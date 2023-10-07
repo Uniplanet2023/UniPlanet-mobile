@@ -27,7 +27,7 @@ class AddressServices {
           'address': address,
         }),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -63,7 +63,7 @@ class AddressServices {
             'address': address,
             'totalPrice': totalSum,
           }));
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -98,7 +98,7 @@ class AddressServices {
           'id': product.id,
         }),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,

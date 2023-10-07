@@ -1,4 +1,5 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
+import 'package:uniplanet_mobile/features/account/services/account_services.dart';
 import 'package:uniplanet_mobile/features/account/widgets/single_product.dart';
 import 'package:uniplanet_mobile/features/admin/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/admin/services/admin_services.dart';
@@ -15,7 +16,7 @@ class PostsScreen extends StatefulWidget {
 class _PostsScreenState extends State<PostsScreen> {
   List<Product>? products;
   final AdminServices adminServices = AdminServices();
-
+  final AccountServices accountServices = AccountServices();
   @override
   void initState() {
     super.initState();
@@ -76,6 +77,10 @@ class _PostsScreenState extends State<PostsScreen> {
                           icon: const Icon(
                             Icons.delete_outline,
                           ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.logout),
+                          onPressed: () => accountServices.logOut(context),
                         ),
                       ],
                     ),

@@ -28,7 +28,7 @@ class ProductDetailsServices {
           'id': product.id!,
         }),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -62,7 +62,7 @@ class ProductDetailsServices {
           'rating': rating,
         }),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,

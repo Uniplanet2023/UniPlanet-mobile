@@ -1,8 +1,8 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/features/admin/models/sales.dart';
 import 'package:uniplanet_mobile/features/admin/services/admin_services.dart';
-import 'package:uniplanet_mobile/features/admin/widgets/category_products_chart.dart';
-import 'package:flutter_charts/flutter_charts.dart' as charts;
+// import 'package:uniplanet_mobile/features/admin/widgets/category_products_chart.dart';
+// import 'package:flutter_charts/flutter_charts.dart' as charts;
 import 'package:flutter/material.dart';
 
 class AnalyticsScreen extends StatefulWidget {

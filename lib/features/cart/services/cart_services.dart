@@ -25,7 +25,7 @@ class CartServices {
           'x-auth-token': userProvider.user.token,
         },
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,

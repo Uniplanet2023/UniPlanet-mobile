@@ -38,7 +38,7 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -71,13 +71,16 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
+          if (!context.mounted) throw Error();
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
+          if (!context.mounted) throw Error();
           Navigator.pushNamedAndRemoveUntil(
             context,
             BottomBar.routeName,
@@ -120,11 +123,12 @@ class AuthService {
             'x-auth-token': token
           },
         );
-
+        if (!context.mounted) throw Error();
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
       }
     } catch (e) {
+      if (!context.mounted) throw Error();
       showSnackBar(context, e.toString());
     }
   }

@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_screen.dart';
+import 'package:uniplanet_mobile/features/cart/screens/cart_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -22,6 +23,7 @@ class _BottomBarState extends State<BottomBar> {
   List<Widget> pages = [
     const HomeScreen(),
     const AccountScreen(),
+    const CartScreen(),
   ];
 
   void updatePage(int page) {
@@ -101,9 +103,7 @@ class _BottomBarState extends State<BottomBar> {
               child: badges.Badge(
                 badgeContent: Text(userCartLen.toString()),
                 badgeStyle: const badges.BadgeStyle(
-                  badgeColor: Colors.white,
-                  elevation: 0,
-                ),
+                    badgeColor: Colors.white, elevation: 0),
                 child: const Icon(
                   Icons.shopping_cart_outlined,
                 ),

@@ -52,7 +52,7 @@ class AdminServices {
         },
         body: product.toJson(),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -76,7 +76,7 @@ class AdminServices {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -116,7 +116,7 @@ class AdminServices {
           'id': product.id,
         }),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -138,7 +138,7 @@ class AdminServices {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -180,7 +180,7 @@ class AdminServices {
           'status': status,
         }),
       );
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
@@ -201,7 +201,7 @@ class AdminServices {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
-
+      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,

@@ -184,7 +184,8 @@ class _AddressScreenState extends State<AddressScreen> {
                 width: double.infinity,
                 style: ApplePayButtonStyle.whiteOutline,
                 type: ApplePayButtonType.buy,
-                paymentConfigurationAsset: 'applepay.json',
+                paymentConfiguration:
+                    PaymentConfiguration.fromJsonString('applepay.json'),
                 onPaymentResult: onApplePayResult,
                 paymentItems: paymentItems,
                 margin: const EdgeInsets.only(top: 15),
@@ -194,7 +195,8 @@ class _AddressScreenState extends State<AddressScreen> {
               const SizedBox(height: 10),
               GooglePayButton(
                 onPressed: () => payPressed(address),
-                paymentConfigurationAsset: 'gpay.json',
+                paymentConfiguration:
+                    PaymentConfiguration.fromJsonString('gpay.json'),
                 onPaymentResult: onGooglePayResult,
                 paymentItems: paymentItems,
                 height: 50,
