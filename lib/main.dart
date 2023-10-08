@@ -40,7 +40,6 @@ class _MyAppState extends State<MyApp> {
       scaffoldMessengerKey: SnackbarGlobal.key,
       title: 'Amazon Clone',
       theme: ThemeData(
-        scaffoldBackgroundColor: GlobalVariables.backgroundColor,
         colorScheme: const ColorScheme.light(
           primary: GlobalVariables.secondaryColor,
         ),
