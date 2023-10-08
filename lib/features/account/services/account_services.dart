@@ -40,7 +40,7 @@ class AccountServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
     return orderList;
   }
@@ -57,7 +57,7 @@ class AccountServices {
         (route) => false,
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 }

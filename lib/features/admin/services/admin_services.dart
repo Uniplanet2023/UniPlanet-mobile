@@ -57,12 +57,12 @@ class AdminServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Product Added Successfully!');
+          SnackbarGlobal.showSnackBar('Product Added Successfully!');
           Navigator.pop(context);
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -93,7 +93,7 @@ class AdminServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
     return productList;
   }
@@ -125,7 +125,7 @@ class AdminServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -155,7 +155,7 @@ class AdminServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
     return orderList;
   }
@@ -187,7 +187,7 @@ class AdminServices {
         onSuccess: onSuccess,
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -218,7 +218,7 @@ class AdminServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
     return {
       'sales': sales,

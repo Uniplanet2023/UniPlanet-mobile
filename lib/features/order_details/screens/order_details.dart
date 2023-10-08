@@ -226,10 +226,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   currentStep: currentStep,
                   controlsBuilder: (context, details) {
                     if (user.type == 'admin') {
-                      return CustomButton(
-                        text: 'Done',
-                        onTap: () => changeOrderStatus(details.currentStep),
-                      );
+                      if (currentStep >= 3) {
+                        const SizedBox();
+                      } else {
+                        return CustomButton(
+                          text: 'Done',
+                          onTap: () => changeOrderStatus(details.currentStep),
+                        );
+                      }
                     }
                     return const SizedBox();
                   },

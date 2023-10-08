@@ -43,14 +43,13 @@ class AuthService {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(
-            context,
+          SnackbarGlobal.showSnackBar(
             'Account created! Login with the same credentials!',
           );
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -89,7 +88,7 @@ class AuthService {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -129,7 +128,7 @@ class AuthService {
       }
     } catch (e) {
       if (!context.mounted) throw Error();
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 }

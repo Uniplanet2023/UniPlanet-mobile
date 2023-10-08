@@ -36,7 +36,7 @@ class CartServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 }

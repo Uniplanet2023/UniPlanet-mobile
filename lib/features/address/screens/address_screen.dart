@@ -1,3 +1,4 @@
+import 'package:uniplanet_mobile/constants/payment_configurations.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/address/services/address_services.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _AddressScreenState extends State<AddressScreen> {
     } else if (addressFromProvider.isNotEmpty) {
       addressToBeUsed = addressFromProvider;
     } else {
-      showSnackBar(context, 'ERROR');
+      SnackbarGlobal.showSnackBar('ERROR');
     }
   }
 
@@ -185,7 +186,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 style: ApplePayButtonStyle.whiteOutline,
                 type: ApplePayButtonType.buy,
                 paymentConfiguration:
-                    PaymentConfiguration.fromJsonString('applepay.json'),
+                    PaymentConfiguration.fromJsonString(defaultApplePay),
                 onPaymentResult: onApplePayResult,
                 paymentItems: paymentItems,
                 margin: const EdgeInsets.only(top: 15),
@@ -196,7 +197,7 @@ class _AddressScreenState extends State<AddressScreen> {
               GooglePayButton(
                 onPressed: () => payPressed(address),
                 paymentConfiguration:
-                    PaymentConfiguration.fromJsonString('gpay.json'),
+                    PaymentConfiguration.fromJsonString(defaultGooglePay),
                 onPaymentResult: onGooglePayResult,
                 paymentItems: paymentItems,
                 height: 50,

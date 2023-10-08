@@ -40,7 +40,7 @@ class AddressServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -68,7 +68,7 @@ class AddressServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Your order has been placed!');
+          SnackbarGlobal.showSnackBar('Your order has been placed!');
           User user = userProvider.user.copyWith(
             cart: [],
           );
@@ -76,7 +76,7 @@ class AddressServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 
@@ -107,7 +107,7 @@ class AddressServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      SnackbarGlobal.showSnackBar(e.toString());
     }
   }
 }
