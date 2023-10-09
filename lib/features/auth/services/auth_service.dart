@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/features/admin/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -80,9 +81,12 @@ class AuthService {
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
           if (!context.mounted) throw Error();
+
           Navigator.pushNamedAndRemoveUntil(
             context,
-            BottomBar.routeName,
+            jsonDecode(res.body)["type"] == "admin"
+                ? AdminScreen.routeName
+                : BottomBar.routeName,
             (route) => false,
           );
         },

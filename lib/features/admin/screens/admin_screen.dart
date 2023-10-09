@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
-
+  static const String routeName = '/admin-page';
   @override
   State<AdminScreen> createState() => _AdminScreenState();
 }
