@@ -16,6 +16,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final bool _pinned = false;
+  final bool _snap = true;
+  final bool _floating = true;
+
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
@@ -23,28 +27,53 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: GlobalVariables.appBarGradient,
+      body: CustomScrollView(
+        controller: widget.controller,
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: _pinned,
+            snap: _snap,
+            floating: _floating,
+            expandedHeight: 0.0,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 20),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/images/UniPlanet Caligraphy.png',
+                    width: 100,
+                    height: 70,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              background: const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 114, 226, 221),
+                      Color.fromARGB(255, 162, 236, 233),
+                    ],
+                    stops: [0.5, 1.0],
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        controller: widget.controller,
-        child: const Column(
-          children: [
-            AddressBox(),
-            SizedBox(height: 10),
-            TopCategories(),
-            SizedBox(height: 10),
-            CarouselImage(),
-            DealOfDay(),
-          ],
-        ),
+          const SliverToBoxAdapter(
+            child: Column(
+              children: [
+                // AddressBox(),
+                SizedBox(height: 10),
+                TopCategories(),
+                SizedBox(height: 10),
+                CarouselImage(),
+                DealOfDay(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
