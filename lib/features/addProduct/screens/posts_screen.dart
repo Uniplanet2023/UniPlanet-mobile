@@ -1,8 +1,8 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/features/account/services/account_services.dart';
 import 'package:uniplanet_mobile/features/account/widgets/single_product.dart';
-import 'package:uniplanet_mobile/features/admin/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/admin/services/admin_services.dart';
+import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
+import 'package:uniplanet_mobile/features/addProduct/services/admin_services.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';
 

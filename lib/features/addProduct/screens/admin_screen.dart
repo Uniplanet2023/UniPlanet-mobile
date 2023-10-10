@@ -1,7 +1,7 @@
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/admin/screens/analtyics_screen.dart';
-import 'package:uniplanet_mobile/features/admin/screens/orders_screen.dart';
-import 'package:uniplanet_mobile/features/admin/screens/posts_screen.dart';
+import 'package:uniplanet_mobile/features/addProduct/screens/analtyics_screen.dart';
+import 'package:uniplanet_mobile/features/addProduct/screens/orders_screen.dart';
+import 'package:uniplanet_mobile/features/addProduct/screens/posts_screen.dart';
 import 'package:flutter/material.dart';
 
 class AdminScreen extends StatefulWidget {

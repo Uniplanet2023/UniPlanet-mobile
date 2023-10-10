@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:uniplanet_mobile/common/widgets/bottom_bar.dart";
 import "package:uniplanet_mobile/features/address/screens/address_screen.dart";
-import "package:uniplanet_mobile/features/admin/screens/add_product_screen.dart";
-import "package:uniplanet_mobile/features/admin/screens/admin_screen.dart";
+import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
+import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/category_deals_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/home_screen.dart";

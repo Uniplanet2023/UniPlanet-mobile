@@ -10,9 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class HomeServices {
-  Future<List<Product>> fetchProductsAll({
-    required BuildContext context,
-  }) async {
+  // get all the products
+  Future<List<Product>> fetchAllProducts(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Product> productList = [];
     try {
@@ -23,19 +22,20 @@ class HomeServices {
       });
       if (!context.mounted) throw Error();
       httpErrorHandle(
-          response: res,
-          context: context,
-          onSuccess: () {
-            for (int i = 0; i < jsonDecode(res.body).length; i++) {
-              productList.add(
-                Product.fromJson(
-                  jsonEncode(
-                    jsonDecode(res.body)[i],
-                  ),
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            productList.add(
+              Product.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
                 ),
-              );
-            }
-          });
+              ),
+            );
+          }
+        },
+      );
     } catch (e) {
       SnackbarGlobal.showSnackBar(e.toString());
     }

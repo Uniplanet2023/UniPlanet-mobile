@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/admin/models/sales.dart';
+import 'package:uniplanet_mobile/features/addProduct/models/sales.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';

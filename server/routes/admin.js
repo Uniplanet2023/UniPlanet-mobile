@@ -4,9 +4,9 @@ const admin = require("../middlewares/admin");
 const { Product } = require("../models/product");
 const Order = require("../models/order");
 const { PromiseProvider } = require("mongoose");
-
+const auth = require("../middlewares/auth");
 // Add product
-adminRouter.post("/admin/add-product", admin, async (req, res) => {
+adminRouter.post("/admin/add-product", auth, async (req, res) => {
   try {
     const { name, description, images, quantity, price, category } = req.body;
     let product = new Product({

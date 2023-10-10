@@ -1,6 +1,6 @@
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/admin/services/admin_services.dart';
+import 'package:uniplanet_mobile/features/addProduct/services/admin_services.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';

@@ -1,7 +1,9 @@
 import 'package:flutter/rendering.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_screen.dart';
+import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/cart/screens/cart_screen.dart';
+import 'package:uniplanet_mobile/features/category/screens/category.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
@@ -23,6 +25,10 @@ class _BottomBarState extends State<BottomBar> {
   double bottomBarBorderWidth = 5;
   ScrollController? _controller;
   bool _isVisible = true;
+
+  void navigateToAddProduct() {
+    Navigator.pushNamed(context, AddProductScreen.routeName);
+  }
 
   @override
   void initState() {
@@ -49,6 +55,10 @@ class _BottomBarState extends State<BottomBar> {
   }
 
   void updatePage(int page) {
+    if (page == 2) {
+      navigateToAddProduct();
+      return;
+    }
     setState(() {
       _page = page;
     });
@@ -63,6 +73,8 @@ class _BottomBarState extends State<BottomBar> {
     final userCartLen = context.watch<UserProvider>().user.cart.length;
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
+      const CategoryPage(),
+      const AddProductScreen(),
       const AccountScreen(),
       const CartScreen(),
     ];
@@ -148,6 +160,7 @@ class _BottomBarState extends State<BottomBar> {
               ),
               BottomNavigationBar(
                 currentIndex: _page,
+                type: BottomNavigationBarType.fixed,
                 selectedItemColor: GlobalVariables.selectedNavBarColor,
                 unselectedItemColor: GlobalVariables.unselectedNavBarColor,
                 backgroundColor: GlobalVariables.backgroundColor,
@@ -160,7 +173,7 @@ class _BottomBarState extends State<BottomBar> {
                       width: bottomBarWidth,
                       decoration: BoxDecoration(
                         border: Border(
-                          top: BorderSide(
+                          bottom: BorderSide(
                             color: _page == 0
                                 ? GlobalVariables.selectedNavBarColor
                                 : GlobalVariables.backgroundColor,
@@ -174,15 +187,46 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     label: '',
                   ),
-
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      width: bottomBarWidth,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: _page == 1
+                                ? GlobalVariables.selectedNavBarColor
+                                : GlobalVariables.backgroundColor,
+                            width: bottomBarBorderWidth,
+                          ),
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.menu,
+                      ),
+                    ),
+                    label: '',
+                  ),
+                  //add
+                  BottomNavigationBarItem(
+                    icon: SizedBox(
+                      width: bottomBarWidth,
+                      child: IconButton(
+                        onPressed: navigateToAddProduct,
+                        icon: const Icon(
+                          Icons.add_box_outlined,
+                        ),
+                      ),
+                    ),
+                    label: '',
+                  ),
                   // ACCOUNT
                   BottomNavigationBarItem(
                     icon: Container(
                       width: bottomBarWidth,
                       decoration: BoxDecoration(
                         border: Border(
-                          top: BorderSide(
-                            color: _page == 1
+                          bottom: BorderSide(
+                            color: _page == 3
                                 ? GlobalVariables.selectedNavBarColor
                                 : GlobalVariables.backgroundColor,
                             width: bottomBarBorderWidth,
@@ -201,8 +245,8 @@ class _BottomBarState extends State<BottomBar> {
                       width: bottomBarWidth,
                       decoration: BoxDecoration(
                         border: Border(
-                          top: BorderSide(
-                            color: _page == 2
+                          bottom: BorderSide(
+                            color: _page == 4
                                 ? GlobalVariables.selectedNavBarColor
                                 : GlobalVariables.backgroundColor,
                             width: bottomBarBorderWidth,
