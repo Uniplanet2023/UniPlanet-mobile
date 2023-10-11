@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search-screen';
-  final String searchQuery;
+  final String? searchQuery;
   const SearchScreen({
     Key? key,
-    required this.searchQuery,
+    this.searchQuery,
   }) : super(key: key);
 
   @override
@@ -26,12 +26,14 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    fetchSearchedProduct();
+    if (widget.searchQuery != null) {
+      fetchSearchedProduct();
+    }
   }
 
   fetchSearchedProduct() async {
     products = await searchServices.fetchSearchedProduct(
-        context: context, searchQuery: widget.searchQuery);
+        context: context, searchQuery: widget.searchQuery!);
     setState(() {});
   }
 
@@ -118,8 +120,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ? const Loader()
           : Column(
               children: [
-                const AddressBox(),
-                const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
                     itemCount: products!.length,

@@ -4,6 +4,8 @@ import 'package:uniplanet_mobile/features/account/screens/account_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/cart/screens/cart_screen.dart';
 import 'package:uniplanet_mobile/features/category/screens/category.dart';
+import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
+import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
@@ -64,8 +66,8 @@ class _BottomBarState extends State<BottomBar> {
     });
   }
 
-  void navigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
+  void navigateToSearchScreen() {
+    Navigator.pushNamed(context, SearchScreen.routeName);
   }
 
   @override
@@ -75,8 +77,9 @@ class _BottomBarState extends State<BottomBar> {
       HomeScreen(controller: _controller!),
       const CategoryPage(),
       const AddProductScreen(),
+      const MobileLayoutScreen(),
+      // const CartScreen(),
       const AccountScreen(),
-      const CartScreen(),
     ];
     return Scaffold(
         body: Stack(
@@ -88,6 +91,7 @@ class _BottomBarState extends State<BottomBar> {
           left: 0,
           right: 0,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 color: Colors.white,
@@ -104,44 +108,34 @@ class _BottomBarState extends State<BottomBar> {
                         child: Material(
                           borderRadius: BorderRadius.circular(7),
                           elevation: 1,
-                          child: TextFormField(
-                            onFieldSubmitted: navigateToSearchScreen,
-                            decoration: InputDecoration(
-                              prefixIcon: InkWell(
-                                onTap: () {},
-                                child: const Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 6,
-                                  ),
-                                  child: Icon(
+                          child: InkWell(
+                            // Use InkWell to capture the tap event
+                            onTap: () =>
+                                navigateToSearchScreen(), // Navigate to search screen on tap
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border:
+                                    Border.all(color: Colors.black38, width: 1),
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(
                                     Icons.search,
-                                    color: Colors.black,
+                                    color: Colors.black54,
                                     size: 23,
                                   ),
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: const EdgeInsets.only(top: 10),
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(7),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(7),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black38,
-                                  width: 1,
-                                ),
-                              ),
-                              hintText: 'Search College Market',
-                              hintStyle: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Search College Market',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -219,7 +213,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     label: '',
                   ),
-                  // ACCOUNT
+                  // CART
                   BottomNavigationBarItem(
                     icon: Container(
                       width: bottomBarWidth,
@@ -233,13 +227,18 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.person_outline_outlined,
+                      child: badges.Badge(
+                        badgeContent: Text(userCartLen.toString()),
+                        badgeStyle: const badges.BadgeStyle(
+                            badgeColor: Colors.white, elevation: 0),
+                        child: const Icon(
+                          Icons.chat_bubble_outline,
+                        ),
                       ),
                     ),
                     label: '',
                   ),
-                  // CART
+                  // ACCOUNT
                   BottomNavigationBarItem(
                     icon: Container(
                       width: bottomBarWidth,
@@ -253,13 +252,8 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: badges.Badge(
-                        badgeContent: Text(userCartLen.toString()),
-                        badgeStyle: const badges.BadgeStyle(
-                            badgeColor: Colors.white, elevation: 0),
-                        child: const Icon(
-                          Icons.shopping_cart_outlined,
-                        ),
+                      child: const Icon(
+                        Icons.person_outline_outlined,
                       ),
                     ),
                     label: '',
