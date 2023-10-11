@@ -1,6 +1,5 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/home/widgets/address_box.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/features/search/services/search_services.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched_product.dart';

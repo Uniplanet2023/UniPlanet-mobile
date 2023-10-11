@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
 
 class MobileChatScreen extends StatelessWidget {
+  static const String routeName = '/mobile-chat-screen';
   const MobileChatScreen({Key? key}) : super(key: key);
 
   get mobileChatBoxColor => null;

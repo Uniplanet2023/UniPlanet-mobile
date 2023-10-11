@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
-import 'package:uniplanet_mobile/features/home/services/home_services.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 
