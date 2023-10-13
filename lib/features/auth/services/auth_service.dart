@@ -26,6 +26,8 @@ class AuthService {
         name: name,
         password: password,
         email: email,
+        isOnline: false,
+        phoneNumber: '',
         address: '',
         type: '',
         token: '',

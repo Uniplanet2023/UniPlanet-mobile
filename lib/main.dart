@@ -6,8 +6,10 @@ import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/features/auth/services/auth_service.dart';
+import 'package:uniplanet_mobile/features/chat/services/socket_client.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:uniplanet_mobile/router.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -31,6 +33,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     authService.getUserData(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

@@ -6,12 +6,12 @@ class GlobalVariables {
   // COLORS
   static const appBarGradient = LinearGradient(
     colors: [
-      Color.fromARGB(255, 29, 201, 192),
+      Color.fromRGBO(29, 201, 192, 1),
       Color.fromARGB(255, 125, 221, 216),
     ],
     stops: [0.5, 1.0],
   );
-
+  static const primaryColor = Color.fromARGB(255, 125, 221, 216);
   static const secondaryColor = Color.fromRGBO(255, 153, 0, 1);
   static const backgroundColor = Colors.white;
   static const Color greyBackgroundCOlor = Color(0xffebecee);

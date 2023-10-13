@@ -6,6 +6,8 @@ class User {
   final String email;
   final String password;
   final String address;
+  final bool isOnline;
+  final String phoneNumber;
   final String type;
   final String token;
   final List<dynamic> cart;
@@ -15,6 +17,8 @@ class User {
     required this.name,
     required this.email,
     required this.password,
+    required this.isOnline,
+    required this.phoneNumber,
     required this.address,
     required this.type,
     required this.token,
@@ -27,6 +31,7 @@ class User {
       'name': name,
       'email': email,
       'password': password,
+      'phoneNumber': phoneNumber,
       'address': address,
       'type': type,
       'token': token,
@@ -38,6 +43,8 @@ class User {
     return User(
       id: map['_id'] ?? '',
       name: map['name'] ?? '',
+      isOnline: map['isOnline'] ?? false,
+      phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       password: map['password'] ?? '',
       address: map['address'] ?? '',
@@ -61,6 +68,8 @@ class User {
     String? email,
     String? password,
     String? address,
+    String? phoneNumber,
+    bool? isOnline,
     String? type,
     String? token,
     List<dynamic>? cart,
@@ -70,6 +79,8 @@ class User {
       name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      isOnline: isOnline ?? this.isOnline,
       address: address ?? this.address,
       type: type ?? this.type,
       token: token ?? this.token,
