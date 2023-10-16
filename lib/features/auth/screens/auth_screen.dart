@@ -1,13 +1,9 @@
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/auth/services/auth_service.dart';
+import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
-
-enum Auth {
-  signin,
-  signup,
-}
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class AuthScreen extends StatefulWidget {
   static const String routeName = '/auth-screen';
@@ -18,163 +14,81 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  Auth _auth = Auth.signup;
-  final _signUpFormKey = GlobalKey<FormState>();
-  final _signInFormKey = GlobalKey<FormState>();
-  final AuthService authService = AuthService();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _nameController.dispose();
-  }
-
-  void signUpUser() {
-    authService.signUpUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
-      name: _nameController.text,
-    );
-  }
-
-  void signInUser() {
-    authService.signInUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: GlobalVariables.greyBackgroundCOlor,
+      appBar: AppBar(
+        backgroundColor: GlobalVariables.greyBackgroundCOlor,
+        title: const Text(
+          'Welcome',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              
+              Image.asset(
+                'assets/images/Logo.png',
+                width: 300,
+              ),
               const Text(
-                'Welcome',
+                'Selling Smarter,',
                 style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w200,
                 ),
               ),
-              ListTile(
-                tileColor: _auth == Auth.signup
-                    ? GlobalVariables.backgroundColor
-                    : GlobalVariables.greyBackgroundCOlor,
-                title: const Text(
-                  'Create Account',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                leading: Radio(
-                  activeColor: GlobalVariables.secondaryColor,
-                  value: Auth.signup,
-                  groupValue: _auth,
-                  onChanged: (Auth? val) {
-                    setState(() {
-                      _auth = val!;
-                    });
-                  },
+              const SizedBox(height: 10),
+              const Text(
+                'Buying Better,',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-              if (_auth == Auth.signup)
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: GlobalVariables.backgroundColor,
-                  child: Form(
-                    key: _signUpFormKey,
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          controller: _nameController,
-                          hintText: 'Name',
-                        ),
-                        const SizedBox(height: 10),
-                        CustomTextField(
-                          controller: _emailController,
-                          hintText: 'Email',
-                        ),
-                        const SizedBox(height: 10),
-                        CustomTextField(
-                          controller: _passwordController,
-                          hintText: 'Password',
-                        ),
-                        const SizedBox(height: 10),
-                        CustomButton(
-                          text: 'Sign Up',
-                          onTap: () {
-                            if (_signUpFormKey.currentState!.validate()) {
-                              signUpUser();
-                            }
-                          },
-                        )
-                      ],
-                    ),
+              SizedBox(
+                width: 250.0,
+                child: TextLiquidFill(
+                  text: 'All on Campus',
+                  waveColor: Colors.blueAccent,
+                  boxBackgroundColor: GlobalVariables.greyBackgroundCOlor,
+                  textStyle: const TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w800,
                   ),
-                ),
-              ListTile(
-                tileColor: _auth == Auth.signin
-                    ? GlobalVariables.backgroundColor
-                    : GlobalVariables.greyBackgroundCOlor,
-                title: const Text(
-                  'Sign-In.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                leading: Radio(
-                  activeColor: GlobalVariables.secondaryColor,
-                  value: Auth.signin,
-                  groupValue: _auth,
-                  onChanged: (Auth? val) {
-                    setState(() {
-                      _auth = val!;
-                    });
-                  },
+                  boxHeight: 50.0,
                 ),
               ),
-              if (_auth == Auth.signin)
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: GlobalVariables.backgroundColor,
-                  child: Form(
-                    key: _signInFormKey,
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          controller: _emailController,
-                          hintText: 'Email',
-                        ),
-                        const SizedBox(height: 10),
-                        CustomTextField(
-                          controller: _passwordController,
-                          hintText: 'Password',
-                        ),
-                        const SizedBox(height: 10),
-                        CustomButton(
-                          text: 'Sign In',
-                          onTap: () {
-                            if (_signInFormKey.currentState!.validate()) {
-                              signInUser();
-                            }
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 50),
+              CustomButton(
+                text: 'Sign Up',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignupScreen()),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              CustomButton(
+                text: 'Sign In',
+                color: GlobalVariables.backgroundColor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SigninScreen()),
+                  );
+                },
+              ),
             ],
           ),
         ),

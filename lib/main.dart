@@ -43,27 +43,27 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: SnackbarGlobal.key,
-      title: 'Amazon Clone',
-      theme: ThemeData(
-        colorScheme: const ColorScheme.light(
-          primary: GlobalVariables.secondaryColor,
-        ),
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          iconTheme: IconThemeData(
-            color: Colors.black,
+        debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: SnackbarGlobal.key,
+        title: 'Amazon Clone',
+        theme: ThemeData(
+          colorScheme: const ColorScheme.light(
+            primary: GlobalVariables.secondaryColor,
           ),
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
-      ),
-      onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-          ? Provider.of<UserProvider>(context).user.type == 'user'
-              ? const BottomBar()
-              : const AdminScreen()
-          : const AuthScreen(),
-    );
+        onGenerateRoute: (settings) => generateRoute(settings),
+        home: Provider.of<UserProvider>(context).user.token.isNotEmpty
+            ? Provider.of<UserProvider>(context).user.type == 'user'
+                ? const BottomBar()
+                : const AdminScreen()
+            // : const AuthScreen(),
+            : AuthScreen());
   }
 }
