@@ -4,6 +4,8 @@ import "package:uniplanet_mobile/features/address/screens/address_screen.dart";
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
+import "package:uniplanet_mobile/features/auth/screens/signin_screen.dart";
+import "package:uniplanet_mobile/features/auth/screens/signup_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/category_deals_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
 import "package:uniplanet_mobile/features/order_details/screens/order_details.dart";
@@ -19,7 +21,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
       );
-
+    case SignupScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SignupScreen(),
+      );
+    case SigninScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SigninScreen(),
+      );
     case HomeScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
