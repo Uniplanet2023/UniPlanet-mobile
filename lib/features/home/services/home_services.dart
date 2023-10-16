@@ -21,24 +21,29 @@ class HomeServices {
         'x-auth-token': userProvider.user.token,
       });
       if (!context.mounted) throw Error();
+      print(
+        jsonDecode(res.body)[0] is Map<String, dynamic>,
+      );
+      print(res.body);
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            productList.add(
-              Product.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
+            var product = Product.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
               ),
             );
+
+            productList.add(product);
           }
         },
       );
     } catch (e) {
       SnackbarGlobal.showSnackBar(e.toString());
     }
+    print(productList);
     return productList;
   }
 

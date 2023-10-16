@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchProductsAll() async {
     productList = await homeServices.fetchAllProducts(context);
+    print(productList);
     setState(() {});
   }
 

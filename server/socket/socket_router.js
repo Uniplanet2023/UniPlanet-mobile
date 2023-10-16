@@ -13,8 +13,27 @@ module.exports = {
     io.on("connection", (socket) => {
       console.log("New client connected", socket.id);
 
-      socket.on("/test", (msg) => {
-        console.log(msg);
+      socket.on("joinChat", async ({ senderId, receiverId }) => {
+        const roomName = [senderId, receiverId].sort().join("-");
+
+        let chatRoom = await ChatRoom.findOne({
+          users: { $all: [senderId, receiverId] },
+        });
+
+        if (!chatRoom) {
+          chatRoom = new ChatRoom({ users: [senderId, receiverId] });
+          await chatRoom.save();
+
+          // Add chat room to both users' chatRooms list
+          await User.findByIdAndUpdate(senderId, {
+            $addToSet: { chatRooms: chatRoom._id },
+          });
+          await User.findByIdAndUpdate(receiverId, {
+            $addToSet: { chatRooms: chatRoom._id },
+          });
+        }
+        socket.join(roomName);
+        console.log(`User${socket.id} joined room ${roomName}}`);
       });
 
       socket.on("signin", (id) => {

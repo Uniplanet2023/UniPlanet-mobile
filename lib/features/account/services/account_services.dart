@@ -22,6 +22,7 @@ class AccountServices {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': userProvider.user.token,
       });
+
       if (!context.mounted) throw Error();
 
       httpErrorHandle(

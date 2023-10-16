@@ -32,6 +32,7 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "user",
   },
+
   cart: [
     {
       product: productSchema,

@@ -2,19 +2,22 @@ const express = require("express");
 const productRouter = express.Router();
 const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
-
-productRouter.get("/api/all-products",auth, async(req,res)=>{
-  try{
-    const products = await Product.find();
-    res.json(products);
-  }catch(e){
-    res.status(500).json({error: e.message})
-  }
-})
-productRouter.get("/api/products/", auth, async (req, res) => {
+const redis_controller = require("../redis_controller/redis_controller");
+productRouter.get("/api/all-products", auth, async (req, res) => {
   try {
-    const products = await Product.find({ category: req.query.category });
-    res.json(products);
+    console.log("all product API is triggered");
+    const data = await redis_controller.getSets("products");
+
+    if (data != null && data && data.length != 0) {
+      console.log("search from redis , product file");
+      return res.json(data);
+    } else {
+      console.log("search from database , product file");
+      const products = await Product.find();
+      console.log(products);
+      await redis_controller.setList("products", products);
+      res.json(products);
+    }
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -29,6 +32,26 @@ productRouter.get("/api/products/search/:name", auth, async (req, res) => {
     });
 
     res.json(products);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Add product
+productRouter.post("/api/add-product", auth, async (req, res) => {
+  try {
+    const { name, description, images, quantity, price, category } = req.body;
+    let product = new Product({
+      name,
+      description,
+      images,
+      quantity,
+      price,
+      category,
+    });
+    product = await product.save();
+    await redis_controller.add("products", product);
+    res.json(product);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
