@@ -112,6 +112,7 @@ userRouter.post("/api/order", auth, async (req, res) => {
 
 userRouter.get("/api/orders/me", auth, async (req, res) => {
   try {
+    console.log("order me is triggered");
     const orders = await Order.find({ userId: req.user });
     res.json(orders);
   } catch (e) {

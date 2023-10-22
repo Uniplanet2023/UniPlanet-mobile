@@ -11,7 +11,6 @@ class User {
   final String type;
   final String token;
   final List<dynamic> cart;
-
   User({
     required this.id,
     required this.name,

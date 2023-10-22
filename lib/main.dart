@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/bloc/user/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
-import 'package:uniplanet_mobile/features/auth/services/auth_service.dart';
-import 'package:uniplanet_mobile/features/chat/services/socket_client.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
+import 'package:uniplanet_mobile/repository/product_repo.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -27,12 +28,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AuthService authService = AuthService();
-
   @override
   void initState() {
     super.initState();
-    authService.getUserData(context);
+    UserRepository().getUserData(context);
   }
 
   @override
@@ -59,11 +58,30 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-            ? Provider.of<UserProvider>(context).user.type == 'user'
-                ? const BottomBar()
-                : const AdminScreen()
-            // : const AuthScreen(),
-            : AuthScreen());
+        home: MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider(create: (context) => UserRepository()),
+              RepositoryProvider(create: (context) => ProductRepository()),
+            ],
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                    create: (context) => UserBloc(
+                          context.read<UserRepository>(),
+                        )),
+              ],
+              child: UserRepository.user.token != ''
+                  ? UserRepository.user.type == 'user'
+                      ? const BottomBar()
+                      : const AdminScreen()
+                  : const AuthScreen(),
+            ))
+        // home: Provider.of<UserProvider>(context).user.token.isNotEmpty
+        //     ? Provider.of<UserProvider>(context).user.type == 'user'
+        //         ? const BottomBar()
+        //         : const AdminScreen()
+        //     // : const AuthScreen(),
+        //     : const AuthScreen(),
+        );
   }
 }

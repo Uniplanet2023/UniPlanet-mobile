@@ -1,15 +1,12 @@
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/common/widgets/stars.dart';
-import 'package:uniplanet_mobile/features/product_details/services/product_details_services.dart';
+
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
-import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   static const String routeName = '/product-details';
@@ -24,8 +21,6 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  final ProductDetailsServices productDetailsServices =
-      ProductDetailsServices();
   double avgRating = 0;
   double myRating = 0;
   final int _currentIndex = 0;
@@ -55,7 +50,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void addToCart() {
-    productDetailsServices.addToCart(
+    UserRepository().addToCart(
       context: context,
       product: widget.product,
     );

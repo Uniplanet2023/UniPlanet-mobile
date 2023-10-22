@@ -1,9 +1,9 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/home/services/home_services.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/repository/product_repo.dart';
 
 class CategoryDealsScreen extends StatefulWidget {
   static const String routeName = '/category-deals';
@@ -19,7 +19,6 @@ class CategoryDealsScreen extends StatefulWidget {
 
 class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
   List<Product>? productList;
-  final HomeServices homeServices = HomeServices();
 
   @override
   void initState() {
@@ -28,7 +27,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
   }
 
   fetchCategoryProducts() async {
-    productList = await homeServices.fetchCategoryProducts(
+    productList = await ProductRepository().fetchCategoryProducts(
       context: context,
       category: widget.category,
     );

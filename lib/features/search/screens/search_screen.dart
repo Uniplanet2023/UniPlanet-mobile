@@ -1,10 +1,10 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
-import 'package:uniplanet_mobile/features/search/services/search_services.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search-screen';
@@ -20,7 +20,6 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   List<Product>? products;
-  final SearchServices searchServices = SearchServices();
 
   @override
   void initState() {
@@ -31,7 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   fetchSearchedProduct() async {
-    products = await searchServices.fetchSearchedProduct(
+    products = await UserRepository().fetchSearchedProduct(
         context: context, searchQuery: widget.searchQuery!);
     setState(() {});
   }

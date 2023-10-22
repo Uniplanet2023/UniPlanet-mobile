@@ -1,10 +1,11 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
-import 'package:uniplanet_mobile/features/account/services/account_services.dart';
+
 import 'package:uniplanet_mobile/features/account/widgets/single_product.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/addProduct/services/admin_services.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/repository/product_repo.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({Key? key}) : super(key: key);
@@ -15,8 +16,7 @@ class PostsScreen extends StatefulWidget {
 
 class _PostsScreenState extends State<PostsScreen> {
   List<Product>? products;
-  final AdminServices adminServices = AdminServices();
-  final AccountServices accountServices = AccountServices();
+
   @override
   void initState() {
     super.initState();
@@ -24,12 +24,12 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   fetchAllProducts() async {
-    products = await adminServices.fetchAllProducts(context);
+    products = await ProductRepository().fetchAllProducts(context);
     setState(() {});
   }
 
   void deleteProduct(Product product, int index) {
-    adminServices.deleteProduct(
+    UserRepository().deleteProduct(
       context: context,
       product: product,
       onSuccess: () {
@@ -80,7 +80,7 @@ class _PostsScreenState extends State<PostsScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.logout),
-                          onPressed: () => accountServices.logOut(context),
+                          onPressed: () => UserRepository().logOut(context),
                         ),
                       ],
                     ),

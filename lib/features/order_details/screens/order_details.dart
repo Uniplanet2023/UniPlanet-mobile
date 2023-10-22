@@ -1,12 +1,13 @@
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/addProduct/services/admin_services.dart';
+
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   static const String routeName = '/order-details';
@@ -22,7 +23,6 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   int currentStep = 0;
-  final AdminServices adminServices = AdminServices();
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
@@ -36,7 +36,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   // !!! ONLY FOR ADMIN!!!
   void changeOrderStatus(int status) {
-    adminServices.changeOrderStatus(
+    UserRepository().changeOrderStatus(
       context: context,
       status: status + 1,
       order: widget.order,

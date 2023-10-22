@@ -10,6 +10,7 @@ import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -33,6 +34,11 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
+    print('init');
+    print(UserRepository.user.token);
+    print('init2');
+    print(UserRepository.user.token);
+    print('init3');
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==

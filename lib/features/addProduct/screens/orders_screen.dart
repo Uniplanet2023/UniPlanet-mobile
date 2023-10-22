@@ -1,9 +1,10 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/features/account/widgets/single_product.dart';
-import 'package:uniplanet_mobile/features/addProduct/services/admin_services.dart';
+
 import 'package:uniplanet_mobile/features/order_details/screens/order_details.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({Key? key}) : super(key: key);
@@ -14,7 +15,6 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   List<Order>? orders;
-  final AdminServices adminServices = AdminServices();
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   void fetchOrders() async {
-    orders = await adminServices.fetchAllOrders(context);
+    orders = await UserRepository().fetchAllOrders(context);
     setState(() {});
   }
 

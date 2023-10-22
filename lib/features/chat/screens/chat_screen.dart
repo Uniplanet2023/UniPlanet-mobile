@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/chat/services/socket_client.dart';
 
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class MobileChatScreen extends StatefulWidget {
   static const String routeName = '/mobile-chat-screen';

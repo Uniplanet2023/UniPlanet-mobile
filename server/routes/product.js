@@ -3,7 +3,7 @@ const productRouter = express.Router();
 const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
 const redis_controller = require("../redis_controller/redis_controller");
-productRouter.get("/api/all-products", auth, async (req, res) => {
+productRouter.get("/api/all-products", async (req, res) => {
   try {
     console.log("all product API is triggered");
     const data = await redis_controller.getSets("products");
@@ -15,7 +15,7 @@ productRouter.get("/api/all-products", auth, async (req, res) => {
       console.log("search from database , product file");
       const products = await Product.find();
       console.log(products);
-      await redis_controller.setList("products", products);
+      await redis_controller.setLists("products", products);
       res.json(products);
     }
   } catch (e) {
@@ -36,10 +36,23 @@ productRouter.get("/api/products/search/:name", auth, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+productRouter.get("/api/products", async (req, res) => {
+  let data;
+  try {
+    if (req.query.category) {
+      console.log("search from redis");
+      data = await redis_controller.getSubSets("products", req.query.category);
+      res.json(data);
+    }
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 // Add product
 productRouter.post("/api/add-product", auth, async (req, res) => {
   try {
+    console.log("add product is triggered");
     const { name, description, images, quantity, price, category } = req.body;
     let product = new Product({
       name,
@@ -49,8 +62,11 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
       price,
       category,
     });
+
     product = await product.save();
-    await redis_controller.add("products", product);
+
+    await redis_controller.addSet("products", product);
+
     res.json(product);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -83,7 +99,7 @@ productRouter.post("/api/rate-product", auth, async (req, res) => {
   }
 });
 
-productRouter.get("/api/deal-of-day", auth, async (req, res) => {
+productRouter.get("/api/deal-of-day", async (req, res) => {
   try {
     let products = await Product.find({});
 

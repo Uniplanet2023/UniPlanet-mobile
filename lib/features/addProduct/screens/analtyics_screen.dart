@@ -1,9 +1,10 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
-import 'package:uniplanet_mobile/features/addProduct/models/sales.dart';
-import 'package:uniplanet_mobile/features/addProduct/services/admin_services.dart';
+
 // import 'package:uniplanet_mobile/features/admin/widgets/category_products_chart.dart';
 // import 'package:flutter_charts/flutter_charts.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/models/sale.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({Key? key}) : super(key: key);
@@ -13,7 +14,6 @@ class AnalyticsScreen extends StatefulWidget {
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
-  final AdminServices adminServices = AdminServices();
   int? totalSales;
   List<Sales>? earnings;
 
@@ -24,7 +24,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   }
 
   getEarnings() async {
-    var earningData = await adminServices.getEarnings(context);
+    var earningData = await UserRepository().getEarnings(context);
     totalSales = earningData['totalEarnings'];
     earnings = earningData['sales'];
     setState(() {});

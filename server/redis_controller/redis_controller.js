@@ -23,54 +23,91 @@ module.exports = {
       socketController.init(server, pubClient, subClient);
     });
   },
-  set: (key, value) => {
-    if (!pubClient) {
-      throw new Error("Redis client is not initialized");
-    }
-    pubClient.set(String(key), JSON.stringify(value));
-  },
-  setList: (key, list_value) => {
-    if (!pubClient) {
-      throw new Error("Redis client is not initialized");
-    }
-    if (
-      list_value == null ||
-      list_value.length == undefined ||
-      list_value.length == 0
-    ) {
-      throw new Error("Invalid List");
-    } else {
-      for (let i = 0; i < list_value.length; i++) {
-        pubClient.sAdd(key, JSON.stringify(list_value[i]));
+  set: async (key, value) => {
+    try {
+      if (!pubClient) {
+        throw new Error("Redis client is not initialized");
       }
+      await pubClient.set(String(key), JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
     }
-  },
-  add: async (key, value) => {
-    if (!pubClient) {
-      throw new Error("Redis client is not initialized");
-    }
-    await pubClient.lPush("products", "value");
   },
   get: async (key) => {
-    if (!pubClient) {
-      throw new Error("Redis client is not initialized");
+    try {
+      if (!pubClient) {
+        throw new Error("Redis client is not initialized");
+      }
+      const value = await pubClient.get(String(key));
+      if (value == null) {
+        return false;
+      }
+      return value;
+    } catch (e) {
+      console.log(e);
     }
-    const value = await pubClient.get(String(key));
-    if (value == null) {
-      return false;
+  },
+  setLists: (key, list_value) => {
+    try {
+      if (!pubClient) {
+        throw new Error("Redis client is not initialized");
+      }
+      if (
+        list_value == null ||
+        list_value.length == undefined ||
+        list_value.length == 0
+      ) {
+        throw new Error("Invalid List");
+      } else {
+        for (let i = 0; i < list_value.length; i++) {
+          pubClient.sAdd(key, JSON.stringify(list_value[i]));
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
-    return value;
+  },
+  addSet: async (key, value) => {
+    try {
+      if (!pubClient) {
+        throw new Error("Redis client is not initialized");
+      }
+
+      await pubClient.sAdd(key, JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  getSubSets: async (key, category) => {
+    try {
+      //finding the sets from key, which category == $category
+      if (!pubClient) {
+        throw new Error("Redis client is not initialized");
+      }
+      // Get all members of the set
+      let sets = await pubClient.SMEMBERS(key);
+      let subset = sets.filter((item) => {
+        let parseItem = JSON.parse(item);
+        return parseItem.category && parseItem.category === category;
+      });
+      let list = subset.map((item) => JSON.parse(item));
+      return list;
+    } catch (e) {
+      console.log(e);
+    }
   },
   getSets: async (key) => {
-    if (!pubClient) {
-      throw new Error("Redis client is not initialized");
-    }
-    //Algorithm fix needed
-    let sets = await pubClient.SMEMBERS(key);
-    let list = [];
-    for (let i = 0; i < sets.length; i++) {
-      list.push(JSON.parse(sets[i]));
-    }
-    return list;
+    try {
+      if (!pubClient) {
+        throw new Error("Redis client is not initialized");
+      }
+      //Algorithm fix needed
+      let sets = await pubClient.SMEMBERS(key);
+      let list = [];
+      for (let i = 0; i < sets.length; i++) {
+        list.push(JSON.parse(sets[i]));
+      }
+      return list;
+    } catch (e) {}
   },
 };

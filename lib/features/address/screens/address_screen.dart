@@ -1,12 +1,12 @@
 import 'package:uniplanet_mobile/constants/payment_configurations.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/address/services/address_services.dart';
 import 'package:flutter/material.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class AddressScreen extends StatefulWidget {
   static const String routeName = '/address';
@@ -29,7 +29,6 @@ class _AddressScreenState extends State<AddressScreen> {
 
   String addressToBeUsed = "";
   List<PaymentItem> paymentItems = [];
-  final AddressServices addressServices = AddressServices();
 
   @override
   void initState() {
@@ -57,10 +56,10 @@ class _AddressScreenState extends State<AddressScreen> {
         .user
         .address
         .isEmpty) {
-      addressServices.saveUserAddress(
-          context: context, address: addressToBeUsed);
+      UserRepository()
+          .saveUserAddress(context: context, address: addressToBeUsed);
     }
-    addressServices.placeOrder(
+    UserRepository().placeOrder(
       context: context,
       address: addressToBeUsed,
       totalSum: double.parse(widget.totalAmount),
@@ -72,10 +71,10 @@ class _AddressScreenState extends State<AddressScreen> {
         .user
         .address
         .isEmpty) {
-      addressServices.saveUserAddress(
-          context: context, address: addressToBeUsed);
+      UserRepository()
+          .saveUserAddress(context: context, address: addressToBeUsed);
     }
-    addressServices.placeOrder(
+    UserRepository().placeOrder(
       context: context,
       address: addressToBeUsed,
       totalSum: double.parse(widget.totalAmount),

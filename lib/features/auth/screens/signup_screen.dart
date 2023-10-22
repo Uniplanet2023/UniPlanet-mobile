@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/auth/screens/Auth_widgets/terms_and_conditions.dart';
-import 'package:uniplanet_mobile/features/auth/services/auth_service.dart';
+import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup-screen';
@@ -15,7 +15,6 @@ class SignupScreen extends StatefulWidget {
 
 class _SigninScreenState extends State<SignupScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
-  final AuthService authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -38,13 +37,18 @@ class _SigninScreenState extends State<SignupScreen> {
       ));
       return;
     }
-
-    authService.signUpUser(
+    UserRepository().signUpUser(
       context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
       name: _nameController.text,
+      password: _passwordController.text,
+      email: _emailController.text,
     );
+    // authService.signUpUser(
+    //   context: context,
+    //   email: _emailController.text,
+    //   password: _passwordController.text,
+    //   name: _nameController.text,
+    // );
   }
 
   @override
