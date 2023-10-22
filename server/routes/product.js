@@ -6,16 +6,41 @@ const redis_controller = require("../redis_controller/redis_controller");
 productRouter.get("/api/all-products", async (req, res) => {
   try {
     console.log("all product API is triggered");
-    const data = await redis_controller.getSets("products");
+    const data = await redis_controller.getJson("products");
 
     if (data != null && data && data.length != 0) {
       console.log("search from redis , product file");
       return res.json(data);
     } else {
       console.log("search from database , product file");
-      const products = await Product.find();
-      console.log(products);
-      await redis_controller.setLists("products", products);
+      Promise.all([
+        (products = await Product.find().sort({ created_at: -1 }).limit(20)),
+        (mobileProducts = await Product.find({ category: "Mobiles" })
+          .sort({ created_at: -1 })
+          .limit(20)),
+        (essentialProducts = await Product.find({ category: "Essentials" })
+          .sort({ created_at: -1 })
+          .limit(20)), //Fashion
+        (applianceProducts = await Product.find({ category: "Appliances" })
+          .sort({ created_at: -1 })
+          .limit(20)),
+        (booksProducts = await Product.find({ category: "Books" })
+          .sort({ created_at: -1 })
+          .limit(20)),
+        (fashionProducts = await Product.find({ category: "Fashion" })
+          .sort({ created_at: -1 })
+          .limit(20)),
+      ]);
+      Promise.all([
+        await redis_controller.setJson("products", "$", products),
+        await redis_controller.setJson("Mobiles", "$", mobileProducts),
+        await redis_controller.setJson("Essentials", "$", essentialProducts),
+        await redis_controller.setJson("Appliances", "$", applianceProducts),
+        await redis_controller.setJson("Books", "$", booksProducts),
+        await redis_controller.setJson("Fashion", "$", fashionProducts),
+      ]);
+      console.log("update redis");
+
       res.json(products);
     }
   } catch (e) {
@@ -37,11 +62,12 @@ productRouter.get("/api/products/search/:name", auth, async (req, res) => {
   }
 });
 productRouter.get("/api/products", async (req, res) => {
+  console.log("category api is triggerd");
   let data;
   try {
     if (req.query.category) {
       console.log("search from redis");
-      data = await redis_controller.getSubSets("products", req.query.category);
+      data = await redis_controller.getJson(req.query.category);
       res.json(data);
     }
   } catch (e) {
@@ -63,10 +89,11 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
       category,
     });
 
-    product = await product.save();
-
-    await redis_controller.addSet("products", product);
-
+    Promise.all([
+      (product = await product.save()),
+      await redis_controller.addJson("products", product),
+      await redis_controller.addJson(product.category, product),
+    ]);
     res.json(product);
   } catch (e) {
     res.status(500).json({ error: e.message });

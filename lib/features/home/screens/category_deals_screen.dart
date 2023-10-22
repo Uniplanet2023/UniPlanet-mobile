@@ -69,19 +69,23 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 170,
+                  height: MediaQuery.of(context).size.height -
+                      AppBar().preferredSize.height -
+                      MediaQuery.of(context).padding.top -
+                      50,
+                  width: 350,
                   child: GridView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(left: 15),
+                    scrollDirection: Axis.vertical,
                     itemCount: productList!.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 1.4,
-                      mainAxisSpacing: 10,
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                      mainAxisSpacing: 5,
                     ),
                     itemBuilder: (context, index) {
-                      final product = productList![index];
+                      final product =
+                          productList![productList!.length - 1 - index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
@@ -94,12 +98,11 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                           children: [
                             SizedBox(
                               height: 130,
+                              width: 150,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Colors.black12,
-                                    width: 0.5,
-                                  ),
+                                      color: Colors.black12, width: 0.5),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
@@ -110,7 +113,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                               ),
                             ),
                             Container(
-                              alignment: Alignment.topLeft,
+                              alignment: Alignment.center,
                               padding: const EdgeInsets.only(
                                 left: 0,
                                 top: 5,

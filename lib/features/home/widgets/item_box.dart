@@ -19,11 +19,13 @@ class _ItemBoxState extends State<ItemBox> {
         : SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
+                final product =
+                    widget.productList[widget.productList.length - 1 - index];
                 return InkWell(
                   onTap: () => Navigator.pushNamed(
                     context,
                     ProductDetailScreen.routeName,
-                    arguments: widget.productList[index],
+                    arguments: product,
                   ),
                   child: Container(
                     margin: const EdgeInsets.symmetric(
@@ -32,7 +34,7 @@ class _ItemBoxState extends State<ItemBox> {
                     child: Row(
                       children: [
                         Image.network(
-                          widget.productList[index].images[0],
+                          product.images[0],
                           fit: BoxFit.contain,
                           height: 135,
                           width: 135,
@@ -44,7 +46,7 @@ class _ItemBoxState extends State<ItemBox> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                "${widget.productList[index].name[0].toUpperCase()}${widget.productList[index].name.substring(1).toLowerCase()}",
+                                "${product.name[0].toUpperCase()}${product.name.substring(1).toLowerCase()}",
                                 style: const TextStyle(
                                   fontSize: 16,
                                 ),
@@ -55,7 +57,7 @@ class _ItemBoxState extends State<ItemBox> {
                               width: 235,
                               padding: const EdgeInsets.only(left: 10, top: 5),
                               child: Text(
-                                '\$${widget.productList[index].price}',
+                                '\$${product.price}',
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
