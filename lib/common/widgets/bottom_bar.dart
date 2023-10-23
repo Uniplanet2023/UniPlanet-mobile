@@ -82,7 +82,7 @@ class _BottomBarState extends State<BottomBar> {
       HomeScreen(controller: _controller!),
       const CategoryPage(),
       const AddProductScreen(),
-      const MobileLayoutScreen(),
+      const ChatList(),
       // const CartScreen(),
       // const AccountScreen(),
       const NewAccountScreen(),

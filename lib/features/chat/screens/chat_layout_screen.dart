@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 
-class MobileLayoutScreen extends StatelessWidget {
-  const MobileLayoutScreen({Key? key}) : super(key: key);
+class ChatList extends StatelessWidget {
+  static const String routeName = '/chat_list';
+  const ChatList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

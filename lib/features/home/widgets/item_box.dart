@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -14,11 +14,6 @@ class ItemBox extends StatefulWidget {
 }
 
 class _ItemBoxState extends State<ItemBox> {
-  static final customCacheManager = CacheManager(Config(
-    'customCacheKey',
-    stalePeriod: const Duration(days: 2),
-    maxNrOfCacheObjects: 100,
-  ));
   @override
   Widget build(BuildContext context) {
     return widget.productList == []
@@ -43,7 +38,7 @@ class _ItemBoxState extends State<ItemBox> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: CachedNetworkImage(
-                            cacheManager: customCacheManager,
+                            cacheManager: GlobalVariables.customCacheManager,
                             imageUrl: product.images[0],
                             key: UniqueKey(),
                             fit: BoxFit.contain,

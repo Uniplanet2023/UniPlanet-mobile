@@ -6,15 +6,15 @@ import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
-class MobileChatScreen extends StatefulWidget {
-  static const String routeName = '/mobile-chat-screen';
-  const MobileChatScreen({Key? key}) : super(key: key);
+class ChatScreen extends StatefulWidget {
+  static const String routeName = '/chat-screen';
+  const ChatScreen({Key? key}) : super(key: key);
 
   @override
-  State<MobileChatScreen> createState() => _MobileChatScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _MobileChatScreenState extends State<MobileChatScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   get mobileChatBoxColor => null;
   SocketClient? client;
 

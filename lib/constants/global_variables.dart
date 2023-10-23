@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 String uri = 'http://localhost:3000';
 
@@ -19,6 +20,11 @@ class GlobalVariables {
   static const unselectedNavBarColor = Colors.black87;
 
   // STATIC IMAGES
+  static final customCacheManager = CacheManager(Config(
+    'customCacheKey',
+    stalePeriod: const Duration(days: 2),
+    maxNrOfCacheObjects: 100,
+  ));
   static const List<String> carouselImages = [
     'https://images-eu.ssl-images-amazon.com/images/G/31/img21/Wireless/WLA/TS/D37847648_Accessories_savingdays_Jan22_Cat_PC_1500.jpg',
     'https://images-eu.ssl-images-amazon.com/images/G/31/img2021/Vday/bwl/English.jpg',

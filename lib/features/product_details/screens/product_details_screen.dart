@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -45,6 +48,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
+  void navigateToChatScreen() {
+    Navigator.pushNamed(context, ChatScreen.routeName);
+  }
+
   void navigateToback(BuildContext context) {
     Navigator.pop(context);
   }
@@ -65,12 +72,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           children: [
             CarouselSlider(
               items: widget.product.images.map(
-                (i) {
+                (image) {
                   return Builder(
-                    builder: (BuildContext context) => Image.network(
-                      i,
+                    builder: (BuildContext context) => CachedNetworkImage(
+                      cacheManager: GlobalVariables.customCacheManager,
+                      imageUrl: image,
+                      key: UniqueKey(),
                       fit: BoxFit.contain,
-                      height: 200,
+                      height: 400,
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.black12,
+                        child: const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                          size: 80,
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -82,7 +101,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             Container(
               color: Colors.black12,
-              height: 5,
+              height: 4,
             ),
             Padding(
               padding: const EdgeInsets.all(8),
@@ -111,36 +130,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Text(widget.product.description),
             ),
-            Container(
-              color: Colors.black12,
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CustomButton(
-                text: 'Buy Now',
-                onTap: () {},
-              ),
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CustomButton(
-                text: 'Like',
-                onTap: addToCart,
-                color: const Color.fromRGBO(254, 216, 19, 1),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              color: Colors.black12,
-              height: 5,
-            )
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
           child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -166,10 +161,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
-          ),
+          Row(children: [
+            IconButton(
+              icon: const Icon(Icons.favorite_border),
+              onPressed: () {},
+            ),
+            TextButton(
+              onPressed: navigateToChatScreen,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    GlobalVariables.secondaryColor),
+              ),
+              child: const Text('Chat',
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
+            ),
+          ]),
         ],
       )),
     );
