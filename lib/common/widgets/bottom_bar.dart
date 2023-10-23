@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_screen.dart';
+import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/category/screens/category.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
@@ -77,7 +78,8 @@ class _BottomBarState extends State<BottomBar> {
       const AddProductScreen(),
       const MobileLayoutScreen(),
       // const CartScreen(),
-      const AccountScreen(),
+      // const AccountScreen(),
+      const NewAccountScreen(),
     ];
     return Scaffold(
         body: Stack(
