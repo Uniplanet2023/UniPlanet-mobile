@@ -87,7 +87,7 @@ authRouter.post("/tokenIsValid", async (req, res) => {
 authRouter.get("/", auth, async (req, res) => {
   console.log("user data get API triggered");
 
-  const data = await JSON.parse(redis_controller.get(req.tocken));
+  const data = await redis_controller.get(req.tocken);
 
   if (data != null && data) {
     console.log("search from redis2");

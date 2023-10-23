@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ItemBox extends StatefulWidget {
   final List<Product> productList;
@@ -12,6 +14,11 @@ class ItemBox extends StatefulWidget {
 }
 
 class _ItemBoxState extends State<ItemBox> {
+  static final customCacheManager = CacheManager(Config(
+    'customCacheKey',
+    stalePeriod: const Duration(days: 2),
+    maxNrOfCacheObjects: 100,
+  ));
   @override
   Widget build(BuildContext context) {
     return widget.productList == []
@@ -33,11 +40,26 @@ class _ItemBoxState extends State<ItemBox> {
                     ),
                     child: Row(
                       children: [
-                        Image.network(
-                          product.images[0],
-                          fit: BoxFit.contain,
-                          height: 135,
-                          width: 135,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedNetworkImage(
+                            cacheManager: customCacheManager,
+                            imageUrl: product.images[0],
+                            key: UniqueKey(),
+                            fit: BoxFit.contain,
+                            height: 135,
+                            width: 135,
+                            placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.black12,
+                              child: const Icon(
+                                Icons.error,
+                                color: Colors.red,
+                                size: 80,
+                              ),
+                            ),
+                          ),
                         ),
                         Column(
                           children: [

@@ -181,8 +181,9 @@ class UserRepository {
             },
           ),
         );
+        print(userRes);
         if (!context.mounted) throw Error();
-        user = userRes.data;
+        user = User.fromMap(userRes.data);
       }
     } catch (e) {
       if (!context.mounted) throw Error();
@@ -257,15 +258,14 @@ class UserRepository {
         category: category,
         price: price,
       );
-      print('here');
-      print(user.token);
+
       Response res = await dio.post('$uri/api/add-product',
           data: product.toJson(),
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json;charset=UTF-8',
             'x-auth-token': user.token
           }));
-      print(res);
+
       if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
