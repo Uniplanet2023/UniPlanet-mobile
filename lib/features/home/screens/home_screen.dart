@@ -1,9 +1,9 @@
-import 'package:uniplanet_mobile/features/home/services/home_services.dart';
 import 'package:uniplanet_mobile/features/home/widgets/item_box.dart';
 import 'package:uniplanet_mobile/features/home/widgets/top_categories.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniplanet_mobile/repository/product_repo.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final bool _snap = true;
   final bool _floating = true;
   List<Product> productList = [];
-  final HomeServices homeServices = HomeServices();
 
   @override
   void initState() {
@@ -28,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void fetchProductsAll() async {
-    productList = await homeServices.fetchAllProducts(context);
+    print('fetch Product is triggered');
+    productList = await ProductRepository().fetchAllProducts(context);
     setState(() {});
   }
 

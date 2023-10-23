@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/features/account/services/account_services.dart';
 import 'package:uniplanet_mobile/features/account/widgets/account_button.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class TopButtons extends StatelessWidget {
   const TopButtons({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class TopButtons extends StatelessWidget {
           children: [
             AccountButton(
               text: 'Log Out',
-              onTap: () => AccountServices().logOut(context),
+              onTap: () => UserRepository().logOut(context),
             ),
             AccountButton(
               text: 'Your Wish List',

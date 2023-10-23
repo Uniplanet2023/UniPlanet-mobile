@@ -1,9 +1,8 @@
-import 'package:uniplanet_mobile/features/cart/services/cart_services.dart';
-import 'package:uniplanet_mobile/features/product_details/services/product_details_services.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class CartProduct extends StatefulWidget {
   final int index;
@@ -17,19 +16,15 @@ class CartProduct extends StatefulWidget {
 }
 
 class _CartProductState extends State<CartProduct> {
-  final ProductDetailsServices productDetailsServices =
-      ProductDetailsServices();
-  final CartServices cartServices = CartServices();
-
   void increaseQuantity(Product product) {
-    productDetailsServices.addToCart(
+    UserRepository().addToCart(
       context: context,
       product: product,
     );
   }
 
   void decreaseQuantity(Product product) {
-    cartServices.removeFromCart(
+    UserRepository().removeFromCart(
       context: context,
       product: product,
     );

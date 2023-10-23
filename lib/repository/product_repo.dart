@@ -1,35 +1,33 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/providers/user_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
-class HomeServices {
-  // get all the products
+class ProductRepository {
   Future<List<Product>> fetchAllProducts(BuildContext context) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Product> productList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/api/all-products'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      Dio dio = Dio();
+      Response res = await dio.get('$uri/api/all-products',
+          options: Options(headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          }));
       if (!context.mounted) throw Error();
+
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < res.data.length; i++) {
             productList.add(
               Product.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  res.data[i],
                 ),
               ),
             );
@@ -46,24 +44,25 @@ class HomeServices {
     required BuildContext context,
     required String category,
   }) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Product> productList = [];
     try {
-      http.Response res = await http
-          .get(Uri.parse('$uri/api/products?category=$category'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      Dio dio = Dio();
+      print('category ');
+      Response res = await dio.get('$uri/api/products?category=$category',
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          }));
+
       if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < res.data.length; i++) {
             productList.add(
               Product.fromJson(
                 jsonEncode(
-                  jsonDecode(res.body)[i],
+                  res.data[i],
                 ),
               ),
             );
@@ -79,7 +78,6 @@ class HomeServices {
   Future<Product> fetchDealOfDay({
     required BuildContext context,
   }) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     Product product = Product(
       name: '',
       description: '',
@@ -90,17 +88,18 @@ class HomeServices {
     );
 
     try {
-      http.Response res =
-          await http.get(Uri.parse('$uri/api/deal-of-day'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      Dio dio = Dio();
+      Response res = await dio.get('$uri/api/deal-of-day',
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          }));
+
       if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () {
-          product = Product.fromJson(res.body);
+          product = Product.fromJson(res.data);
         },
       );
     } catch (e) {

@@ -29,8 +29,8 @@ class CategoryPage extends StatelessWidget {
   }
 }
 
-class LocationListItem extends StatelessWidget {
-  LocationListItem({
+class LocationListItem extends StatefulWidget {
+  const LocationListItem({
     super.key,
     required this.imageUrl,
     required this.name,
@@ -40,7 +40,26 @@ class LocationListItem extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String country;
+
+  @override
+  State<LocationListItem> createState() => _LocationListItemState();
+}
+
+class _LocationListItemState extends State<LocationListItem> {
   final GlobalKey _backgroundImageKey = GlobalKey();
+  late Image imageFile;
+  @override
+  void initState() {
+    super.initState();
+    imageFile = Image.asset(widget.imageUrl,
+        key: _backgroundImageKey, fit: BoxFit.cover);
+  }
+
+  @override
+  void didChnageDependencies() {
+    precacheImage(imageFile.image, context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +88,7 @@ class LocationListItem extends StatelessWidget {
         listItemContext: context,
         backgroundImageKey: _backgroundImageKey,
       ),
-      children: [
-        Image.asset(imageUrl, key: _backgroundImageKey, fit: BoxFit.cover),
-      ],
+      children: [imageFile],
     );
   }
 
@@ -99,7 +116,7 @@ class LocationListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            name,
+            widget.name,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -107,7 +124,7 @@ class LocationListItem extends StatelessWidget {
             ),
           ),
           Text(
-            country,
+            widget.country,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,

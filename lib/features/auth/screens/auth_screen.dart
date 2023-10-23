@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class AuthScreen extends StatefulWidget {
   static const String routeName = '/auth-screen';
@@ -33,7 +34,6 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              
               Image.asset(
                 'assets/images/Logo.png',
                 width: 300,

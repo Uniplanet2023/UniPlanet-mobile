@@ -3,7 +3,7 @@ import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup_screen.dart';
-import 'package:uniplanet_mobile/features/auth/services/auth_service.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SigninScreen extends StatefulWidget {
   static const String routeName = '/signin-screen';
@@ -15,16 +15,14 @@ class SigninScreen extends StatefulWidget {
 
 class _SigninScreenState extends State<SigninScreen> {
   final _signInFormKey = GlobalKey<FormState>();
-  final AuthService authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   void signInUser() {
-    authService.signInUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+    UserRepository().signInUser(
+        context: context,
+        email: _emailController.text,
+        password: _passwordController.text);
   }
 
   @override

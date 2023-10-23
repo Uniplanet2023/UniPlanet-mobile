@@ -4,6 +4,7 @@ const auth = require("../middlewares/auth");
 const Order = require("../models/order");
 const { Product } = require("../models/product");
 const User = require("../models/user");
+const redis_controller = require("../redis_controller/redis_controller");
 
 userRouter.post("/api/add-to-cart", auth, async (req, res) => {
   try {
@@ -111,6 +112,7 @@ userRouter.post("/api/order", auth, async (req, res) => {
 
 userRouter.get("/api/orders/me", auth, async (req, res) => {
   try {
+    console.log("order me is triggered");
     const orders = await Order.find({ userId: req.user });
     res.json(orders);
   } catch (e) {

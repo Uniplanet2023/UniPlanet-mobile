@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_screen.dart';
+import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/category/screens/category.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
@@ -10,6 +11,7 @@ import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -33,6 +35,11 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
+    print('init');
+    print(UserRepository.user.token);
+    print('init2');
+    print(UserRepository.user.token);
+    print('init3');
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==
@@ -75,9 +82,10 @@ class _BottomBarState extends State<BottomBar> {
       HomeScreen(controller: _controller!),
       const CategoryPage(),
       const AddProductScreen(),
-      const MobileLayoutScreen(),
+      const ChatList(),
       // const CartScreen(),
-      const AccountScreen(),
+      // const AccountScreen(),
+      const NewAccountScreen(),
     ];
     return Scaffold(
         body: Stack(

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:uniplanet_mobile/constants/utils.dart';
 
 void httpErrorHandle({
-  required http.Response response,
+  required Response response,
   required BuildContext context,
   required VoidCallback onSuccess,
 }) {
@@ -14,12 +14,12 @@ void httpErrorHandle({
       onSuccess();
       break;
     case 400:
-      SnackbarGlobal.showSnackBar(jsonDecode(response.body)['msg']);
+      SnackbarGlobal.showSnackBar(jsonDecode(response.data)['msg']);
       break;
     case 500:
-      SnackbarGlobal.showSnackBar(jsonDecode(response.body)['error']);
+      SnackbarGlobal.showSnackBar(jsonDecode(response.data)['error']);
       break;
     default:
-      SnackbarGlobal.showSnackBar(response.body);
+      SnackbarGlobal.showSnackBar(response.data);
   }
 }
