@@ -239,7 +239,7 @@ class UserRepository {
     Dio dio = Dio();
 
     try {
-      final cloudinary = CloudinaryPublic('denfgaxvg', 'uszbstnu');
+      final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
       List<String> imageUrls = [];
 
       for (int i = 0; i < images.length; i++) {
