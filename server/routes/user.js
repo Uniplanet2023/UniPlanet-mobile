@@ -6,60 +6,6 @@ const { Product } = require("../models/product");
 const User = require("../models/user");
 const redis_controller = require("../redis_controller/redis_controller");
 
-userRouter.post("/api/add-to-cart", auth, async (req, res) => {
-  try {
-    const { id } = req.body;
-    const product = await Product.findById(id);
-    let user = await User.findById(req.user);
-
-    if (user.cart.length == 0) {
-      user.cart.push({ product, quantity: 1 });
-    } else {
-      let isProductFound = false;
-      for (let i = 0; i < user.cart.length; i++) {
-        if (user.cart[i].product._id.equals(product._id)) {
-          isProductFound = true;
-        }
-      }
-
-      if (isProductFound) {
-        let producttt = user.cart.find((productt) =>
-          productt.product._id.equals(product._id)
-        );
-        producttt.quantity += 1;
-      } else {
-        user.cart.push({ product, quantity: 1 });
-      }
-    }
-    user = await user.save();
-    res.json(user);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-userRouter.delete("/api/remove-from-cart/:id", auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    let user = await User.findById(req.user);
-
-    for (let i = 0; i < user.cart.length; i++) {
-      if (user.cart[i].product._id.equals(product._id)) {
-        if (user.cart[i].quantity == 1) {
-          user.cart.splice(i, 1);
-        } else {
-          user.cart[i].quantity -= 1;
-        }
-      }
-    }
-    user = await user.save();
-    res.json(user);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
 // save user address
 userRouter.post("/api/save-user-address", auth, async (req, res) => {
   try {
@@ -76,14 +22,14 @@ userRouter.post("/api/save-user-address", auth, async (req, res) => {
 // order product
 userRouter.post("/api/order", auth, async (req, res) => {
   try {
-    const { cart, totalPrice, address } = req.body;
+    const { like, totalPrice, address } = req.body;
     let products = [];
 
-    for (let i = 0; i < cart.length; i++) {
-      let product = await Product.findById(cart[i].product._id);
-      if (product.quantity >= cart[i].quantity) {
-        product.quantity -= cart[i].quantity;
-        products.push({ product, quantity: cart[i].quantity });
+    for (let i = 0; i < like.length; i++) {
+      let product = await Product.findById(like[i].product._id);
+      if (product.quantity >= like[i].quantity) {
+        product.quantity -= like[i].quantity;
+        products.push({ product, quantity: like[i].quantity });
         await product.save();
       } else {
         return res
@@ -93,7 +39,7 @@ userRouter.post("/api/order", auth, async (req, res) => {
     }
 
     let user = await User.findById(req.user);
-    user.cart = [];
+    user.like = [];
     user = await user.save();
 
     let order = new Order({
@@ -119,5 +65,104 @@ userRouter.get("/api/orders/me", auth, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+// get user data
+userRouter.get("/", auth, async (req, res) => {
+  console.log("user data get API triggered");
+
+  const data = await redis_controller.get(req.tocken);
+
+  if (data != null && data) {
+    console.log("search from redis2");
+    res.json({ ...data._doc, tocken: req.token });
+  } else {
+    console.log("search from database2");
+    console.log(req.user);
+    const user = await User.findById(req.user);
+    console.log(user._id);
+    res.json({ ...user._doc, token: req.token });
+  }
+});
+
+// Delete the product
+userRouter.post("/api/delete-product", auth, async (req, res) => {
+  try {
+    const { id } = req.body;
+    let product = await Product.findByIdAndDelete(id);
+    res.json(product);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.get("/api/get-orders", auth, async (req, res) => {
+  try {
+    const orders = await Order.find({});
+    res.json(orders);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.post("/api/change-order-status", auth, async (req, res) => {
+  try {
+    const { id, status } = req.body;
+    let order = await Order.findById(id);
+    order.status = status;
+    order = await order.save();
+    res.json(order);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.get("/api/analytics", auth, async (req, res) => {
+  try {
+    const orders = await Order.find({});
+    let totalEarnings = 0;
+
+    for (let i = 0; i < orders.length; i++) {
+      for (let j = 0; j < orders[i].products.length; j++) {
+        totalEarnings +=
+          orders[i].products[j].quantity * orders[i].products[j].product.price;
+      }
+    }
+    // CATEGORY WISE ORDER FETCHING
+    let mobileEarnings = await fetchCategoryWiseProduct("Mobiles");
+    let essentialEarnings = await fetchCategoryWiseProduct("Essentials");
+    let applianceEarnings = await fetchCategoryWiseProduct("Appliances");
+    let booksEarnings = await fetchCategoryWiseProduct("Books");
+    let fashionEarnings = await fetchCategoryWiseProduct("Fashion");
+
+    let earnings = {
+      totalEarnings,
+      mobileEarnings,
+      essentialEarnings,
+      applianceEarnings,
+      booksEarnings,
+      fashionEarnings,
+    };
+
+    res.json(earnings);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+async function fetchCategoryWiseProduct(category) {
+  let earnings = 0;
+  let categoryOrders = await Order.find({
+    "products.product.category": category,
+  });
+
+  for (let i = 0; i < categoryOrders.length; i++) {
+    for (let j = 0; j < categoryOrders[i].products.length; j++) {
+      earnings +=
+        categoryOrders[i].products[j].quantity *
+        categoryOrders[i].products[j].product.price;
+    }
+  }
+  return earnings;
+}
 
 module.exports = userRouter;

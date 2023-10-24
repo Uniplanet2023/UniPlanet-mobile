@@ -1,8 +1,8 @@
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/address/screens/address_screen.dart';
-import 'package:uniplanet_mobile/features/cart/widgets/cart_product.dart';
-import 'package:uniplanet_mobile/features/cart/widgets/cart_subtotal.dart';
+import 'package:uniplanet_mobile/features/like/widgets/cart_product.dart';
+import 'package:uniplanet_mobile/features/like/widgets/cart_subtotal.dart';
 import 'package:uniplanet_mobile/features/home/widgets/address_box.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/providers/user_provider.dart';
@@ -33,7 +33,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
     int sum = 0;
-    user.cart
+    user.like
         .map((e) => sum += e['quantity'] * e['product']['price'] as int)
         .toList();
 
@@ -118,7 +118,7 @@ class _CartScreenState extends State<CartScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CustomButton(
-                text: 'Proceed to Buy (${user.cart.length} items)',
+                text: 'Proceed to Buy (${user.like.length} items)',
                 onTap: () => navigateToAddress(sum),
                 color: Colors.yellow[600],
               ),
@@ -130,7 +130,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
             const SizedBox(height: 5),
             ListView.builder(
-              itemCount: user.cart.length,
+              itemCount: user.like.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return CartProduct(

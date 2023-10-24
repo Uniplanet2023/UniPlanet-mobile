@@ -1,6 +1,7 @@
 const socketIo = require("socket.io");
 const Message = require("../models/message");
 const { createAdapter } = require("@socket.io/redis-adapter");
+const cors = require("cors");
 let io;
 
 // Store socket references for each user
@@ -8,32 +9,35 @@ const userSocketIds = {};
 
 module.exports = {
   init: (httpServer, pubClient, subClient) => {
+    // io = socketIo(httpServer, { cors: { origin: "*" } });
     io = socketIo(httpServer);
     io.adapter(createAdapter(pubClient, subClient));
     io.on("connection", (socket) => {
+      console.log("Socket Server is on");
       console.log("New client connected", socket.id);
 
       socket.on("joinChat", async ({ senderId, receiverId }) => {
-        const roomName = [senderId, receiverId].sort().join("-");
+        console.log("test sucess");
+        // const roomName = [senderId, receiverId].sort().join("-");
 
-        let chatRoom = await ChatRoom.findOne({
-          users: { $all: [senderId, receiverId] },
-        });
+        // let chatRoom = await ChatRoom.findOne({
+        //   users: { $all: [senderId, receiverId] },
+        // });
 
-        if (!chatRoom) {
-          chatRoom = new ChatRoom({ users: [senderId, receiverId] });
-          await chatRoom.save();
+        // if (!chatRoom) {
+        //   chatRoom = new ChatRoom({ users: [senderId, receiverId] });
+        //   await chatRoom.save();
 
-          // Add chat room to both users' chatRooms list
-          await User.findByIdAndUpdate(senderId, {
-            $addToSet: { chatRooms: chatRoom._id },
-          });
-          await User.findByIdAndUpdate(receiverId, {
-            $addToSet: { chatRooms: chatRoom._id },
-          });
-        }
-        socket.join(roomName);
-        console.log(`User${socket.id} joined room ${roomName}}`);
+        //   // Add chat room to both users' chatRooms list
+        //   await User.findByIdAndUpdate(senderId, {
+        //     $addToSet: { chatRooms: chatRoom._id },
+        //   });
+        //   await User.findByIdAndUpdate(receiverId, {
+        //     $addToSet: { chatRooms: chatRoom._id },
+        //   });
+        // }
+        // socket.join(roomName);
+        // console.log(`User${socket.id} joined room ${roomName}}`);
       });
 
       socket.on("signin", (id) => {

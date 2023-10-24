@@ -15,6 +15,16 @@ const Message = new mongoose.Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    default: "text",
+    required: true,
+  },
+  isSeen: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   timestamp: {
     type: Date,
     default: Date.now,

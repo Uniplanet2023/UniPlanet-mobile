@@ -10,18 +10,18 @@ class User {
   final String phoneNumber;
   final String type;
   final String token;
-  final List<dynamic> cart;
+  final List<dynamic> like;
   User({
     required this.id,
     required this.name,
     required this.email,
     required this.password,
+    required this.address,
     required this.isOnline,
     required this.phoneNumber,
-    required this.address,
     required this.type,
     required this.token,
-    required this.cart,
+    required this.like,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,7 +34,7 @@ class User {
       'address': address,
       'type': type,
       'token': token,
-      'cart': cart,
+      'like': like,
     };
   }
 
@@ -49,8 +49,8 @@ class User {
       address: map['address'] ?? '',
       type: map['type'] ?? '',
       token: map['token'] ?? '',
-      cart: List<Map<String, dynamic>>.from(
-        map['cart']?.map(
+      like: List<Map<String, dynamic>>.from(
+        map['like']?.map(
           (x) => Map<String, dynamic>.from(x),
         ),
       ),
@@ -71,7 +71,7 @@ class User {
     bool? isOnline,
     String? type,
     String? token,
-    List<dynamic>? cart,
+    List<dynamic>? like,
   }) {
     return User(
       id: id ?? this.id,
@@ -83,7 +83,7 @@ class User {
       address: address ?? this.address,
       type: type ?? this.type,
       token: token ?? this.token,
-      cart: cart ?? this.cart,
+      like: like ?? this.like,
     );
   }
 }

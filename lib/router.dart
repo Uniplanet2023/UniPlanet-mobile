@@ -8,7 +8,7 @@ import "package:uniplanet_mobile/features/auth/screens/signin_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/signup_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
-import "package:uniplanet_mobile/features/home/screens/category_deals_screen.dart";
+import 'package:uniplanet_mobile/features/home/screens/category_screen.dart';
 import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
 import "package:uniplanet_mobile/features/order_details/screens/order_details.dart";
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
@@ -49,11 +49,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AddProductScreen(),
       );
 
-    case CategoryDealsScreen.routeName:
+    case CategoryScreen.routeName:
       var category = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => CategoryDealsScreen(
+        builder: (_) => CategoryScreen(
           category: category,
         ),
       );
@@ -95,9 +95,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AdminScreen(),
       );
     case ChatScreen.routeName:
+      var recieverId = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const ChatScreen(),
+        builder: (_) => ChatScreen(receiverId: recieverId),
       );
     case ChatList.routeName:
       return MaterialPageRoute(

@@ -74,37 +74,4 @@ class ProductRepository {
     }
     return productList;
   }
-
-  Future<Product> fetchDealOfDay({
-    required BuildContext context,
-  }) async {
-    Product product = Product(
-      name: '',
-      description: '',
-      quantity: 0,
-      images: [],
-      category: '',
-      price: 0,
-    );
-
-    try {
-      Dio dio = Dio();
-      Response res = await dio.get('$uri/api/deal-of-day',
-          options: Options(headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          }));
-
-      if (!context.mounted) throw Error();
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          product = Product.fromJson(res.data);
-        },
-      );
-    } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
-    }
-    return product;
-  }
 }

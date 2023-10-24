@@ -79,16 +79,29 @@ productRouter.get("/api/products", async (req, res) => {
 productRouter.post("/api/add-product", auth, async (req, res) => {
   try {
     console.log("add product is triggered");
-    const { name, description, images, quantity, price, category } = req.body;
+    console.log(req.body);
+    const {
+      name,
+      seller,
+      seller_id,
+      description,
+      images,
+      quantity,
+      price,
+      category,
+    } = req.body;
+    console.log(req.user);
     let product = new Product({
       name,
+      sellerName: seller,
+      sellerId: seller_id,
       description,
       images,
       quantity,
       price,
       category,
     });
-
+    console.log(product);
     Promise.all([
       (product = await product.save()),
       await redis_controller.addJson("products", product),
@@ -96,6 +109,7 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
     ]);
     res.json(product);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e.message });
   }
 });

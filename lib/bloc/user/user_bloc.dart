@@ -73,7 +73,7 @@ class InitUserState extends UserState {
           address: '',
           type: '',
           token: '',
-          cart: [],
+          like: [],
         ));
 
   @override

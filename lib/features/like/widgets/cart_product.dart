@@ -17,14 +17,14 @@ class CartProduct extends StatefulWidget {
 
 class _CartProductState extends State<CartProduct> {
   void increaseQuantity(Product product) {
-    UserRepository().addToCart(
+    UserRepository().addToLikes(
       context: context,
       product: product,
     );
   }
 
   void decreaseQuantity(Product product) {
-    UserRepository().removeFromCart(
+    UserRepository().removeFromLikes(
       context: context,
       product: product,
     );
@@ -32,7 +32,7 @@ class _CartProductState extends State<CartProduct> {
 
   @override
   Widget build(BuildContext context) {
-    final productCart = context.watch<UserProvider>().user.cart[widget.index];
+    final productCart = context.watch<UserProvider>().user.like[widget.index];
     final product = Product.fromMap(productCart['product']);
     final quantity = productCart['quantity'];
 

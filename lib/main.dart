@@ -11,6 +11,7 @@ import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -31,6 +32,20 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    IO.Socket socket = IO.io(
+        uri,
+        IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
+            {'Content-Type': 'application/json; charset=UTF-8'}).build());
+    socket.onConnect((_) {
+      print('socket server is connected');
+    });
+    socket.onError(
+      (data) => print(data),
+    );
+    print('test');
+    socket.on('event', (data) => print(data));
+    socket.onDisconnect((_) => print('disconnect'));
+    socket.on('fromServer', (_) => print(_));
     UserRepository().getUserData(context);
   }
 

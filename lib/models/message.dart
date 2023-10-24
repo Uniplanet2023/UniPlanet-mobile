@@ -1,4 +1,7 @@
-import 'package:uniplanet_mobile/common/widgets/enums/message_enum.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 
 class Message {
   final String senderId;
@@ -26,32 +29,38 @@ class Message {
   });
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'senderId': senderId,
       'recieverid': recieverid,
       'text': text,
-      'type': type.type,
+      'type': type.value,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'messageId': messageId,
       'isSeen': isSeen,
       'repliedMessage': repliedMessage,
       'repliedTo': repliedTo,
-      'repliedMessageType': repliedMessageType.type,
+      'repliedMessageType': repliedMessageType.value,
     };
   }
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
-      senderId: map['senderId'] ?? '',
-      recieverid: map['recieverid'] ?? '',
-      text: map['text'] ?? '',
-      type: (map['type'] as String).toEnum(),
-      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
-      messageId: map['messageId'] ?? '',
-      isSeen: map['isSeen'] ?? false,
-      repliedMessage: map['repliedMessage'] ?? '',
-      repliedTo: map['repliedTo'] ?? '',
-      repliedMessageType: (map['repliedMessageType'] as String).toEnum(),
+      senderId: map['senderId'] as String,
+      recieverid: map['recieverid'] as String,
+      text: map['text'] as String,
+      type: MessageEnumExtension.fromString(map['type'] as String),
+      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int),
+      messageId: map['messageId'] as String,
+      isSeen: map['isSeen'] as bool,
+      repliedMessage: map['repliedMessage'] as String,
+      repliedTo: map['repliedTo'] as String,
+      repliedMessageType:
+          MessageEnumExtension.fromString(map['repliedMessageType'] as String),
     );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory Message.fromJson(String source) =>
+      Message.fromMap(json.decode(source) as Map<String, dynamic>);
 }

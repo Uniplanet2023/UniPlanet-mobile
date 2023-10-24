@@ -8,7 +8,11 @@ import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
-  const ChatScreen({Key? key}) : super(key: key);
+  final String receiverId;
+  const ChatScreen({
+    Key? key,
+    required this.receiverId,
+  }) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -48,12 +52,12 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: ChatList(),
           ),
-          BottomChatField(),
+          BottomChatField(recieverId: widget.receiverId),
         ],
       ),
     );

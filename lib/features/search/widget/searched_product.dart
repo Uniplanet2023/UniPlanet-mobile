@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uniplanet_mobile/common/widgets/stars.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -27,11 +29,23 @@ class SearchedProduct extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Image.network(
-                product.images[0],
+              CachedNetworkImage(
+                cacheManager: GlobalVariables.customCacheManager,
+                imageUrl: product.images[0],
+                key: UniqueKey(),
                 fit: BoxFit.contain,
                 height: 135,
                 width: 135,
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.black12,
+                  child: const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 80,
+                  ),
+                ),
               ),
               Column(
                 children: [

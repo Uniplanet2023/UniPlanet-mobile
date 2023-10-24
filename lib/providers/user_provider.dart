@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
     address: '',
     type: '',
     token: '',
-    cart: [],
+    like: [],
   );
 
   User get user => _user;
@@ -38,7 +38,7 @@ class UserProvider extends ChangeNotifier {
       address: '',
       type: '',
       token: '',
-      cart: [],
+      like: [],
     );
     notifyListeners(); // Notifies any listening widgets to rebuild.
   }

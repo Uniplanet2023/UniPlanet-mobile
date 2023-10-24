@@ -20,7 +20,10 @@ authRouter.post("/api/signup", async (req, res) => {
         .json({ msg: "User with same email already exists!" });
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 8);
+    const hashedPassword = await bcryptjs.hash(
+      password,
+      process.env.SECRET_PASS_KEY
+    );
 
     let user = new User({
       email,
@@ -35,7 +38,39 @@ authRouter.post("/api/signup", async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
-
+authRouter.post("api/delet-user", auth, async (req, res) => {
+  try {
+    console.log("user.delete API is called");
+    await User.findByIdAndDelete(req.user);
+    res.status(200).json("Account Successfully Deleted");
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+authRouter.post("api/password-update", async (req, res) => {
+  let hashedPassword;
+  try {
+    console.log("password update api is triggered");
+    if (req.body.password) {
+      hashedPassword = await bcryptjs.hash(
+        req.body.password,
+        process.env.SECRET_PASS_KEY
+      );
+      const updateUser = await User.findByIdAndUpdate(
+        req.body.id,
+        {
+          $password: req.body.password,
+        },
+        { new: true }
+      );
+      res.status(200).json(updateUser);
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+});
 // Sign In Route
 // Exercise
 authRouter.post("/api/signin", async (req, res) => {
@@ -80,24 +115,6 @@ authRouter.post("/tokenIsValid", async (req, res) => {
     res.json(true);
   } catch (e) {
     res.status(500).json({ error: e.message });
-  }
-});
-
-// get user data
-authRouter.get("/", auth, async (req, res) => {
-  console.log("user data get API triggered");
-
-  const data = await redis_controller.get(req.tocken);
-
-  if (data != null && data) {
-    console.log("search from redis2");
-    res.json({ ...data._doc, tocken: req.token });
-  } else {
-    console.log("search from database2");
-    console.log(req.user);
-    const user = await User.findById(req.user);
-    console.log(user._id);
-    res.json({ ...user._doc, token: req.token });
   }
 });
 

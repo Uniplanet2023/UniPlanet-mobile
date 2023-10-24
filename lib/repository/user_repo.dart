@@ -4,12 +4,14 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/sale.dart';
@@ -26,8 +28,12 @@ class UserRepository {
     address: '',
     type: '',
     token: '',
-    cart: [],
+    like: [],
   );
+  User get getUser {
+    return user;
+  }
+
   void initUser() {
     user = User(
       id: '',
@@ -39,7 +45,7 @@ class UserRepository {
       address: '',
       type: '',
       token: '',
-      cart: [],
+      like: [],
     );
   }
 
@@ -60,7 +66,7 @@ class UserRepository {
       address: '',
       type: '',
       token: '',
-      cart: [],
+      like: [],
     );
 
     try {
@@ -252,6 +258,8 @@ class UserRepository {
 
       Product product = Product(
         name: name,
+        seller: user.name,
+        sellerId: user.id,
         description: description,
         quantity: quantity,
         images: imageUrls,
@@ -288,7 +296,7 @@ class UserRepository {
     Dio dio = Dio();
 
     try {
-      Response res = await dio.post('$uri/admin/delete-product',
+      Response res = await dio.post('$uri/api/delete-product',
           data: jsonEncode({'id': product.id}),
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -311,7 +319,7 @@ class UserRepository {
     List<Order> orderList = [];
     try {
       Dio dio = Dio();
-      Response res = await dio.get('$uri/admin/get-orders',
+      Response res = await dio.get('$uri/api/get-orders',
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': user.token,
@@ -347,7 +355,7 @@ class UserRepository {
   }) async {
     try {
       Dio dio = Dio();
-      Response res = await dio.post('$uri/admin/change-order-status',
+      Response res = await dio.post('$uri/api/change-order-status',
           data: jsonEncode({'id': order.id, 'status': status}),
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -370,7 +378,7 @@ class UserRepository {
     int totalEarning = 0;
     try {
       Dio dio = Dio();
-      Response res = await dio.get('$uri/admin/analytics',
+      Response res = await dio.get('$uri/api/analytics',
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': user.token,
@@ -446,7 +454,7 @@ class UserRepository {
             'x-auth-token': user.token,
           }),
           data: jsonEncode({
-            'cart': user.cart,
+            'like': user.like,
             'address': address,
             'totalPrice': totalSum,
           }));
@@ -458,7 +466,7 @@ class UserRepository {
         onSuccess: () {
           SnackbarGlobal.showSnackBar('Your order has been placed!');
           user.copyWith(
-            cart: [],
+            like: [],
           );
         },
       );
@@ -467,13 +475,13 @@ class UserRepository {
     }
   }
 
-  void removeFromCart({
+  void removeFromLikes({
     required BuildContext context,
     required Product product,
   }) async {
     try {
       Dio dio = Dio();
-      Response res = await dio.delete('$uri/api/remove-from-cart/${product.id}',
+      Response res = await dio.delete('$uri/api/remove-from-like/${product.id}',
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': user.token,
@@ -484,7 +492,7 @@ class UserRepository {
         response: res,
         context: context,
         onSuccess: () {
-          user.copyWith(cart: res.data['cart']);
+          user.copyWith(like: res.data['like']);
         },
       );
     } catch (e) {
@@ -492,13 +500,13 @@ class UserRepository {
     }
   }
 
-  void addToCart({
+  void addToLikes({
     required BuildContext context,
     required Product product,
   }) async {
     try {
       Dio dio = Dio();
-      Response res = await dio.post('$uri/api/add-to-cart',
+      Response res = await dio.post('$uri/api/add-like',
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
           }),
@@ -511,7 +519,7 @@ class UserRepository {
         response: res,
         context: context,
         onSuccess: () {
-          user.copyWith(cart: res.data['cart']);
+          user.copyWith(like: res.data['like']);
         },
       );
     } catch (e) {
@@ -582,5 +590,54 @@ class UserRepository {
       SnackbarGlobal.showSnackBar(e.toString());
     }
     return productList;
+  }
+
+  Future<Message> sendMessage(
+      {required BuildContext context,
+      required String msg,
+      required String receiverId}) async {
+    Message Message1 = Message(
+        senderId: user.id,
+        recieverid: "recieverid",
+        text: "msg",
+        type: MessageEnum.text,
+        timeSent: DateTime.now(),
+        messageId: "messageId",
+        isSeen: false,
+        repliedMessage: "repliedMessage",
+        repliedTo: "repliedTo",
+        repliedMessageType: MessageEnum.text);
+    try {
+      Dio dio = Dio();
+
+      Response res = await dio.post(
+        '$uri/api/message',
+        options: Options(headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': user.token,
+        }),
+        data: {'message': msg, 'user_id': user.id, 'receiver_id': receiverId},
+      );
+
+      if (!context.mounted) throw Error();
+      // httpErrorHandle(
+      //   response: res,
+      //   context: context,
+      //   onSuccess: () {
+      //     for (int i = 0; i < res.data.length; i++) {
+      //       productList.add(
+      //         Product.fromJson(
+      //           jsonEncode(
+      //             res.data[i],
+      //           ),
+      //         ),
+      //       );
+      //     }
+      //   },
+      // );
+    } catch (e) {
+      SnackbarGlobal.showSnackBar(e.toString());
+    }
+    return Message1;
   }
 }

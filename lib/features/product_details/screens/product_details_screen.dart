@@ -49,15 +49,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void navigateToChatScreen() {
-    Navigator.pushNamed(context, ChatScreen.routeName);
+    Navigator.pushNamed(context, ChatScreen.routeName,
+        arguments: widget.product.sellerId);
   }
 
   void navigateToback(BuildContext context) {
     Navigator.pop(context);
   }
 
-  void addToCart() {
-    UserRepository().addToCart(
+  void addToLikes() {
+    UserRepository().addToLikes(
       context: context,
       product: widget.product,
     );

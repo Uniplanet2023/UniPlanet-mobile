@@ -3,7 +3,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/category/screens/category.dart';
+import 'package:uniplanet_mobile/features/event/screens/category.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
@@ -77,7 +77,8 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    final userCartLen = context.watch<UserProvider>().user.cart.length;
+    final userLikeLen = UserRepository().getUser.like.length;
+
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
       const CategoryPage(),
@@ -234,7 +235,7 @@ class _BottomBarState extends State<BottomBar> {
                         ),
                       ),
                       child: badges.Badge(
-                        badgeContent: Text(userCartLen.toString()),
+                        badgeContent: Text(userLikeLen.toString()),
                         badgeStyle: const badges.BadgeStyle(
                             badgeColor: Colors.white, elevation: 0),
                         child: const Icon(

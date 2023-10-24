@@ -7,6 +7,16 @@ const productSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
+  sellerName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  sellerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   description: {
     type: String,
     required: true,
