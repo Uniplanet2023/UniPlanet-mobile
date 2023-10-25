@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class BottomChatField extends StatefulWidget {
@@ -28,9 +29,9 @@ class _BottomChatFieldState extends State<BottomChatField> {
   bool isShowEmojiContainer = false;
   FocusNode focusNode = FocusNode();
   User user = UserRepository().getUser;
-
+  void createRepository(context) async {}
   void sendTextMessage(context) async {
-    UserRepository().sendMessage(
+    ChatRepository().sendMessage(
         context: context,
         msg: _messageController.text,
         receiverId: widget.recieverId);

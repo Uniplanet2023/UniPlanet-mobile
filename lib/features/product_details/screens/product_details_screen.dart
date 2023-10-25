@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 
-import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
-import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -33,10 +36,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     double totalRating = 0;
     for (int i = 0; i < widget.product.rating!.length; i++) {
       totalRating += widget.product.rating![i].rating;
-      if (widget.product.rating![i].userId ==
-          Provider.of<UserProvider>(context, listen: false).user.id) {
-        myRating = widget.product.rating![i].rating;
-      }
+      // if (widget.product.rating![i].userId ==
+      //     Provider.of<UserProvider>(context, listen: false).user.id) {
+      //   myRating = widget.product.rating![i].rating;
+      // }
     }
 
     if (totalRating != 0) {
@@ -48,7 +51,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
-  void navigateToChatScreen() {
+  void navigateToChatScreen() async {
+    context.read<ChatBloc>().add(CreateChatRoomEvent(widget.product.sellerId));
     Navigator.pushNamed(context, ChatScreen.routeName,
         arguments: widget.product.sellerId);
   }

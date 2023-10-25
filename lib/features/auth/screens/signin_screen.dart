@@ -83,32 +83,27 @@ class _SigninScreenState extends State<SigninScreen> {
                   }
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 70,
-                ),
-                child: Row(
-                  children: [
-                    const Text('Don\'t have an account? '),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignupScreen()),
-                        );
-                      },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: GlobalVariables.secondaryColor,
-                        ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Don\'t have an account? '),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignupScreen()),
+                      );
+                    },
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: GlobalVariables.secondaryColor,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

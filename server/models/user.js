@@ -11,6 +11,7 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
     trim: true,
+    unique: true,
     validate: {
       validator: (value) => {
         const re =
@@ -42,6 +43,7 @@ const userSchema = mongoose.Schema({
       },
     },
   ],
+  chatRooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "ChatRoom" }],
 });
 
 const User = mongoose.model("User", userSchema);

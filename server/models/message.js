@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const Message = new mongoose.Schema({
-  senderId: {
+  chatRoomId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "ChatRoom",
     required: true,
   },
-  receiverId: {
+  senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -17,7 +17,6 @@ const Message = new mongoose.Schema({
   },
   type: {
     type: String,
-    default: "text",
     required: true,
   },
   isSeen: {
@@ -25,6 +24,7 @@ const Message = new mongoose.Schema({
     default: false,
     required: true,
   },
+  seenAt: Date,
   timestamp: {
     type: Date,
     default: Date.now,

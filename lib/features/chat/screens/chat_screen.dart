@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -20,12 +21,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   get mobileChatBoxColor => null;
-  SocketClient? client;
+  ChatRepository? client;
 
   @override
   void initState() {
     super.initState();
-    client = SocketClient.instance;
+
+    // client = ChatRepository.instance;
   }
 
   @override

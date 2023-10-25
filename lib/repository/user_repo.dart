@@ -120,7 +120,7 @@ class UserRepository {
 
           if (!context.mounted) throw Error();
           user = User.fromMap(res.data);
-          print(user.token);
+
           Navigator.pushNamedAndRemoveUntil(
             context,
             res.data["type"] == "admin"
@@ -187,7 +187,7 @@ class UserRepository {
             },
           ),
         );
-        print(userRes);
+
         if (!context.mounted) throw Error();
         user = User.fromMap(userRes.data);
       }
@@ -203,7 +203,7 @@ class UserRepository {
     List<Order> orderList = [];
     try {
       late Dio dio = Dio();
-      print(user.token);
+
       Response res = await dio.get('$uri/api/orders/me',
           data: user.toJson(),
           options: Options(headers: <String, String>{
@@ -590,54 +590,5 @@ class UserRepository {
       SnackbarGlobal.showSnackBar(e.toString());
     }
     return productList;
-  }
-
-  Future<Message> sendMessage(
-      {required BuildContext context,
-      required String msg,
-      required String receiverId}) async {
-    Message Message1 = Message(
-        senderId: user.id,
-        recieverid: "recieverid",
-        text: "msg",
-        type: MessageEnum.text,
-        timeSent: DateTime.now(),
-        messageId: "messageId",
-        isSeen: false,
-        repliedMessage: "repliedMessage",
-        repliedTo: "repliedTo",
-        repliedMessageType: MessageEnum.text);
-    try {
-      Dio dio = Dio();
-
-      Response res = await dio.post(
-        '$uri/api/message',
-        options: Options(headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': user.token,
-        }),
-        data: {'message': msg, 'user_id': user.id, 'receiver_id': receiverId},
-      );
-
-      if (!context.mounted) throw Error();
-      // httpErrorHandle(
-      //   response: res,
-      //   context: context,
-      //   onSuccess: () {
-      //     for (int i = 0; i < res.data.length; i++) {
-      //       productList.add(
-      //         Product.fromJson(
-      //           jsonEncode(
-      //             res.data[i],
-      //           ),
-      //         ),
-      //       );
-      //     }
-      //   },
-      // );
-    } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
-    }
-    return Message1;
   }
 }

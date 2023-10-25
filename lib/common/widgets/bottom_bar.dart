@@ -35,11 +35,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-    print('init');
-    print(UserRepository.user.token);
-    print('init2');
-    print(UserRepository.user.token);
-    print('init3');
+
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==

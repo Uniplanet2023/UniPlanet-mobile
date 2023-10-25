@@ -19,11 +19,7 @@ authRouter.post("/api/signup", async (req, res) => {
         .status(400)
         .json({ msg: "User with same email already exists!" });
     }
-
-    const hashedPassword = await bcryptjs.hash(
-      password,
-      process.env.SECRET_PASS_KEY
-    );
+    const hashedPassword = await bcryptjs.hash(password, 8);
 
     let user = new User({
       email,
