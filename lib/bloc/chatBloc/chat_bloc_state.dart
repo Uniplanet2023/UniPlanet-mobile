@@ -34,14 +34,12 @@ class CreatedChatRoomState extends ChatBlocState {
 class LoadingChatRoomState extends ChatBlocState {
   const LoadingChatRoomState({super.currentChatRoom, super.chatRoomList});
   @override
-  // TODO: implement props
   List<Object?> get props => [currentChatRoom, chatRoomList];
 }
 
 class LoadedChatRoomState extends ChatBlocState {
   const LoadedChatRoomState({super.currentChatRoom, super.chatRoomList});
   @override
-  // TODO: implement props
   List<Object?> get props => [currentChatRoom, chatRoomList];
 }
 
@@ -49,7 +47,6 @@ class LoadedChatRoomState extends ChatBlocState {
 class SelectChatRoomState extends ChatBlocState {
   const SelectChatRoomState({super.currentChatRoom, super.chatRoomList});
   @override
-  // TODO: implement props
   List<Object?> get props => [currentChatRoom, chatRoomList];
 }
 
@@ -59,6 +56,5 @@ class ErrorChatState extends ChatBlocState {
   const ErrorChatState(this.errMsg);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }

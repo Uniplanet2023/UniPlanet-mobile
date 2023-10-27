@@ -28,7 +28,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
   bool isRecorderInit = false;
   bool isShowEmojiContainer = false;
   FocusNode focusNode = FocusNode();
-  User user = UserRepository().getUser;
+
   void createRepository(context) async {}
   void sendTextMessage(context) async {
     ChatRepository().sendMessage(

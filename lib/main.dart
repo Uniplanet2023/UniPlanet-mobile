@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/user/user_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    UserRepository().getUserData(context);
+    UserRepository().getUserData();
   }
 
   @override
@@ -70,8 +70,8 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: UserRepository.user.token != ''
-          ? UserRepository.user.type == 'user'
+      home: UserRepository.getUser(context).token != ''
+          ? UserRepository.getUser(context).type == 'user'
               ? const BottomBar()
               : const AdminScreen()
           : const AuthScreen(),

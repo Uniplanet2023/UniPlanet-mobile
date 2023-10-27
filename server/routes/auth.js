@@ -5,16 +5,17 @@ const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
 const redis_controller = require("../redis_controller/redis_controller");
+
 // SIGN UP
 authRouter.post("/api/signup", async (req, res) => {
   try {
     console.log("Sign-Up API triggerd");
-
-    const { name, email, password } = req.body;
-
+    console.log(req.body);
+    const { name, email, password, profileImage, school, verified } = req.body;
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
+      console.log("User Exists!");
       return res
         .status(400)
         .json({ msg: "User with same email already exists!" });
@@ -25,8 +26,18 @@ authRouter.post("/api/signup", async (req, res) => {
       email,
       password: hashedPassword,
       name,
+      profileImage,
+      school,
+      verified,
+      unseenNotifications: [],
+      unseenMessages: [],
+      like: [],
+      selling: [],
+      sold: [],
+      bought: [],
+      chatRooms: [],
     });
-
+    console.log("here");
     user = await user.save();
     res.json(user);
   } catch (e) {

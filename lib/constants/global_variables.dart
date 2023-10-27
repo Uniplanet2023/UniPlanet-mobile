@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:uniplanet_mobile/models/user.dart';
 
 String uri = 'http://localhost:3000';
 
 class GlobalVariables {
+  User initialUser = User(
+      id: '',
+      name: '',
+      email: '',
+      profileImage: '',
+      password: '',
+      school: '',
+      verified: false,
+      isOnline: false,
+      unseenNotifications: [],
+      unseenMessages: [],
+      like: [],
+      selling: [],
+      bought: [],
+      sold: [],
+      chatRooms: [],
+      type: '',
+      token: '');
   // COLORS
   static const appBarGradient = LinearGradient(
     colors: [

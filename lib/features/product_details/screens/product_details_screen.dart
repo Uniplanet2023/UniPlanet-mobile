@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
@@ -11,6 +12,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
@@ -51,8 +53,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
-  void navigateToChatScreen() async {
-    context.read<ChatBloc>().add(CreateChatRoomEvent(widget.product.sellerId));
+  void navigateToChatScreen() {
+    User user = context.read<UserBloc>().state.user!;
+    context
+        .read<ChatBloc>()
+        .add(CreateChatRoomEvent(user, widget.product.sellerId));
     Navigator.pushNamed(context, ChatScreen.routeName,
         arguments: widget.product.sellerId);
   }

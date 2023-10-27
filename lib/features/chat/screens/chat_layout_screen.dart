@@ -1,13 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
-class ChatList extends StatelessWidget {
+class ChatList extends StatefulWidget {
   static const String routeName = '/chat_list';
   const ChatList({Key? key}) : super(key: key);
 
   @override
+  State<ChatList> createState() => _ChatListState();
+}
+
+class _ChatListState extends State<ChatList> {
+  List<ChatRoom> list = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadList();
+  }
+
+  _loadList() async {
+    User user = context.read<UserBloc>().state.user!;
+    context.read<ChatBloc>().add(LoadChatRoomEvent(user));
+    return list;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = context.watch<ChatBloc>().state;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -54,7 +80,7 @@ class ChatList extends StatelessWidget {
             ],
           ),
         ),
-        body: const ContactsList(),
+        body: ContactsList(list: state.chatRoomList!),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           backgroundColor: GlobalVariables.secondaryColor,

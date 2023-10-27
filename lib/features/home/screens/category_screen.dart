@@ -29,7 +29,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   fetchCategoryProducts() async {
     productList = await ProductRepository().fetchCategoryProducts(
-      context: context,
       category: widget.category,
     );
     setState(() {});

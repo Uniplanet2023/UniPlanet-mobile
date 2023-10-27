@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
@@ -21,23 +23,19 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   get mobileChatBoxColor => null;
-  ChatRepository? client;
 
   @override
   void initState() {
     super.initState();
-
-    // client = ChatRepository.instance;
   }
 
   @override
   Widget build(BuildContext context) {
+    ChatRoom roomState = context.watch<ChatBloc>().state.currentChatRoom!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: GlobalVariables.backgroundColor,
-        title: Text(
-          info[0]['name'].toString(),
-        ),
+        title: Text(roomState.receiverName),
         centerTitle: false,
         actions: [
           IconButton(

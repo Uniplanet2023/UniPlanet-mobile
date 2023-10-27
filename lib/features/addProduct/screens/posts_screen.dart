@@ -24,7 +24,7 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   fetchAllProducts() async {
-    products = await ProductRepository().fetchAllProducts(context);
+    products = await ProductRepository().fetchAllProducts();
     setState(() {});
   }
 

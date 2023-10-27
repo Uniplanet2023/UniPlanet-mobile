@@ -3,7 +3,6 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/order.dart';
-import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +49,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = UserRepository.getUser(context);
 
     return Scaffold(
       appBar: PreferredSize(

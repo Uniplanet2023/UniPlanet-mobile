@@ -1,14 +1,13 @@
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class BelowAppBar extends StatelessWidget {
   const BelowAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = UserRepository.getUser(context);
 
     return Container(
       decoration: const BoxDecoration(

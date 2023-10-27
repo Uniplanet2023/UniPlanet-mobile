@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -19,10 +21,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   void signInUser() {
-    UserRepository().signInUser(
-        context: context,
-        email: _emailController.text,
-        password: _passwordController.text);
+    context.read<UserBloc>().add(
+        SignInEvent(context, _emailController.text, _passwordController.text));
   }
 
   @override

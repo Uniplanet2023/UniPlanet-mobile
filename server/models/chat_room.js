@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const { userSchema } = require("./user");
 
 const chatRoomSchema = new mongoose.Schema({
-  participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  chatRoomType: { type: String },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
   updated_at: { type: Date, default: Date.now },
 });

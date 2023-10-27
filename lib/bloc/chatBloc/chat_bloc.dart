@@ -19,11 +19,16 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       await _loadChatRooms(event, emit);
     });
   }
+
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
     emit(LoadingChatRoomState(
         currentChatRoom: state.currentChatRoom,
         chatRoomList: state.chatRoomList));
-    try {} catch (e) {
+    try {
+      List<ChatRoom> chatrooms = await _chatRepository.getChatRoom(event.user);
+      emit(LoadedChatRoomState(
+          currentChatRoom: state.currentChatRoom, chatRoomList: chatrooms));
+    } catch (e) {
       print(e);
       throw Exception('Loading chat room API error');
     }
@@ -34,8 +39,8 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         currentChatRoom: state.currentChatRoom,
         chatRoomList: state.chatRoomList));
     try {
-      ChatRoom? room =
-          await _chatRepository.creatingChatRoom(receiverId: event.receiverId);
+      ChatRoom? room = await _chatRepository.creatingChatRoom(
+          user: event.user, receiverId: event.receiverId);
       if (room != null || state.chatRoomList != null) {
         List<ChatRoom> list = state.chatRoomList!;
         list.add(room!);

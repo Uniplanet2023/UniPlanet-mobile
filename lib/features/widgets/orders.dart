@@ -23,7 +23,7 @@ class _OrdersState extends State<Orders> {
   }
 
   void fetchOrders() async {
-    orders = await UserRepository().fetchMyOrders(context: context);
+    orders = await UserRepository().fetchMyOrders();
     setState(() {});
   }
 

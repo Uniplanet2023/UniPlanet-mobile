@@ -8,12 +8,13 @@ const ChatRoom = require("../models/chat_room");
 chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
   try {
     console.log("creating chat room api triggered");
-    const { userId, receiverId } = req.body;
-    if (!userId || !receiverId) {
-      throw new Error("Both userId and receiverId are required");
+    const { receiverId } = req.body;
+    if (!receiverId) {
+      throw new Error("receiverId are required");
     }
+
     Promise.all([
-      (user = await User.findById(userId)),
+      (user = await User.findById(req.user)),
       (receiver = await User.findById(receiverId)),
     ]);
 
@@ -25,7 +26,7 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
       participants: [user._id, receiver._id],
     });
     const chatRoomId = chatRoom._id.toString();
-    console.log(chatRoomId);
+
     Promise.all([await chatRoom.save(), await user.chatRooms.push(chatRoomId)]);
     await user.save();
     reciverData = { receiverName: receiver.name };
@@ -36,9 +37,27 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-chatRouter.post("/api/chatRooms", auth, async (req, res) => {
+chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
   try {
-    console.log("chat rooms ");
+    console.log("chat rooms");
+    receiver = await User.findById(req.user).populate({
+      path: "chatRooms",
+      populate: {
+        path: "participants",
+        match: { _id: { $ne: req.user } },
+        model: "User",
+      },
+    });
+    console.log(receiver.chatRooms[0].participants[0]);
+    var chatRoomdata = [];
+    for (let i = 0; i < receiver.chatRooms.length; i++) {
+      chatRoomdata[i] = {
+        receiverName: receiver.chatRooms[i].participants[0].name,
+        lastMessage: receiver.chatRooms[i].lastMessage,
+      };
+    }
+    console.log(chatRoomdata);
+    res.status(200).json(chatRoomdata);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });
@@ -64,6 +83,24 @@ chatRouter.post("/api/message", auth, async (req, res) => {
     ]);
     res.json(product);
   } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+chatRouter.post("/api/getMessages", auth, async (req, res) => {
+  try {
+    console.log("message gets is triggered");
+    const { chatRoom_id } = req.body;
+    receiver = await User.findById(req.user).populate({
+      path: "chatRooms",
+      populate: {
+        path: "participants",
+        match: { _id: { $ne: req.user } },
+        model: "User",
+      },
+    });
+    await ChatRoom.findById(chatRoom_id).populate({ path: "" });
+  } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e.message });
   }
 });

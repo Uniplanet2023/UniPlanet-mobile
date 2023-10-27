@@ -3,6 +3,7 @@ import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
+import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -18,9 +19,10 @@ class _SigninScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+
   bool isChecked = false;
 
-  void signUpUser() {
+  void signUpUser(BuildContext context) {
     final bool emailValid = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.edu$")
         .hasMatch(_emailController.text);
 
@@ -37,12 +39,16 @@ class _SigninScreenState extends State<SignupScreen> {
       ));
       return;
     }
+
     UserRepository().signUpUser(
-      context: context,
-      name: _nameController.text,
-      password: _passwordController.text,
-      email: _emailController.text,
-    );
+        context: context,
+        verified: true,
+        name: _nameController.text,
+        password: _passwordController.text,
+        email: _emailController.text,
+        profileImage:
+            'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+        school: 'StonyBrook');
     // authService.signUpUser(
     //   context: context,
     //   email: _emailController.text,
@@ -139,7 +145,7 @@ class _SigninScreenState extends State<SignupScreen> {
                 text: 'Sign Up',
                 onTap: () {
                   if (_signUpFormKey.currentState!.validate()) {
-                    signUpUser();
+                    signUpUser(context);
                   }
                 },
               ),

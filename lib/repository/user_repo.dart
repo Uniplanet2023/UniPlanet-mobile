@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
@@ -11,6 +13,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
@@ -18,86 +21,62 @@ import 'package:uniplanet_mobile/models/sale.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class UserRepository {
-  static User user = User(
-    id: '',
-    name: '',
-    password: '',
-    email: '',
-    isOnline: false,
-    phoneNumber: '',
-    address: '',
-    type: '',
-    token: '',
-    like: [],
-  );
-  User get getUser {
+  static User getUser(BuildContext context) {
+    User user = context.read<UserBloc>().state.user!;
     return user;
   }
 
-  void initUser() {
-    user = User(
-      id: '',
-      name: '',
-      password: '',
-      email: '',
-      isOnline: false,
-      phoneNumber: '',
-      address: '',
-      type: '',
-      token: '',
-      like: [],
-    );
-  }
-
-  void signUpUser({
-    required BuildContext context,
-    required String email,
-    required String password,
-    required String name,
-  }) async {
-    late Dio dio = Dio();
-    User user = User(
-      id: '',
-      name: name,
-      password: password,
-      email: email,
-      isOnline: false,
-      phoneNumber: '',
-      address: '',
-      type: '',
-      token: '',
-      like: [],
-    );
-
+  Future<User> signUpUser(
+      {required BuildContext context,
+      required String email,
+      required String password,
+      required String name,
+      required String profileImage,
+      required String school,
+      required bool verified}) async {
+    Dio dio = Dio();
+    User user = GlobalVariables().initialUser;
     try {
       Response res = await dio.post('$uri/api/signup',
-          data: user.toJson(),
+          data: json.encode({
+            'email': email,
+            'password': password,
+            'name': name,
+            'profileImage': profileImage,
+            'school': school,
+            'verified': verified
+          }),
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
-      if (!context.mounted) throw Error();
+
+      user = User.fromMap(res.data);
 
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           SnackbarGlobal.showSnackBar(
             'Account created! Login with the same credentials!',
           );
+          // Future.delayed(const Duration(seconds: 1));
+          Navigator.pushNamed(context, SigninScreen.routeName);
         },
       );
+      return user;
     } catch (e) {
       SnackbarGlobal.showSnackBar(e.toString());
     }
+    return user;
   }
 
-  Future<dynamic> signInUser({
+  Future<User> signInUser({
     required BuildContext context,
     required String email,
     required String password,
   }) async {
+    User user = GlobalVariables().initialUser;
+    Dio dio = Dio();
     try {
-      late Dio dio = Dio();
       Response res = await dio.post('$uri/api/signin',
           data: jsonEncode({
             'email': email,
@@ -106,36 +85,31 @@ class UserRepository {
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
-
-      if (!context.mounted) throw Error();
-
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          if (!context.mounted) throw Error();
-
           await prefs.setString('x-auth-token', res.data['token']);
-
-          if (!context.mounted) throw Error();
-          user = User.fromMap(res.data);
-
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            res.data["type"] == "admin"
-                ? AdminScreen.routeName
-                : BottomBar.routeName,
-            (route) => false,
-          );
-          return res.data;
         },
       );
-      return null;
+      user = User.fromMap(res.data);
+      if (user.token == '') {
+        return user;
+      } else {
+        if (!context.mounted) throw Error();
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          res.data["type"] == "admin"
+              ? AdminScreen.routeName
+              : BottomBar.routeName,
+          (route) => false,
+        );
+        return user;
+      }
     } catch (e) {
       SnackbarGlobal.showSnackBar(e.toString());
     }
-    return null;
+    return user;
   }
 
   void logOut(BuildContext context) async {
@@ -143,8 +117,9 @@ class UserRepository {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       await sharedPreferences.setString('x-auth-token', '');
+
+      //ToDo: Clean User
       if (!context.mounted) throw Error();
-      initUser();
       Navigator.pushNamedAndRemoveUntil(
         context,
         AuthScreen.routeName,
@@ -156,9 +131,8 @@ class UserRepository {
   }
 
 // get user data
-  void getUserData(
-    BuildContext context,
-  ) async {
+  Future<User> getUserData() async {
+    User user = GlobalVariables().initialUser;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
@@ -188,50 +162,13 @@ class UserRepository {
           ),
         );
 
-        if (!context.mounted) throw Error();
         user = User.fromMap(userRes.data);
+        return user;
       }
     } catch (e) {
-      if (!context.mounted) throw Error();
       SnackbarGlobal.showSnackBar(e.toString());
     }
-  }
-
-  Future<List<Order>> fetchMyOrders({
-    required BuildContext context,
-  }) async {
-    List<Order> orderList = [];
-    try {
-      late Dio dio = Dio();
-
-      Response res = await dio.get('$uri/api/orders/me',
-          data: user.toJson(),
-          options: Options(headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': user.token,
-          }));
-
-      if (!context.mounted) throw Error();
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          for (int i = 0; i < res.data.length; i++) {
-            orderList.add(
-              Order.fromJson(
-                jsonEncode(
-                  res.data[i],
-                ),
-              ),
-            );
-          }
-        },
-      );
-    } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
-    }
-    return orderList;
+    return user;
   }
 
   void sellProduct({
@@ -244,7 +181,7 @@ class UserRepository {
     required List<File> images,
   }) async {
     Dio dio = Dio();
-
+    User user = context.read<UserBloc>().state.user!;
     try {
       final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
       List<String> imageUrls = [];
@@ -274,10 +211,8 @@ class UserRepository {
             'x-auth-token': user.token
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           SnackbarGlobal.showSnackBar('Product Added Successfully!');
           Navigator.pop(context);
@@ -294,7 +229,7 @@ class UserRepository {
     required VoidCallback onSuccess,
   }) async {
     Dio dio = Dio();
-
+    User user = context.read<UserBloc>().state.user!;
     try {
       Response res = await dio.post('$uri/api/delete-product',
           data: jsonEncode({'id': product.id}),
@@ -302,10 +237,9 @@ class UserRepository {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': user.token,
           }));
-      if (!context.mounted) throw Error();
+
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           onSuccess();
         },
@@ -319,16 +253,15 @@ class UserRepository {
     List<Order> orderList = [];
     try {
       Dio dio = Dio();
+      User user = context.read<UserBloc>().state.user!;
       Response res = await dio.get('$uri/api/get-orders',
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': user.token,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.data).length; i++) {
             orderList.add(
@@ -353,6 +286,7 @@ class UserRepository {
     required Order order,
     required VoidCallback onSuccess,
   }) async {
+    User user = context.read<UserBloc>().state.user!;
     try {
       Dio dio = Dio();
       Response res = await dio.post('$uri/api/change-order-status',
@@ -362,10 +296,8 @@ class UserRepository {
             'x-auth-token': user.token,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: onSuccess,
       );
     } catch (e) {
@@ -373,7 +305,10 @@ class UserRepository {
     }
   }
 
-  Future<Map<String, dynamic>> getEarnings(BuildContext context) async {
+  Future<Map<String, dynamic>> getEarnings({
+    required BuildContext context,
+  }) async {
+    User user = context.read<UserBloc>().state.user!;
     List<Sales> sales = [];
     int totalEarning = 0;
     try {
@@ -384,10 +319,8 @@ class UserRepository {
             'x-auth-token': user.token,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           var response = res.data;
           totalEarning = response['totalEarnings'];
@@ -409,37 +342,6 @@ class UserRepository {
     };
   }
 
-  void saveUserAddress({
-    required BuildContext context,
-    required String address,
-  }) async {
-    Dio dio = Dio();
-
-    try {
-      Response res = await dio.post('$uri/api/save-user-address',
-          options: Options(headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': user.token,
-          }),
-          data: jsonEncode({
-            'address': address,
-          }));
-
-      if (!context.mounted) throw Error();
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          user.copyWith(
-            address: res.data['address'],
-          );
-        },
-      );
-    } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
-    }
-  }
-
   // get all the products
   void placeOrder({
     required BuildContext context,
@@ -447,6 +349,7 @@ class UserRepository {
     required double totalSum,
   }) async {
     try {
+      User user = context.read<UserBloc>().state.user!;
       Dio dio = Dio();
       Response res = await dio.post('$uri/api/order',
           options: Options(headers: {
@@ -459,10 +362,8 @@ class UserRepository {
             'totalPrice': totalSum,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           SnackbarGlobal.showSnackBar('Your order has been placed!');
           user.copyWith(
@@ -480,6 +381,7 @@ class UserRepository {
     required Product product,
   }) async {
     try {
+      User user = context.read<UserBloc>().state.user!;
       Dio dio = Dio();
       Response res = await dio.delete('$uri/api/remove-from-like/${product.id}',
           options: Options(headers: {
@@ -487,10 +389,8 @@ class UserRepository {
             'x-auth-token': user.token,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           user.copyWith(like: res.data['like']);
         },
@@ -505,6 +405,7 @@ class UserRepository {
     required Product product,
   }) async {
     try {
+      User user = context.read<UserBloc>().state.user!;
       Dio dio = Dio();
       Response res = await dio.post('$uri/api/add-like',
           options: Options(headers: {
@@ -514,10 +415,8 @@ class UserRepository {
             'id': product.id!,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           user.copyWith(like: res.data['like']);
         },
@@ -533,6 +432,7 @@ class UserRepository {
     required double rating,
   }) async {
     try {
+      User user = context.read<UserBloc>().state.user!;
       Dio dio = Dio();
       Response res = await dio.post('$uri/api/rate-product',
           options: Options(headers: {
@@ -544,10 +444,8 @@ class UserRepository {
             'rating': rating,
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {},
       );
     } catch (e) {
@@ -561,6 +459,7 @@ class UserRepository {
   }) async {
     List<Product> productList = [];
     try {
+      User user = context.read<UserBloc>().state.user!;
       Dio dio = Dio();
       Response res = await dio.get(
         '$uri/api/products/search/$searchQuery',
@@ -570,10 +469,8 @@ class UserRepository {
         }),
       );
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           for (int i = 0; i < res.data.length; i++) {
             productList.add(

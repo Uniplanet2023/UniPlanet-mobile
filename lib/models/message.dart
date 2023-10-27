@@ -5,57 +5,40 @@ import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 
 class Message {
   final String senderId;
-  final String recieverid;
-  final String text;
+  final String message;
   final MessageEnum type;
-  final DateTime timeSent;
+  final DateTime timestamp;
   final String messageId;
   final bool isSeen;
-  final String repliedMessage;
-  final String repliedTo;
-  final MessageEnum repliedMessageType;
 
   Message({
-    required this.senderId,
-    required this.recieverid,
-    required this.text,
-    required this.type,
-    required this.timeSent,
     required this.messageId,
+    required this.senderId,
+    required this.message,
+    required this.type,
     required this.isSeen,
-    required this.repliedMessage,
-    required this.repliedTo,
-    required this.repliedMessageType,
+    required this.timestamp,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'senderId': senderId,
-      'recieverid': recieverid,
-      'text': text,
+      'message': message,
       'type': type.value,
-      'timeSent': timeSent.millisecondsSinceEpoch,
+      'timestamp': timestamp.millisecondsSinceEpoch,
       'messageId': messageId,
       'isSeen': isSeen,
-      'repliedMessage': repliedMessage,
-      'repliedTo': repliedTo,
-      'repliedMessageType': repliedMessageType.value,
     };
   }
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
       senderId: map['senderId'] as String,
-      recieverid: map['recieverid'] as String,
-      text: map['text'] as String,
+      message: map['message'] as String,
       type: MessageEnumExtension.fromString(map['type'] as String),
-      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int),
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
       messageId: map['messageId'] as String,
       isSeen: map['isSeen'] as bool,
-      repliedMessage: map['repliedMessage'] as String,
-      repliedTo: map['repliedTo'] as String,
-      repliedMessageType:
-          MessageEnumExtension.fromString(map['repliedMessageType'] as String),
     );
   }
 
