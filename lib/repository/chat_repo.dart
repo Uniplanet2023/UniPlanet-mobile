@@ -33,8 +33,7 @@ class ChatRepository {
       {required User user, required String receiverId}) async {
     try {
       ChatRoom chatRoom;
-
-      // var user = UserRepository().getUser;
+      print('creating ChatRoom API triggered');
       Dio dio = Dio();
       Response res = await dio.post(
         '$uri/api/joinChatingRoom',
@@ -44,8 +43,27 @@ class ChatRepository {
         }),
         data: {'receiverId': receiverId},
       );
+      print(res.data);
+      var receiver = "";
+      var type = "";
+      Message? lastMsg;
+      if (res.data['lastMessage'] != null) {
+        print('lastMessage called');
+        lastMsg = Message.fromMap(res.data['lastMessage']);
+      }
+      print('no lastMessage');
+      if (res.data['buyer'] == null) {
+        receiver = res.data['seller']['name'];
+        type = "buyer";
+      } else {
+        receiver = res.data['buyer']['name'];
+      }
 
-      chatRoom = ChatRoom(receiverName: res.data['receiver']['receiverName']);
+      chatRoom = ChatRoom(
+          name: receiver,
+          type: type,
+          lastMessage: lastMsg,
+          lastMessageTime: lastMsg?.timestamp);
 
       return chatRoom;
     } catch (e) {
@@ -55,7 +73,7 @@ class ChatRepository {
   }
 
   Future<List<ChatRoom>> getChatRoom(User user) async {
-    List<ChatRoom> chatRoom = [];
+    List<ChatRoom> chatRoomList = [];
     try {
       Dio dio = Dio();
       print('getChatRoom triggered');
@@ -64,13 +82,38 @@ class ChatRepository {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': user.token,
           }));
-      chatRoom.add(ChatRoom.fromMap(res.data[0]));
 
-      return chatRoom;
+      for (var i = 0; i < res.data.length; i++) {
+        var receiver = "";
+        var type = "seller";
+
+        Message? lastMsg;
+
+        if (res.data[i]['lastMessage'] != null) {
+          print('lastMessage called');
+          lastMsg = Message.fromMap(res.data['lastMessage']);
+        }
+
+        if (res.data[i]['buyer'] == null) {
+          receiver = res.data[i]['seller']['name'];
+          type = "buyer";
+        } else {
+          receiver = res.data[i]['buyer']['name'];
+        }
+
+        ChatRoom chatRoom = ChatRoom(
+            name: receiver,
+            type: type,
+            lastMessage: lastMsg,
+            lastMessageTime: lastMsg?.timestamp);
+        chatRoomList.add(chatRoom);
+      }
+
+      return chatRoomList;
     } catch (e) {
       SnackbarGlobal.showSnackBar(e.toString());
     }
-    return chatRoom;
+    return chatRoomList;
   }
 
   Future<Message?> sendMessage(

@@ -35,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: GlobalVariables.backgroundColor,
-        title: Text(roomState.receiverName),
+        title: Text(roomState.name),
         centerTitle: false,
         actions: [
           IconButton(

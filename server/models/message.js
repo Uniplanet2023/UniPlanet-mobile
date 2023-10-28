@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const ChatRoom = require("./chat_room");
+const User = require("./user");
 const message = mongoose.Schema({
   chatRoomId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +25,9 @@ const message = mongoose.Schema({
     default: false,
     required: true,
   },
-  seenAt: Date,
+  seenAt: {
+    type: Date,
+  },
   timestamp: {
     type: Date,
     default: Date.now,

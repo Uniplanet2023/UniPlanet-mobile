@@ -27,7 +27,7 @@ class TopButtons extends StatelessWidget {
             AccountButton(
               text: 'Log Out',
               onTap: () {
-                UserRepository().logOut(context);
+                UserRepository().logOut();
               },
             ),
             AccountButton(

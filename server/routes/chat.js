@@ -5,6 +5,7 @@ const redis_controller = require("../redis_controller/redis_controller");
 const Message = require("../models/message");
 const User = require("../models/user");
 const ChatRoom = require("../models/chat_room");
+
 chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
   try {
     console.log("creating chat room api triggered");
@@ -13,25 +14,61 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
       throw new Error("receiverId are required");
     }
 
-    Promise.all([
-      (user = await User.findById(req.user)),
-      (receiver = await User.findById(receiverId)),
-    ]);
-
-    if (!user || !receiver) {
-      throw new Error("User or Receiver not found");
-    }
-
-    const chatRoom = new ChatRoom({
-      participants: [user._id, receiver._id],
+    // Check if a chat room already exists between the user and the receiver
+    let existingChatRoom = await ChatRoom.findOne({
+      buyer: req.user,
+      seller: receiverId,
     });
-    const chatRoomId = chatRoom._id.toString();
+    console.log(existingChatRoom);
+    if (existingChatRoom) {
+      // Determine if req.user is the buyer or seller
+      if (existingChatRoom.buyer.toString() === req.user.toString()) {
+        existingChatRoom.buyer = null;
+        Promise.all([
+          await existingChatRoom.populate({
+            path: "seller",
+            select: "name email isOnline school verified profileImage type",
+            model: "User",
+          }),
+          await existingChatRoom.populate({
+            path: "lastMessage",
+            model: "Message",
+          }),
+        ]);
+      } else {
+        existingChatRoom.seller = null;
+        Promise.all([
+          await existingChatRoom.populate({
+            path: "buyer",
+            select: "name email isOnline school verified profileImage type",
+            model: "User",
+          }),
+          await existingChatRoom.populate({
+            path: "lastMessage",
+            model: "Message",
+          }),
+        ]);
+      }
 
-    Promise.all([await chatRoom.save(), await user.chatRooms.push(chatRoomId)]);
-    await user.save();
-    reciverData = { receiverName: receiver.name };
-    const chatRoomData = { receiver: reciverData, chatRoom };
-    res.status(200).json(chatRoomData);
+      return res.status(200).json(existingChatRoom);
+    }
+    console.log("create chatRoom");
+    let chatRoom = new ChatRoom({
+      buyer: req.user,
+      seller: receiverId,
+      chatRoomType: "resell",
+    });
+
+    await chatRoom.save();
+    // Populate the seller details
+    chatRoom.buyer = null;
+    await chatRoom.populate({
+      path: "seller",
+      select: "name email isOnline school verified profileImage type",
+      model: "User",
+    });
+    console.log(chatRoom);
+    res.status(200).json(chatRoom);
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -40,24 +77,33 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
 chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
   try {
     console.log("chat rooms");
-    receiver = await User.findById(req.user).populate({
-      path: "chatRooms",
-      populate: {
-        path: "participants",
-        match: { _id: { $ne: req.user } },
-        model: "User",
+
+    let user = await User.findById(req.user).populate([
+      {
+        path: "chatRooms",
+        populate: [
+          {
+            path: "buyer",
+            match: { _id: { $ne: req.user } },
+            select: "name email isOnline school verified profileImage type",
+            model: "User",
+          },
+          {
+            path: "seller",
+            match: { _id: { $ne: req.user } },
+            model: "User",
+            select: "name email isOnline school verified profileImage type",
+          },
+          {
+            path: "lastMessage",
+            model: "Message",
+          },
+        ],
       },
-    });
-    console.log(receiver.chatRooms[0].participants[0]);
-    var chatRoomdata = [];
-    for (let i = 0; i < receiver.chatRooms.length; i++) {
-      chatRoomdata[i] = {
-        receiverName: receiver.chatRooms[i].participants[0].name,
-        lastMessage: receiver.chatRooms[i].lastMessage,
-      };
-    }
-    console.log(chatRoomdata);
-    res.status(200).json(chatRoomdata);
+    ]);
+
+    console.log(user.chatRooms);
+    res.status(200).json(user.chatRooms);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });

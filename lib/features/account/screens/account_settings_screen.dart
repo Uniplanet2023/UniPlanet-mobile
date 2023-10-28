@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
+import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
+import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
-class AccountSettingsScreen extends StatelessWidget {
+class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
+
+  @override
+  State<AccountSettingsScreen> createState() => _AccountSettingsScreenState();
+}
+
+class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
+  void logout(BuildContext context) {
+    context.read<UserBloc>().add(LogOutEvent());
+    if (!context.mounted) throw Error();
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AuthScreen.routeName,
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +29,8 @@ class AccountSettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Account Settings'),
       ),
-      body: const Center(
-        child: Text('Account settings content goes here.'),
+      body: Center(
+        child: CustomButton(text: "Logout", onTap: () => logout(context)),
       ),
     );
   }

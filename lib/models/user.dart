@@ -6,7 +6,6 @@ class User {
   final String name;
   final String email;
   final String profileImage;
-  final String password;
   final String school;
   final bool verified;
   final bool isOnline;
@@ -24,7 +23,6 @@ class User {
     required this.name,
     required this.email,
     required this.profileImage,
-    required this.password,
     required this.school,
     required this.verified,
     required this.isOnline,
@@ -36,8 +34,27 @@ class User {
     required this.sold,
     required this.chatRooms,
     required this.type,
-    required this.token,
+    this.token = "",
   });
+  static initialUser() {
+    return User(
+        id: '',
+        name: '',
+        email: '',
+        profileImage: '',
+        school: '',
+        verified: false,
+        isOnline: false,
+        unseenNotifications: [],
+        unseenMessages: [],
+        like: [],
+        selling: [],
+        bought: [],
+        sold: [],
+        chatRooms: [],
+        type: '',
+        token: '');
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -45,7 +62,6 @@ class User {
       'name': name,
       'email': email,
       'profileImage': profileImage,
-      'password': password,
       'school': school,
       'verified': verified,
       'isOnline': isOnline,
@@ -68,7 +84,6 @@ class User {
       email: map['email'] as String,
       profileImage: map['profileImage'] as String ??
           'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-      password: map['password'] as String,
       school: map['school'] as String,
       verified: map['verified'] as bool,
       isOnline: map['isOnline'] as bool,
@@ -82,7 +97,7 @@ class User {
       sold: List<dynamic>.from(map['sold'] as List<dynamic>),
       chatRooms: List<dynamic>.from(map['chatRooms'] as List<dynamic>),
       type: map['type'] as String,
-      token: map['token'] as String,
+      token: map['token'] ?? "",
     );
   }
 
@@ -115,7 +130,6 @@ class User {
       name: name ?? this.name,
       email: email ?? this.email,
       profileImage: profileImages ?? profileImage,
-      password: password ?? this.password,
       school: school ?? this.school,
       verified: verified ?? this.verified,
       isOnline: isOnline ?? this.isOnline,

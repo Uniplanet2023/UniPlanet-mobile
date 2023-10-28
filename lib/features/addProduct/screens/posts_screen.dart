@@ -80,7 +80,7 @@ class _PostsScreenState extends State<PostsScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.logout),
-                          onPressed: () => UserRepository().logOut(context),
+                          onPressed: () => UserRepository().logOut(),
                         ),
                       ],
                     ),

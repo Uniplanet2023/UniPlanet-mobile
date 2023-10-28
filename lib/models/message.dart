@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 
 class Message {
+  final String chatRoomId;
   final String senderId;
   final String message;
   final MessageEnum type;
@@ -12,6 +13,7 @@ class Message {
   final bool isSeen;
 
   Message({
+    required this.chatRoomId,
     required this.messageId,
     required this.senderId,
     required this.message,
@@ -19,9 +21,20 @@ class Message {
     required this.isSeen,
     required this.timestamp,
   });
+  static initialMessage() {
+    return Message(
+        chatRoomId: '',
+        messageId: '',
+        senderId: '',
+        message: '',
+        type: MessageEnum.text,
+        isSeen: false,
+        timestamp: DateTime.now());
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'chatRoomId': chatRoomId,
       'senderId': senderId,
       'message': message,
       'type': type.value,
@@ -33,11 +46,12 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
+      chatRoomId: map['chatRoomId'] as String,
       senderId: map['senderId'] as String,
       message: map['message'] as String,
       type: MessageEnumExtension.fromString(map['type'] as String),
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
-      messageId: map['messageId'] as String,
+      timestamp: DateTime.parse(map['timestamp'].toString()),
+      messageId: map['_id'] as String,
       isSeen: map['isSeen'] as bool,
     );
   }

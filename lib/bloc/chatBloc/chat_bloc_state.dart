@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 
 abstract class ChatBlocState extends Equatable {
@@ -12,7 +13,7 @@ abstract class ChatBlocState extends Equatable {
 
 class InitChatRoomState extends ChatBlocState {
   InitChatRoomState()
-      : super(currentChatRoom: ChatRoom(receiverName: ""), chatRoomList: []);
+      : super(currentChatRoom: ChatRoom.initialChatRoom(), chatRoomList: []);
   @override
   List<Object?> get props => [currentChatRoom, chatRoomList];
 }

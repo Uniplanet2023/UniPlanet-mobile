@@ -35,7 +35,7 @@ class UserRepository {
       required String school,
       required bool verified}) async {
     Dio dio = Dio();
-    User user = GlobalVariables().initialUser;
+    User user = User.initialUser();
     try {
       Response res = await dio.post('$uri/api/signup',
           data: json.encode({
@@ -49,7 +49,7 @@ class UserRepository {
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
-
+      print(res.data);
       user = User.fromMap(res.data);
 
       httpErrorHandle(
@@ -64,17 +64,20 @@ class UserRepository {
       );
       return user;
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return user;
   }
 
   Future<User> signInUser({
-    required BuildContext context,
     required String email,
     required String password,
   }) async {
-    User user = GlobalVariables().initialUser;
+    User user = User.initialUser();
     Dio dio = Dio();
     try {
       Response res = await dio.post('$uri/api/signin',
@@ -96,43 +99,35 @@ class UserRepository {
       if (user.token == '') {
         return user;
       } else {
-        if (!context.mounted) throw Error();
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          res.data["type"] == "admin"
-              ? AdminScreen.routeName
-              : BottomBar.routeName,
-          (route) => false,
-        );
         return user;
       }
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return user;
   }
 
-  void logOut(BuildContext context) async {
+  void logOut() async {
     try {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       await sharedPreferences.setString('x-auth-token', '');
-
-      //ToDo: Clean User
-      if (!context.mounted) throw Error();
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AuthScreen.routeName,
-        (route) => false,
-      );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
 // get user data
   Future<User> getUserData() async {
-    User user = GlobalVariables().initialUser;
+    User user = User.initialUser();
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
@@ -166,7 +161,11 @@ class UserRepository {
         return user;
       }
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return user;
   }
@@ -219,7 +218,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -245,7 +248,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -275,7 +282,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return orderList;
   }
@@ -301,7 +312,11 @@ class UserRepository {
         onSuccess: onSuccess,
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -334,7 +349,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return {
       'sales': sales,
@@ -372,7 +391,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -396,7 +419,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -422,7 +449,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -449,7 +480,11 @@ class UserRepository {
         onSuccess: () {},
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
   }
 
@@ -484,7 +519,11 @@ class UserRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return productList;
   }

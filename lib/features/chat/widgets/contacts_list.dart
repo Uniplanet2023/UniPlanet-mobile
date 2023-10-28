@@ -38,7 +38,7 @@ class _ContactsListState extends State<ContactsList> {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: ListTile(
                     title: Text(
-                      widget.list[index].receiverName,
+                      widget.list[index].name,
                       style: const TextStyle(
                         fontSize: 18,
                       ),

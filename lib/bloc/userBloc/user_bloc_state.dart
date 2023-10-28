@@ -13,7 +13,6 @@ final class UserInitialState extends UserState {
                 name: '',
                 email: '',
                 profileImage: '',
-                password: '',
                 school: '',
                 verified: false,
                 isOnline: false,
@@ -38,6 +37,12 @@ final class LoadingUserState extends UserState {
 
 final class LoadedUserState extends UserState {
   const LoadedUserState({super.user});
+  @override
+  List<Object?> get props => [user];
+}
+
+final class LogOutState extends UserState {
+  const LogOutState({super.user});
   @override
   List<Object?> get props => [user];
 }
