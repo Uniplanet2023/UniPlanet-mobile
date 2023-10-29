@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.msgList);
+    var state = context.watch<MessageBloc>().state;
     ChatRoom roomState = context.read<ChatBloc>().state.currentChatRoom!;
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          const Expanded(child: ChatList()),
+          Expanded(child: ChatList(msgList: state.msgList!)),
           BottomChatField(chatRoomId: widget.chatRoomId),
           const SizedBox(
             height: 10,

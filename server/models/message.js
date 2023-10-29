@@ -42,12 +42,21 @@ Message.watch().on("change", async (change) => {
     change.fullDocument &&
     change.fullDocument._id
   ) {
+    console.log("message watch triggered");
+
     const messageId = change.fullDocument._id;
     const chatRoomId = change.fullDocument.chatRoomId;
     const senderId = change.fullDocument.senderId;
 
     // Fetch the associated ChatRoom
-    const chatRoom = await ChatRoom.findById(chatRoomId);
+    const chatRoom = await ChatRoom.findByIdAndUpdate(chatRoomId, {
+      $push: {
+        messages: messageId,
+      },
+      $set: {
+        lastMessage: messageId,
+      },
+    });
 
     // Determine the receiver's ID based on who sent the message
     let receiverId;

@@ -49,7 +49,7 @@ class Message {
       chatRoomId: map['chatRoomId'] as String,
       senderId: map['senderId'] as String,
       message: map['message'] as String,
-      type: MessageEnumExtension.fromString(map['type'] as String),
+      type: MessageEnum.text,
       timestamp: DateTime.parse(map['timestamp'].toString()),
       messageId: map['_id'] as String,
       isSeen: map['isSeen'] as bool,

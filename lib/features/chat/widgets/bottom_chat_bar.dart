@@ -54,8 +54,10 @@ class _BottomChatFieldState extends State<BottomChatField> {
     isRecorderInit = true;
   }
 
-  void sendTextMessage() async {
+  void sendTextMessage(String msg, String chatRoomId) async {
+    print('sendTextMessage');
     if (isShowSendButton) {
+      ChatRepository().sendMessage(msg: msg, chatRoomId: chatRoomId);
       setState(() {
         _messageController.text = '';
       });
@@ -190,7 +192,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   backgroundColor: const Color(0xFF128C7E),
                   radius: 20,
                   child: GestureDetector(
-                    onTap: sendTextMessage,
+                    onTap: () => sendTextMessage(
+                        _messageController.text, widget.chatRoomId),
                     child: Icon(
                       isShowSendButton
                           ? Icons.send

@@ -80,6 +80,7 @@ class UserRepository {
     User user = User.initialUser();
     Dio dio = Dio();
     try {
+      print('here2');
       Response res = await dio.post('$uri/api/signin',
           data: jsonEncode({
             'email': email,
@@ -88,6 +89,7 @@ class UserRepository {
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
+      print(res);
       httpErrorHandle(
         response: res,
         onSuccess: () async {
@@ -95,7 +97,7 @@ class UserRepository {
           await prefs.setString('x-auth-token', res.data['token']);
         },
       );
-
+      print(res.data);
       user = User.fromMap(res.data);
     } catch (e) {
       if (e is DioException) {

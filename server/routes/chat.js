@@ -5,6 +5,7 @@ const redis_controller = require("../redis_controller/redis_controller");
 const Message = require("../models/message");
 const User = require("../models/user");
 const ChatRoom = require("../models/chat_room");
+const { ObjectId } = require("mongoose").Types;
 
 chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
   try {
@@ -114,22 +115,18 @@ chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
 chatRouter.post("/api/message", auth, async (req, res) => {
   try {
     console.log("message triggered");
-    const { user_id, receiver_id, message } = req.body;
-    let msg = new Message({
-      senderId: user_id,
-      receiverId: receiver_id,
-      message,
+    const { chatroom_id, message } = req.body;
+    console.log(message);
+    var msg = new Message({
+      senderId: req.user,
+      chatRoomId: chatroom_id,
+      message: message,
       type: "text",
       isSeen: false,
     });
     console.log(msg);
-
-    Promise.all([
-      (product = await product.save()),
-      await redis_controller.addJson("products", product),
-      await redis_controller.addJson(product.category, product),
-    ]);
-    res.json(product);
+    await msg.save();
+    res.status(200).json(msg);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

@@ -46,9 +46,8 @@ class ChatRepository {
         }),
         data: {'msgList': msgList},
       );
-      print(res.data);
+
       listMsg = MessageList.fromMap(res.data).msgList;
-      print(listMsg);
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -130,7 +129,7 @@ class ChatRepository {
 
         if (res.data[i]['lastMessage'] != null) {
           print('lastMessage called');
-          lastMsg = Message.fromMap(res.data['lastMessage']);
+          lastMsg = Message.fromMap(res.data[i]['lastMessage']);
         }
 
         if (res.data[i]['buyer'] == null) {
@@ -149,7 +148,7 @@ class ChatRepository {
             lastMessageTime: lastMsg?.timestamp);
         chatRoomList.add(chatRoom);
       }
-
+      print(chatRoomList);
       return chatRoomList;
     } catch (e) {
       if (e is DioException) {
@@ -162,41 +161,25 @@ class ChatRepository {
   }
 
   Future<Message?> sendMessage(
-      {required BuildContext context,
-      required String msg,
-      required String chatRoomId}) async {
-    User user = context.read<UserBloc>().state.user!;
+      {required String msg, required String chatRoomId}) async {
     // receiverId, messages, last Messages
     try {
+      print('sendMessage called');
       Dio dio = Dio();
-
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('x-auth-token')!;
       Response res = await dio.post(
-        '$uri/api/joinChatingRoom',
+        '$uri/api/message',
         options: Options(headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': user.token,
+          'x-auth-token': token,
         }),
-        data: {'message': msg, 'user_id': user.id, 'chatroom_id': chatRoomId},
+        data: {'message': msg, 'chatroom_id': chatRoomId},
       );
+
       Message sMsg = Message.fromJson(res.data);
       print(sMsg);
-      // Message(messageId: messageId, senderId: senderId, message: message, type: type, isSeen: isSeen, timestamp: timestamp);
-      if (!context.mounted) throw Error();
-      // httpErrorHandle(
-      //   response: res,
-      //   context: context,
-      //   onSuccess: () {
-      //     for (int i = 0; i < res.data.length; i++) {
-      //       productList.add(
-      //         Product.fromJson(
-      //           jsonEncode(
-      //             res.data[i],
-      //           ),
-      //         ),
-      //       );
-      //     }
-      //   },
-      // );
+
       return sMsg;
     } catch (e) {
       if (e is DioException) {
