@@ -79,38 +79,38 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
 chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
   try {
     console.log("chat rooms");
-
-    let user = await User.findById(req.user).populate([
+    const { chatRoomIds } = req.body;
+    console.log(chatRoomIds);
+    // Find chatRooms directly using chatRoomIds
+    let chatRooms = await ChatRoom.find({
+      _id: { $in: chatRoomIds },
+    }).populate([
       {
-        path: "chatRooms",
-        populate: [
-          {
-            path: "buyer",
-            match: { _id: { $ne: req.user } },
-            select: "name email isOnline school verified profileImage type",
-            model: "User",
-          },
-          {
-            path: "seller",
-            match: { _id: { $ne: req.user } },
-            model: "User",
-            select: "name email isOnline school verified profileImage type",
-          },
-          {
-            path: "lastMessage",
-            model: "Message",
-          },
-        ],
+        path: "buyer",
+        match: { _id: { $ne: req.user } },
+        select: "name email isOnline school verified profileImage type",
+        model: "User",
+      },
+      {
+        path: "seller",
+        match: { _id: { $ne: req.user } },
+        model: "User",
+        select: "name email isOnline school verified profileImage type",
+      },
+      {
+        path: "lastMessage",
+        model: "Message",
       },
     ]);
 
-    console.log(user.chatRooms);
-    res.status(200).json(user.chatRooms);
+    console.log(chatRooms);
+    res.status(200).json(chatRooms);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });
   }
 });
+
 chatRouter.post("/api/message", auth, async (req, res) => {
   try {
     console.log("message triggered");
@@ -134,19 +134,20 @@ chatRouter.post("/api/message", auth, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
 chatRouter.post("/api/getMessages", auth, async (req, res) => {
   try {
     console.log("message gets is triggered");
-    const { chatRoom_id } = req.body;
-    receiver = await User.findById(req.user).populate({
-      path: "chatRooms",
-      populate: {
-        path: "participants",
-        match: { _id: { $ne: req.user } },
-        model: "User",
-      },
-    });
-    await ChatRoom.findById(chatRoom_id).populate({ path: "" });
+    const { msgList } = req.body;
+
+    // Directly find messages using the list of message IDs
+    const messages = await Message.find({
+      _id: { $in: msgList },
+    })
+      .sort({ createdAt: -1 })
+      .limit(20);
+
+    res.status(200).json({ messages });
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });

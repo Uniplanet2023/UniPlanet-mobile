@@ -25,10 +25,10 @@ class SelectChatRoomEvent extends ChatBlocEvent {
 }
 
 class LoadChatRoomEvent extends ChatBlocEvent {
-  final User user;
-  const LoadChatRoomEvent(this.user);
+  final List<String> chatRoomIds;
+  const LoadChatRoomEvent(this.chatRoomIds);
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [chatRoomIds];
 }
 
 class LoadMessageEvent extends ChatBlocEvent {

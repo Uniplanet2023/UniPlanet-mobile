@@ -8,9 +8,11 @@ class ChatRoom {
   final String chatRoomId;
   final String name;
   final String type;
+  final List<String> msgList;
   final Message? lastMessage;
   final DateTime? lastMessageTime;
   ChatRoom({
+    required this.msgList,
     required this.chatRoomId,
     required this.name,
     required this.type,
@@ -19,6 +21,7 @@ class ChatRoom {
   });
   static initialChatRoom() {
     return ChatRoom(
+      msgList: [],
       name: "",
       type: "",
       chatRoomId: '',
@@ -27,6 +30,7 @@ class ChatRoom {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'messageList': msgList,
       'chatRoomId': chatRoomId,
       'name': name,
       'type': type,
@@ -37,6 +41,7 @@ class ChatRoom {
 
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
+      msgList: List<String>.from(map['messages']),
       chatRoomId: map['chatRoomId'] as String,
       name: (map['receiver']?['receiverName'] ?? "") as String,
       type: map['type'] as String,

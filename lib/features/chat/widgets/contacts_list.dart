@@ -25,7 +25,7 @@ class _ContactsListState extends State<ContactsList> {
 
   _loadList() {
     User user = context.read<UserBloc>().state.user!;
-    context.read<ChatBloc>().add(LoadChatRoomEvent(user));
+    context.read<ChatBloc>().add(LoadChatRoomEvent(user.chatRooms));
   }
 
   @override
@@ -44,7 +44,9 @@ class _ContactsListState extends State<ContactsList> {
                   await Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
                       return ChatScreen(
-                          chatRoomId: widget.list[index].chatRoomId);
+                        chatRoomId: widget.list[index].chatRoomId,
+                        msgList: widget.list[index].msgList,
+                      );
                     }),
                   );
                   _loadList();

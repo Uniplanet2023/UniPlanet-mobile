@@ -9,14 +9,11 @@ import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
-  final ProductRepository _productRepository;
-  final UserRepository _userRepository;
   final ChatRepository _chatRepository;
   final _onlineStatusController = StreamController<bool>.broadcast();
   Stream<bool> get onlineStatusStream => _onlineStatusController.stream;
 
-  ChatBloc(this._productRepository, this._userRepository, this._chatRepository)
-      : super(InitChatRoomState()) {
+  ChatBloc(this._chatRepository) : super(InitChatRoomState()) {
     on<CreateChatRoomEvent>((event, emit) async {
       await _creatingChatRoom(event, emit);
     });
@@ -43,7 +40,8 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         currentChatRoom: ChatRoom.initialChatRoom(),
         chatRoomList: state.chatRoomList));
     try {
-      List<ChatRoom> chatrooms = await _chatRepository.getChatRoom(event.user);
+      List<ChatRoom> chatrooms =
+          await _chatRepository.getChatRoom(event.chatRoomIds);
       emit(LoadedChatRoomState(
           currentChatRoom: state.currentChatRoom, chatRoomList: chatrooms));
     } catch (e) {

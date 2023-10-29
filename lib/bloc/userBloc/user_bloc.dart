@@ -40,7 +40,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       User user = await _userRepository.signInUser(
           email: event.email, password: event.password);
-
+      print(user.name);
       if (user.token != '') {
         _navigate(event);
         emit(LoadedUserState(user: user));

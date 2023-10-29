@@ -95,12 +95,8 @@ class UserRepository {
           await prefs.setString('x-auth-token', res.data['token']);
         },
       );
+
       user = User.fromMap(res.data);
-      if (user.token == '') {
-        return user;
-      } else {
-        return user;
-      }
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {

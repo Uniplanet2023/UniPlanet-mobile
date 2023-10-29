@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -26,10 +27,9 @@ void main() {
                   context.read<UserRepository>(),
                 )),
         BlocProvider(
-            create: (context) => ChatBloc(
-                context.read<ProductRepository>(),
-                context.read<UserRepository>(),
-                context.read<ChatRepository>())),
+            create: (context) => ChatBloc(context.read<ChatRepository>())),
+        BlocProvider(
+            create: (context) => MessageBloc(context.read<ChatRepository>())),
       ], child: const MyApp())));
 }
 

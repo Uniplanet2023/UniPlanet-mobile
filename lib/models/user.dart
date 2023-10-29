@@ -9,13 +9,13 @@ class User {
   final String school;
   final bool verified;
   final bool isOnline;
-  final List<dynamic> unseenNotifications;
-  final List<dynamic> unseenMessages;
-  final List<dynamic> like;
-  final List<dynamic> selling;
-  final List<dynamic> bought;
-  final List<dynamic> sold;
-  final List<dynamic> chatRooms;
+  final List<String> unseenNotifications;
+  final List<String> unseenMessages;
+  final List<String> like;
+  final List<String> selling;
+  final List<String> bought;
+  final List<String> sold;
+  final List<String> chatRooms;
   final String type;
   final String token;
   User({
@@ -87,15 +87,13 @@ class User {
       school: map['school'] as String,
       verified: map['verified'] as bool,
       isOnline: map['isOnline'] as bool,
-      unseenNotifications:
-          List<dynamic>.from(map['unseenNotifications'] as List<dynamic>),
-      unseenMessages:
-          List<dynamic>.from(map['unseenMessages'] as List<dynamic>),
-      like: List<dynamic>.from(map['like'] as List<dynamic>),
-      selling: List<dynamic>.from(map['selling'] as List<dynamic>),
-      bought: List<dynamic>.from(map['bought'] as List<dynamic>),
-      sold: List<dynamic>.from(map['sold'] as List<dynamic>),
-      chatRooms: List<dynamic>.from(map['chatRooms'] as List<dynamic>),
+      unseenNotifications: List<String>.from(map['unseenNotifications']),
+      unseenMessages: List<String>.from(map['unseenMessages']),
+      like: List<String>.from(map['like']),
+      selling: List<String>.from(map['selling']),
+      bought: List<String>.from(map['bought']),
+      sold: List<String>.from(map['sold']),
+      chatRooms: List<String>.from(map['chatRooms']),
       type: map['type'] as String,
       token: map['token'] ?? "",
     );
@@ -110,18 +108,17 @@ class User {
     String? id,
     String? name,
     String? email,
-    String? profileImages,
-    String? password,
+    String? profileImage,
     String? school,
     bool? verified,
     bool? isOnline,
-    List<dynamic>? unseenNotifications,
-    List<dynamic>? unseenMessages,
-    List<dynamic>? like,
-    List<dynamic>? selling,
-    List<dynamic>? bought,
-    List<dynamic>? sold,
-    List<dynamic>? chatRooms,
+    List<String>? unseenNotifications,
+    List<String>? unseenMessages,
+    List<String>? like,
+    List<String>? selling,
+    List<String>? bought,
+    List<String>? sold,
+    List<String>? chatRooms,
     String? type,
     String? token,
   }) {
@@ -129,7 +126,7 @@ class User {
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
-      profileImage: profileImages ?? profileImage,
+      profileImage: profileImage ?? this.profileImage,
       school: school ?? this.school,
       verified: verified ?? this.verified,
       isOnline: isOnline ?? this.isOnline,

@@ -33,7 +33,11 @@ class ProductRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return productList;
   }
@@ -65,7 +69,11 @@ class ProductRepository {
         },
       );
     } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
     }
     return productList;
   }
