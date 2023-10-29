@@ -20,7 +20,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LogOutEvent>((event, emit) async {
       await _logOutFunction(event, emit);
     });
+    on<LoadUserDataEvent>((event, emit) async {
+      await _loadingUserFunction(event, emit);
+    });
   }
+  _loadingUserFunction(LoadUserDataEvent event, emit) async {
+    emit(LoadingUserState(user: state.user));
+    User user = await _userRepository.getUserData();
+    if (user.token != '') {
+      emit(LoadedUserState(user: user));
+    } else {
+      emit(const ErrorUserState('No User Data'));
+    }
+  }
+
   _signInFunction(SignInEvent event, emit) async {
     try {
       emit(LoadingUserState(user: state.user));

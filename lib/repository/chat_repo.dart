@@ -45,7 +45,7 @@ class ChatRepository {
       );
       print(res.data);
       var receiver = "";
-      var type = "";
+      var type = "seller";
       Message? lastMsg;
       if (res.data['lastMessage'] != null) {
         print('lastMessage called');
@@ -60,11 +60,12 @@ class ChatRepository {
       }
 
       chatRoom = ChatRoom(
+          chatRoomId: res.data['_id'],
           name: receiver,
           type: type,
           lastMessage: lastMsg,
           lastMessageTime: lastMsg?.timestamp);
-
+      print(chatRoom);
       return chatRoom;
     } catch (e) {
       SnackbarGlobal.showSnackBar(e.toString());
@@ -102,6 +103,7 @@ class ChatRepository {
         }
 
         ChatRoom chatRoom = ChatRoom(
+            chatRoomId: res.data[i]['_id'],
             name: receiver,
             type: type,
             lastMessage: lastMsg,
@@ -119,7 +121,7 @@ class ChatRepository {
   Future<Message?> sendMessage(
       {required BuildContext context,
       required String msg,
-      required String receiverId}) async {
+      required String chatRoomId}) async {
     User user = context.read<UserBloc>().state.user!;
     // receiverId, messages, last Messages
     try {
@@ -131,7 +133,7 @@ class ChatRepository {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': user.token,
         }),
-        data: {'message': msg, 'user_id': user.id, 'receiver_id': receiverId},
+        data: {'message': msg, 'user_id': user.id, 'chatroom_id': chatRoomId},
       );
       Message sMsg = Message.fromJson(res.data);
       print(sMsg);

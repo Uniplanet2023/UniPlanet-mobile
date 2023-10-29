@@ -63,3 +63,12 @@ Future<File?> pickVideoFromGallery(BuildContext context) async {
   }
   return video;
 }
+
+// Method to open the camera
+Future<void> openCamera() async {
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  if (pickedFile != null) {
+    final File imageFile = File(pickedFile.path);
+    // Handle the captured image file (e.g., send it or display it)
+  }
+}

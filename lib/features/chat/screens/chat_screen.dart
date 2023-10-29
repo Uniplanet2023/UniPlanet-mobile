@@ -5,16 +5,15 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
+
 import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
-  final String receiverId;
+  final String chatRoomId;
   const ChatScreen({
     Key? key,
-    required this.receiverId,
+    required this.chatRoomId,
   }) : super(key: key);
 
   @override
@@ -31,11 +30,40 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ChatRoom roomState = context.watch<ChatBloc>().state.currentChatRoom!;
+    print(widget.chatRoomId);
+    ChatRoom roomState = context.read<ChatBloc>().state.currentChatRoom!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: GlobalVariables.backgroundColor,
-        title: Text(roomState.name),
+        title: Column(
+          children: [
+            Text(roomState.name),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: StreamBuilder<bool>(
+                stream: context
+                    .read<ChatBloc>()
+                    .onlineStatusStream, // Replace with your stream source
+                builder: (context, snapshot) {
+                  if (snapshot.data == true) {
+                    return const Text(
+                      'online',
+                      style: TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.normal),
+                    );
+                  } else {
+                    return const Text(
+                      'offline',
+                      style: TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.normal),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
         centerTitle: false,
         actions: [
           IconButton(
@@ -54,10 +82,11 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: ChatList(),
-          ),
-          BottomChatField(recieverId: widget.receiverId),
+          const Expanded(child: ChatList()),
+          BottomChatField(chatRoomId: widget.chatRoomId),
+          const SizedBox(
+            height: 10,
+          )
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
@@ -44,7 +45,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     print('here');
-    UserRepository().getUserData();
+    _loadUser();
+  }
+
+  _loadUser() {
+    context.read<UserBloc>().add(LoadUserDataEvent());
   }
 
   @override
@@ -54,6 +59,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<UserBloc>().state;
+    print(state == LoadingUserState);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: SnackbarGlobal.key,
@@ -71,11 +78,16 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: UserRepository.getUser(context).token != ''
-          ? UserRepository.getUser(context).type == 'user'
+      home: state is LoadingUserState
+          ? const AuthScreen()
+          : state is LoadedUserState
               ? const BottomBar()
-              : const AdminScreen()
-          : const AuthScreen(),
+              : const AuthScreen(),
+      // state.user!.token != ''
+      //     ? state.user!.type == 'user'
+      //         ? const BottomBar()
+      //         : const AdminScreen()
+      //     : const AuthScreen(),
     );
   }
 }

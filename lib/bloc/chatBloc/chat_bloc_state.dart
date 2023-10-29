@@ -46,9 +46,9 @@ class LoadedChatRoomState extends ChatBlocState {
 
 //Select ChatRoom
 class SelectChatRoomState extends ChatBlocState {
-  const SelectChatRoomState({super.currentChatRoom, super.chatRoomList});
+  const SelectChatRoomState({super.currentChatRoom});
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [currentChatRoom];
 }
 
 //Error

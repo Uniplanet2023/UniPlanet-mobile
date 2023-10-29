@@ -14,6 +14,7 @@ const ChatRoom = mongoose.model("ChatRoom", chatroom);
 
 ChatRoom.watch().on("change", async (change) => {
   // Check if the operation is an insert of a new ChatRoom
+  console.log("chatRoom wacth is triggered");
   if (
     change.operationType === "insert" &&
     change.fullDocument &&
@@ -21,20 +22,20 @@ ChatRoom.watch().on("change", async (change) => {
   ) {
     const chatRoomId = change.fullDocument._id;
     const { buyer, seller } = change.fullDocument;
-
+    console.log("chatRoom wacth is triggered1");
     // Update the buyer's chatRooms field
     await User.findByIdAndUpdate(
       buyer,
       { $push: { chatRooms: chatRoomId } },
       { new: true, useFindAndModify: false }
-    ).exec();
+    );
 
     // Update the seller's chatRooms field
     await User.findByIdAndUpdate(
       seller,
       { $push: { chatRooms: chatRoomId } },
       { new: true, useFindAndModify: false }
-    ).exec();
+    );
   }
 });
 module.exports = ChatRoom;

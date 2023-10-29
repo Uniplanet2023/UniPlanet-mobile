@@ -95,10 +95,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AdminScreen(),
       );
     case ChatScreen.routeName:
-      var recieverId = routeSettings.arguments as String;
+      var chatRoomId = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => ChatScreen(receiverId: recieverId),
+        builder: (_) => ChatScreen(chatRoomId: chatRoomId),
       );
     case ChatList.routeName:
       return MaterialPageRoute(

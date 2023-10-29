@@ -13,13 +13,15 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
     if (!receiverId) {
       throw new Error("receiverId are required");
     }
-
+    if (req.user == receiverId) {
+      return res.status(400).json("It`s your self");
+    }
     // Check if a chat room already exists between the user and the receiver
     let existingChatRoom = await ChatRoom.findOne({
       buyer: req.user,
       seller: receiverId,
     });
-    console.log(existingChatRoom);
+
     if (existingChatRoom) {
       // Determine if req.user is the buyer or seller
       if (existingChatRoom.buyer.toString() === req.user.toString()) {

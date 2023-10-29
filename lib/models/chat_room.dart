@@ -5,11 +5,13 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class ChatRoom {
+  final String chatRoomId;
   final String name;
   final String type;
   final Message? lastMessage;
   final DateTime? lastMessageTime;
   ChatRoom({
+    required this.chatRoomId,
     required this.name,
     required this.type,
     this.lastMessage,
@@ -19,11 +21,13 @@ class ChatRoom {
     return ChatRoom(
       name: "",
       type: "",
+      chatRoomId: '',
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'chatRoomId': chatRoomId,
       'name': name,
       'type': type,
       'lastMessage': lastMessage?.toMap(),
@@ -33,6 +37,7 @@ class ChatRoom {
 
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
+      chatRoomId: map['chatRoomId'] as String,
       name: (map['receiver']?['receiverName'] ?? "") as String,
       type: map['type'] as String,
       lastMessage: map['lastMessage'] != null

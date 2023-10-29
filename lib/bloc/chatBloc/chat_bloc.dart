@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
@@ -10,6 +12,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ProductRepository _productRepository;
   final UserRepository _userRepository;
   final ChatRepository _chatRepository;
+  final _onlineStatusController = StreamController<bool>.broadcast();
+  Stream<bool> get onlineStatusStream => _onlineStatusController.stream;
+
   ChatBloc(this._productRepository, this._userRepository, this._chatRepository)
       : super(InitChatRoomState()) {
     on<CreateChatRoomEvent>((event, emit) async {
@@ -18,11 +23,24 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
+    on<SelectChatRoomEvent>((event, emit) async {
+      await _selectChatRoom(event, emit);
+    });
+    on<UpdateOnlineStatusEvent>((event, emit) async {
+      _updateOnlineStatus(event);
+    });
+  }
+  void _updateOnlineStatus(UpdateOnlineStatusEvent event) {
+    _onlineStatusController.sink.add(event.isOnline);
+  }
+
+  _selectChatRoom(SelectChatRoomEvent event, emit) async {
+    emit(SelectChatRoomState(currentChatRoom: event.chatroom));
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
     emit(LoadingChatRoomState(
-        currentChatRoom: state.currentChatRoom,
+        currentChatRoom: ChatRoom.initialChatRoom(),
         chatRoomList: state.chatRoomList));
     try {
       List<ChatRoom> chatrooms = await _chatRepository.getChatRoom(event.user);
@@ -51,6 +69,12 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     } catch (e) {
       throw Exception('creating chat room API error');
     }
+  }
+
+  @override
+  Future<void> close() {
+    _onlineStatusController.close();
+    return super.close();
   }
 
   @override
