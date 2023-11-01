@@ -8,6 +8,7 @@ import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
@@ -26,12 +27,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<MessageBloc>().add(GetMessageEvent(widget.msgList));
+    context
+        .read<MessageBloc>()
+        .add(GetMessageEvent(widget.msgList, widget.chatRoomId));
   }
 
   @override
   Widget build(BuildContext context) {
-    var state = context.watch<MessageBloc>().state;
     ChatRoom roomState = context.read<ChatBloc>().state.currentChatRoom!;
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Expanded(child: ChatList(msgList: state.msgList!)),
+          const Expanded(child: ChatList()),
           BottomChatField(chatRoomId: widget.chatRoomId),
           const SizedBox(
             height: 10,

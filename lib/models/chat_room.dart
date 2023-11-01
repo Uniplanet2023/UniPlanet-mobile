@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/user.dart';
+import 'package:socket_io_client/socket_io_client.dart' as socketio;
 
 class ChatRoom {
   final String chatRoomId;
@@ -26,6 +27,22 @@ class ChatRoom {
       type: "",
       chatRoomId: '',
     );
+  }
+
+  static initialSocket() {
+    socketio.Socket socket = socketio.io(
+        uri,
+        socketio.OptionBuilder()
+            .setTransports(['websocket'])
+            .disableAutoConnect()
+            .build());
+    socket.onConnect((_) {
+      print('connect');
+    });
+    socket.onDisconnect((_) => throw Exception('disconnected'));
+    socket.onConnectError((data) => throw Exception(data));
+    socket.connect();
+    return socket;
   }
 
   Map<String, dynamic> toMap() {

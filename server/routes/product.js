@@ -5,32 +5,35 @@ const { Product } = require("../models/product");
 const redis_controller = require("../redis_controller/redis_controller");
 productRouter.get("/api/all-products", async (req, res) => {
   try {
-    console.log("all product API is triggered");
-    const data = await redis_controller.getJson("products");
+    console.log(
+      "\x1b[32m----------------- Product API : Getting All product API is triggered -----------------\x1b[0m"
+    );
 
-    if (data != null && data && data.length != 0) {
-      console.log("search from redis , product file");
-      return res.json(data);
+    var products = await redis_controller.getJson("products");
+
+    if (products != null && products && products.length != 0) {
+      console.log("1. Search Data from Redis , product file");
     } else {
-      console.log("search from database , product file");
+      console.log("2. Search from database , product file");
       Promise.all([
         (products = await Product.find().sort({ created_at: -1 }).limit(20)),
         (mobileProducts = await Product.find({ category: "Mobiles" })
-          .sort({ created_at: -1 })
+          .sort({ timestamp: -1 })
           .limit(20)),
         (essentialProducts = await Product.find({ category: "Essentials" })
-          .sort({ created_at: -1 })
+          .sort({ timestamp: -1 })
           .limit(20)), //Fashion
         (applianceProducts = await Product.find({ category: "Appliances" })
-          .sort({ created_at: -1 })
+          .sort({ timestamp: -1 })
           .limit(20)),
         (booksProducts = await Product.find({ category: "Books" })
-          .sort({ created_at: -1 })
+          .sort({ timestamp: -1 })
           .limit(20)),
         (fashionProducts = await Product.find({ category: "Fashion" })
-          .sort({ created_at: -1 })
+          .sort({ timestamp: -1 })
           .limit(20)),
       ]);
+      console.log("3. Fetching Datata to Redis");
       Promise.all([
         await redis_controller.setJson("products", "$", products),
         await redis_controller.setJson("Mobiles", "$", mobileProducts),
@@ -39,11 +42,20 @@ productRouter.get("/api/all-products", async (req, res) => {
         await redis_controller.setJson("Books", "$", booksProducts),
         await redis_controller.setJson("Fashion", "$", fashionProducts),
       ]);
-      console.log("update redis");
 
-      res.json(products);
+      console.log("4. Updating Data to Redis");
     }
+
+    res.json(products);
+    console.log(
+      "\x1b[32m----------------- Product API : Getting All product API is scuessfully completed -----------------\x1b[0m"
+    );
+    console.log("");
   } catch (e) {
+    console.log(
+      "\x1b[31m There is Issues at Product API: Getting All Product\x1b[0m"
+    );
+    console.error(e);
     res.status(500).json({ error: e.message });
   }
 });
@@ -52,25 +64,43 @@ productRouter.get("/api/all-products", async (req, res) => {
 // /api/products/search/i
 productRouter.get("/api/products/search/:name", auth, async (req, res) => {
   try {
+    console.log(
+      "\x1b[32m----------------- Product API : Searching product API is triggered -----------------\x1b[0m"
+    );
     const products = await Product.find({
       name: { $regex: req.params.name, $options: "i" },
     });
 
     res.json(products);
+    console.log(
+      "\x1b[32m----------------- Product API : Searching product API is Sucessfully completed -----------------\x1b[0m"
+    );
+    console.log("");
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 productRouter.get("/api/products", async (req, res) => {
-  console.log("category api is triggerd");
+  console.log(
+    "\x1b[32m----------------- Product API : Searching Category Product API is Triggered -----------------\x1b[0m"
+  );
   let data;
   try {
+    console.log("1. Checking if there is category in query");
     if (req.query.category) {
-      console.log("search from redis");
+      console.log("2. Search product from Redis");
       data = await redis_controller.getJson(req.query.category);
       res.json(data);
     }
+    console.log(
+      "\x1b[32m----------------- Product API : Searching product API is Sucessfully completed -----------------\x1b[0m"
+    );
+    console.log("");
   } catch (e) {
+    console.log(
+      "\x1b[31m----------------- There is Issues at Searching Category Product API -----------------\x1b[0m"
+    );
+    console.error(e);
     res.status(500).json({ error: e.message });
   }
 });
@@ -78,8 +108,9 @@ productRouter.get("/api/products", async (req, res) => {
 // Add product
 productRouter.post("/api/add-product", auth, async (req, res) => {
   try {
-    console.log("add product is triggered");
-    console.log(req.body);
+    console.log(
+      "\x1b[32m----------------- Product API : Adding Product is Triggered -----------------\x1b[0m"
+    );
     const {
       name,
       seller,
@@ -90,7 +121,7 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
       price,
       category,
     } = req.body;
-    console.log(req.user);
+    console.log("1. Creating Product Model");
     let product = new Product({
       name,
       sellerName: seller,
@@ -101,14 +132,19 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
       price,
       category,
     });
-    console.log(product);
+    console.log("2. Adding Product to Database and Redis");
     Promise.all([
       (product = await product.save()),
       await redis_controller.addJson("products", product),
       await redis_controller.addJson(product.category, product),
     ]);
     res.json(product);
+    console.log(
+      "\x1b[32m----------------- Product API : Adding Product is Successfully completed -----------------\x1b[0m"
+    );
+    console.log("");
   } catch (e) {
+    console.error("\x1b[31m There is Issues at Adding Product API \x1b[0m");
     console.log(e);
     res.status(500).json({ error: e.message });
   }

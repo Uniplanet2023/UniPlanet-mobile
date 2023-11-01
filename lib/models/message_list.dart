@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'dart:convert';
 
 import 'package:uniplanet_mobile/models/message.dart';
@@ -22,6 +20,8 @@ class MessageList {
         msgList: (map['messages'] as List)
             .map((messageMap) =>
                 Message.fromMap(messageMap as Map<String, dynamic>))
+            .toList()
+            .reversed
             .toList());
   }
 

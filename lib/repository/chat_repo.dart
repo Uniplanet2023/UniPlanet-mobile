@@ -1,37 +1,20 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart' as socketio;
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/message_list.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatRepository {
-  static socketio.Socket socket = socketio.io(
-      uri,
-      socketio.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .build());
-
-  ChatRepository() {
-    socket.onConnect((_) {
-      print('connect');
-    });
-    socket.onDisconnect((_) => throw Exception('disconnected'));
-    socket.onConnectError((data) => throw Exception(data));
-    socket.connect();
-  }
-  Future<List<Message>> getMessages({required List<String> msgList}) async {
+  Future<List<Message>> getMessages(
+      {required String chatRoomId, required List<String> msgList}) async {
     List<Message> listMsg = [];
     try {
       Dio dio = Dio();
@@ -146,9 +129,16 @@ class ChatRepository {
             type: type,
             lastMessage: lastMsg,
             lastMessageTime: lastMsg?.timestamp);
+
         chatRoomList.add(chatRoom);
       }
-      print(chatRoomList);
+      print('checking');
+
+      for (var chatRoomId in chatRoomIds) {
+        print(chatRoomId);
+        socketService.socket!.emit('joinChatRoom', chatRoomId);
+      }
+
       return chatRoomList;
     } catch (e) {
       if (e is DioException) {
@@ -160,34 +150,35 @@ class ChatRepository {
     return chatRoomList;
   }
 
-  Future<Message?> sendMessage(
+  Future<Message> sendMessage(
       {required String msg, required String chatRoomId}) async {
     // receiverId, messages, last Messages
-    try {
-      print('sendMessage called');
-      Dio dio = Dio();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString('x-auth-token')!;
-      Response res = await dio.post(
-        '$uri/api/message',
-        options: Options(headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': token,
-        }),
-        data: {'message': msg, 'chatroom_id': chatRoomId},
-      );
+    print("send Message API");
+    Message sMsg = Message.initialMessage();
 
-      Message sMsg = Message.fromJson(res.data);
-      print(sMsg);
+    // try {
+    //   print('sendMessage called');
 
-      return sMsg;
-    } catch (e) {
-      if (e is DioException) {
-        if (e.response != null) {
-          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
-        }
-      }
-    }
-    return null;
+    //   Dio dio = Dio();
+    //   SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   String token = prefs.getString('x-auth-token')!;
+    //   Response res = await dio.post(
+    //     '$uri/api/message',
+    //     options: Options(headers: {
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //       'x-auth-token': token,
+    //     }),
+    //     data: {'message': msg, 'chatroom_id': chatRoomId},
+    //   );
+
+    //   sMsg = Message.fromJson(res.data);
+    // } catch (e) {
+    //   if (e is DioException) {
+    //     if (e.response != null) {
+    //       SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+    //     }
+    //   }
+    // }
+    return sMsg;
   }
 }

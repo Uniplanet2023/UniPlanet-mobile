@@ -5,7 +5,6 @@ import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class OrderDetailScreen extends StatefulWidget {

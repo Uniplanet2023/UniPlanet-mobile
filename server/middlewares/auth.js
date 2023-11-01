@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
   try {
-    console.log("auth is triggered");
     const token = req.header("x-auth-token");
     if (!token)
       return res.status(401).json({ msg: "No auth token, access denied" });
@@ -17,6 +16,7 @@ const auth = async (req, res, next) => {
     req.token = token;
     next();
   } catch (err) {
+    console.err("Middle Ware Auth has issues!!");
     res.status(500).json({ error: err.message });
   }
 };

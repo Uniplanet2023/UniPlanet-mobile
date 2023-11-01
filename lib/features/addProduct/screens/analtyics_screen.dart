@@ -1,7 +1,4 @@
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
-
-// import 'package:uniplanet_mobile/features/admin/widgets/category_products_chart.dart';
-// import 'package:flutter_charts/flutter_charts.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/sale.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';

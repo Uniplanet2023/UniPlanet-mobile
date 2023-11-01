@@ -68,29 +68,55 @@ userRouter.get("/api/orders/me", auth, async (req, res) => {
 
 // get user data
 userRouter.get("/", auth, async (req, res) => {
-  console.log("user data get API triggered");
+  console.log(
+    "\x1b[32m----------------- UserAPI : User Data Get API triggered -----------------\x1b[0m"
+  );
+  try {
+    console.log("1. Getting data from redis");
+    const data = await redis_controller.get(req.tocken);
 
-  const data = await redis_controller.get(req.tocken);
-
-  if (data != null && data) {
-    console.log("search from redis2");
-    res.json({ ...data._doc, tocken: req.token });
-  } else {
-    console.log("search from database2");
-    console.log(req.user);
-    const user = await User.findById(req.user);
-    console.log(user._id);
-    res.json({ ...user._doc, token: req.token });
+    if (data != null && data) {
+      console.log("2. Sending data from Redis");
+      res.json({ ...data._doc, tocken: req.token });
+    } else {
+      console.log("2. No Data From Redis");
+      console.log("3. Search User From DB");
+      const user = await User.findById(req.user);
+      console.log("4. Sending User Data from DB");
+      res.json({ ...user._doc, token: req.token });
+      console.log(
+        "\x1b[32m----------------- UserAPI : User Data Get API is Scuessfully Completed -----------------\x1b[0m"
+      );
+      console.log("");
+    }
+  } catch (e) {
+    console.error("Getting User Data has Issues!!");
+    console.log(e);
   }
 });
 
 // Delete the product
 userRouter.post("/api/delete-product", auth, async (req, res) => {
+  console.log(
+    "\x1b[32m----------------- UserAPI : Delete Product API is triggered -----------------\x1b[0m"
+  );
   try {
     const { id } = req.body;
+    console.log("1. Finding and Delete Product");
     let product = await Product.findByIdAndDelete(id);
+    if (product) {
+      consolse.log("2. Successfully Deleted");
+    } else {
+      consolse.log("2. Can't find Product or Couldn't Delete the Product");
+    }
     res.json(product);
+    console.log(
+      "\x1b[32m----------------- UserAPI : Delete Product API is Scuessfully Completed -----------------\x1b[0m"
+    );
+    console.log("");
   } catch (e) {
+    console.error("Delete Product API has Issues");
+    console.log(e);
     res.status(500).json({ error: e.message });
   }
 });

@@ -3,17 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
+
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
+
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ProductDetailScreen extends StatefulWidget {

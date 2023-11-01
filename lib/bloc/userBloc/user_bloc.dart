@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
@@ -40,7 +39,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       User user = await _userRepository.signInUser(
           email: event.email, password: event.password);
-      print(user.name);
+
       if (user.token != '') {
         _navigate(event);
         emit(LoadedUserState(user: user));

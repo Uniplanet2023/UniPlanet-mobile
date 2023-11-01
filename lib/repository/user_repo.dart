@@ -19,6 +19,9 @@ import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/sale.dart';
 import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:socket_io_client/socket_io_client.dart' as socketio;
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class UserRepository {
   static User getUser(BuildContext context) {
@@ -80,7 +83,6 @@ class UserRepository {
     User user = User.initialUser();
     Dio dio = Dio();
     try {
-      print('here2');
       Response res = await dio.post('$uri/api/signin',
           data: jsonEncode({
             'email': email,
@@ -89,7 +91,7 @@ class UserRepository {
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
-      print(res);
+
       httpErrorHandle(
         response: res,
         onSuccess: () async {
@@ -97,8 +99,9 @@ class UserRepository {
           await prefs.setString('x-auth-token', res.data['token']);
         },
       );
-      print(res.data);
+
       user = User.fromMap(res.data);
+      socketService();
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -156,6 +159,8 @@ class UserRepository {
         );
 
         user = User.fromMap(userRes.data);
+        socketService();
+
         return user;
       }
     } catch (e) {

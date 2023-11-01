@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
@@ -23,13 +23,14 @@ void main() {
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
-            create: (context) => UserBloc(
-                  context.read<UserRepository>(),
-                )),
+            create: (context) => UserBloc(context.read<UserRepository>())),
         BlocProvider(
             create: (context) => ChatBloc(context.read<ChatRepository>())),
         BlocProvider(
             create: (context) => MessageBloc(context.read<ChatRepository>())),
+        BlocProvider(
+            create: (context) =>
+                ProductBloc(context.read<ProductRepository>())),
       ], child: const MyApp())));
 }
 
@@ -44,12 +45,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    print('here');
-    _loadUser();
+    _initBloc();
   }
 
-  _loadUser() {
+  _initBloc() {
     context.read<UserBloc>().add(LoadUserDataEvent());
+    context.read<ProductBloc>();
   }
 
   @override
@@ -60,7 +61,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var state = context.watch<UserBloc>().state;
-    print(state == LoadingUserState);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: SnackbarGlobal.key,
@@ -83,11 +83,6 @@ class _MyAppState extends State<MyApp> {
           : state is LoadedUserState
               ? const BottomBar()
               : const AuthScreen(),
-      // state.user!.token != ''
-      //     ? state.user!.type == 'user'
-      //         ? const BottomBar()
-      //         : const AdminScreen()
-      //     : const AuthScreen(),
     );
   }
 }

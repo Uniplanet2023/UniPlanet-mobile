@@ -15,8 +15,12 @@ module.exports = {
 
     //Redis DB Setting
     pubClient.on("error", (err) => console.log("Redis Client Error", err));
-    pubClient.on("connect", () => console.log("Pub Connected to Redis"));
-    subClient.on("connect", () => console.log("Sub Connected to Redis"));
+    pubClient.on("connect", () =>
+      console.log("2-1. Redis Connection : Pub Client Connected")
+    );
+    subClient.on("connect", () =>
+      console.log("2-2. Redis Connection : Sub Client Connected")
+    );
 
     // DB,redis Connections
     Promise.all([pubClient.connect(), subClient.connect()]).then(() => {

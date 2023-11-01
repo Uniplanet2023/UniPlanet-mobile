@@ -5,8 +5,6 @@ import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
-import 'package:uniplanet_mobile/repository/product_repo.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;
@@ -76,10 +74,10 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   @override
-  void onChange(Change<ChatBlocState> change) {
-    super.onChange(change);
-    print(change);
-  }
+  // void onChange(Change<ChatBlocState> change) {
+  //   super.onChange(change);
+  //   print(change);
+  // }
 
   @override
   void onTransition(Transition<ChatBlocEvent, ChatBlocState> transition) {

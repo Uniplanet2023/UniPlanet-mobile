@@ -30,12 +30,23 @@ app.use(cors());
 mongoose
   .connect(process.env.MONGO_DB_HOST)
   .then(() => {
-    console.log("Mongo DB Connection Successful");
+    console.log("3. DB Connection : Mongo DB Connection Successful");
+    console.log(
+      "\x1b[32m------------------- All the Connect is successfully connected -------------------\x1b[0m "
+    );
+    console.log("");
   })
+
   .catch((e) => {
     console.log(e);
   });
 
 server.listen(PORT, () => {
-  console.log(`BackEnd Server connected at port ${PORT}`);
+  console.log("");
+  console.info(
+    "\x1b[32m------------------- Back End Connection is Staring -------------------\x1b[0m"
+  );
+  console.log(
+    `1. BackEnd Connection : BackEnd Server connected at port ${PORT}`
+  );
 });

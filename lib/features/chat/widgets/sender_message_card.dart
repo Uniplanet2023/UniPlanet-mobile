@@ -14,18 +14,22 @@ class SenderMessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width - 45,
-        ),
-        child: Card(
-          elevation: 1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: GlobalVariables.primaryColor,
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          child: Stack(
-            children: [
-              Padding(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          // Card containing the message
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width - 45,
+            ),
+            child: Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              color: GlobalVariables.primaryColor,
+              margin: const EdgeInsets.fromLTRB(15, 5, 5, 5),
+              child: Padding(
                 padding: const EdgeInsets.only(
                   left: 10,
                   right: 30,
@@ -39,20 +43,27 @@ class SenderMessageCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 2,
-                right: 10,
-                child: Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
+            ),
+          ),
+          // Date and Icon
+          Row(
+            children: [
+              Text(
+                date,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[600], // Style to match SenderMessageCard
                 ),
+              ),
+              const SizedBox(width: 5),
+              Icon(
+                Icons.done_all,
+                size: 20,
+                color: Colors.grey[600], // Color to match the text style
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

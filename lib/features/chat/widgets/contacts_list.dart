@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
@@ -99,7 +100,10 @@ class _ContactsListState extends State<ContactsList> {
                       ],
                     ),
                     trailing: Text(
-                      TimeOfDay.now().format(context).toString(),
+                      widget.list[index].lastMessage?.timestamp != null
+                          ? formatTimestamp(
+                              widget.list[index].lastMessage!.timestamp)
+                          : "",
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13,

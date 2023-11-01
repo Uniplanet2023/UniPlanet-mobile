@@ -41,6 +41,10 @@ const productSchema = mongoose.Schema({
     required: true,
   },
   ratings: [ratingSchema],
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);

@@ -8,7 +8,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatList extends StatefulWidget {
   static const String routeName = '/chat_list';
