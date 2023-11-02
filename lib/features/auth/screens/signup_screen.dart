@@ -1,10 +1,11 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
-import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/constants/university_list.dart';
 
 class SignupScreen extends StatefulWidget {
   static const String routeName = '/signup-screen';
@@ -19,16 +20,24 @@ class _SigninScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  String? school = "";
 
   bool isChecked = false;
 
-  void signUpUser(BuildContext context) {
+  void signUpUser(BuildContext context) async {
     final bool emailValid = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.edu$")
         .hasMatch(_emailController.text);
 
     if (isChecked == false) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Agree to Terms and conditions to continue'),
+      ));
+      return;
+    }
+
+    if (school == null || school == "") {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Please select school before continuing!'),
       ));
       return;
     }
@@ -40,7 +49,7 @@ class _SigninScreenState extends State<SignupScreen> {
       return;
     }
 
-    UserRepository().signUpUser(
+    await UserRepository().signUpUser(
         context: context,
         verified: true,
         name: _nameController.text,
@@ -48,7 +57,13 @@ class _SigninScreenState extends State<SignupScreen> {
         email: _emailController.text,
         profileImage:
             'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-        school: 'StonyBrook');
+        school: school!);
+
+    // await UserRepository().sendOtp(
+    //     context: context,
+    //     email: _emailController.text,
+    //     name: _nameController.text);
+
     // authService.signUpUser(
     //   context: context,
     //   email: _emailController.text,
@@ -123,6 +138,35 @@ class _SigninScreenState extends State<SignupScreen> {
               CustomTextField(
                 controller: _passwordController,
                 hintText: 'Password',
+              ),
+              const SizedBox(height: 10),
+              DropdownSearch<String>(
+                popupProps: const PopupProps.menu(
+                    showSearchBox: true,
+                    showSelectedItems: true,
+                    scrollbarProps: ScrollbarProps(
+                      trackBorderColor: Colors.amber,
+                    )),
+                items: universities,
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    hintText: "Select School",
+                    focusColor: GlobalVariables.secondaryColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black38,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.0),
+                      ),
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    school = value;
+                  });
+                },
               ),
               const SizedBox(height: 10),
               Row(

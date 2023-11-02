@@ -5,12 +5,13 @@ const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
 const redis_controller = require("../redis_controller/redis_controller");
+const mail_verify = require("../middlewares/email_verify.js");
 
 // SIGN UP
 authRouter.post("/api/signup", async (req, res) => {
   try {
     console.log("Sign-Up API triggerd");
-    console.log(req.body);
+    // console.log(req.body);
     const { name, email, password, profileImage, school, verified } = req.body;
     const existingUser = await User.findOne({ email });
 
@@ -39,12 +40,13 @@ authRouter.post("/api/signup", async (req, res) => {
     });
     console.log("here");
     user = await user.save();
-    res.json(user);
+    res.status(200).json(user);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e.message });
   }
 });
+
 authRouter.post("api/delet-user", auth, async (req, res) => {
   try {
     console.log("user.delete API is called");
@@ -55,6 +57,7 @@ authRouter.post("api/delet-user", auth, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
 authRouter.post("api/password-update", async (req, res) => {
   let hashedPassword;
   try {
@@ -122,6 +125,37 @@ authRouter.post("/tokenIsValid", async (req, res) => {
     res.json(true);
   } catch (e) {
     res.status(500).json({ error: e.message });
+  }
+});
+
+authRouter.post("/api/sendOtp", async (req, res) => {
+  try {
+    const mail_result = await mail_verify.send_mail(
+      req.body.email,
+      req.body.name
+    );
+
+    res.status(200).json({ message: "Success", hash: mail_result });
+  } catch (error) {
+    res.status(400).json({ message: "Error while sending OTP", error: error });
+  }
+});
+
+authRouter.post("/api/verifyOtp", async (req, res) => {
+  try {
+    let result = await mail_verify.verfy_otp(req.body);
+    console.log("----------------------------");
+    console.log(result);
+    console.log("----------------------------");
+    if (result == "Success") {
+      res.status(200).json({ message: result });
+    } else if (result == "OTP expired") {
+      res.status(406).json({ message: result });
+    } else if (result == "Invalid Verfication number") {
+      res.status(404).json({ message: result});
+    }
+  } catch (error) {
+    res.status(400).json({ message: "Error while sending OTP", data: error });
   }
 });
 

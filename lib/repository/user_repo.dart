@@ -13,7 +13,9 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
+import 'package:uniplanet_mobile/models/api_response.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
@@ -49,17 +51,28 @@ class UserRepository {
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
-      print(res.data);
-      user = User.fromMap(res.data);
 
+      user = User.fromMap(res.data);
+      String otp_hash =
+          await sendOtp(context: context, email: email, name: name);
       httpErrorHandle(
         response: res,
         onSuccess: () {
-          SnackbarGlobal.showSnackBar(
-            'Account created! Login with the same credentials!',
+          // SnackbarGlobal.showSnackBar(
+          //   'Account created! Login with the same credentials!',
+          // );
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                // builder: (context) => const SigninScreen()),
+                builder: (context) => OtpVerifyScreen(
+                      otpHash: otp_hash,
+                      email: email,
+                    )),
           );
           // Future.delayed(const Duration(seconds: 1));
-          Navigator.pushNamed(context, SigninScreen.routeName);
+          // Navigator.pushNamed(context, SigninScreen.routeName);
         },
       );
       return user;
@@ -526,5 +539,74 @@ class UserRepository {
       }
     }
     return productList;
+  }
+
+  Future<String> sendOtp({
+    required BuildContext context,
+    required String email,
+    required String name,
+  }) async {
+    try {
+      Dio dio = Dio();
+      var res = await dio.post('$uri/api/sendOtp',
+          data: jsonEncode({
+            'email': email,
+            'name': name,
+          }),
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          }));
+      httpErrorHandle(
+        response: res,
+        onSuccess: () async {
+          // SnackbarGlobal.showSnackBar(
+          //   res.data.toString(),
+          // );
+
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // await prefs.setString('x-auth-token', res.data['token']);
+        },
+      );
+      if (res.data != null &&
+          res.data is Map<String, dynamic> &&
+          res.data.containsKey('hash')) {
+        return res.data['hash'];
+      } else {
+        return 'Something went wrong';
+      }
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> verifyUser({
+    required BuildContext context,
+    required String email,
+    required String otpHash,
+    required String otpCode,
+  }) async {
+    try {
+      Dio dio = Dio();
+      var res = await dio.post('$uri/api/verifyOtp',
+          data: jsonEncode(
+              {'email': email, 'otpHash': otpHash, 'otpCode': otpCode}),
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          }));
+      httpErrorHandle(
+        response: res,
+        onSuccess: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('x-auth-token', res.data['token']);
+        },
+      );
+      if (res.data != null) {
+        return res.data['message'];
+      } else {
+        return 'Something went wrong';
+      }
+    } catch (e) {
+      return e.toString();
+    }
   }
 }
