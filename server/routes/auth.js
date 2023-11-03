@@ -106,7 +106,6 @@ authRouter.post("api/password-update", async (req, res) => {
   }
 });
 // Sign In Route
-// Exercise
 authRouter.post("/api/signin", async (req, res) => {
   try {
     console.log(
@@ -128,9 +127,15 @@ authRouter.post("/api/signin", async (req, res) => {
       console.log("1. Incorrect Password");
       return res.status(400).json({ msg: "Incorrect password." });
     }
+
     console.log("1. Correct Password");
+    console.log("2. Generate Token");
     const token = jwt.sign({ id: user._id }, "passwordKey");
-    console.log("2. Store User Data into Redis");
+
+    console.log("3. Set the user's online status to true");
+    user.isOnline = true;
+    await user.save();
+    console.log("4. Store User Data into Redis");
     redis_controller.set(user._id, user);
 
     res.json({ token, ...user._doc });
@@ -163,7 +168,10 @@ authRouter.post("/tokenIsValid", async (req, res) => {
     const user = await User.findById(verified.id);
 
     if (!user) return res.json(false);
-    console.log("4. User is Existed");
+    console.log("4. Set the user's online status to true");
+    user.isOnline = true;
+    await user.save();
+    console.log("5. User is Existed");
 
     res.json(true);
     console.log(

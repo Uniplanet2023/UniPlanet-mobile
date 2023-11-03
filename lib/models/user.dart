@@ -7,7 +7,7 @@ class User {
   final String profileImage;
   final String school;
   final bool verified;
-  final bool isOnline;
+  bool isOnline;
   final List<String> unseenNotifications;
   final List<String> unseenMessages;
   final List<String> like;

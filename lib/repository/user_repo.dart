@@ -5,6 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
@@ -27,6 +30,22 @@ class UserRepository {
   static User getUser(BuildContext context) {
     User user = context.read<UserBloc>().state.user!;
     return user;
+  }
+
+  void updateUserStatus() async {
+    try {
+      Dio dio = Dio();
+      Response res = await dio.post('$uri/api/update_status',
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          }));
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+        }
+      }
+    }
   }
 
   Future<User> signUpUser(
@@ -52,7 +71,7 @@ class UserRepository {
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
-      print(res.data);
+
       user = User.fromMap(res.data);
 
       httpErrorHandle(
@@ -97,11 +116,11 @@ class UserRepository {
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('x-auth-token', res.data['token']);
+          SocketService();
         },
       );
 
       user = User.fromMap(res.data);
-      socketService();
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -112,11 +131,19 @@ class UserRepository {
     return user;
   }
 
-  void logOut() async {
+  void logOut(BuildContext context) async {
     try {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      await sharedPreferences.setString('x-auth-token', '');
+      SocketService.socket!.disconnect();
+      UserBloc userBloc = context.read<UserBloc>();
+      context
+          .read<StatusBloc>()
+          .add(StatusDisconnectEvent(userBloc.state.user!.id));
+      if (!context.mounted) throw Error();
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AuthScreen.routeName,
+        (route) => false,
+      );
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -159,7 +186,7 @@ class UserRepository {
         );
 
         user = User.fromMap(userRes.data);
-        socketService();
+        SocketService();
 
         return user;
       }

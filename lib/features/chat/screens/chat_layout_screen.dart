@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
@@ -22,16 +23,13 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    _loadList();
-  }
-
-  _loadList() {
     User user = context.read<UserBloc>().state.user!;
     context.read<ChatBloc>().add(LoadChatRoomEvent(user.chatRooms));
   }
 
   @override
   Widget build(BuildContext context) {
+    User user = context.read<UserBloc>().state.user!;
     final state = context.watch<ChatBloc>().state;
 
     List<ChatRoom> buyerChatRoom = [];
@@ -39,14 +37,15 @@ class _ChatListState extends State<ChatList> {
 
     if (state is LoadedChatRoomState) {
       buyerChatRoom = state.chatRoomList!
-          .where((chatRoom) => chatRoom.type == 'buyer')
+          .where((chatRoom) => chatRoom.seller.id == user.id)
           .toList();
       sellerChatRooms = state.chatRoomList!
-          .where((chatRoom) => chatRoom.type == 'seller')
+          .where((chatRoom) => chatRoom.buyer.id == user.id)
           .toList();
     }
+
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -83,10 +82,7 @@ class _ChatListState extends State<ChatList> {
                 text: 'Buy Items (${buyerChatRoom.length})',
               ),
               Tab(
-                text: 'Buy Items (${sellerChatRooms.length})',
-              ),
-              const Tab(
-                text: 'CALLS',
+                text: 'Sell Items (${sellerChatRooms.length})',
               ),
             ],
           ),
@@ -101,9 +97,6 @@ class _ChatListState extends State<ChatList> {
             ContactsList(
               list: sellerChatRooms,
             ),
-            // Calls Tab
-            // For this example, I'm leaving it empty. Update it as per your requirements.
-            Container(),
           ],
         ),
       ),

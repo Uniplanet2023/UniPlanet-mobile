@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
@@ -39,15 +40,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-    var state = context.read<UserBloc>().state;
-    context.read<ChatBloc>().add(LoadChatRoomEvent(state.user!.chatRooms));
-    socketService.socket!.on("receiveMessage", (data) {
-      print('Receive Message Trigger');
 
-      Message msg = Message.fromMap(data);
-      print(msg);
-      context.read<MessageBloc>().add(ReceiveMessageEvent(msg));
-    });
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==

@@ -47,6 +47,18 @@ final class LogOutState extends UserState {
   List<Object?> get props => [user];
 }
 
+class UpdatingOnlineState extends UserState {
+  const UpdatingOnlineState({super.user});
+  @override
+  List<Object?> get props => [user];
+}
+
+class UpdatedOnlineState extends UserState {
+  const UpdatedOnlineState({super.user});
+  @override
+  List<Object?> get props => [user];
+}
+
 class ErrorUserState extends UserState {
   final String errMsg;
   const ErrorUserState(this.errMsg);

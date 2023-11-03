@@ -8,20 +8,29 @@ abstract class UserEvent extends Equatable {
 }
 
 class SignInEvent extends UserEvent {
-  final BuildContext context;
   final String email;
   final String password;
-  const SignInEvent(this.context, this.email, this.password);
+  final BuildContext context;
+
+  const SignInEvent(this.email, this.password, this.context);
   @override
-  List<Object> get props => [context, email, password];
+  List<Object> get props => [email, password, context];
 }
 
-class LogOutEvent extends UserEvent {
+class LogoutEvent extends UserEvent {
+  final BuildContext context;
+  const LogoutEvent(this.context);
+  @override
+  List<Object> get props => [context];
+}
+
+class LoadUserDataEvent extends UserEvent {
   @override
   List<Object> get props => [];
 }
 
-class LoadUserDataEvent extends UserEvent {
+class UpdateOnlineStatusEvent extends UserEvent {
+  const UpdateOnlineStatusEvent();
   @override
   List<Object> get props => [];
 }

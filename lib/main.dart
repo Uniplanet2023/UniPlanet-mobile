@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -13,6 +15,7 @@ import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 void main() {
   runApp(MultiRepositoryProvider(
@@ -31,6 +34,9 @@ void main() {
         BlocProvider(
             create: (context) =>
                 ProductBloc(context.read<ProductRepository>())),
+        BlocProvider(
+          create: (context) => StatusBloc(),
+        )
       ], child: const MyApp())));
 }
 
@@ -48,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     _initBloc();
   }
 
-  _initBloc() {
+  _initBloc() async {
     context.read<UserBloc>().add(LoadUserDataEvent());
     context.read<ProductBloc>();
   }
@@ -61,6 +67,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var state = context.watch<UserBloc>().state;
+    if (state is LoadedUserState) {
+      SocketService().setSocket(context);
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: SnackbarGlobal.key,

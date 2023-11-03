@@ -24,67 +24,34 @@ chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
     }
     // Check if a chat room already exists between the user and the receiver
     console.log("2. Checking the chatroom is already existed");
+
     let existingChatRoom = await ChatRoom.findOne({
       buyer: req.user,
       seller: receiverId,
-    });
+    }).populate("seller buyer lastMessage");
 
     if (existingChatRoom) {
       console.log(
         "3. Existing Room : Determine if req.user is the buyer or seller"
       );
+      res.status(200).json(existingChatRoom);
+    } else {
+      console.log("3. Creating Room Model");
 
-      if (existingChatRoom.buyer.toString() === req.user.toString()) {
-        console.log("4. Req.user is Seller");
-        existingChatRoom.buyer = null;
-        Promise.all([
-          await existingChatRoom.populate({
-            path: "seller",
-            select: "name email isOnline school verified profileImage type",
-            model: "User",
-          }),
-          await existingChatRoom.populate({
-            path: "lastMessage",
-            model: "Message",
-          }),
-        ]);
-      } else {
-        console.log("4. Req.user is Buyer");
-        existingChatRoom.seller = null;
-        Promise.all([
-          await existingChatRoom.populate({
-            path: "buyer",
-            select: "name email isOnline school verified profileImage type",
-            model: "User",
-          }),
-          await existingChatRoom.populate({
-            path: "lastMessage",
-            model: "Message",
-          }),
-        ]);
-      }
+      let chatRoom = new ChatRoom({
+        buyer: req.user,
+        seller: receiverId,
+        chatRoomType: "resell",
+      });
+      console.log("4. Save ChatRoom into DB");
+      await chatRoom.save();
+      console.log("5. Setting User as Buyer");
+      // Populate the seller details
+      await chatRoom.populate("seller buyer");
 
-      return res.status(200).json(existingChatRoom);
+      res.status(200).json(chatRoom);
     }
-    console.log("3. Creating Room Model");
 
-    let chatRoom = new ChatRoom({
-      buyer: req.user,
-      seller: receiverId,
-      chatRoomType: "resell",
-    });
-    console.log("4. Save ChatRoom into DB");
-    await chatRoom.save();
-    console.log("5. Setting User as Buyer");
-    // Populate the seller details
-    chatRoom.buyer = null;
-    await chatRoom.populate({
-      path: "seller",
-      select: "name email isOnline school verified profileImage type",
-      model: "User",
-    });
-
-    res.status(200).json(chatRoom);
     console.log(
       "\x1b[32m----------------- ChatRoom API : Creating ChatRoom API is scuessfully completed -----------------\x1b[0m"
     );
@@ -110,15 +77,12 @@ chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
     }).populate([
       {
         path: "buyer",
-        match: { _id: { $ne: req.user } },
-        select: "name email isOnline school verified profileImage type",
         model: "User",
       },
       {
         path: "seller",
-        match: { _id: { $ne: req.user } },
         model: "User",
-        select: "name email isOnline school verified profileImage type",
+        // select: "name email isOnline school verified profileImage type", // Include only these fields
       },
       {
         path: "lastMessage",

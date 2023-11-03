@@ -54,11 +54,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   void navigateToChatScreen() {
     User user = context.read<UserBloc>().state.user!;
-    context
-        .read<ChatBloc>()
-        .add(CreateChatRoomEvent(user, widget.product.sellerId));
-    Navigator.pushNamed(context, ChatScreen.routeName,
-        arguments: widget.product.sellerId);
+    ChatBloc chatBloc = context.read<ChatBloc>();
+    chatBloc.add(CreateChatRoomEvent(user, widget.product.sellerId));
+    Navigator.pushNamed(context, ChatScreen.routeName);
   }
 
   void navigateToback(BuildContext context) {

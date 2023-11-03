@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
@@ -20,43 +20,47 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
-  selectChatRoom(ChatRoom chatroom) {
-    context.read<ChatBloc>().add(SelectChatRoomEvent(chatroom));
+  selectChatRoom(ChatRoom chatroom, String userId) {
+    context.read<ChatBloc>().add(SelectChatRoomEvent(chatroom, userId));
   }
 
-  _loadList() {
-    User user = context.read<UserBloc>().state.user!;
+  _loadList(User user) {
     context.read<ChatBloc>().add(LoadChatRoomEvent(user.chatRooms));
   }
 
   @override
   Widget build(BuildContext context) {
+    User user = context.read<UserBloc>().state.user!;
+
+    var userOnline = context.watch<StatusBloc>().state.userOnList!;
+
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: widget.list.length,
         itemBuilder: (context, index) {
+          User client = widget.list[index].buyer.id == user.id
+              ? widget.list[index].seller
+              : widget.list[index].buyer;
+
           return Column(
             children: [
               InkWell(
                 onTap: () async {
-                  selectChatRoom(widget.list[index]);
+                  selectChatRoom(widget.list[index], user.id);
                   await Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
-                      return ChatScreen(
-                        chatRoomId: widget.list[index].chatRoomId,
-                        msgList: widget.list[index].msgList,
-                      );
+                      return const ChatScreen();
                     }),
                   );
-                  _loadList();
+                  _loadList(user);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: ListTile(
                     title: Text(
-                      widget.list[index].name,
+                      client.name,
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -80,23 +84,13 @@ class _ContactsListState extends State<ContactsList> {
                           radius: 30,
                         ),
                         Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: StreamBuilder<bool>(
-                            stream: context
-                                .read<ChatBloc>()
-                                .onlineStatusStream, // Replace with your stream source
-                            builder: (context, snapshot) {
-                              if (snapshot.data == true) {
-                                return const Icon(Icons.circle,
-                                    color: Colors.green, size: 16);
-                              } else {
-                                return const Icon(Icons.circle,
-                                    color: Colors.red, size: 16);
-                              }
-                            },
-                          ),
-                        ),
+                            bottom: 0,
+                            right: 0,
+                            child: userOnline.contains(client.id)
+                                ? const Icon(Icons.circle,
+                                    color: Colors.green, size: 16)
+                                : const Icon(Icons.circle,
+                                    color: Colors.red, size: 16)),
                       ],
                     ),
                     trailing: Text(

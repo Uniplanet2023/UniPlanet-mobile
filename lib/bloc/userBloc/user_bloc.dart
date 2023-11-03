@@ -16,13 +16,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<SignInEvent>((event, emit) async {
       await _signInFunction(event, emit);
     });
-    on<LogOutEvent>((event, emit) async {
+    on<LogoutEvent>((event, emit) async {
       await _logOutFunction(event, emit);
     });
     on<LoadUserDataEvent>((event, emit) async {
       await _loadingUserFunction(event, emit);
     });
   }
+
   _loadingUserFunction(LoadUserDataEvent event, emit) async {
     emit(LoadingUserState(user: state.user));
     User user = await _userRepository.getUserData();
@@ -64,9 +65,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     );
   }
 
-  _logOutFunction(LogOutEvent event, emit) async {
+  _logOutFunction(LogoutEvent event, emit) async {
     emit(LogOutState(user: User.initialUser()));
-    UserRepository().logOut();
+    _userRepository.logOut(event.context);
   }
 
   //Tracking
@@ -78,6 +79,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   @override
   void onTransition(Transition<UserEvent, UserState> transition) {
     super.onTransition(transition);
-    print(transition);
+    // print(transition);
   }
 }

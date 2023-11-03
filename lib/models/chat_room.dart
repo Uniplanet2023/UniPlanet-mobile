@@ -4,53 +4,39 @@ import 'dart:convert';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socketio;
+import 'package:uniplanet_mobile/models/user.dart';
 
 class ChatRoom {
   final String chatRoomId;
-  final String name;
-  final String type;
-  final List<String> msgList;
+  final User buyer;
+  final User seller;
+  final List<String> messages;
   final Message? lastMessage;
   final DateTime? lastMessageTime;
+
   ChatRoom({
-    required this.msgList,
+    required this.buyer,
+    required this.seller,
+    required this.messages,
     required this.chatRoomId,
-    required this.name,
-    required this.type,
     this.lastMessage,
     this.lastMessageTime,
   });
   static initialChatRoom() {
     return ChatRoom(
-      msgList: [],
-      name: "",
-      type: "",
+      buyer: User.initialUser(),
+      seller: User.initialUser(),
+      messages: [],
       chatRoomId: '',
     );
   }
 
-  static initialSocket() {
-    socketio.Socket socket = socketio.io(
-        uri,
-        socketio.OptionBuilder()
-            .setTransports(['websocket'])
-            .disableAutoConnect()
-            .build());
-    socket.onConnect((_) {
-      print('connect');
-    });
-    socket.onDisconnect((_) => throw Exception('disconnected'));
-    socket.onConnectError((data) => throw Exception(data));
-    socket.connect();
-    return socket;
-  }
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'messageList': msgList,
+      'buyer': buyer,
+      'seller': seller,
+      'messages': messages,
       'chatRoomId': chatRoomId,
-      'name': name,
-      'type': type,
       'lastMessage': lastMessage?.toMap(),
       'lastMessageTime': lastMessageTime?.millisecondsSinceEpoch,
     };
@@ -58,15 +44,15 @@ class ChatRoom {
 
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
-      msgList: List<String>.from(map['messages']),
-      chatRoomId: map['chatRoomId'] as String,
-      name: (map['receiver']?['receiverName'] ?? "") as String,
-      type: map['type'] as String,
+      buyer: User.fromMap(map['buyer']),
+      seller: User.fromMap(map['seller']),
+      messages: List<String>.from(map['messages']),
+      chatRoomId: map['_id'] as String,
       lastMessage: map['lastMessage'] != null
-          ? Message.fromMap(map['lastMessage'] as Map<String, dynamic>)
+          ? Message.fromMap(map['lastMessage'])
           : null,
-      lastMessageTime: map['updated_at'] != null
-          ? DateTime.parse(map['updated_at'].toString())
+      lastMessageTime: map['created_at'] != null
+          ? DateTime.parse(map['created_at'].toString())
           : null,
     );
   }

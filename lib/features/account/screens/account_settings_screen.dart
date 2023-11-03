@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
@@ -14,13 +15,7 @@ class AccountSettingsScreen extends StatefulWidget {
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   void logout(BuildContext context) {
-    context.read<UserBloc>().add(LogOutEvent());
-    if (!context.mounted) throw Error();
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AuthScreen.routeName,
-      (route) => false,
-    );
+    context.read<UserBloc>().add(LogoutEvent(context));
   }
 
   @override

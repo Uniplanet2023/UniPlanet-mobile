@@ -13,8 +13,10 @@ import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
 import "package:uniplanet_mobile/features/order_details/screens/order_details.dart";
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
+import "package:uniplanet_mobile/models/chat_room.dart";
 import "package:uniplanet_mobile/models/order.dart";
 import "package:uniplanet_mobile/models/product.dart";
+import "package:uniplanet_mobile/models/user.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -95,14 +97,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AdminScreen(),
       );
     case ChatScreen.routeName:
-      String chatRoomId = routeSettings.arguments as String;
-      List<String> msgList = routeSettings.arguments as List<String>;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => ChatScreen(
-          chatRoomId: chatRoomId,
-          msgList: msgList,
-        ),
+        builder: (_) => const ChatScreen(),
       );
     case ChatList.routeName:
       return MaterialPageRoute(

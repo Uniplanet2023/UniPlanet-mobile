@@ -7,7 +7,7 @@ const chatroom = new mongoose.Schema({
   seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
   lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
-  updated_at: { type: Date, default: Date.now },
+  created_at: { type: Date, default: Date.now },
 });
 
 const ChatRoom = mongoose.model("ChatRoom", chatroom);
@@ -15,6 +15,7 @@ const ChatRoom = mongoose.model("ChatRoom", chatroom);
 ChatRoom.watch().on("change", async (change) => {
   // Check if the operation is an insert of a new ChatRoom
   console.log("chatRoom wacth is triggered");
+
   if (
     change.operationType === "insert" &&
     change.fullDocument &&

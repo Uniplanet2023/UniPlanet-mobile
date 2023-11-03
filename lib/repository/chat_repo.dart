@@ -55,29 +55,8 @@ class ChatRepository {
         }),
         data: {'receiverId': receiverId},
       );
-      print(res.data);
-      var receiver = "";
-      var type = "seller";
-      Message? lastMsg;
-      if (res.data['lastMessage'] != null) {
-        print('lastMessage called');
-        lastMsg = Message.fromMap(res.data['lastMessage']);
-      }
-      print('no lastMessage');
-      if (res.data['buyer'] == null) {
-        receiver = res.data['seller']['name'];
-        type = "buyer";
-      } else {
-        receiver = res.data['buyer']['name'];
-      }
 
-      chatRoom = ChatRoom(
-          msgList: res.data['messages'],
-          chatRoomId: res.data['_id'],
-          name: receiver,
-          type: type,
-          lastMessage: lastMsg,
-          lastMessageTime: lastMsg?.timestamp);
+      chatRoom = ChatRoom.fromMap(res.data);
 
       return chatRoom;
     } catch (e) {
@@ -97,6 +76,7 @@ class ChatRepository {
       print('getChatRoom triggered');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('x-auth-token')!;
+
       Response res = await dio.get('$uri/api/getChatRooms',
           data: {'chatRoomIds': chatRoomIds},
           options: Options(headers: {
@@ -105,38 +85,9 @@ class ChatRepository {
           }));
 
       for (var i = 0; i < res.data.length; i++) {
-        var receiver = "";
-        var type = "seller";
-
-        Message? lastMsg;
-
-        if (res.data[i]['lastMessage'] != null) {
-          print('lastMessage called');
-          lastMsg = Message.fromMap(res.data[i]['lastMessage']);
-        }
-
-        if (res.data[i]['buyer'] == null) {
-          receiver = res.data[i]['seller']['name'];
-          type = "buyer";
-        } else {
-          receiver = res.data[i]['buyer']['name'];
-        }
-
-        ChatRoom chatRoom = ChatRoom(
-            msgList: List<String>.from(res.data[i]['messages']),
-            chatRoomId: res.data[i]['_id'],
-            name: receiver,
-            type: type,
-            lastMessage: lastMsg,
-            lastMessageTime: lastMsg?.timestamp);
+        ChatRoom chatRoom = ChatRoom.fromMap(res.data[i]);
 
         chatRoomList.add(chatRoom);
-      }
-      print('checking');
-
-      for (var chatRoomId in chatRoomIds) {
-        print(chatRoomId);
-        socketService.socket!.emit('joinChatRoom', chatRoomId);
       }
 
       return chatRoomList;

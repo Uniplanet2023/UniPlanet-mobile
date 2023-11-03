@@ -19,15 +19,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(LoadedProductState(productList: result));
   }
 
-  // @override
-  // void onChange(Change<ProductState> change) {
-  //   super.onChange(change);
-  //   print(change);
-  // }
+  @override
+  void onChange(Change<ProductState> change) {
+    super.onChange(change);
+    // print(change);
+  }
 
   @override
   void onTransition(Transition<ProductEvent, ProductState> transition) {
     super.onTransition(transition);
-    print(transition);
+    // print(transition);
   }
 }

@@ -57,7 +57,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void sendTextMessage(String msg, String chatRoomId) async {
     print('sendTextMessage');
     if (isShowSendButton) {
-      socketService.socket!.emit('sendMessage', {msg, chatRoomId});
+      SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
       // context.read<MessageBloc>().add(SendMessageEvent(chatRoomId, msg));
       // ChatRepository().sendMessage(msg: msg, chatRoomId: chatRoomId);
       setState(() {
@@ -118,8 +118,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   @override
   Widget build(BuildContext context) {
-    // final messageReply = ref.watch(messageReplyProvider);
-    // final isShowMessageReply = messageReply != null;
     const isShowMessageReply = true;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
