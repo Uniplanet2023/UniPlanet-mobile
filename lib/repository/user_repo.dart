@@ -116,7 +116,6 @@ class UserRepository {
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('x-auth-token', res.data['token']);
-          SocketService();
         },
       );
 
@@ -186,7 +185,6 @@ class UserRepository {
         );
 
         user = User.fromMap(userRes.data);
-        SocketService();
 
         return user;
       }

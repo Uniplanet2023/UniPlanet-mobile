@@ -12,12 +12,13 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class SocketService {
+  final BuildContext context;
   static socketio.Socket? socket;
-  SocketService() {
-    _initSocket();
+  SocketService(this.context) {
+    _initSocket(context);
   }
 
-  _initSocket() async {
+  _initSocket(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('x-auth-token')!;
 
@@ -36,6 +37,14 @@ class SocketService {
               .build());
       socket!.onConnect((_) {
         print('connect');
+        var state = context.read<UserBloc>().state;
+        context.read<ChatBloc>().add(LoadChatRoomEvent(state.user!.chatRooms));
+
+        receiveMessageOn();
+        receivingChatRoomData();
+        userStatusChange();
+        disconnectStatus();
+        joiningAllChatRoom(state.user!.chatRooms);
       });
       socket!.onDisconnect((_) {
         print('disconnected');
@@ -50,14 +59,14 @@ class SocketService {
     var state = context.read<UserBloc>().state;
     context.read<ChatBloc>().add(LoadChatRoomEvent(state.user!.chatRooms));
 
-    SocketService.receiveMessageOn(context);
-    SocketService.receivingChatRoomData();
-    SocketService.userStatusChange(context);
-    SocketService.disconnectStatus(context);
-    SocketService.joiningAllChatRoom(state.user!.chatRooms);
+    receiveMessageOn();
+    receivingChatRoomData();
+    userStatusChange();
+    disconnectStatus();
+    joiningAllChatRoom(state.user!.chatRooms);
   }
 
-  static void receiveMessageOn(BuildContext context) {
+  void receiveMessageOn() {
     try {
       socket!.on("receiveMessage", (data) {
         Message msg = Message.fromMap(data);
@@ -69,7 +78,7 @@ class SocketService {
     }
   }
 
-  static void userStatusChange(BuildContext context) {
+  void userStatusChange() {
     StatusBloc stateBloc = context.read<StatusBloc>();
     print("this is my User id${context.read<UserBloc>().state.user!.id}");
     socket!.on("connectStatus", (data) {
@@ -80,7 +89,7 @@ class SocketService {
     });
   }
 
-  static void disconnectStatus(BuildContext context) {
+  void disconnectStatus() {
     StatusBloc stateBloc = context.read<StatusBloc>();
     socket!.on('disconnectStatus', (data) {
       stateBloc.add(StatusDisconnectEvent(data['userId']));
@@ -93,7 +102,7 @@ class SocketService {
     });
   }
 
-  static void joiningAllChatRoom(List<String> chatRoomIds) {
+  void joiningAllChatRoom(List<String> chatRoomIds) {
     for (var chatRoomId in chatRoomIds) {
       socket!.emit("joinChatRoom", chatRoomId);
     }

@@ -47,12 +47,12 @@ class _ChatScreenState extends State<ChatScreen> {
             userOnline.contains(client.id)
                 ? const Row(
                     children: [
-                      Icon(Icons.circle, color: Colors.green, size: 16),
                       Text(
                         'online',
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.normal),
                       ),
+                      Icon(Icons.circle, color: Colors.green, size: 16),
                     ],
                   )
                 : const Row(

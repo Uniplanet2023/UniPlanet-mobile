@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
@@ -102,34 +104,19 @@ class ChatRepository {
   }
 
   Future<Message> sendMessage(
-      {required String msg, required String chatRoomId}) async {
+      {required String msg,
+      required String chatRoomId,
+      required String senderId}) async {
     // receiverId, messages, last Messages
-    print("send Message API");
-    Message sMsg = Message.initialMessage();
-
-    // try {
-    //   print('sendMessage called');
-
-    //   Dio dio = Dio();
-    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   String token = prefs.getString('x-auth-token')!;
-    //   Response res = await dio.post(
-    //     '$uri/api/message',
-    //     options: Options(headers: {
-    //       'Content-Type': 'application/json; charset=UTF-8',
-    //       'x-auth-token': token,
-    //     }),
-    //     data: {'message': msg, 'chatroom_id': chatRoomId},
-    //   );
-
-    //   sMsg = Message.fromJson(res.data);
-    // } catch (e) {
-    //   if (e is DioException) {
-    //     if (e.response != null) {
-    //       SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
-    //     }
-    //   }
-    // }
+    SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
+    Message sMsg = Message(
+        chatRoomId: chatRoomId,
+        messageId: "",
+        senderId: senderId,
+        message: msg,
+        type: MessageEnum.text,
+        isSeen: false,
+        timestamp: DateTime.now());
     return sMsg;
   }
 }

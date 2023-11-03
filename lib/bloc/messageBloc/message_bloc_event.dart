@@ -17,8 +17,9 @@ class GetMessageEvent extends MessageBlocEvent {
 
 class SendMessageEvent extends MessageBlocEvent {
   final String msg;
+  final String senderId;
   final String chatRoomId;
-  const SendMessageEvent(this.chatRoomId, this.msg);
+  const SendMessageEvent(this.chatRoomId, this.senderId, this.msg);
   @override
   List<Object> get props => [msg, chatRoomId];
 }

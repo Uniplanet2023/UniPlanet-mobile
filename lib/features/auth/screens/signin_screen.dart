@@ -24,14 +24,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   void signInUser() async {
-    try {
-      print("signInuser");
-      context.read<UserBloc>().add(SignInEvent(
-          _emailController.text, _passwordController.text, context));
-    } catch (e) {
-      print("this?");
-      print(e);
-    }
+    context.read<UserBloc>().add(
+        SignInEvent(_emailController.text, _passwordController.text, context));
   }
 
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDQwZDg2ZWNjMTc3NTFmNGJiZGIzMSIsImlhdCI6MTY5ODk3NDAxM30.wU8DNEsI1oayDiBaiItGBz79RiKa3D9wsZeY2I-fFRo

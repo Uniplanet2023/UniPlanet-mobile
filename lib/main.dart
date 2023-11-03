@@ -68,7 +68,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     var state = context.watch<UserBloc>().state;
     if (state is LoadedUserState) {
-      SocketService().setSocket(context);
+      print("Set Socket is triggered");
+      SocketService(context);
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,

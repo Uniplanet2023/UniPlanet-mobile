@@ -109,9 +109,12 @@ module.exports = {
       });
 
       socket.on("sendMessage", async (msg, chatRoomId) => {
-        console.log("send Message");
+        console.log(
+          "\x1b[32m----------------- Socket API : Send Message  is Triggered -----------------\x1b[0m"
+        );
         console.log(msg);
         console.log("chat Room Id is " + chatRoomId);
+
         var msg = new Message({
           senderId: socket.user,
           chatRoomId: chatRoomId,
@@ -120,10 +123,12 @@ module.exports = {
           isSeen: false,
         });
         try {
-          await msg.save();
-          console.log("send message");
           io.to(chatRoomId).emit("receiveMessage", msg);
-          console.log("send message1");
+          await msg.save();
+
+          console.log(
+            "\x1b[32m----------------- Socket API : Send Message  is Successfully Completed -----------------\x1b[0m"
+          );
         } catch (error) {
           console.error("Error saving message:", error);
         }

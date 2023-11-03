@@ -27,12 +27,14 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
 
   _sendMessage(SendMessageEvent event, emit) async {
-    emit(LoadingMessageState(msgList: state.msgList));
+    // emit(LoadingMessageState(msgList: state.msgList));
     try {
       Message msg = await _chatRepository.sendMessage(
-          msg: event.msg, chatRoomId: event.chatRoomId);
-      var updatedList = List<Message>.from(state.msgList!)..add(msg);
-      emit(LoadedMessageState(msgList: updatedList));
+          msg: event.msg,
+          chatRoomId: event.chatRoomId,
+          senderId: event.senderId);
+
+      // emit(LoadedMessageState(msgList: updatedList));
     } catch (e) {
       // handle errors
     }
