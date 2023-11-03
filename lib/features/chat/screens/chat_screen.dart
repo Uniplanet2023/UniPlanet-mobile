@@ -10,7 +10,6 @@ import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
@@ -23,6 +22,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   get mobileChatBoxColor => null;
+  final ScrollController _scrollController = ScrollController();
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(_scrollController.position.minScrollExtent,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    }
+  }
 
   @override
   void initState() {
@@ -85,10 +91,15 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          const Expanded(child: ChatList()),
+          Expanded(
+              child: ChatList(
+            scrollController: _scrollController,
+          )),
           BottomChatField(
-              chatRoomId:
-                  context.read<ChatBloc>().state.currentChatRoom!.chatRoomId),
+            chatRoomId:
+                context.read<ChatBloc>().state.currentChatRoom!.chatRoomId,
+            scrollDownfuction: _scrollToBottom,
+          ),
           const SizedBox(
             height: 10,
           )

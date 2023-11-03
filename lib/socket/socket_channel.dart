@@ -82,16 +82,20 @@ class SocketService {
     StatusBloc stateBloc = context.read<StatusBloc>();
     print("this is my User id${context.read<UserBloc>().state.user!.id}");
     socket!.on("connectStatus", (data) {
-      print(
-          "${"User : " + data['userId']} join the chatRoom ${data['chatRoomId']}");
-      print(stateBloc.state.userOnList!);
-      stateBloc.add(StatusChangeEvent(data['userId']));
+      print(data['userId']);
+      data['userId'].forEach((userId) {
+        print(
+            "${"User : $userId"} join the chatRoom ${data['chatRoomId'].toString()}");
+        stateBloc.add(StatusChangeEvent(userId));
+      });
     });
   }
 
   void disconnectStatus() {
     StatusBloc stateBloc = context.read<StatusBloc>();
     socket!.on('disconnectStatus', (data) {
+      print('disconnnectStatus');
+      print(data['userId']);
       stateBloc.add(StatusDisconnectEvent(data['userId']));
     });
   }
@@ -106,6 +110,5 @@ class SocketService {
     for (var chatRoomId in chatRoomIds) {
       socket!.emit("joinChatRoom", chatRoomId);
     }
-    socket!.emit('signin');
   }
 }

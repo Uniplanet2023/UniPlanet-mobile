@@ -9,13 +9,19 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class ChatList extends StatefulWidget {
-  const ChatList({Key? key}) : super(key: key);
+  final ScrollController scrollController;
+  const ChatList({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   State<ChatList> createState() => _ChatListState();
 }
 
 class _ChatListState extends State<ChatList> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = context.read<UserBloc>().state.user!;
@@ -29,6 +35,9 @@ class _ChatListState extends State<ChatList> {
 
     return ListView.builder(
       itemCount: state.msgList!.length,
+      controller: widget.scrollController,
+      cacheExtent: 100.0,
+      reverse: true,
       itemBuilder: (context, index) {
         final Message currentMessage = state.msgList![index];
         String formattedDate = formatter.format(currentMessage.timestamp);
@@ -39,13 +48,16 @@ class _ChatListState extends State<ChatList> {
           final Message previousMessage = state.msgList![index - 1];
           print("$index current message : ${currentMessage.message}");
           print('$index previous message : ${previousMessage.message}');
+          print(
+              'Time Difference : ${currentMessage.timestamp.difference(previousMessage.timestamp).inMinutes}');
           final bool isSameSender =
               currentMessage.senderId == previousMessage.senderId;
 
           if (isSameSender &&
               currentMessage.timestamp
                       .difference(previousMessage.timestamp)
-                      .inMinutes <
+                      .inMinutes
+                      .abs() <
                   1) {
             // Flag to hide date for the previous message
             hidePreviousDate = true;

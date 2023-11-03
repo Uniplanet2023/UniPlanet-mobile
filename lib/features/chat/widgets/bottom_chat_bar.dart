@@ -14,9 +14,11 @@ import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
+  final Function scrollDownfuction;
   const BottomChatField({
     super.key,
     required this.chatRoomId,
+    required this.scrollDownfuction,
   });
 
   @override
@@ -68,6 +70,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
       setState(() {
         _messageController.text = '';
       });
+      widget.scrollDownfuction();
     }
   }
 

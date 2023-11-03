@@ -20,8 +20,6 @@ class MessageList {
         msgList: (map['messages'] as List)
             .map((messageMap) =>
                 Message.fromMap(messageMap as Map<String, dynamic>))
-            .toList()
-            .reversed
             .toList());
   }
 

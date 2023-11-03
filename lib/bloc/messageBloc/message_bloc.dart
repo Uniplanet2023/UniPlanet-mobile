@@ -22,7 +22,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
   _receiveMessage(ReceiveMessageEvent event, emit) {
     emit(LoadingMessageState(msgList: state.msgList));
-    state.msgList!.add(event.msg);
+    state.msgList!.insertAll(0, [event.msg]);
     emit(LoadedMessageState(msgList: state.msgList));
   }
 

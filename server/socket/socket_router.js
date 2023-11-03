@@ -21,8 +21,6 @@ module.exports = {
       console.log(
         "\x1b[32m------------------- Socket Middleware is Triggered -------------------\x1b[0m"
       );
-      //65440d86ecc17751f4bbdb31
-      //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDQwZDg2ZWNjMTc3NTFmNGJiZGIzMSIsImlhdCI6MTY5OTAyNTQyMn0.5bbjDmzk0jFlE28azjTcFqTQkIw7NeyRmDB-sUQxkYA
 
       const headers = socket.handshake.headers;
       console.log(headers);
@@ -60,9 +58,20 @@ module.exports = {
         console.log(
           "\x1b[32m------------------- Joining ChatRoom is Triggered -------------------\x1b[0m"
         );
-        console.log(`1. ${socket.user} joining chatRoom`);
-        socket.join(chatRoomId);
+
+        let userList = await isUserInChatRoom(chatRoomId);
         socket.chatRoomList.push(chatRoomId);
+        if (userList.length == 0 || !userList.includes(socket.user)) {
+          socket.join(chatRoomId);
+          console.log(`1. ${socket.user} joining chatRoom`);
+          userList.push(socket.user);
+        }
+        console.log("Final userList is " + userList);
+        io.to(chatRoomId).emit("connectStatus", {
+          userId: userList,
+          chatRoomId: chatRoomId,
+        });
+
         console.log("2. Chat Room Id is " + chatRoomId);
         console.log("User : " + socket.user + " is notified");
         // Fetch the last 50 messages from this chat room and send to the user
@@ -84,17 +93,6 @@ module.exports = {
         console.log(
           "\x1b[32m------------------- Joining ChatRoom is Successfully completed -------------------\x1b[0m"
         );
-      });
-
-      socket.on("signin", () => {
-        console.log("signin Triggered");
-        console.log(socket.user);
-        socket.chatRoomList.forEach((chatRoomId) => {
-          io.to(chatRoomId).emit("connectStatus", {
-            userId: socket.user,
-            chatRoomId: chatRoomId,
-          });
-        });
       });
 
       socket.on("fetch_messages", async () => {
@@ -140,13 +138,14 @@ module.exports = {
 
       socket.on("disconnect", async () => {
         console.log("Client disconnected");
+        console.log(socket.chatRoomList);
         socket.chatRoomList.forEach((chatRoomId) => {
+          console.log("disconnected");
           io.to(chatRoomId).emit("disconnectStatus", { userId: socket.user });
         });
         socket.user = "";
         socket.handshake.headers["x-auth-token"] = "";
-        console.log(socket.handshake.headers);
-        console.log(socket.user);
+
         // user = await User.findByIdAndUpdate(
         //   socket.user,
         //   { isOnline: false },
@@ -160,6 +159,19 @@ module.exports = {
           delete userSocketIds[userId];
         }
       });
+      // This function checks if a user is already in a chat room
+      const isUserInChatRoom = async (chatRoomId) => {
+        // Get the room's data
+        const sockets = await io.in(chatRoomId).fetchSockets();
+        let userList = [];
+        sockets.map((e) => {
+          userList.push(e.user);
+          console.log(e.user);
+        });
+
+        console.log("isUserInChatRoom " + userList);
+        return userList; // User is not in the chat room
+      };
     });
 
     return io;
