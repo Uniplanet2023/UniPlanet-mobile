@@ -40,7 +40,8 @@ const send_mail = async (user_email, name) => {
       from: "UniPlanet ✉️ <uniplanet.info@gmail.com>",
       to: user_email,
       subject: `Hello ${name}, Your UniPlanet Marketplace verification code"`,
-      text: `Hi ${name}, Please verify your email address using the following verification code: ${otp_to_be_sent[0]}`,
+      text: `Hi ${name}, Please verify your email address using the following verification code: ${otp_to_be_sent[0]}.
+             \nThe verification code is valid for 5 minutes. Please complete the verification as soon as possible.`,
       auth: {
         user: "uniplanet.info@gmail.com",
         refreshToken: REFRESH_TOKEN,

@@ -12,7 +12,7 @@ class TermsAndConditions extends StatefulWidget {
 class _TermsAndConditionsState extends State<TermsAndConditions> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 320,
       child: RichText(
         text: TextSpan(
