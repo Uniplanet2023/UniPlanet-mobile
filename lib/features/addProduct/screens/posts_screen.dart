@@ -24,7 +24,7 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   fetchAllProducts() async {
-    products = await ProductRepository().fetchAllProducts(context);
+    products = await ProductRepository().fetchAllProducts();
     setState(() {});
   }
 
@@ -80,7 +80,7 @@ class _PostsScreenState extends State<PostsScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.logout),
-                          onPressed: () => UserRepository().logOut(context),
+                          onPressed: () => UserRepository().logOut(),
                         ),
                       ],
                     ),

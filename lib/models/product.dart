@@ -4,6 +4,8 @@ import 'package:uniplanet_mobile/models/rating.dart';
 
 class Product {
   final String name;
+  final String seller;
+  final String sellerId;
   final String description;
   final double quantity;
   final List<String> images;
@@ -13,6 +15,8 @@ class Product {
   final List<Rating>? rating;
   Product({
     required this.name,
+    required this.seller,
+    required this.sellerId,
     required this.description,
     required this.quantity,
     required this.images,
@@ -25,6 +29,8 @@ class Product {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'seller': seller,
+      'seller_id': sellerId,
       'description': description,
       'quantity': quantity,
       'images': images,
@@ -38,6 +44,8 @@ class Product {
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
       name: map['name'] ?? '',
+      seller: map['sellerName'] ?? "",
+      sellerId: map['sellerId'] ?? "",
       description: map['description'] ?? '',
       quantity: map['quantity']?.toDouble() ?? 0.0,
       images: List<String>.from(map['images']),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SnackbarGlobal {
   static GlobalKey<ScaffoldMessengerState> key =
@@ -31,4 +32,43 @@ Future<List<File>> pickImages() async {
     debugPrint(e.toString());
   }
   return images;
+}
+
+Future<File?> pickImageFromGallery(BuildContext context) async {
+  File? image;
+  try {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      image = File(pickedImage.path);
+    }
+  } catch (e) {
+    SnackbarGlobal.showSnackBar(e.toString());
+  }
+  return image;
+}
+
+Future<File?> pickVideoFromGallery(BuildContext context) async {
+  File? video;
+  try {
+    final pickedVideo =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+
+    if (pickedVideo != null) {
+      video = File(pickedVideo.path);
+    }
+  } catch (e) {
+    SnackbarGlobal.showSnackBar(e.toString());
+  }
+  return video;
+}
+
+// Method to open the camera
+Future<void> openCamera() async {
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  if (pickedFile != null) {
+    final File imageFile = File(pickedFile.path);
+    // Handle the captured image file (e.g., send it or display it)
+  }
 }

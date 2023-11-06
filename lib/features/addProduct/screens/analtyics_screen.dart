@@ -24,7 +24,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   }
 
   getEarnings() async {
-    var earningData = await UserRepository().getEarnings(context);
+    var earningData = await UserRepository().getEarnings(context: context);
     totalSales = earningData['totalEarnings'];
     earnings = earningData['sales'];
     setState(() {});

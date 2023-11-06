@@ -5,8 +5,7 @@ import 'package:uniplanet_mobile/features/account/screens/buying_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/help_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/payment_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/selling_screen.dart';
-import 'package:uniplanet_mobile/providers/user_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class NewAccountScreen extends StatelessWidget {
   const NewAccountScreen({Key? key}) : super(key: key);
@@ -62,7 +61,8 @@ class UserHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = UserRepository.getUser(context);
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(

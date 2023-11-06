@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchProductsAll() async {
     print('fetch Product is triggered');
-    productList = await ProductRepository().fetchAllProducts(context);
+    productList = await ProductRepository().fetchAllProducts();
     setState(() {});
   }
 

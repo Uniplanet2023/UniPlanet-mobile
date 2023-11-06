@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/user.dart';
 
 String uri = 'http://localhost:3000';
 

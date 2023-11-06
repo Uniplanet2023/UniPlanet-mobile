@@ -1,9 +1,20 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' as foundation;
+
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class BottomChatField extends StatefulWidget {
+  final String chatRoomId;
   const BottomChatField({
     super.key,
+    required this.chatRoomId,
   });
 
   @override
@@ -11,81 +22,237 @@ class BottomChatField extends StatefulWidget {
 }
 
 class _BottomChatFieldState extends State<BottomChatField> {
+  bool isContainerVisible = false;
   bool isShowSendButton = false;
+  final TextEditingController _messageController = TextEditingController();
+  // FlutterSoundRecorder? _soundRecorder;
+  bool isRecorderInit = false;
+  bool isShowEmojiContainer = false;
+  bool isRecording = false;
+  FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // _soundRecorder = FlutterSoundRecorder();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus && isContainerVisible) {
+        // If TextFormField is clicked and container is visible
+        setState(() {
+          isContainerVisible = false; // Hide the container
+        });
+      }
+    });
+  }
+
+  void openAudio() async {
+    // final status = await Permission.microphone.request();
+    // if (status != PermissionStatus.granted) {
+    //   throw RecordingPermissionException('Mic permission not allowed!');
+    // }
+    // await _soundRecorder!.openRecorder();
+    isRecorderInit = true;
+  }
+
+  void sendTextMessage() async {
+    // if (isShowSendButton) {
+    //   ref.read(chatControllerProvider).sendTextMessage(
+    //         context,
+    //         _messageController.text.trim(),
+    //         widget.recieverUserId,
+    //         widget.isGroupChat,
+    //       );
+    //   setState(() {
+    //     _messageController.text = '';
+    //   });
+    // } else {
+    //   var tempDir = await getTemporaryDirectory();
+    //   var path = '${tempDir.path}/flutter_sound.aac';
+    //   if (!isRecorderInit) {
+    //     return;
+    //   }
+    //   if (isRecording) {
+    //     await _soundRecorder!.stopRecorder();
+    //     sendFileMessage(File(path), MessageEnum.audio);
+    //   } else {
+    //     await _soundRecorder!.startRecorder(
+    //       toFile: path,
+    //     );
+    //   }
+
+    //   setState(() {
+    //     isRecording = !isRecording;
+    //   });
+    // }
+  }
+
+  void sendFileMessage(
+    File file,
+    MessageEnum messageEnum,
+  ) {
+    // ref.read(chatControllerProvider).sendFileMessage(
+    //       context,
+    //       file,
+    //       widget.recieverUserId,
+    //       messageEnum,
+    //       widget.isGroupChat,
+    //     );
+  }
+
+  void selectImage() async {
+    File? image = await pickImageFromGallery(context);
+    if (image != null) {
+      sendFileMessage(image, MessageEnum.image);
+    }
+  }
+
+  void selectVideo() async {
+    File? video = await pickVideoFromGallery(context);
+    if (video != null) {
+      sendFileMessage(video, MessageEnum.video);
+    }
+  }
+
+  void selectGIF() async {
+    // final gif = await pickGIF(context);
+    // if (gif != null) {
+    //   ref.read(chatControllerProvider).sendGIFMessage(
+    //         context,
+    //         gif.url,
+    //         widget.recieverUserId,
+    //         widget.isGroupChat,
+    //       );
+    // }
+  }
+
+  void showKeyboard() => focusNode.requestFocus();
+  void hideKeyboard() => focusNode.unfocus();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _messageController.dispose();
+    // _soundRecorder!.closeRecorder();
+    isRecorderInit = false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: GlobalVariables.greyBackgroundCOlor,
-              prefixIcon: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SizedBox(
-                  width: 48,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.emoji_emotions,
-                          color: Colors.grey,
-                        ),
-                      )
-                    ],
+    // final messageReply = ref.watch(messageReplyProvider);
+    // final isShowMessageReply = messageReply != null;
+    const isShowMessageReply = true;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  focusNode: focusNode,
+                  controller: _messageController,
+                  onChanged: (val) {
+                    if (val.isNotEmpty) {
+                      setState(() {
+                        isShowSendButton = true;
+                      });
+                    } else {
+                      setState(() {
+                        isShowSendButton = false;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: GlobalVariables.backgroundColor,
+                    prefixIcon: SizedBox(
+                      width: 50,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isContainerVisible =
+                                    !isContainerVisible; // Toggle container visibility
+                              });
+                              if (isContainerVisible) {
+                                hideKeyboard(); // Hide the keyboard if container is shown
+                              } else {
+                                showKeyboard(); // Show the keyboard if container is hidden
+                              }
+                            },
+                            icon: Transform.rotate(
+                                angle: isContainerVisible ? 0.785398 : 0,
+                                child: const Icon(
+                                  Icons
+                                      .add, // Change icon based on container visibility
+                                  color: Colors.grey,
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+                    hintText: 'Type a message!',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.all(10),
                   ),
                 ),
               ),
-              suffixIcon: SizedBox(
-                width: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.camera_alt,
-                        color: Colors.grey,
-                      ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 0,
+                  right: 2,
+                  left: 2,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: const Color(0xFF128C7E),
+                  radius: 20,
+                  child: GestureDetector(
+                    onTap: sendTextMessage,
+                    child: Icon(
+                      isShowSendButton
+                          ? Icons.send
+                          : isRecording
+                              ? Icons.close
+                              : Icons.mic,
+                      color: Colors.white,
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.attach_file,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-              hintText: 'Type a message!',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-              ),
-              contentPadding: const EdgeInsets.all(10),
-            ),
+            ],
           ),
-        ),
-        const Padding(
-          padding: EdgeInsets.only(bottom: 0, right: 8, left: 2),
-          child: CircleAvatar(
-              backgroundColor: GlobalVariables.primaryColor,
-              radius: 25,
-              child: Icon(
-                Icons.send,
-                color: Colors.white,
-              )),
-        ),
-        const SizedBox(
-          height: 100,
-        )
-      ],
+          // Conditionally render the new container based on the value of isContainerVisible
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 20),
+            height: isContainerVisible ? 200 : 0,
+            color: Colors.grey[200],
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.photo_library),
+                    onPressed: () => pickImageFromGallery(context),
+                    color: Colors.blue,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.camera_alt),
+                    onPressed: () => openCamera(),
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

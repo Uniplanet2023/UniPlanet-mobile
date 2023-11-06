@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
@@ -5,19 +6,19 @@ import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 
-class CategoryDealsScreen extends StatefulWidget {
+class CategoryScreen extends StatefulWidget {
   static const String routeName = '/category-deals';
   final String category;
-  const CategoryDealsScreen({
+  const CategoryScreen({
     Key? key,
     required this.category,
   }) : super(key: key);
 
   @override
-  State<CategoryDealsScreen> createState() => _CategoryDealsScreenState();
+  State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
+class _CategoryScreenState extends State<CategoryScreen> {
   List<Product>? productList;
 
   @override
@@ -28,7 +29,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
 
   fetchCategoryProducts() async {
     productList = await ProductRepository().fetchCategoryProducts(
-      context: context,
       category: widget.category,
     );
     setState(() {});
@@ -106,8 +106,25 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
-                                  child: Image.network(
-                                    product.images[0],
+                                  child: CachedNetworkImage(
+                                    cacheManager:
+                                        GlobalVariables.customCacheManager,
+                                    imageUrl: product.images[0],
+                                    key: UniqueKey(),
+                                    fit: BoxFit.contain,
+                                    height: 135,
+                                    width: 135,
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      color: Colors.black12,
+                                      child: const Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                        size: 80,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

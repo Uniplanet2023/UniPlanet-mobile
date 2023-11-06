@@ -1,57 +1,63 @@
-import 'package:uniplanet_mobile/common/widgets/enums/message_enum.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 
 class Message {
+  final String chatRoomId;
   final String senderId;
-  final String recieverid;
-  final String text;
+  final String message;
   final MessageEnum type;
-  final DateTime timeSent;
+  final DateTime timestamp;
   final String messageId;
   final bool isSeen;
-  final String repliedMessage;
-  final String repliedTo;
-  final MessageEnum repliedMessageType;
 
   Message({
-    required this.senderId,
-    required this.recieverid,
-    required this.text,
-    required this.type,
-    required this.timeSent,
+    required this.chatRoomId,
     required this.messageId,
+    required this.senderId,
+    required this.message,
+    required this.type,
     required this.isSeen,
-    required this.repliedMessage,
-    required this.repliedTo,
-    required this.repliedMessageType,
+    required this.timestamp,
   });
+  static initialMessage() {
+    return Message(
+        chatRoomId: '',
+        messageId: '',
+        senderId: '',
+        message: '',
+        type: MessageEnum.text,
+        isSeen: false,
+        timestamp: DateTime.now());
+  }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
+      'chatRoomId': chatRoomId,
       'senderId': senderId,
-      'recieverid': recieverid,
-      'text': text,
-      'type': type.type,
-      'timeSent': timeSent.millisecondsSinceEpoch,
+      'message': message,
+      'type': type.value,
+      'timestamp': timestamp.millisecondsSinceEpoch,
       'messageId': messageId,
       'isSeen': isSeen,
-      'repliedMessage': repliedMessage,
-      'repliedTo': repliedTo,
-      'repliedMessageType': repliedMessageType.type,
     };
   }
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
-      senderId: map['senderId'] ?? '',
-      recieverid: map['recieverid'] ?? '',
-      text: map['text'] ?? '',
-      type: (map['type'] as String).toEnum(),
-      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
-      messageId: map['messageId'] ?? '',
-      isSeen: map['isSeen'] ?? false,
-      repliedMessage: map['repliedMessage'] ?? '',
-      repliedTo: map['repliedTo'] ?? '',
-      repliedMessageType: (map['repliedMessageType'] as String).toEnum(),
+      chatRoomId: map['chatRoomId'] as String,
+      senderId: map['senderId'] as String,
+      message: map['message'] as String,
+      type: MessageEnumExtension.fromString(map['type'] as String),
+      timestamp: DateTime.parse(map['timestamp'].toString()),
+      messageId: map['_id'] as String,
+      isSeen: map['isSeen'] as bool,
     );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory Message.fromJson(String source) =>
+      Message.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -6,7 +6,6 @@ import 'package:uniplanet_mobile/constants/utils.dart';
 
 void httpErrorHandle({
   required Response response,
-  required BuildContext context,
   required VoidCallback onSuccess,
 }) {
   switch (response.statusCode) {

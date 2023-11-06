@@ -9,7 +9,7 @@ import 'package:uniplanet_mobile/models/order.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 
 class ProductRepository {
-  Future<List<Product>> fetchAllProducts(BuildContext context) async {
+  Future<List<Product>> fetchAllProducts() async {
     List<Product> productList = [];
     try {
       Dio dio = Dio();
@@ -17,11 +17,9 @@ class ProductRepository {
           options: Options(headers: {
             'Content-Type': 'application/json; charset=UTF-8',
           }));
-      if (!context.mounted) throw Error();
 
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           for (int i = 0; i < res.data.length; i++) {
             productList.add(
@@ -41,22 +39,19 @@ class ProductRepository {
   }
 
   Future<List<Product>> fetchCategoryProducts({
-    required BuildContext context,
     required String category,
   }) async {
     List<Product> productList = [];
     try {
       Dio dio = Dio();
-      print('category ');
+
       Response res = await dio.get('$uri/api/products?category=$category',
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           }));
 
-      if (!context.mounted) throw Error();
       httpErrorHandle(
         response: res,
-        context: context,
         onSuccess: () {
           for (int i = 0; i < res.data.length; i++) {
             productList.add(
@@ -73,38 +68,5 @@ class ProductRepository {
       SnackbarGlobal.showSnackBar(e.toString());
     }
     return productList;
-  }
-
-  Future<Product> fetchDealOfDay({
-    required BuildContext context,
-  }) async {
-    Product product = Product(
-      name: '',
-      description: '',
-      quantity: 0,
-      images: [],
-      category: '',
-      price: 0,
-    );
-
-    try {
-      Dio dio = Dio();
-      Response res = await dio.get('$uri/api/deal-of-day',
-          options: Options(headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          }));
-
-      if (!context.mounted) throw Error();
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          product = Product.fromJson(res.data);
-        },
-      );
-    } catch (e) {
-      SnackbarGlobal.showSnackBar(e.toString());
-    }
-    return product;
   }
 }

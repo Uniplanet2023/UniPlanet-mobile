@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { productSchema } = require("./product");
 
 const userSchema = mongoose.Schema({
   name: {
@@ -11,6 +10,7 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
     trim: true,
+    unique: true,
     validate: {
       validator: (value) => {
         const re =
@@ -20,29 +20,50 @@ const userSchema = mongoose.Schema({
       message: "Please enter a valid email address",
     },
   },
+  isOnline: {
+    required: true,
+    type: Boolean,
+    default: true,
+  },
+  school: {
+    required: true,
+    type: String,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   password: {
     required: true,
     type: String,
   },
-  address: {
+  profileImage: {
+    required: true,
     type: String,
-    default: "",
   },
   type: {
     type: String,
     default: "user",
   },
-
-  cart: [
+  unseenNotifications: [
     {
-      product: productSchema,
-      quantity: {
-        type: Number,
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Notification",
     },
   ],
+  unseenMessages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+    },
+  ],
+  like: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  selling: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  sold: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  bought: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  chatRooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "ChatRoom" }],
 });
 
 const User = mongoose.model("User", userSchema);
+
 module.exports = User;

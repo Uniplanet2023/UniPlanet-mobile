@@ -5,7 +5,6 @@ import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/providers/user_provider.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -52,33 +51,27 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   void onApplePayResult(res) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
-      UserRepository()
-          .saveUserAddress(context: context, address: addressToBeUsed);
-    }
-    UserRepository().placeOrder(
-      context: context,
-      address: addressToBeUsed,
-      totalSum: double.parse(widget.totalAmount),
-    );
+    // if (UserRepository().getUser.address.isEmpty) {
+    //   UserRepository()
+    //       .saveUserAddress(context: context, address: addressToBeUsed);
+    // }
+    // UserRepository().placeOrder(
+    //   context: context,
+    //   address: addressToBeUsed,
+    //   totalSum: double.parse(widget.totalAmount),
+    // );
   }
 
   void onGooglePayResult(res) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
-      UserRepository()
-          .saveUserAddress(context: context, address: addressToBeUsed);
-    }
-    UserRepository().placeOrder(
-      context: context,
-      address: addressToBeUsed,
-      totalSum: double.parse(widget.totalAmount),
-    );
+    // if (UserRepository().getUser.address.isEmpty) {
+    //   UserRepository()
+    //       .saveUserAddress(context: context, address: addressToBeUsed);
+    // }
+    // UserRepository().placeOrder(
+    //   context: context,
+    //   address: addressToBeUsed,
+    //   totalSum: double.parse(widget.totalAmount),
+    // );
   }
 
   void payPressed(String addressFromProvider) {
@@ -105,8 +98,8 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var address = context.watch<UserProvider>().user.address;
-
+    // var address = UserRepository().getUser.address;
+    var address = '';
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
