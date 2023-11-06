@@ -11,6 +11,7 @@ import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/splash_screen.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
@@ -75,7 +76,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: SnackbarGlobal.key,
-      title: 'Amazon Clone',
+      title: 'Uniplanet Marketplace',
       theme: ThemeData(
         colorScheme: const ColorScheme.light(
           primary: GlobalVariables.secondaryColor,
@@ -89,11 +90,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: state is LoadingUserState
-          ? const AuthScreen()
-          : state is LoadedUserState
-              ? const BottomBar()
-              : const AuthScreen(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -5,6 +5,7 @@ const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
 const redis_controller = require("../redis_controller/redis_controller");
+const mail_verify = require("../middlewares/email_verify.js");
 
 // SIGN UP
 authRouter.post("/api/signup", async (req, res) => {
@@ -12,6 +13,8 @@ authRouter.post("/api/signup", async (req, res) => {
     console.log(
       "\x1b[32m----------------- Auth API : Sign Up User API Triggerd -----------------\x1b[0m"
     );
+    console.log("Sign-Up API triggerd");
+    // console.log(req.body);
     const { name, email, password, profileImage, school, verified } = req.body;
     console.log("1. Finding Existing User");
     const existingUser = await User.findOne({ email });
@@ -54,6 +57,7 @@ authRouter.post("/api/signup", async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
 authRouter.post("api/delete-user", auth, async (req, res) => {
   try {
     console.log(
@@ -74,6 +78,7 @@ authRouter.post("api/delete-user", auth, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
 authRouter.post("api/password-update", async (req, res) => {
   try {
     console.log(
@@ -184,6 +189,43 @@ authRouter.post("/tokenIsValid", async (req, res) => {
     );
     console.log(e);
     res.status(500).json({ error: e.message });
+  }
+});
+
+authRouter.post("/api/sendOtp", async (req, res) => {
+  try {
+    const { email, name } = req.body;
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      console.log("User Exists!");
+      return res
+        .status(200)
+        .json({ message: "User with same email already exists!" });
+    }
+    const mail_result = await mail_verify.send_mail(
+      req.body.email,
+      req.body.name
+    );
+
+    res.status(200).json({ message: "Success", hash: mail_result });
+  } catch (error) {
+    res.status(400).json({ message: "Error while sending OTP", error: error });
+  }
+});
+
+authRouter.post("/api/verifyOtp", async (req, res) => {
+  try {
+    let result = await mail_verify.verfy_otp(req.body);
+    if (result == "Success") {
+      res.status(200).json({ message: result });
+    } else if (result == "Verfication number expired, Try signing in again") {
+      res.status(200).json({ message: result });
+    } else if (result == "Invalid Verfication number") {
+      res.status(200).json({ message: result });
+    }
+  } catch (error) {
+    res.status(400).json({ message: "Error while sending OTP", data: error });
   }
 });
 

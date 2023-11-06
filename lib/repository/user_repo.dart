@@ -16,6 +16,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/order.dart';
@@ -80,8 +81,7 @@ class UserRepository {
           SnackbarGlobal.showSnackBar(
             'Account created! Login with the same credentials!',
           );
-          // Future.delayed(const Duration(seconds: 1));
-          Navigator.pushNamed(context, SigninScreen.routeName);
+          Navigator.pushReplacementNamed(context, SigninScreen.routeName);
         },
       );
       return user;
@@ -558,5 +558,83 @@ class UserRepository {
       }
     }
     return productList;
+  }
+
+  Future<String> sendOtp(
+      {required BuildContext context,
+      required String email,
+      required String password,
+      required String name,
+      required String profileImage,
+      required String school,
+      required bool verified}) async {
+    try {
+      Dio dio = Dio();
+      var res = await dio.post('$uri/api/sendOtp',
+          data: jsonEncode({
+            'email': email,
+            'name': name,
+          }),
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          }));
+      if (res.data['message'] == "User with same email already exists!") {
+        SnackbarGlobal.showSnackBar(
+          "User with same email already exists!",
+        );
+      }
+      if (res.data != null &&
+          res.data is Map<String, dynamic> &&
+          res.data.containsKey('hash')) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OtpVerifyScreen(
+                  otpHash: res.data['hash'],
+                  email: email,
+                  password: password,
+                  name: name,
+                  profileImage: profileImage,
+                  school: school,
+                  verified: verified)),
+        );
+        return res.data['hash'];
+      } else {
+        return 'Something went wrong';
+      }
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> verifyUser({
+    required BuildContext context,
+    required String email,
+    required String otpHash,
+    required String otpCode,
+  }) async {
+    try {
+      Dio dio = Dio();
+      var res = await dio.post('$uri/api/verifyOtp',
+          data: jsonEncode(
+              {'email': email, 'otpHash': otpHash, 'otpCode': otpCode}),
+          options: Options(headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          }));
+      httpErrorHandle(
+        response: res,
+        onSuccess: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('x-auth-token', res.data['token']);
+        },
+      );
+      if (res.data != null) {
+        return res.data['message'];
+      } else {
+        return 'Something went wrong';
+      }
+    } catch (e) {
+      return e.toString();
+    }
   }
 }

@@ -4,6 +4,7 @@ import "package:uniplanet_mobile/features/address/screens/address_screen.dart";
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
+import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/signin_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/signup_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
@@ -29,6 +30,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SignupScreen(),
+      );
+    case OtpVerifyScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const OtpVerifyScreen(),
       );
     case SigninScreen.routeName:
       return MaterialPageRoute(
