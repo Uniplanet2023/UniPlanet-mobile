@@ -15,6 +15,7 @@ import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
@@ -78,6 +79,7 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    User user = context.watch<UserBloc>().state.user!;
     final userLikeLen = UserRepository.getUser(context).like.length;
 
     List<Widget> pages = [
@@ -221,7 +223,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     label: '',
                   ),
-                  // CART
+                  // Chat
                   BottomNavigationBarItem(
                     icon: Container(
                       width: bottomBarWidth,
@@ -235,17 +237,49 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: badges.Badge(
-                        badgeContent: Text(userLikeLen.toString()),
-                        badgeStyle: const badges.BadgeStyle(
-                            badgeColor: Colors.white, elevation: 0),
-                        child: const Icon(
-                          Icons.chat_bubble_outline,
-                        ),
-                      ),
+                      child: user.unseenMessages.isEmpty
+                          ? const Icon(
+                              Icons.chat_bubble_outline,
+                            )
+                          : badges.Badge(
+                              badgeContent: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors
+                                      .red, // Background color for the circle
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Makes it round
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth:
+                                      10, // Minimum width for the red circle
+                                  minHeight:
+                                      10, // Minimum height for the red circle
+                                ),
+                                child: Text(
+                                  user.unseenMessages.length.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize:
+                                        12, // You can adjust the font size as needed
+                                  ),
+                                ),
+                              ),
+                              badgeStyle: const badges.BadgeStyle(
+                                elevation: 0,
+                                shape: badges.BadgeShape.circle,
+                              ),
+                              position:
+                                  badges.BadgePosition.topEnd(top: -13, end: 2),
+                              child: const Icon(
+                                Icons.chat_bubble_outline,
+                              ),
+                            ),
                     ),
                     label: '',
                   ),
+
                   // ACCOUNT
                   BottomNavigationBarItem(
                     icon: Container(

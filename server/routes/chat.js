@@ -7,62 +7,63 @@ const User = require("../models/user");
 const ChatRoom = require("../models/chat_room");
 const { ObjectId } = require("mongoose").Types;
 
-chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
-  try {
-    console.log(
-      "\x1b[32m----------------- ChatRoom API : Creating ChatRoom API is Triggered -----------------\x1b[0m"
-    );
+// chatRouter.post("/api/joinChatingRoom", auth, async (req, res) => {
+//   try {
+//     console.log(
+//       "\x1b[32m----------------- ChatRoom API : Creating ChatRoom API is Triggered -----------------\x1b[0m"
+//     );
 
-    const { receiverId } = req.body;
-    if (!receiverId) {
-      throw new Error("receiverId are required");
-    }
-    console.log("1. Cheking UserID and ReceiverID");
-    if (req.user == receiverId) {
-      console.log("2. Cheking UserID and ReceiverID are Same!");
-      return res.status(400).json("It`s your self");
-    }
-    // Check if a chat room already exists between the user and the receiver
-    console.log("2. Checking the chatroom is already existed");
+//     const { receiverId } = req.body;
+//     if (!receiverId) {
+//       throw new Error("receiverId are required");
+//     }
+//     console.log("1. Cheking UserID and ReceiverID");
+//     if (req.user == receiverId) {
+//       console.log("2. Cheking UserID and ReceiverID are Same!");
+//       return res.status(400).json("It`s your self");
+//     }
+//     // Check if a chat room already exists between the user and the receiver
+//     console.log("2. Checking the chatroom is already existed");
 
-    let existingChatRoom = await ChatRoom.findOne({
-      buyer: req.user,
-      seller: receiverId,
-    }).populate("seller buyer lastMessage");
+//     let existingChatRoom = await ChatRoom.findOne({
+//       buyer: req.user,
+//       seller: receiverId,
+//     }).populate("seller buyer lastMessage");
 
-    if (existingChatRoom) {
-      console.log(
-        "3. Existing Room : Determine if req.user is the buyer or seller"
-      );
-      res.status(200).json(existingChatRoom);
-    } else {
-      console.log("3. Creating Room Model");
+//     if (existingChatRoom) {
+//       console.log(
+//         "3. Existing Room : Determine if req.user is the buyer or seller"
+//       );
+//       res.status(200).json(existingChatRoom);
+//     } else {
+//       console.log("3. Creating Room Model");
 
-      let chatRoom = new ChatRoom({
-        buyer: req.user,
-        seller: receiverId,
-        chatRoomType: "resell",
-      });
-      console.log("4. Save ChatRoom into DB");
-      await chatRoom.save();
-      console.log("5. Setting User as Buyer");
-      // Populate the seller details
-      await chatRoom.populate("seller buyer");
+//       let chatRoom = new ChatRoom({
+//         buyer: req.user,
+//         seller: receiverId,
+//         chatRoomType: "resell",
+//       });
+//       console.log("4. Save ChatRoom into DB");
+//       await chatRoom.save();
+//       console.log("5. Setting User as Buyer");
+//       // Populate the seller details
+//       await chatRoom.populate("seller buyer");
 
-      res.status(200).json(chatRoom);
-    }
+//       res.status(200).json(chatRoom);
+//     }
 
-    console.log(
-      "\x1b[32m----------------- ChatRoom API : Creating ChatRoom API is scuessfully completed -----------------\x1b[0m"
-    );
-  } catch (error) {
-    console.log(
-      "\x1b[31m----------------- There is an error in Creating ChatRoom API -----------------\x1b[0m"
-    );
-    console.error(error);
-    res.status(400).json({ error: error.message });
-  }
-});
+//     console.log(
+//       "\x1b[32m----------------- ChatRoom API : Creating ChatRoom API is scuessfully completed -----------------\x1b[0m"
+//     );
+//   } catch (error) {
+//     console.log(
+//       "\x1b[31m----------------- There is an error in Creating ChatRoom API -----------------\x1b[0m"
+//     );
+//     console.error(error);
+//     res.status(400).json({ error: error.message });
+//   }
+// });
+
 chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
   try {
     console.log(
@@ -70,6 +71,7 @@ chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
     );
 
     const { chatRoomIds } = req.body;
+    console.log(chatRoomIds);
     console.log("1. Finding ChatRoom from DB");
     // Find chatRooms directly using chatRoomIds
     let chatRooms = await ChatRoom.find({

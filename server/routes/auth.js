@@ -54,7 +54,7 @@ authRouter.post("/api/signup", async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
-authRouter.post("api/delet-user", auth, async (req, res) => {
+authRouter.post("api/delete-user", auth, async (req, res) => {
   try {
     console.log(
       "\x1b[32m----------------- Auth API : Delete User API Triggerd -----------------\x1b[0m"

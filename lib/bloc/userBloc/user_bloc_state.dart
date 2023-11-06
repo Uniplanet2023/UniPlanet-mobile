@@ -15,7 +15,6 @@ final class UserInitialState extends UserState {
                 profileImage: '',
                 school: '',
                 verified: false,
-                isOnline: false,
                 unseenNotifications: [],
                 unseenMessages: [],
                 like: [],

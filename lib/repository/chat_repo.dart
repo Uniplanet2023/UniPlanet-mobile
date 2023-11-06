@@ -43,33 +43,33 @@ class ChatRepository {
     return listMsg;
   }
 
-  Future<ChatRoom?> creatingChatRoom(
-      {required User user, required String receiverId}) async {
-    try {
-      ChatRoom chatRoom;
-      print('creating ChatRoom API triggered');
-      Dio dio = Dio();
-      Response res = await dio.post(
-        '$uri/api/joinChatingRoom',
-        options: Options(headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': user.token,
-        }),
-        data: {'receiverId': receiverId},
-      );
+  // Future<ChatRoom?> creatingChatRoom(
+  //     {required User user, required String receiverId}) async {
+  //   try {
+  //     ChatRoom chatRoom;
+  //     print('creating ChatRoom API triggered');
+  //     // Dio dio = Dio();
+  //     // Response res = await dio.post(
+  //     //   '$uri/api/joinChatingRoom',
+  //     //   options: Options(headers: {
+  //     //     'Content-Type': 'application/json; charset=UTF-8',
+  //     //     'x-auth-token': user.token,
+  //     //   }),
+  //     //   data: {'receiverId': receiverId},
+  //     // );
 
-      chatRoom = ChatRoom.fromMap(res.data);
+  //     // chatRoom = ChatRoom.fromMap(res.data);
 
-      return chatRoom;
-    } catch (e) {
-      if (e is DioException) {
-        if (e.response != null) {
-          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
-        }
-      }
-    }
-    return null;
-  }
+  //     return chatRoom;
+  //   } catch (e) {
+  //     if (e is DioException) {
+  //       if (e.response != null) {
+  //         SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+  //       }
+  //     }
+  //   }
+  //   return null;
+  // }
 
   Future<List<ChatRoom>> getChatRoom(List<String> chatRoomIds) async {
     List<ChatRoom> chatRoomList = [];
@@ -85,7 +85,7 @@ class ChatRepository {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': token,
           }));
-
+      print(res.data);
       for (var i = 0; i < res.data.length; i++) {
         ChatRoom chatRoom = ChatRoom.fromMap(res.data[i]);
 
@@ -108,7 +108,9 @@ class ChatRepository {
       required String chatRoomId,
       required String senderId}) async {
     // receiverId, messages, last Messages
+
     SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
+
     Message sMsg = Message(
         chatRoomId: chatRoomId,
         messageId: "",

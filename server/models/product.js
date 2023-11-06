@@ -7,12 +7,11 @@ const productSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
-  sellerName: {
-    type: String,
+  forSale: {
+    type: Boolean,
     required: true,
-    trim: true,
   },
-  sellerId: {
+  seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -28,10 +27,7 @@ const productSchema = mongoose.Schema({
       required: true,
     },
   ],
-  quantity: {
-    type: Number,
-    required: true,
-  },
+
   price: {
     type: Number,
     required: true,
@@ -40,8 +36,7 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  ratings: [ratingSchema],
-  timestamp: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },

@@ -63,6 +63,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
     if (isShowSendButton) {
       User user = context.read<UserBloc>().state.user!;
       context.read<MessageBloc>().add(SendMessageEvent(
+            // BLoc
             chatRoomId,
             user.id,
             msg,

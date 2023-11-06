@@ -32,8 +32,9 @@ void main() {
         BlocProvider(
             create: (context) => MessageBloc(context.read<ChatRepository>())),
         BlocProvider(
-            create: (context) =>
-                ProductBloc(context.read<ProductRepository>())),
+          create: (context) => ProductBloc(context.read<ProductRepository>(),
+              context.read<UserRepository>()),
+        ),
         BlocProvider(
           create: (context) => StatusBloc(),
         )

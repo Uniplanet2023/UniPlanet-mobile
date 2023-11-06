@@ -3,6 +3,7 @@ const Message = require("../models/message");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const jwt = require("jsonwebtoken");
 const ChatRoom = require("../models/chat_room");
+const creatingChatRoom = require("../routes/chatFunction");
 const cors = require("cors");
 let io;
 
@@ -16,7 +17,7 @@ module.exports = {
     io = socketIo(httpServer);
     io.adapter(createAdapter(pubClient, subClient));
 
-    //Middle ware
+    //Middle ware (Socket middle ware)
     io.use((socket, next) => {
       console.log(
         "\x1b[32m------------------- Socket Middleware is Triggered -------------------\x1b[0m"
@@ -39,7 +40,7 @@ module.exports = {
         }
         console.log("3. Setting User Id into the Socket");
 
-        socket.user = verified.id;
+        socket.user = verified.id; //user ID
         socket.token = token;
         socket.chatRoomList = [];
         console.log(socket.user);
@@ -52,7 +53,7 @@ module.exports = {
         console.log(err);
       }
     });
-
+    // socket API
     io.on("connection", (socket) => {
       socket.on("joinChatRoom", async (chatRoomId) => {
         console.log(
@@ -121,8 +122,8 @@ module.exports = {
           isSeen: false,
         });
         try {
-          io.to(chatRoomId).emit("receiveMessage", msg);
-          await msg.save();
+          io.to(chatRoomId).emit("receiveMessage", msg); //Front End
+          await msg.save(); // saving msg to the mongo db
 
           console.log(
             "\x1b[32m----------------- Socket API : Send Message  is Successfully Completed -----------------\x1b[0m"
@@ -131,7 +132,18 @@ module.exports = {
           console.error("Error saving message:", error);
         }
       });
+      socket.on("creating_chatRoom", async (receiverId) => {
+        // Socket (Temp), DB (Persistant)
+        var chatRoom = await creatingChatRoom(socket.user, receiverId); // Creating ChatRoom to the Mongo DB
+        // Every socket is different
+        socket.join(chatRoom._id); // Creating Chatroom and Join the chatRoom (Chat Room in Socket Level)
 
+        io.to(chatRoom._id).emit("connectStatus", {
+          userId: [socket.user],
+          chatRoomId: chatRoom._id,
+        }); // client have to let seller know I'm in the online.
+        io.to(chatRoom._id).emit("chatRoomInvitation"); // Clinet make a chatroom. seller have to join.
+      });
       socket.on("broadcast_message", (data) => {
         socket.broadcast.emit("receive_message", data);
       });
@@ -146,12 +158,6 @@ module.exports = {
         socket.user = "";
         socket.handshake.headers["x-auth-token"] = "";
 
-        // user = await User.findByIdAndUpdate(
-        //   socket.user,
-        //   { isOnline: false },
-        //   { new: true }
-        // );
-        // Remove socket reference on disconnect
         const userId = Object.keys(userSocketIds).find(
           (id) => userSocketIds[id] === socket.id
         );
@@ -162,7 +168,7 @@ module.exports = {
       // This function checks if a user is already in a chat room
       const isUserInChatRoom = async (chatRoomId) => {
         // Get the room's data
-        const sockets = await io.in(chatRoomId).fetchSockets();
+        const sockets = await io.in(chatRoomId).fetchSockets(); // let you know who is joining the certain chat room
         let userList = [];
         sockets.map((e) => {
           userList.push(e.user);

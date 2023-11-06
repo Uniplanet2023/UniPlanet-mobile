@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;
@@ -21,14 +22,12 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       await _selectChatRoom(event, emit);
     });
     on<ClientStatusChangeEvent>((event, emit) {
-      state.client!.isOnline = true;
       emit(StatusChangingState(
           currentChatRoom: state.currentChatRoom,
           chatRoomList: state.chatRoomList,
           client: state.client));
     });
     on<ClientStatusDisconnectEvent>(((event, emit) {
-      state.client!.isOnline = false;
       emit(StatusChangingState(
           currentChatRoom: state.currentChatRoom,
           chatRoomList: state.chatRoomList,
@@ -70,13 +69,14 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         chatRoomList: state.chatRoomList,
         client: state.client));
     try {
-      ChatRoom? room = await _chatRepository.creatingChatRoom(
-          user: event.user, receiverId: event.receiverId);
-      if (room != null || state.chatRoomList != null) {
-        List<ChatRoom> list = state.chatRoomList!;
-        list.add(room!);
+      SocketService.socket!.emit("joinChatRoom", event.chatRoom.chatRoomId);
+      state.chatRoomList!.add(event.chatRoom);
+      if (state.chatRoomList != null) {
+        state.chatRoomList!.add(event.chatRoom);
         emit(CreatedChatRoomState(
-            currentChatRoom: room, chatRoomList: list, client: room.seller));
+            currentChatRoom: event.chatRoom,
+            chatRoomList: state.chatRoomList!,
+            client: event.chatRoom.seller));
       } else {
         throw Exception('room or list is not initialized');
       }

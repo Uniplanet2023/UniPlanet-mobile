@@ -14,6 +14,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
   UserBloc(this._userRepository) : super(UserInitialState()) {
     on<SignInEvent>((event, emit) async {
+      // listen all the time
       await _signInFunction(event, emit);
     });
     on<LogoutEvent>((event, emit) async {

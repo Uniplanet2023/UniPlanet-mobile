@@ -33,50 +33,55 @@ class _ChatListState extends State<ChatList> {
 
     final DateFormat formatter = DateFormat('h:mm a');
 
-    return ListView.builder(
-      itemCount: state.msgList!.length,
-      controller: widget.scrollController,
-      cacheExtent: 100.0,
-      reverse: true,
-      itemBuilder: (context, index) {
-        final Message currentMessage = state.msgList![index];
-        String formattedDate = formatter.format(currentMessage.timestamp);
-
-        // Check for one-minute gap if not the first message and the same sender
-        bool hidePreviousDate = false;
-        if (index > 0) {
-          final Message previousMessage = state.msgList![index - 1];
-          print("$index current message : ${currentMessage.message}");
-          print('$index previous message : ${previousMessage.message}');
-          print(
-              'Time Difference : ${currentMessage.timestamp.difference(previousMessage.timestamp).inMinutes}');
-          final bool isSameSender =
-              currentMessage.senderId == previousMessage.senderId;
-
-          if (isSameSender &&
-              currentMessage.timestamp
-                      .difference(previousMessage.timestamp)
-                      .inMinutes
-                      .abs() <
-                  1) {
-            // Flag to hide date for the previous message
-            hidePreviousDate = true;
-          }
-        }
-
-        // Card assignment with conditional date visibility
-        if (currentMessage.senderId == user.id) {
-          return MyMessageCard(
-            message: currentMessage.message,
-            date: index == 0 || !hidePreviousDate ? formattedDate : '',
-          );
-        } else {
-          return SenderMessageCard(
-            message: currentMessage.message,
-            date: index == 0 || !hidePreviousDate ? formattedDate : '',
-          );
-        }
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
       },
+      child: ListView.builder(
+        itemCount: state.msgList!.length,
+        controller: widget.scrollController,
+        cacheExtent: 100.0,
+        reverse: true,
+        itemBuilder: (context, index) {
+          final Message currentMessage = state.msgList![index];
+          String formattedDate = formatter.format(currentMessage.timestamp);
+
+          // Check for one-minute gap if not the first message and the same sender
+          bool hidePreviousDate = false;
+          if (index > 0) {
+            final Message previousMessage = state.msgList![index - 1];
+            print("$index current message : ${currentMessage.message}");
+            print('$index previous message : ${previousMessage.message}');
+            print(
+                'Time Difference : ${currentMessage.timestamp.difference(previousMessage.timestamp).inMinutes}');
+            final bool isSameSender =
+                currentMessage.senderId == previousMessage.senderId;
+
+            if (isSameSender &&
+                currentMessage.timestamp
+                        .difference(previousMessage.timestamp)
+                        .inMinutes
+                        .abs() <
+                    1) {
+              // Flag to hide date for the previous message
+              hidePreviousDate = true;
+            }
+          }
+
+          // Card assignment with conditional date visibility
+          if (currentMessage.senderId == user.id) {
+            return MyMessageCard(
+              message: currentMessage.message,
+              date: index == 0 || !hidePreviousDate ? formattedDate : '',
+            );
+          } else {
+            return SenderMessageCard(
+              message: currentMessage.message,
+              date: index == 0 || !hidePreviousDate ? formattedDate : '',
+            );
+          }
+        },
+      ),
     );
   }
 }

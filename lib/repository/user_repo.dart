@@ -198,15 +198,17 @@ class UserRepository {
     return user;
   }
 
-  void sellProduct({
+  Future<Product> uploadProduct({
     required BuildContext context,
     required String name,
+    required bool forSale,
     required String description,
     required double price,
-    required double quantity,
     required String category,
     required List<File> images,
   }) async {
+    print('upload product is called');
+    Product product = Product.initProduct();
     Dio dio = Dio();
     User user = context.read<UserBloc>().state.user!;
     try {
@@ -219,20 +221,19 @@ class UserRepository {
         );
         imageUrls.add(res.secureUrl);
       }
-
-      Product product = Product(
-        name: name,
-        seller: user.name,
-        sellerId: user.id,
-        description: description,
-        quantity: quantity,
-        images: imageUrls,
-        category: category,
-        price: price,
-      );
+      print('upload product is called');
+      var productData = {
+        'name': name,
+        'forSale': forSale,
+        'seller': user.id,
+        'description': description,
+        'images': imageUrls,
+        'price': price,
+        'category': category,
+      };
 
       Response res = await dio.post('$uri/api/add-product',
-          data: product.toJson(),
+          data: productData,
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json;charset=UTF-8',
             'x-auth-token': user.token
@@ -245,6 +246,8 @@ class UserRepository {
           Navigator.pop(context);
         },
       );
+
+      product = Product.fromMap(res.data);
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -252,6 +255,7 @@ class UserRepository {
         }
       }
     }
+    return product;
   }
 
   void deleteProduct({
@@ -467,7 +471,7 @@ class UserRepository {
             'Content-Type': 'application/json; charset=UTF-8',
           }),
           data: jsonEncode({
-            'id': product.id!,
+            'id': product.id,
           }));
 
       httpErrorHandle(
@@ -499,7 +503,7 @@ class UserRepository {
             'x-auth-token': user.token,
           }),
           data: jsonEncode({
-            'id': product.id!,
+            'id': product.id,
             'rating': rating,
           }));
 

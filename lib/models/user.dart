@@ -7,7 +7,6 @@ class User {
   final String profileImage;
   final String school;
   final bool verified;
-  bool isOnline;
   final List<String> unseenNotifications;
   final List<String> unseenMessages;
   final List<String> like;
@@ -24,7 +23,6 @@ class User {
     required this.profileImage,
     required this.school,
     required this.verified,
-    required this.isOnline,
     required this.unseenNotifications,
     required this.unseenMessages,
     required this.like,
@@ -43,7 +41,6 @@ class User {
         profileImage: '',
         school: '',
         verified: false,
-        isOnline: false,
         unseenNotifications: [],
         unseenMessages: [],
         like: [],
@@ -63,7 +60,6 @@ class User {
       'profileImage': profileImage,
       'school': school,
       'verified': verified,
-      'isOnline': isOnline,
       'unseenNotifications': unseenNotifications,
       'unseenMessages': unseenMessages,
       'like': like,
@@ -85,7 +81,6 @@ class User {
           'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
       school: map['school'] as String,
       verified: map['verified'] as bool,
-      isOnline: map['isOnline'] as bool,
       unseenNotifications: List<String>.from(map['unseenNotifications']),
       unseenMessages: List<String>.from(map['unseenMessages']),
       like: List<String>.from(map['like']),
@@ -128,7 +123,6 @@ class User {
       profileImage: profileImage ?? this.profileImage,
       school: school ?? this.school,
       verified: verified ?? this.verified,
-      isOnline: isOnline ?? this.isOnline,
       unseenNotifications: unseenNotifications ?? this.unseenNotifications,
       unseenMessages: unseenMessages ?? this.unseenMessages,
       like: like ?? this.like,

@@ -20,11 +20,6 @@ const userSchema = mongoose.Schema({
       message: "Please enter a valid email address",
     },
   },
-  isOnline: {
-    required: true,
-    type: Boolean,
-    default: true,
-  },
   school: {
     required: true,
     type: String,

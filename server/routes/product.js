@@ -111,28 +111,21 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
     console.log(
       "\x1b[32m----------------- Product API : Adding Product is Triggered -----------------\x1b[0m"
     );
-    const {
-      name,
-      seller,
-      seller_id,
-      description,
-      images,
-      quantity,
-      price,
-      category,
-    } = req.body;
+    const { name, forSale, seller, description, images, price, category } =
+      req.body;
     console.log("1. Creating Product Model");
     let product = new Product({
       name,
-      sellerName: seller,
-      sellerId: seller_id,
+      forSale,
+      seller,
       description,
       images,
-      quantity,
       price,
       category,
     });
+
     console.log("2. Adding Product to Database and Redis");
+    console.log(product);
     Promise.all([
       (product = await product.save()),
       await redis_controller.addJson("products", product),

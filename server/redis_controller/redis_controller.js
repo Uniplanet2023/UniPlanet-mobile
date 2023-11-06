@@ -64,6 +64,7 @@ module.exports = {
         list_value.length == undefined ||
         list_value.length == 0
       ) {
+        await pubClient.json.set(key, path, []);
         console.log("Invalid List Or Empty Products");
       } else {
         await pubClient.json.set(key, path, list_value);

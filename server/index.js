@@ -12,6 +12,7 @@ const productRouter = require("./routes/product");
 const userRouter = require("./routes/user");
 const likeRouter = require("./routes/like");
 const chatRouter = require("./routes/chat");
+
 // INIT
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use(chatRouter);
 app.use(productRouter);
 app.use(userRouter);
 app.use(likeRouter);
+
 app.use(cors());
 mongoose
   .connect(process.env.MONGO_DB_HOST)

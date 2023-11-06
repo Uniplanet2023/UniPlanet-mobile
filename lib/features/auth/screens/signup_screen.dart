@@ -39,7 +39,7 @@ class _SigninScreenState extends State<SignupScreen> {
       ));
       return;
     }
-
+    // Bussiness logic
     UserRepository().signUpUser(
         context: context,
         verified: true,
@@ -49,6 +49,7 @@ class _SigninScreenState extends State<SignupScreen> {
         profileImage:
             'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
         school: 'StonyBrook');
+
     // authService.signUpUser(
     //   context: context,
     //   email: _emailController.text,
@@ -125,20 +126,22 @@ class _SigninScreenState extends State<SignupScreen> {
                 hintText: 'Password',
               ),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  Checkbox(
-                    checkColor: GlobalVariables.secondaryColor,
-                    fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked = value!;
-                      });
-                    },
-                  ),
-                  const TermsAndConditions()
-                ],
+              Expanded(
+                child: Row(
+                  children: [
+                    Checkbox(
+                      checkColor: GlobalVariables.secondaryColor,
+                      fillColor: MaterialStateProperty.resolveWith(getColor),
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
+                    ),
+                    const TermsAndConditions()
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
               CustomButton(

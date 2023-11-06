@@ -24,6 +24,7 @@ class _ChatListState extends State<ChatList> {
   void initState() {
     super.initState();
     User user = context.read<UserBloc>().state.user!;
+    print(user);
     context.read<ChatBloc>().add(LoadChatRoomEvent(user.chatRooms));
   }
 

@@ -20,6 +20,14 @@ final class LoadedProductState extends ProductState {
   const LoadedProductState({super.productList});
 }
 
+final class UploadingProduct extends ProductState {
+  const UploadingProduct({super.productList});
+}
+
+final class UploadedProduct extends ProductState {
+  const UploadedProduct({super.productList});
+}
+
 final class ErrorProductState extends ProductState {
   final String errorMessage;
   const ErrorProductState(this.errorMessage);

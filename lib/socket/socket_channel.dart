@@ -8,6 +8,7 @@ import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
@@ -61,14 +62,29 @@ class SocketService {
 
     receiveMessageOn();
     receivingChatRoomData();
+    receiveChatRoomInvitation();
     userStatusChange();
     disconnectStatus();
     joiningAllChatRoom(state.user!.chatRooms);
   }
 
+  void receiveChatRoomInvitation() {
+    try {
+      socket!.on("chatRoomInvitation", (chatRoom) {
+        print('receive Invitation chatRoom id is : ' + chatRoom);
+        ChatRoom room = ChatRoom.fromMap(chatRoom);
+        CreateChatRoomEvent(room);
+        socket!.emit("joinChatRoom", chatRoom._id);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void receiveMessageOn() {
     try {
       socket!.on("receiveMessage", (data) {
+        //TCP chanell
         Message msg = Message.fromMap(data);
 
         context.read<MessageBloc>().add(ReceiveMessageEvent(msg));
