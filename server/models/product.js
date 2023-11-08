@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const ratingSchema = require("./rating");
 
 const productSchema = mongoose.Schema({
   name: {

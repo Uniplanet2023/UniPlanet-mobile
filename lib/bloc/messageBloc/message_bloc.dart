@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
@@ -27,14 +28,14 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
 
   _sendMessage(SendMessageEvent event, emit) async {
-    // emit(LoadingMessageState(msgList: state.msgList));
+    emit(LoadingMessageState(msgList: state.msgList));
     try {
       Message msg = await _chatRepository.sendMessage(
           msg: event.msg,
           chatRoomId: event.chatRoomId,
           senderId: event.senderId);
-
-      // emit(LoadedMessageState(msgList: updatedList));
+      state.msgList!.add(msg);
+      emit(LoadedMessageState(msgList: state.msgList!));
     } catch (e) {
       // handle errors
     }
@@ -42,9 +43,15 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
 
   _loadMessages(GetMessageEvent event, emit) async {
     emit(LoadingMessageState(msgList: state.msgList));
-    List<Message> msgList = await _chatRepository.getMessages(
-        chatRoomId: event.chatRoomId, msgList: event.msgList);
-    emit(LoadedMessageState(msgList: msgList));
+    try {
+      List<Message> msgList =
+          await _chatRepository.getMessages(chatRoomId: event.chatRoomId);
+
+      state.msgList!.insertAll(0, msgList);
+      emit(LoadedMessageState(msgList: state.msgList));
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

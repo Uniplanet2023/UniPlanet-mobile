@@ -34,3 +34,10 @@ class UpdateOnlineStatusEvent extends UserEvent {
   @override
   List<Object> get props => [];
 }
+
+class UpdateUserEvent extends UserEvent {
+  final User user;
+  const UpdateUserEvent(this.user);
+  @override
+  List<Object> get props => [user];
+}

@@ -51,6 +51,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   @override
   void onTransition(Transition<ProductEvent, ProductState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    print(transition);
   }
 }

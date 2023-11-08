@@ -5,7 +5,7 @@ import 'package:uniplanet_mobile/models/user.dart';
 
 class Product {
   final String name;
-  final String seller;
+  final User seller;
   final String description;
   final bool forSale;
   final List<String> images;
@@ -28,7 +28,7 @@ class Product {
     return Product(
         name: "",
         forSale: true,
-        seller: "",
+        seller: User.initialUser(),
         description: "",
         images: [""],
         category: "",
@@ -56,7 +56,7 @@ class Product {
       id: map['_id'],
       name: map['name'],
       forSale: map['forSale'] as bool,
-      seller: map['seller'],
+      seller: User.fromMap(map['seller']),
       description: map['description'],
       images: List<String>.from(map['images']),
       price: map['price'].toDouble(),

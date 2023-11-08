@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SocketService {
   final BuildContext context;
@@ -34,51 +36,40 @@ class SocketService {
               .setExtraHeaders({
                 'x-auth-token': token,
               })
-              .disableAutoConnect()
+              .enableAutoConnect()
+              .setReconnectionAttempts(3)
+              .setReconnectionDelay(300)
               .build());
+      socket!.onReconnect((data) {
+        print("reconnecting");
+        print(data);
+      });
+      socket!.onReconnect((_) {
+        print('onReconecting');
+      });
       socket!.onConnect((_) {
         print('connect');
-        var state = context.read<UserBloc>().state;
-        context.read<ChatBloc>().add(LoadChatRoomEvent(state.user!.chatRooms));
-
-        receiveMessageOn();
-        receivingChatRoomData();
-        userStatusChange();
-        disconnectStatus();
-        joiningAllChatRoom(state.user!.chatRooms);
+        setSocket(context);
       });
-      socket!.onDisconnect((_) {
+      socket!.onDisconnect((_) async {
         print('disconnected');
-        socket = null;
       });
-      socket!.onConnectError((data) => throw Exception(data));
+      socket!.onConnectError((data) async {
+        throw Exception(data);
+      });
       socket!.connect();
     }
   }
 
   void setSocket(BuildContext context) {
     var state = context.read<UserBloc>().state;
-    context.read<ChatBloc>().add(LoadChatRoomEvent(state.user!.chatRooms));
 
     receiveMessageOn();
-    receivingChatRoomData();
-    receiveChatRoomInvitation();
+    createChatRoom(context, state.user!);
+
     userStatusChange();
     disconnectStatus();
     joiningAllChatRoom(state.user!.chatRooms);
-  }
-
-  void receiveChatRoomInvitation() {
-    try {
-      socket!.on("chatRoomInvitation", (chatRoom) {
-        print('receive Invitation chatRoom id is : ' + chatRoom);
-        ChatRoom room = ChatRoom.fromMap(chatRoom);
-        CreateChatRoomEvent(room);
-        socket!.emit("joinChatRoom", chatRoom._id);
-      });
-    } catch (e) {
-      print(e);
-    }
   }
 
   void receiveMessageOn() {
@@ -86,7 +77,6 @@ class SocketService {
       socket!.on("receiveMessage", (data) {
         //TCP chanell
         Message msg = Message.fromMap(data);
-
         context.read<MessageBloc>().add(ReceiveMessageEvent(msg));
       });
     } catch (e) {
@@ -96,7 +86,7 @@ class SocketService {
 
   void userStatusChange() {
     StatusBloc stateBloc = context.read<StatusBloc>();
-    print("this is my User id${context.read<UserBloc>().state.user!.id}");
+    print("this is my User id${UserRepository.user.id}");
     socket!.on("connectStatus", (data) {
       print(data['userId']);
       data['userId'].forEach((userId) {
@@ -111,14 +101,15 @@ class SocketService {
     StatusBloc stateBloc = context.read<StatusBloc>();
     socket!.on('disconnectStatus', (data) {
       print('disconnnectStatus');
-      print(data['userId']);
+
       stateBloc.add(StatusDisconnectEvent(data['userId']));
     });
   }
 
-  static void receivingChatRoomData() {
-    socket!.on("chatRoomData", (data) {
-      print(data);
+  void createChatRoom(BuildContext context, User user) {
+    socket!.on("created_chatRoom", (data) {
+      print("chatRoom data is received(socket.io)");
+      ChatRoom chatRoom = ChatRoom.fromMap(data);
     });
   }
 

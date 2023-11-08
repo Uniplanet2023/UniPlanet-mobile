@@ -7,25 +7,16 @@ abstract class ChatBlocEvent extends Equatable {
 }
 
 class CreateChatRoomEvent extends ChatBlocEvent {
-  final ChatRoom chatRoom;
-  const CreateChatRoomEvent(this.chatRoom);
+  final User seller;
+  const CreateChatRoomEvent(this.seller);
   @override
-  List<Object> get props => [chatRoom];
-}
-
-class SelectChatRoomEvent extends ChatBlocEvent {
-  final ChatRoom chatroom;
-  final String userId;
-  const SelectChatRoomEvent(this.chatroom, this.userId);
-  @override
-  List<Object> get props => [chatroom];
+  List<Object> get props => [seller];
 }
 
 class LoadChatRoomEvent extends ChatBlocEvent {
-  final List<String> chatRoomIds;
-  const LoadChatRoomEvent(this.chatRoomIds);
+  const LoadChatRoomEvent();
   @override
-  List<Object> get props => [chatRoomIds];
+  List<Object> get props => [];
 }
 
 class LoadMessageEvent extends ChatBlocEvent {

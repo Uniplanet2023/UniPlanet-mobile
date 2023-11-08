@@ -10,6 +10,7 @@ import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;
@@ -20,18 +21,12 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
-  selectChatRoom(ChatRoom chatroom, String userId) {
-    context.read<ChatBloc>().add(SelectChatRoomEvent(chatroom, userId));
-  }
-
-  _loadList(User user) {
-    context.read<ChatBloc>().add(LoadChatRoomEvent(user.chatRooms));
+  _loadList() {
+    context.read<ChatBloc>().add(const LoadChatRoomEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<UserBloc>().state.user!;
-
     var userOnline = context.watch<StatusBloc>().state.userOnList!;
 
     return Padding(
@@ -40,7 +35,7 @@ class _ContactsListState extends State<ContactsList> {
         shrinkWrap: true,
         itemCount: widget.list.length,
         itemBuilder: (context, index) {
-          User client = widget.list[index].buyer.id == user.id
+          User client = widget.list[index].buyer.id == UserRepository.user.id
               ? widget.list[index].seller
               : widget.list[index].buyer;
 
@@ -48,13 +43,15 @@ class _ContactsListState extends State<ContactsList> {
             children: [
               InkWell(
                 onTap: () async {
-                  selectChatRoom(widget.list[index], user.id);
                   await Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
-                      return const ChatScreen();
+                      return ChatScreen(
+                        client: client,
+                        chatRoom: widget.list[index],
+                      );
                     }),
                   );
-                  _loadList(user);
+                  _loadList();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),

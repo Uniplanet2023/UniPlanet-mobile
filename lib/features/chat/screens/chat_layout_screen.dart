@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
-import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ChatList extends StatefulWidget {
   static const String routeName = '/chat_list';
@@ -23,25 +22,22 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    User user = context.read<UserBloc>().state.user!;
-    print(user);
-    context.read<ChatBloc>().add(LoadChatRoomEvent(user.chatRooms));
+    context.read<ChatBloc>().add(const LoadChatRoomEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    User user = context.read<UserBloc>().state.user!;
     final state = context.watch<ChatBloc>().state;
 
-    List<ChatRoom> buyerChatRoom = [];
-    List<ChatRoom> sellerChatRooms = [];
+    List<ChatRoom> buyingChatRoom = [];
+    List<ChatRoom> sellingChatRooms = [];
 
     if (state is LoadedChatRoomState) {
-      buyerChatRoom = state.chatRoomList!
-          .where((chatRoom) => chatRoom.seller.id == user.id)
+      sellingChatRooms = state.chatRoomList!
+          .where((chatRoom) => chatRoom.seller.id == UserRepository.user.id)
           .toList();
-      sellerChatRooms = state.chatRoomList!
-          .where((chatRoom) => chatRoom.buyer.id == user.id)
+      buyingChatRoom = state.chatRoomList!
+          .where((chatRoom) => chatRoom.buyer.id == UserRepository.user.id)
           .toList();
     }
 
@@ -80,10 +76,10 @@ class _ChatListState extends State<ChatList> {
             ),
             tabs: [
               Tab(
-                text: 'Buy Items (${buyerChatRoom.length})',
+                text: 'Buying (${buyingChatRoom.length})',
               ),
               Tab(
-                text: 'Sell Items (${sellerChatRooms.length})',
+                text: 'Selling (${sellingChatRooms.length})',
               ),
             ],
           ),
@@ -92,11 +88,11 @@ class _ChatListState extends State<ChatList> {
           children: [
             // Buy Items Tab
             ContactsList(
-              list: buyerChatRoom,
+              list: buyingChatRoom,
             ),
             // Sell Items Tab
             ContactsList(
-              list: sellerChatRooms,
+              list: sellingChatRooms,
             ),
           ],
         ),

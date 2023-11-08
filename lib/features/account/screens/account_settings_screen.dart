@@ -14,10 +14,6 @@ class AccountSettingsScreen extends StatefulWidget {
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
-  void logout(BuildContext context) {
-    context.read<UserBloc>().add(LogoutEvent(context));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +21,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         title: const Text('Account Settings'),
       ),
       body: Center(
-        child: CustomButton(text: "Logout", onTap: () => logout(context)),
+        child: CustomButton(
+            text: "Logout",
+            onTap: () => context.read<UserBloc>().add(LogoutEvent(context))),
       ),
     );
   }

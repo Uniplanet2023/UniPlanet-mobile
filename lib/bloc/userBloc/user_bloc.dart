@@ -23,6 +23,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoadUserDataEvent>((event, emit) async {
       await _loadingUserFunction(event, emit);
     });
+    on<UpdateUserEvent>((event, emit) async {
+      await _updateUserFunction(event, emit);
+    });
+  }
+  _updateUserFunction(UpdateUserEvent event, emit) async {
+    emit(LoadedUserState(user: event.user));
   }
 
   _loadingUserFunction(LoadUserDataEvent event, emit) async {

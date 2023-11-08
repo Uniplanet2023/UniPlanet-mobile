@@ -1,61 +1,60 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-
 import 'package:uniplanet_mobile/repository/user_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   static const String routeName = '/product-details';
   final Product product;
-  const ProductDetailScreen({
-    Key? key,
-    required this.product,
-  }) : super(key: key);
+
+  const ProductDetailScreen({Key? key, required this.product})
+      : super(key: key);
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  double avgRating = 0;
-  double myRating = 0;
-
   @override
   void initState() {
     super.initState();
   }
 
-  void navigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
-  }
-
-  void navigateToChatScreen(String seller) {
-    print(seller);
-    SocketService.socket!.emit("creating_chatRoom", seller);
-    Navigator.pushNamed(context, ChatScreen.routeName);
-  }
-
-  void navigateToback(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void addToLikes() {
-    UserRepository().addToLikes(
-      context: context,
-      product: widget.product,
+  CarouselSlider _buildCarouselSlider() {
+    return CarouselSlider(
+      items: widget.product.images
+          .map((image) => Builder(
+                builder: (BuildContext context) {
+                  return CachedNetworkImage(
+                    cacheManager: GlobalVariables.customCacheManager,
+                    imageUrl: image,
+                    fit: BoxFit.contain,
+                    height: 400,
+                    placeholder: (_, __) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (_, __, ___) =>
+                        const Icon(Icons.error, color: Colors.red, size: 80),
+                  );
+                },
+              ))
+          .toList(),
+      options: CarouselOptions(viewportFraction: 1, height: 400),
     );
+  }
+
+  void navigateToChatScreen(User seller, ChatBlocState state) {
+    if (state is CreatedChatRoomState) {
+      Navigator.pushNamed(context, ChatScreen.routeName,
+          arguments: {"seller": seller, "chatRoom": state.chatRoomList!.last});
+    }
   }
 
   @override
@@ -65,61 +64,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CarouselSlider(
-              items: widget.product.images.map(
-                (image) {
-                  return Builder(
-                    builder: (BuildContext context) => CachedNetworkImage(
-                      cacheManager: GlobalVariables.customCacheManager,
-                      imageUrl: image,
-                      key: UniqueKey(),
-                      fit: BoxFit.contain,
-                      height: 400,
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Container(
-                        color: Colors.black12,
-                        child: const Icon(
-                          Icons.error,
-                          color: Colors.red,
-                          size: 80,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ).toList(),
-              options: CarouselOptions(
-                viewportFraction: 1,
-                height: 400,
-              ),
-            ),
-            Container(
-              color: Colors.black12,
-              height: 4,
-            ),
+            _buildCarouselSlider(),
+            const Divider(height: 4, color: Colors.black12),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: RichText(
-                text: TextSpan(
-                  text: 'Fixed Price: ',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '\$${widget.product.price}',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              child: _buildPriceText(widget.product.price),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -128,53 +77,75 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-          child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar: _buildBottomAppBar(),
+    );
+  }
+
+  Widget _buildPriceText(double price) {
+    return RichText(
+      text: TextSpan(
+        text: 'Fixed Price: ',
+        style: const TextStyle(
+            fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
         children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => navigateToback(context),
+          TextSpan(
+            text: '\$$price',
+            style: const TextStyle(
+                fontSize: 22, color: Colors.red, fontWeight: FontWeight.w500),
           ),
-          RichText(
-            text: TextSpan(
-              text: 'Price: ',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              children: [
-                TextSpan(
-                  text: '\$${widget.product.price}',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(children: [
-            IconButton(
-              icon: const Icon(Icons.favorite_border),
-              onPressed: () {},
-            ),
-            TextButton(
-              onPressed: () => navigateToChatScreen(widget.product.seller),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    GlobalVariables.secondaryColor),
-              ),
-              child: const Text('Chat',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
-            ),
-          ]),
         ],
-      )),
+      ),
+    );
+  }
+
+  BottomAppBar _buildBottomAppBar() {
+    return BottomAppBar(
+      child: BlocConsumer<ChatBloc, ChatBlocState>(
+        listener: (context, state) {
+          if (state is CreatedChatRoomState) {
+            navigateToChatScreen(widget.product.seller, state);
+          }
+        },
+        builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+              _buildPriceText(widget.product.price),
+              widget.product.seller == UserRepository.user.id
+                  ? const SizedBox()
+                  : _buildChatAndFavoriteButtons(state),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildChatAndFavoriteButtons(ChatBlocState state) {
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.favorite_border),
+          onPressed: () => UserRepository()
+              .addToLikes(context: context, product: widget.product),
+        ),
+        TextButton(
+          onPressed: () => state is CreatingChatRoomState
+              ? null
+              : context
+                  .read<ChatBloc>()
+                  .add(CreateChatRoomEvent(widget.product.seller)),
+          style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor),
+          child: state is CreatingChatRoomState
+              ? const CircularProgressIndicator()
+              : const Text('Chat', style: TextStyle(color: Colors.white)),
+        ),
+      ],
     );
   }
 }

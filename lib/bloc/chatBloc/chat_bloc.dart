@@ -18,45 +18,32 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
-    on<SelectChatRoomEvent>((event, emit) async {
-      await _selectChatRoom(event, emit);
-    });
+
     on<ClientStatusChangeEvent>((event, emit) {
       emit(StatusChangingState(
-          currentChatRoom: state.currentChatRoom,
-          chatRoomList: state.chatRoomList,
-          client: state.client));
+        currentChatRoom: state.currentChatRoom,
+        chatRoomList: state.chatRoomList,
+      ));
     });
     on<ClientStatusDisconnectEvent>(((event, emit) {
       emit(StatusChangingState(
-          currentChatRoom: state.currentChatRoom,
-          chatRoomList: state.chatRoomList,
-          client: state.client));
-    }));
-  }
-
-  _selectChatRoom(SelectChatRoomEvent event, emit) async {
-    User client = event.chatroom.buyer.id == event.userId
-        ? event.chatroom.seller
-        : event.chatroom.buyer;
-    emit(SelectChatRoomState(
-        currentChatRoom: event.chatroom,
+        currentChatRoom: state.currentChatRoom,
         chatRoomList: state.chatRoomList,
-        client: client));
+      ));
+    }));
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
     emit(LoadingChatRoomState(
-        currentChatRoom: ChatRoom.initialChatRoom(),
-        chatRoomList: state.chatRoomList,
-        client: state.client));
+      currentChatRoom: ChatRoom.initialChatRoom(),
+      chatRoomList: state.chatRoomList,
+    ));
     try {
-      List<ChatRoom> chatrooms =
-          await _chatRepository.getChatRoom(event.chatRoomIds);
+      List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
       emit(LoadedChatRoomState(
-          currentChatRoom: state.currentChatRoom,
-          chatRoomList: chatrooms,
-          client: state.client));
+        currentChatRoom: state.currentChatRoom,
+        chatRoomList: chatrooms,
+      ));
     } catch (e) {
       print(e);
       throw Exception('Loading chat room API error');
@@ -65,18 +52,20 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
     emit(CreatingChatRoomState(
-        currentChatRoom: state.currentChatRoom,
-        chatRoomList: state.chatRoomList,
-        client: state.client));
+      currentChatRoom: state.currentChatRoom,
+      chatRoomList: state.chatRoomList,
+    ));
     try {
-      SocketService.socket!.emit("joinChatRoom", event.chatRoom.chatRoomId);
-      state.chatRoomList!.add(event.chatRoom);
+      ChatRoom chatRoom =
+          await _chatRepository.creatingChatRoom(receiverId: event.seller.id);
+      SocketService.socket!.emit("joinChatRoom", chatRoom.chatRoomId);
+      state.chatRoomList!.add(chatRoom);
       if (state.chatRoomList != null) {
-        state.chatRoomList!.add(event.chatRoom);
+        state.chatRoomList!.add(chatRoom);
         emit(CreatedChatRoomState(
-            currentChatRoom: event.chatRoom,
-            chatRoomList: state.chatRoomList!,
-            client: event.chatRoom.seller));
+          currentChatRoom: chatRoom,
+          chatRoomList: state.chatRoomList!,
+        ));
       } else {
         throw Exception('room or list is not initialized');
       }

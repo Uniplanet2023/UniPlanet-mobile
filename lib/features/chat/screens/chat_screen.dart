@@ -13,15 +13,16 @@ import 'package:uniplanet_mobile/models/user.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
-
-  const ChatScreen({Key? key}) : super(key: key);
+  final ChatRoom chatRoom;
+  final User client;
+  const ChatScreen({Key? key, required this.client, required this.chatRoom})
+      : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  get mobileChatBoxColor => null;
   final ScrollController _scrollController = ScrollController();
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -33,15 +34,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    ChatRoom roomState = context.read<ChatBloc>().state.currentChatRoom!;
     context
         .read<MessageBloc>()
-        .add(GetMessageEvent(roomState.messages, roomState.chatRoomId));
+        .add(GetMessageEvent(widget.chatRoom.chatRoomId));
   }
 
   @override
   Widget build(BuildContext context) {
-    User client = context.watch<ChatBloc>().state.client!;
     var userOnline = context.watch<StatusBloc>().state.userOnList!;
     return Scaffold(
       appBar: AppBar(
@@ -49,8 +48,8 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(client.name),
-            userOnline.contains(client.id)
+            Text(widget.client.name),
+            userOnline.contains(widget.client.id)
                 ? const Row(
                     children: [
                       Text(
@@ -94,10 +93,10 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
               child: ChatList(
             scrollController: _scrollController,
+            chatRoom: widget.chatRoom,
           )),
           BottomChatField(
-            chatRoomId:
-                context.read<ChatBloc>().state.currentChatRoom!.chatRoomId,
+            chatRoomId: widget.chatRoom.chatRoomId,
             scrollDownfuction: _scrollToBottom,
           ),
           const SizedBox(

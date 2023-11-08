@@ -8,11 +8,10 @@ abstract class MessageBlocEvent extends Equatable {
 }
 
 class GetMessageEvent extends MessageBlocEvent {
-  final List<String> msgList;
   final String chatRoomId;
-  const GetMessageEvent(this.msgList, this.chatRoomId);
+  const GetMessageEvent(this.chatRoomId);
   @override
-  List<Object> get props => [chatRoomId, msgList];
+  List<Object> get props => [chatRoomId];
 }
 
 class SendMessageEvent extends MessageBlocEvent {

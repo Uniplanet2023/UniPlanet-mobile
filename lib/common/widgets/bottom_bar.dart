@@ -80,7 +80,6 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     User user = context.watch<UserBloc>().state.user!;
-    final userLikeLen = UserRepository.getUser(context).like.length;
 
     List<Widget> pages = [
       HomeScreen(controller: _controller!),

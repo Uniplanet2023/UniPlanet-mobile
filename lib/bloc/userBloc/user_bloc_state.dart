@@ -6,24 +6,7 @@ abstract class UserState extends Equatable {
 }
 
 final class UserInitialState extends UserState {
-  UserInitialState()
-      : super(
-            user: User(
-                id: '',
-                name: '',
-                email: '',
-                profileImage: '',
-                school: '',
-                verified: false,
-                unseenNotifications: [],
-                unseenMessages: [],
-                like: [],
-                selling: [],
-                bought: [],
-                sold: [],
-                chatRooms: [],
-                type: '',
-                token: ''));
+  UserInitialState() : super(user: User.initialUser());
   @override
   List<Object?> get props => [user];
 }

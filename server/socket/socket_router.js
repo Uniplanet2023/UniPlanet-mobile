@@ -88,9 +88,9 @@ module.exports = {
           .populate({ path: "seller", model: "User" })
           .populate({ path: "buyer", model: "User" });
 
-        io.to(chatRoomId).emit("chatRoomData", {
-          chatRoom,
-        });
+        // io.to(chatRoomId).emit("chatRoomData", {
+        //   chatRoom,
+        // });
         console.log(
           "\x1b[32m------------------- Joining ChatRoom is Successfully completed -------------------\x1b[0m"
         );
@@ -134,15 +134,24 @@ module.exports = {
       });
       socket.on("creating_chatRoom", async (receiverId) => {
         // Socket (Temp), DB (Persistant)
-        var chatRoom = await creatingChatRoom(socket.user, receiverId); // Creating ChatRoom to the Mongo DB
-        // Every socket is different
-        socket.join(chatRoom._id); // Creating Chatroom and Join the chatRoom (Chat Room in Socket Level)
-
-        io.to(chatRoom._id).emit("connectStatus", {
-          userId: [socket.user],
-          chatRoomId: chatRoom._id,
-        }); // client have to let seller know I'm in the online.
-        io.to(chatRoom._id).emit("chatRoomInvitation"); // Clinet make a chatroom. seller have to join.
+        try {
+          var chatRoom = await creatingChatRoom(socket.user, receiverId); // Creating ChatRoom to the Mongo DB
+          console.log(chatRoom);
+          if (!chatRoom) {
+            throw Error("Wrong ChatRoom Intervention");
+          } else {
+            // Every socket is different
+            socket.join(chatRoom._id); // Creating Chatroom and Join the chatRoom (Chat Room in Socket Level)
+            io.to(chatRoom._id).emit("created_chatRoom", chatRoom);
+            // io.to(chatRoom._id).emit("connectStatus", {
+            //   userId: [socket.user],
+            //   chatRoomId: chatRoom._id,
+            // }); // client have to let seller know I'm in the online.
+            // io.to(chatRoom._id).emit("chatRoomInvitation"); // Clinet make a chatroom. seller have to join.
+          }
+        } catch (e) {
+          console.log(e);
+        }
       });
       socket.on("broadcast_message", (data) => {
         socket.broadcast.emit("receive_message", data);
