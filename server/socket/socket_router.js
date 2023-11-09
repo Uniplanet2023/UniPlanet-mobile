@@ -3,7 +3,6 @@ const Message = require("../models/message");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const jwt = require("jsonwebtoken");
 const ChatRoom = require("../models/chat_room");
-const creatingChatRoom = require("../routes/chatFunction");
 const cors = require("cors");
 let io;
 
@@ -132,27 +131,7 @@ module.exports = {
           console.error("Error saving message:", error);
         }
       });
-      socket.on("creating_chatRoom", async (receiverId) => {
-        // Socket (Temp), DB (Persistant)
-        try {
-          var chatRoom = await creatingChatRoom(socket.user, receiverId); // Creating ChatRoom to the Mongo DB
-          console.log(chatRoom);
-          if (!chatRoom) {
-            throw Error("Wrong ChatRoom Intervention");
-          } else {
-            // Every socket is different
-            socket.join(chatRoom._id); // Creating Chatroom and Join the chatRoom (Chat Room in Socket Level)
-            io.to(chatRoom._id).emit("created_chatRoom", chatRoom);
-            // io.to(chatRoom._id).emit("connectStatus", {
-            //   userId: [socket.user],
-            //   chatRoomId: chatRoom._id,
-            // }); // client have to let seller know I'm in the online.
-            // io.to(chatRoom._id).emit("chatRoomInvitation"); // Clinet make a chatroom. seller have to join.
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      });
+
       socket.on("broadcast_message", (data) => {
         socket.broadcast.emit("receive_message", data);
       });

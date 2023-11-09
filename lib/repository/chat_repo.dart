@@ -31,12 +31,13 @@ class ChatRepository {
     return chatRoom;
   }
 
-  Future<List<Message>> getMessages({required String chatRoomId}) async {
+  Future<List<Message>> getMessages(
+      {required String chatRoomId, required int page}) async {
     try {
       Response res = await dio.post(
         '$uri/api/getMessages',
         options: _getDioOptions(),
-        data: {'chatRoomId': chatRoomId},
+        data: {'chatRoomId': chatRoomId, 'page': page},
       );
 
       return MessageList.fromMap(res.data).msgList;

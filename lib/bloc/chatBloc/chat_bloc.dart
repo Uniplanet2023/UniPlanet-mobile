@@ -21,13 +21,11 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
     on<ClientStatusChangeEvent>((event, emit) {
       emit(StatusChangingState(
-        currentChatRoom: state.currentChatRoom,
         chatRoomList: state.chatRoomList,
       ));
     });
     on<ClientStatusDisconnectEvent>(((event, emit) {
       emit(StatusChangingState(
-        currentChatRoom: state.currentChatRoom,
         chatRoomList: state.chatRoomList,
       ));
     }));
@@ -35,13 +33,11 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
     emit(LoadingChatRoomState(
-      currentChatRoom: ChatRoom.initialChatRoom(),
       chatRoomList: state.chatRoomList,
     ));
     try {
       List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
       emit(LoadedChatRoomState(
-        currentChatRoom: state.currentChatRoom,
         chatRoomList: chatrooms,
       ));
     } catch (e) {
@@ -52,7 +48,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
     emit(CreatingChatRoomState(
-      currentChatRoom: state.currentChatRoom,
       chatRoomList: state.chatRoomList,
     ));
     try {
@@ -63,7 +58,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       if (state.chatRoomList != null) {
         state.chatRoomList!.add(chatRoom);
         emit(CreatedChatRoomState(
-          currentChatRoom: chatRoom,
           chatRoomList: state.chatRoomList!,
         ));
       } else {

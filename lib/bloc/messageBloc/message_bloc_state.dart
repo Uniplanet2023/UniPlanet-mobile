@@ -2,23 +2,30 @@ part of 'message_bloc.dart';
 
 abstract class MessageBlocState extends Equatable {
   final List<Message>? msgList;
-  const MessageBlocState({this.msgList});
+  final int? page;
+  const MessageBlocState({this.msgList, this.page});
 }
 
 class InitMessageState extends MessageBlocState {
-  InitMessageState() : super(msgList: []);
+  InitMessageState() : super(msgList: [], page: 0);
   @override
-  List<Object?> get props => [msgList];
+  List<Object?> get props => [msgList, page];
 }
 
 class LoadingMessageState extends MessageBlocState {
-  const LoadingMessageState({super.msgList});
+  const LoadingMessageState({super.msgList, super.page});
   @override
-  List<Object?> get props => [msgList];
+  List<Object?> get props => [msgList, page];
 }
 
 class LoadedMessageState extends MessageBlocState {
-  const LoadedMessageState({super.msgList});
+  const LoadedMessageState({super.msgList, super.page});
   @override
-  List<Object?> get props => [msgList];
+  List<Object?> get props => [msgList, page];
+}
+
+class EndMessageState extends MessageBlocState {
+  const EndMessageState({super.msgList, super.page});
+  @override
+  List<Object?> get props => [msgList, page];
 }

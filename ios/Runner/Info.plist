@@ -48,10 +48,18 @@
 
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We want image for product!</string>
+
 	<key>NSCameraUsageDescription</key>
 	<string>We need camera image for chatting</string>
+
 	<key>NSMicrophoneUsageDescription</key>
-<string>The application does not use this feature</string>
+	<string>The application does not use this feature</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location when open.</string>
+	
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to location when in the background.</string>
 
 </dict>
 </plist>

@@ -40,6 +40,7 @@ chatRouter.post("/api/createChatRoom", auth, async (req, res) => {
       console.log("4. Save ChatRoom into DB");
       await chatRoom.save();
       console.log("5. Setting User as Buyer");
+      console.log("done");
       // Populate the seller details
       await chatRoom.populate("seller buyer");
       res.status(200).json(chatRoom);
@@ -55,14 +56,18 @@ chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
 
     console.log("1. Finding ChatRoom from DB");
     // Execute the user lookup to get chatRooms.
-    const user = await User.findById(req.user, "chatRooms").lean();
+    const user = await User.findById(req.user, "chatRooms");
 
-    if (!user || !user.chatRooms.length) {
+    if (!user || user.chatRooms.length == 0) {
       // No chat rooms for the user
       return res.status(200).json([]);
     }
-
+    console.log(user);
     // Execute the chat room lookup.
+    const chatRoomstest = await ChatRoom.find({
+      _id: { $in: user.chatRooms },
+    });
+    console.log(chatRoomstest);
     const chatRooms = await ChatRoom.find({
       _id: { $in: user.chatRooms },
     })
@@ -86,10 +91,12 @@ chatRouter.get("/api/getChatRooms", auth, async (req, res) => {
 chatRouter.post("/api/getMessages", auth, async (req, res) => {
   try {
     logStart("Getting Message API");
-    const { chatRoomId } = req.body;
+    const { chatRoomId, page } = req.body;
     console.log("1. getting messages from database");
     // Directly find messages using the list of message IDs
     const chatRoom = await ChatRoom.findById(chatRoomId).lean();
+    const limit = 20;
+    const skip = page * limit;
     if (!chatRoom) {
       throw Error("No ChatRoom");
     }
@@ -97,7 +104,9 @@ chatRouter.post("/api/getMessages", auth, async (req, res) => {
       _id: { $in: chatRoom.messages },
     })
       .sort({ timestamp: -1 })
-      .limit(20);
+      .skip(skip)
+      .limit(limit);
+    console.log(messages);
 
     res.status(200).json({ messages });
     logEnd("Getting Message API");

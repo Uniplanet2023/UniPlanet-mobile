@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -23,27 +25,40 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
+  Timer? _debounce;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.scrollController.hasClients &&
-          widget.scrollController.position.maxScrollExtent - 200 <=
-              widget.scrollController.offset) {
+    // Add a listener to the scrollController here
+    widget.scrollController.addListener(_scrollListener);
+  }
+
+  // Define the scroll listener method
+  void _scrollListener() {
+    // If there's an existing timer, cancel it
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    // Check if the scroll position is at the end of the scroll extent
+    // Set up a new timer that waits for 50ms (or your desired debounce duration) before firing
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (widget.scrollController.position.pixels >=
+          widget.scrollController.position.maxScrollExtent) {
         context
             .read<MessageBloc>()
-            .add(GetMessageEvent(widget.chatRoom.chatRoomId));
+            .add(GetMoreMessageEvent(widget.chatRoom.chatRoomId));
       }
     });
   }
 
   @override
+  void dispose() {
+    // Don't forget to remove the listener when the widget is disposed
+    widget.scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var state = context.watch<MessageBloc>().state;
-
-    if (state.msgList == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
 
     final DateFormat formatter = DateFormat('h:mm a');
 
@@ -58,7 +73,7 @@ class _ChatListState extends State<ChatList> {
         reverse: true,
         itemBuilder: (context, index) {
           if (index == state.msgList!.length) {
-            if (state.msgList!.length > 19) {
+            if (state.msgList!.length > 19 && state is! EndMessageState) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -66,6 +81,7 @@ class _ChatListState extends State<ChatList> {
               return const SizedBox();
             }
           }
+
           final Message currentMessage = state.msgList![index];
           String formattedDate = formatter.format(currentMessage.timestamp);
 

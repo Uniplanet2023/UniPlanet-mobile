@@ -3,11 +3,9 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 abstract class ChatBlocState extends Equatable {
-  final ChatRoom? currentChatRoom;
   final List<ChatRoom>? chatRoomList;
 
   const ChatBlocState({
-    this.currentChatRoom,
     this.chatRoomList,
   });
 }
@@ -15,59 +13,58 @@ abstract class ChatBlocState extends Equatable {
 class InitChatRoomState extends ChatBlocState {
   InitChatRoomState()
       : super(
-          currentChatRoom: ChatRoom.initialChatRoom(),
           chatRoomList: [],
         );
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 //Creat ChatRoom
 class CreatingChatRoomState extends ChatBlocState {
-  const CreatingChatRoomState({super.currentChatRoom, super.chatRoomList});
+  const CreatingChatRoomState({super.chatRoomList});
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 class CreatedChatRoomState extends ChatBlocState {
-  const CreatedChatRoomState({super.currentChatRoom, super.chatRoomList});
+  const CreatedChatRoomState({super.chatRoomList});
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 //Load ChatRoom
 class LoadingChatRoomState extends ChatBlocState {
-  const LoadingChatRoomState({super.currentChatRoom, super.chatRoomList});
+  const LoadingChatRoomState({super.chatRoomList});
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 class LoadedChatRoomState extends ChatBlocState {
-  const LoadedChatRoomState({super.currentChatRoom, super.chatRoomList});
+  const LoadedChatRoomState({super.chatRoomList});
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 //Select ChatRoom
 class SelectChatRoomState extends ChatBlocState {
-  const SelectChatRoomState({super.currentChatRoom, super.chatRoomList});
+  const SelectChatRoomState({super.chatRoomList});
   @override
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 //setting client
 class StatusChangingState extends ChatBlocState {
-  const StatusChangingState({super.currentChatRoom, super.chatRoomList});
+  const StatusChangingState({super.chatRoomList});
   @override
   // TODO: implement props
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 class StatusChangedState extends ChatBlocState {
-  const StatusChangedState({super.currentChatRoom, super.chatRoomList});
+  const StatusChangedState({super.chatRoomList});
   @override
   // TODO: implement props
-  List<Object?> get props => [currentChatRoom, chatRoomList];
+  List<Object?> get props => [chatRoomList];
 }
 
 //Error
