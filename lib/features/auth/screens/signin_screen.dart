@@ -4,7 +4,9 @@ import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup_screen.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SigninScreen extends StatefulWidget {
   static const String routeName = '/signin-screen';
@@ -18,6 +20,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final _signInFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _resetPasswordController =
+      TextEditingController();
 
   void signInUser() {
     try {
@@ -28,11 +32,33 @@ class _SigninScreenState extends State<SigninScreen> {
     }
   }
 
+  void resetPassword() {
+    try {
+      final bool emailValid =
+          RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.edu$")
+              .hasMatch(_resetPasswordController.text);
+
+      if (!emailValid || _resetPasswordController.text == '') {
+        SnackbarGlobal.showSnackBar(
+          'Email format not correct, only school accounts accepted(.edu)',
+        );
+        return;
+      }
+      UserRepository().forgottenPassword(
+          context: context, email: _resetPasswordController.text);
+    } catch (e) {
+      SnackbarGlobal.showSnackBar(
+        'Something went wrong',
+      );
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _resetPasswordController.dispose();
   }
 
   @override
@@ -88,25 +114,76 @@ class _SigninScreenState extends State<SigninScreen> {
                     }
                   },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    const Text('Don\'t have an account? '),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignupScreen()),
-                        );
-                      },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: GlobalVariables.secondaryColor,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Don\'t have an account? '),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignupScreen()),
+                            );
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: GlobalVariables.secondaryColor,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Forgot your password? '),
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  scrollable: true,
+                                  title: const Text('Reset Password'),
+                                  content: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CustomTextField(
+                                        controller: _resetPasswordController,
+                                        hintText:
+                                            'Enter your email (.edu only)'),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
+                                      ),
+                                      child: const Text('Reset'),
+                                      onPressed: () {
+                                        resetPassword();
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            "Reset Password",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: GlobalVariables.secondaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

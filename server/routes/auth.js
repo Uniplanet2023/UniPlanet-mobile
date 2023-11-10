@@ -133,7 +133,6 @@ authRouter.post("/api/sendOtp", async (req, res) => {
     const { email, name } = req.body;
     const existingUser = await User.findOne({ email });
 
-
     if (existingUser) {
       console.log("User Exists!");
       return res
@@ -163,6 +162,35 @@ authRouter.post("/api/verifyOtp", async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ message: "Error while sending OTP", data: error });
+  }
+});
+
+authRouter.put("/api/forgottenPassword", async (req, res) => {
+  try {
+    const { email } = req.body;
+    console.log(email);
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      console.log("User Exists!");
+      return res
+        .status(200)
+        .json({ message: "User with the given email address doesn't exists!" });
+    }
+
+    const send_reset_password = await mail_verify.send_reset_password(email);
+    const hashedPassword = await bcryptjs.hash(send_reset_password, 8);
+
+    console.log(send_reset_password);
+    console.log(hashedPassword);
+
+    existingUser.password = hashedPassword;
+
+    const updatedUser = await existingUser.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    return res.status(400).json({ message: "Something went wrong" });
   }
 });
 
