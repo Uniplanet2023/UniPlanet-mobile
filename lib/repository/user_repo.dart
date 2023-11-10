@@ -551,6 +551,7 @@ class UserRepository {
           "User with same email already exists!",
         );
       }
+      // print(res.data);
       if (res.data != null &&
           res.data is Map<String, dynamic> &&
           res.data.containsKey('hash')) {
@@ -603,6 +604,34 @@ class UserRepository {
       }
     } catch (e) {
       return e.toString();
+    }
+  }
+
+  Future<void> forgottenPassword({
+    required BuildContext context,
+    required String email,
+  }) async {
+    Dio dio = Dio();
+    var res = await dio.put('$uri/api/forgottenPassword',
+        data: jsonEncode({'email': email}),
+        options: Options(headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        }));
+
+    if (res.data['message'] ==
+        "User with the given email address doesn't exists!") {
+      SnackbarGlobal.showSnackBar(
+        "Email address not found!",
+      );
+    }
+    if (res.data['message'] == "Password updated successfully") {
+      SnackbarGlobal.showSnackBar(
+        "Password reset successful, Use the temporary password sent to your email to log in ",
+      );
+    } else {
+      SnackbarGlobal.showSnackBar(
+        "Something went wrong!",
+      );
     }
   }
 }
