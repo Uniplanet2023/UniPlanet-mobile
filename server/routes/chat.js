@@ -73,20 +73,21 @@ chatRouter.post("/api/createChatRoom", auth, async (req, res) => {
         type: "seller", //Receiver must be selling
       });
       await Promise.all([
-        await newChatRoom.save({ session }),
-        await myChatRoom.save({ session }),
-        await receiverChatRoom.save({ session }),
+        // runing currently  (not sequential)
+        await newChatRoom.save({ session }), // Create Chat room (model)
+        await myChatRoom.save({ session }), // my Chatting (model)
+        await receiverChatRoom.save({ session }), // target chatting room --> There is a issue
         await User.findByIdAndUpdate(
           req.user,
           {
-            $addToSet: { myChatRoom: myChatRoom._id },
+            $addToSet: { myChatRoom: myChatRoom._id }, // User
           },
           { session }
         ),
         await User.findByIdAndUpdate(
           receiverId,
           {
-            $addToSet: { myChatRoom: receiverChatRoom._id },
+            $addToSet: { myChatRoom: receiverChatRoom._id }, //Receiver
           },
           { session }
         ),
@@ -169,33 +170,6 @@ chatRouter.post("/api/getMessages", auth, async (req, res) => {
       return res.status(200).json({ messages: [] });
     }
 
-    // Update unseen messages to seen
-    if (myChatRoom.unseenMessage.length > 0) {
-      try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        await Message.updateMany(
-          { _id: { $in: myChatRoom.unseenMessage } },
-          { isSeen: true },
-          { session }
-        );
-        await UserChatRoom.findByIdAndUpdate(
-          myChatRoomId,
-          {
-            unseenMessage: [],
-          },
-          { session }
-        );
-        myChatRoom.chatRoom.messages.forEach((message) => {
-          message.isSeen = true;
-        });
-        await session.commitTransaction();
-        session.endSession();
-      } catch (e) {
-        await session.abortTransaction();
-        session.endSession();
-      }
-    }
     const messages = myChatRoom.chatRoom.messages;
     res.status(200).json({ messages });
     logEnd("Getting Message API");

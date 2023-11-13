@@ -13,12 +13,7 @@ import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatRepository {
   final Dio dio = Dio();
-  StreamController<bool> messageAddStatus = StreamController<bool>.broadcast();
-  late Stream<bool> stream;
 
-  ChatRepository() {
-    stream = messageAddStatus.stream;
-  }
   Options _getDioOptions() => Options(headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': UserRepository.user.token
@@ -75,6 +70,7 @@ class ChatRepository {
       required String chatRoomId,
       required String senderId}) async {
     SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
+
     return Message(
       chatRoomId: chatRoomId,
       messageId: '',

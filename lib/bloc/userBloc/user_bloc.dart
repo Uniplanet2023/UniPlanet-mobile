@@ -6,13 +6,16 @@ import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 part 'user_bloc_event.dart';
 part 'user_bloc_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
-  UserBloc(this._userRepository) : super(UserInitialState()) {
+  final SocketService _socketService;
+  UserBloc(this._userRepository, this._socketService)
+      : super(UserInitialState()) {
     on<SignInEvent>((event, emit) async {
       // listen all the time
       await _signInFunction(event, emit);
@@ -25,6 +28,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
     on<UpdateUserNotificationEvent>((event, emit) async {
       await _updateUserFunction(event, emit);
+    });
+    _socketService.stream.listen((event) {
+      if (event) {
+        int unSeenMsgNum = state.unSeenMessageNum! + 1;
+        add(UpdateUserNotificationEvent(unSeenMsgNum));
+      }
     });
   }
   _updateUserFunction(UpdateUserNotificationEvent event, emit) async {

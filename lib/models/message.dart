@@ -9,7 +9,7 @@ class Message {
   final MessageEnum type;
   final DateTime timestamp;
   final String messageId;
-  final bool isSeen;
+  bool isSeen;
 
   Message({
     required this.chatRoomId,

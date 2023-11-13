@@ -1,4 +1,4 @@
-import 'package:flutter/scheduler.dart';
+import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,12 +13,16 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SocketService {
   final BuildContext context;
   static socketio.Socket? socket;
+
+  StreamController<bool> messageAddStatus = StreamController<bool>.broadcast();
+  late Stream<bool> stream;
+
   SocketService(this.context) {
+    stream = messageAddStatus.stream;
     _initSocket(context);
   }
 
@@ -34,9 +38,7 @@ class SocketService {
           socketio.OptionBuilder()
               .enableForceNew()
               .setTransports(['websocket'])
-              .setExtraHeaders({
-                'x-auth-token': token,
-              })
+              .setExtraHeaders({'x-auth-token': token})
               .enableAutoConnect()
               .setReconnectionAttempts(3)
               .setReconnectionDelay(300)
@@ -73,12 +75,25 @@ class SocketService {
     joiningAllChatRoom(state.user!.myChatRoom);
   }
 
+  void emptyUnSeenMessageOn() {
+    try {
+      socket?.off("emptyUnseenMessage");
+      socket!.on("emptyUnseenMessage", (data) {
+        print('empty emptyUnseenMessage');
+        context.read<ChatBloc>().add(EmptyUnseenMessageEvent(data));
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void receiveMessageOn() {
     try {
       socket?.off("receiveMessage");
       socket!.on("receiveMessage", (data) {
         //TCP chanell
         Message msg = Message.fromMap(data);
+        messageAddStatus.sink.add(true);
         context.read<MessageBloc>().add(ReceiveMessageEvent(msg));
       });
     } catch (e) {

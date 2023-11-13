@@ -13,6 +13,7 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
@@ -112,6 +113,12 @@ class _ChatListState extends State<ChatList> {
               date: index == 0 || !hidePreviousDate ? formattedDate : '',
             );
           } else {
+            if (currentMessage.isSeen == false) {
+              print('triggered');
+              SocketService.socket!.emit('seenMessage',
+                  {currentMessage.messageId, widget.myChatRoom.myChatRoomId});
+              currentMessage.isSeen = true;
+            }
             return SenderMessageCard(
               message: currentMessage,
               date: index == 0 || !hidePreviousDate ? formattedDate : '',

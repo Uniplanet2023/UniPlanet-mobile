@@ -8,7 +8,7 @@ class MyChatRoom {
   final User receiver;
   final String type;
   final ChatRoom chatRoom;
-  final List<String> unseenMessage;
+  List<String> unseenMessage;
 
   MyChatRoom(
       {required this.myChatRoomId,

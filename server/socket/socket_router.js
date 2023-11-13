@@ -88,6 +88,40 @@ module.exports = {
           console.error("Error fetching messages:", error);
         }
       });
+      socket.on("seenMessage", async (msgId, myChatRoomId) => {
+        logStart("Socket API: SeenMessage");
+        console.log(myChatRoomId);
+        const session = await mongoose.startSession();
+
+        try {
+          session.startTransaction();
+          Promise.all([
+            await Message.findByIdAndUpdate(
+              msgId,
+              { isSeen: true },
+              { session }
+            ),
+            await UserChatRoom.findByIdAndUpdate(
+              myChatRoomId,
+              {
+                unseenMessage: [],
+              },
+              { session }
+            ),
+          ]);
+
+          await session.commitTransaction();
+          // socket.emit("emptyUnseenMessage", myChatRoomId);
+        } catch (e) {
+          console.log(e);
+          socket.emit("seenMessageError", "Error processing seen message");
+          await session.abortTransaction();
+        } finally {
+          session.endSession();
+        }
+
+        logEnd("Socket API: SeenMessage");
+      });
 
       socket.on("sendMessage", async (msg, chatRoomId) => {
         logStart("Socket API : Send Message");
@@ -101,33 +135,34 @@ module.exports = {
           isSeen: false,
           createdAt: Date.now(),
         });
+        const session = await mongoose.startSession(); // start a new session for the transaction
         try {
-          var test = await isUserInChatRoom(chatRoomId);
-          console.log(test);
-          io.to(chatRoomId).emit("receiveMessage", newMessage); //Front End
-
-          const session = await mongoose.startSession(); // start a new session for the transaction
           session.startTransaction(); // Start the transaction
+          Promise.all([
+            await newMessage.save({ session }), // saving msg to the mongo db
+            await UserChatRoom.findOneAndUpdate(
+              { receiver: socket.user, chatRoom: chatRoomId },
+              { $push: { unseenMessage: newMessage["_id"] } },
+              { session }
+            ),
+            await ChatRoom.findByIdAndUpdate(
+              chatRoomId,
+              {
+                $push: { messages: newMessage["_id"] },
+                $set: { lastMessage: newMessage["_id"] },
+              },
+              { session }
+            ),
+          ]);
 
-          await newMessage.save({ session }); // saving msg to the mongo db
-          await UserChatRoom.findOneAndUpdate(
-            { receiver: socket.user, chatRoom: chatRoomId },
-            { $push: { unseenMessage: newMessage["_id"] } },
-            { session }
-          );
-          await ChatRoom.findByIdAndUpdate(
-            chatRoomId,
-            {
-              $push: { messages: newMessage["_id"] },
-              $set: { lastMessage: newMessage["_id"] },
-            },
-            { session }
-          );
           await session.commitTransaction(); // Committing the transaction
-          session.endSession();
+          io.to(chatRoomId).emit("receiveMessage", newMessage); //Front End
           logEnd("Socket API : Send Message");
         } catch (error) {
-          handleError(res, error);
+          await session.abortTransaction();
+          console.log(error);
+        } finally {
+          session.endSession();
         }
       });
 

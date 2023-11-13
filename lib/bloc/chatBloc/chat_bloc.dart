@@ -1,25 +1,21 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;
-  ChatBloc(this._chatRepository) : super(InitChatRoomState()) {
+  final SocketService _socketService;
+  ChatBloc(this._chatRepository, this._socketService)
+      : super(InitChatRoomState()) {
     on<CreateChatRoomEvent>((event, emit) async {
       await _creatingChatRoom(event, emit);
     });
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
-
     on<ClientStatusChangeEvent>((event, emit) {
       emit(StatusChangingState(
         chatRoomList: state.chatRoomList,
@@ -30,6 +26,20 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         chatRoomList: state.chatRoomList,
       ));
     }));
+    on<EmptyUnseenMessageEvent>(
+      (event, emit) {
+        for (var myChat in state.chatRoomList!) {
+          if (myChat.myChatRoomId == event.myChatRoomId) {
+            myChat.unseenMessage = [];
+            return;
+          }
+        }
+        emit(LoadedChatRoomState(chatRoomList: state.chatRoomList));
+      },
+    );
+    _socketService.stream.listen((event) {
+      if (event) {}
+    });
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
@@ -38,6 +48,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     ));
     try {
       List<MyChatRoom> chatrooms = await _chatRepository.getChatRooms();
+
       emit(LoadedChatRoomState(
         chatRoomList: chatrooms,
       ));
