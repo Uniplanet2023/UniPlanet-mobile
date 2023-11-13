@@ -236,45 +236,38 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: user.unseenMessages.isEmpty
-                          ? const Icon(
-                              Icons.chat_bubble_outline,
-                            )
-                          : badges.Badge(
-                              badgeContent: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors
-                                      .red, // Background color for the circle
-                                  borderRadius: BorderRadius.circular(
-                                      10), // Makes it round
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth:
-                                      10, // Minimum width for the red circle
-                                  minHeight:
-                                      10, // Minimum height for the red circle
-                                ),
-                                child: Text(
-                                  user.unseenMessages.length.toString(),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize:
-                                        12, // You can adjust the font size as needed
-                                  ),
-                                ),
-                              ),
-                              badgeStyle: const badges.BadgeStyle(
-                                elevation: 0,
-                                shape: badges.BadgeShape.circle,
-                              ),
-                              position:
-                                  badges.BadgePosition.topEnd(top: -13, end: 2),
-                              child: const Icon(
-                                Icons.chat_bubble_outline,
-                              ),
+                      child: badges.Badge(
+                        badgeContent: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                Colors.red, // Background color for the circle
+                            borderRadius:
+                                BorderRadius.circular(10), // Makes it round
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 10, // Minimum width for the red circle
+                            minHeight: 10, // Minimum height for the red circle
+                          ),
+                          child: const Text(
+                            '0',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize:
+                                  12, // You can adjust the font size as needed
                             ),
+                          ),
+                        ),
+                        badgeStyle: const badges.BadgeStyle(
+                          elevation: 0,
+                          shape: badges.BadgeShape.circle,
+                        ),
+                        position: badges.BadgePosition.topEnd(top: -13, end: 2),
+                        child: const Icon(
+                          Icons.chat_bubble_outline,
+                        ),
+                      ),
                     ),
                     label: '',
                   ),

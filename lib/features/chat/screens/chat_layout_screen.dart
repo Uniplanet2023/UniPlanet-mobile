@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
@@ -29,15 +30,15 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     final state = context.watch<ChatBloc>().state;
 
-    List<ChatRoom> buyingChatRoom = [];
-    List<ChatRoom> sellingChatRooms = [];
+    List<MyChatRoom> buyingChatRoom = [];
+    List<MyChatRoom> sellingChatRooms = [];
 
     if (state is LoadedChatRoomState) {
       sellingChatRooms = state.chatRoomList!
-          .where((chatRoom) => chatRoom.seller.id == UserRepository.user.id)
+          .where((myChatRoom) => myChatRoom.type == "seller")
           .toList();
       buyingChatRoom = state.chatRoomList!
-          .where((chatRoom) => chatRoom.buyer.id == UserRepository.user.id)
+          .where((myChatRoom) => myChatRoom.type == "buyer")
           .toList();
     }
 

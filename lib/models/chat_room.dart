@@ -1,40 +1,37 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:socket_io_client/socket_io_client.dart' as socketio;
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class ChatRoom {
   final String chatRoomId;
-  final User buyer;
-  final User seller;
+  final String chatRoomType;
+  final Product product;
   final List<String> messages;
   final Message? lastMessage;
   final DateTime? lastMessageTime;
 
   ChatRoom({
-    required this.buyer,
-    required this.seller,
+    required this.product,
+    required this.chatRoomType,
     required this.messages,
     required this.chatRoomId,
     this.lastMessage,
     this.lastMessageTime,
   });
-  static initialChatRoom() {
+  static initChatRoom() {
     return ChatRoom(
-      buyer: User.initialUser(),
-      seller: User.initialUser(),
-      messages: [],
-      chatRoomId: '',
-    );
+        product: Product.initProduct(),
+        chatRoomType: "",
+        messages: [],
+        chatRoomId: '');
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'buyer': buyer,
-      'seller': seller,
+      'chatRoomType': chatRoomType,
+      'product': product,
       'messages': messages,
       'chatRoomId': chatRoomId,
       'lastMessage': lastMessage?.toMap(),
@@ -44,15 +41,15 @@ class ChatRoom {
 
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
-      buyer: User.fromMap(map['buyer']),
-      seller: User.fromMap(map['seller']),
+      product: Product.fromMap(map['product']),
       messages: List<String>.from(map['messages']),
+      chatRoomType: map['chatRoomType'] ?? "",
       chatRoomId: map['_id'] as String,
       lastMessage: map['lastMessage'] != null
           ? Message.fromMap(map['lastMessage'])
           : null,
-      lastMessageTime: map['created_at'] != null
-          ? DateTime.parse(map['created_at'].toString())
+      lastMessageTime: map['lastMessage'] != null
+          ? DateTime.parse(map['lastMessage']['createdAt'].toString())
           : null,
     );
   }

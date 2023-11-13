@@ -3,6 +3,8 @@ const Message = require("../models/message");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const jwt = require("jsonwebtoken");
 const ChatRoom = require("../models/chat_room");
+const UserChatRoom = require("../models/user_chat_room");
+const mongoose = require("mongoose");
 const cors = require("cors");
 let io;
 
@@ -10,6 +12,8 @@ let io;
 const userSocketIds = {};
 const auth = require("../middlewares/auth");
 const User = require("../models/user");
+const { logStart, logEnd, handleError } = require("../functions/logFunction");
+
 module.exports = {
   init: (httpServer, pubClient, subClient) => {
     // io = socketIo(httpServer, { cors: { origin: "*" } });
@@ -18,12 +22,10 @@ module.exports = {
 
     //Middle ware (Socket middle ware)
     io.use((socket, next) => {
-      console.log(
-        "\x1b[32m------------------- Socket Middleware is Triggered -------------------\x1b[0m"
-      );
+      logStart("Socket Middleware");
 
       const headers = socket.handshake.headers;
-      console.log(headers);
+
       try {
         console.log("1. Getting Token from header");
         const token = headers["x-auth-token"];
@@ -43,9 +45,7 @@ module.exports = {
         socket.token = token;
         socket.chatRoomList = [];
         console.log(socket.user);
-        console.log(
-          "\x1b[32m------------------- Socket Middleware is Successfully completed -------------------\x1b[0m"
-        );
+        logEnd("Socket Middleware");
         next();
       } catch (err) {
         console.log("\x1b[31m Middle Ware Auth has issues!! \x1b[0m");
@@ -55,15 +55,19 @@ module.exports = {
     // socket API
     io.on("connection", (socket) => {
       socket.on("joinChatRoom", async (chatRoomId) => {
-        console.log(
-          "\x1b[32m------------------- Joining ChatRoom is Triggered -------------------\x1b[0m"
-        );
+        logStart("Joining ChatRoom");
 
         let userList = await isUserInChatRoom(chatRoomId);
-        socket.chatRoomList.push(chatRoomId);
+        console.log(userList);
+        console.log(userList.includes(socket.user));
+        if (!userList.includes(chatRoomId)) {
+          socket.chatRoomList.push(chatRoomId);
+        }
+
         if (userList.length == 0 || !userList.includes(socket.user)) {
           socket.join(chatRoomId);
           console.log(`1. ${socket.user} joining chatRoom`);
+          console.log(`ChatRoom Id: ${chatRoomId}`);
           userList.push(socket.user);
         }
         console.log("Final userList is " + userList);
@@ -71,28 +75,7 @@ module.exports = {
           userId: userList,
           chatRoomId: chatRoomId,
         });
-
-        console.log("2. Chat Room Id is " + chatRoomId);
-        console.log("User : " + socket.user + " is notified");
-        // Fetch the last 50 messages from this chat room and send to the user
-        const chatRoom = await ChatRoom.findOne({ _id: chatRoomId }) // Ensure the field to match is correct, usually it's _id for MongoDB
-          .populate({
-            path: "messages",
-            model: "Message",
-            options: {
-              sort: { timestamp: -1 },
-              limit: 50,
-            },
-          })
-          .populate({ path: "seller", model: "User" })
-          .populate({ path: "buyer", model: "User" });
-
-        // io.to(chatRoomId).emit("chatRoomData", {
-        //   chatRoom,
-        // });
-        console.log(
-          "\x1b[32m------------------- Joining ChatRoom is Successfully completed -------------------\x1b[0m"
-        );
+        logEnd("Joining ChatRoom");
       });
 
       socket.on("fetch_messages", async () => {
@@ -107,28 +90,44 @@ module.exports = {
       });
 
       socket.on("sendMessage", async (msg, chatRoomId) => {
-        console.log(
-          "\x1b[32m----------------- Socket API : Send Message  is Triggered -----------------\x1b[0m"
-        );
-        console.log(msg);
+        logStart("Socket API : Send Message");
         console.log("chat Room Id is " + chatRoomId);
 
-        var msg = new Message({
+        var newMessage = new Message({
           senderId: socket.user,
           chatRoomId: chatRoomId,
           message: msg,
           type: "text",
           isSeen: false,
+          createdAt: Date.now(),
         });
         try {
-          io.to(chatRoomId).emit("receiveMessage", msg); //Front End
-          await msg.save(); // saving msg to the mongo db
+          var test = await isUserInChatRoom(chatRoomId);
+          console.log(test);
+          io.to(chatRoomId).emit("receiveMessage", newMessage); //Front End
 
-          console.log(
-            "\x1b[32m----------------- Socket API : Send Message  is Successfully Completed -----------------\x1b[0m"
+          const session = await mongoose.startSession(); // start a new session for the transaction
+          session.startTransaction(); // Start the transaction
+
+          await newMessage.save({ session }); // saving msg to the mongo db
+          await UserChatRoom.findOneAndUpdate(
+            { receiver: socket.user, chatRoom: chatRoomId },
+            { $push: { unseenMessage: newMessage["_id"] } },
+            { session }
           );
+          await ChatRoom.findByIdAndUpdate(
+            chatRoomId,
+            {
+              $push: { messages: newMessage["_id"] },
+              $set: { lastMessage: newMessage["_id"] },
+            },
+            { session }
+          );
+          await session.commitTransaction(); // Committing the transaction
+          session.endSession();
+          logEnd("Socket API : Send Message");
         } catch (error) {
-          console.error("Error saving message:", error);
+          handleError(res, error);
         }
       });
 

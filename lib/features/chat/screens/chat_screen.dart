@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
-
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
-  final ChatRoom chatRoom;
+  final MyChatRoom myChatRoom;
   final User client;
-  const ChatScreen({Key? key, required this.client, required this.chatRoom})
+  const ChatScreen({Key? key, required this.client, required this.myChatRoom})
       : super(key: key);
 
   @override
@@ -36,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     context
         .read<MessageBloc>()
-        .add(GetMessageEvent(widget.chatRoom.chatRoomId));
+        .add(GetMessageEvent(widget.myChatRoom.myChatRoomId));
   }
 
   @override
@@ -93,10 +91,10 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
               child: ChatList(
             scrollController: _scrollController,
-            chatRoom: widget.chatRoom,
+            myChatRoom: widget.myChatRoom,
           )),
           BottomChatField(
-            chatRoomId: widget.chatRoom.chatRoomId,
+            chatRoomId: widget.myChatRoom.chatRoom.chatRoomId,
             scrollDownfuction: _scrollToBottom,
           ),
           const SizedBox(

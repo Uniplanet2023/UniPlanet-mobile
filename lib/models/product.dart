@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:uniplanet_mobile/models/rating.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 
 class Product {
@@ -9,16 +7,19 @@ class Product {
   final String description;
   final bool forSale;
   final List<String> images;
+  final List<String> likes;
   final String category;
   final double price;
   final String id;
   final DateTime createdAt;
+
   Product({
     required this.name,
     required this.forSale,
     required this.seller,
     required this.description,
     required this.images,
+    required this.likes,
     required this.category,
     required this.price,
     required this.id,
@@ -30,6 +31,7 @@ class Product {
         forSale: true,
         seller: User.initialUser(),
         description: "",
+        likes: [""],
         images: [""],
         category: "",
         price: 0,
@@ -44,6 +46,7 @@ class Product {
       'forSale': forSale,
       'description': description,
       'images': images,
+      'likes': likes,
       'category': category,
       'price': price,
       'id': id,
@@ -59,6 +62,7 @@ class Product {
       seller: User.fromMap(map['seller']),
       description: map['description'],
       images: List<String>.from(map['images']),
+      likes: List<String>.from(map['likes']),
       price: map['price'].toDouble(),
       category: map['category'],
       createdAt: DateTime.parse(map['createdAt'].toString()),

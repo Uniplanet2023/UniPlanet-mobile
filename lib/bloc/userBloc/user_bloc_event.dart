@@ -35,9 +35,9 @@ class UpdateOnlineStatusEvent extends UserEvent {
   List<Object> get props => [];
 }
 
-class UpdateUserEvent extends UserEvent {
-  final User user;
-  const UpdateUserEvent(this.user);
+class UpdateUserNotificationEvent extends UserEvent {
+  final int unSeenMessageNum;
+  const UpdateUserNotificationEvent(this.unSeenMessageNum);
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [unSeenMessageNum];
 }

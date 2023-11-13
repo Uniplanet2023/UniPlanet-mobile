@@ -5,6 +5,7 @@ const Order = require("../models/order");
 const { Product } = require("../models/product");
 const User = require("../models/user");
 const redis_controller = require("../redis_controller/redis_controller");
+const { logStart, logEnd, handleError } = require("../functions/logFunction");
 
 likeRouter.post("/api/add-like", auth, async (req, res) => {
   try {
@@ -34,7 +35,7 @@ likeRouter.post("/api/add-like", auth, async (req, res) => {
     user = await user.save();
     res.json(user);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 
@@ -56,7 +57,7 @@ likeRouter.delete("/api/remove-from-like/:id", auth, async (req, res) => {
     user = await user.save();
     res.json(user);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
+
 class User {
   final String id;
   final String name;
@@ -7,13 +9,14 @@ class User {
   final String profileImage;
   final String school;
   final bool verified;
-  final List<String> unseenNotifications;
-  final List<String> unseenMessages;
+  final List<String> myEvents;
+  final List<String> recentSearchHistory;
   final List<String> like;
   final List<String> selling;
   final List<String> bought;
   final List<String> sold;
-  final List<String> chatRooms;
+  final List<MyChatRoom> myChatRoom;
+
   final String type;
   final String token;
   User({
@@ -23,13 +26,13 @@ class User {
     required this.profileImage,
     required this.school,
     required this.verified,
-    required this.unseenNotifications,
-    required this.unseenMessages,
+    required this.myEvents,
+    required this.recentSearchHistory,
     required this.like,
     required this.selling,
     required this.bought,
     required this.sold,
-    required this.chatRooms,
+    required this.myChatRoom,
     required this.type,
     this.token = "",
   });
@@ -41,13 +44,13 @@ class User {
         profileImage: '',
         school: '',
         verified: false,
-        unseenNotifications: [],
-        unseenMessages: [],
+        myEvents: [],
+        recentSearchHistory: [],
         like: [],
         selling: [],
         bought: [],
         sold: [],
-        chatRooms: [],
+        myChatRoom: [],
         type: '',
         token: '');
   }
@@ -60,13 +63,13 @@ class User {
       'profileImage': profileImage,
       'school': school,
       'verified': verified,
-      'unseenNotifications': unseenNotifications,
-      'unseenMessages': unseenMessages,
+      'myEvents': myEvents,
+      'recentSearchHistory': recentSearchHistory,
       'like': like,
       'selling': selling,
       'bought': bought,
       'sold': sold,
-      'chatRooms': chatRooms,
+      'myChatRooms': myChatRoom,
       'type': type,
       'token': token,
     };
@@ -81,13 +84,16 @@ class User {
           'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
       school: map['school'] as String,
       verified: map['verified'] as bool,
-      unseenNotifications: List<String>.from(map['unseenNotifications'] ?? []),
-      unseenMessages: List<String>.from(map['unseenMessages'] ?? []),
+      myEvents: List<String>.from(map['myEvent'] ?? []),
+      recentSearchHistory: List<String>.from(map['recentSearchHistory'] ?? []),
       like: List<String>.from(map['like'] ?? []),
       selling: List<String>.from(map['selling'] ?? []),
       bought: List<String>.from(map['bought'] ?? []),
       sold: List<String>.from(map['sold'] ?? []),
-      chatRooms: List<String>.from(map['chatRooms'] ?? []),
+      myChatRoom: (map['myChatRoom'] as List<dynamic>?)
+              ?.map((e) => MyChatRoom.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       type: map['type'] as String,
       token: map['token'] ?? "",
     );
@@ -106,13 +112,13 @@ class User {
     String? school,
     bool? verified,
     bool? isOnline,
-    List<String>? unseenNotifications,
-    List<String>? unseenMessages,
+    List<String>? myEvents,
+    List<String>? recentSearchHistory,
     List<String>? like,
     List<String>? selling,
     List<String>? bought,
     List<String>? sold,
-    List<String>? chatRooms,
+    List<MyChatRoom>? myChatRoom,
     String? type,
     String? token,
   }) {
@@ -123,13 +129,13 @@ class User {
       profileImage: profileImage ?? this.profileImage,
       school: school ?? this.school,
       verified: verified ?? this.verified,
-      unseenNotifications: unseenNotifications ?? this.unseenNotifications,
-      unseenMessages: unseenMessages ?? this.unseenMessages,
+      myEvents: myEvents ?? this.myEvents,
+      recentSearchHistory: recentSearchHistory ?? this.recentSearchHistory,
       like: like ?? this.like,
       selling: selling ?? this.selling,
       bought: bought ?? this.bought,
       sold: sold ?? this.sold,
-      chatRooms: chatRooms ?? this.chatRooms,
+      myChatRoom: myChatRoom ?? this.myChatRoom,
       type: type ?? this.type,
       token: token ?? this.token,
     );

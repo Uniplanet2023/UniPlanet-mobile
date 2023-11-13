@@ -115,7 +115,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               _buildPriceText(widget.product.price),
-              widget.product.seller == UserRepository.user.id
+              widget.product.seller.id == UserRepository.user.id
                   ? const SizedBox()
                   : _buildChatAndFavoriteButtons(state),
             ],
@@ -136,9 +136,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         TextButton(
           onPressed: () => state is CreatingChatRoomState
               ? null
-              : context
-                  .read<ChatBloc>()
-                  .add(CreateChatRoomEvent(widget.product.seller)),
+              : context.read<ChatBloc>().add(CreateChatRoomEvent(
+                  widget.product.seller, widget.product.id)),
           style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor),
           child: state is CreatingChatRoomState

@@ -10,14 +10,15 @@ import 'package:uniplanet_mobile/features/chat/widgets/my_message_card.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/sender_message_card.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
-  final ChatRoom chatRoom;
+  final MyChatRoom myChatRoom;
   const ChatList(
-      {Key? key, required this.scrollController, required this.chatRoom})
+      {Key? key, required this.scrollController, required this.myChatRoom})
       : super(key: key);
 
   @override
@@ -44,7 +45,7 @@ class _ChatListState extends State<ChatList> {
           widget.scrollController.position.maxScrollExtent) {
         context
             .read<MessageBloc>()
-            .add(GetMoreMessageEvent(widget.chatRoom.chatRoomId));
+            .add(GetMoreMessageEvent(widget.myChatRoom.myChatRoomId));
       }
     });
   }
@@ -107,12 +108,12 @@ class _ChatListState extends State<ChatList> {
           // Card assignment with conditional date visibility
           if (currentMessage.senderId == UserRepository.user.id) {
             return MyMessageCard(
-              message: currentMessage.message,
+              message: currentMessage,
               date: index == 0 || !hidePreviousDate ? formattedDate : '',
             );
           } else {
             return SenderMessageCard(
-              message: currentMessage.message,
+              message: currentMessage,
               date: index == 0 || !hidePreviousDate ? formattedDate : '',
             );
           }

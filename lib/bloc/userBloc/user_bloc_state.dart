@@ -2,37 +2,38 @@ part of 'user_bloc.dart';
 
 abstract class UserState extends Equatable {
   final User? user;
-  const UserState({this.user});
+  final int? unSeenMessageNum;
+  const UserState({this.user, this.unSeenMessageNum});
 }
 
 final class UserInitialState extends UserState {
-  UserInitialState() : super(user: User.initialUser());
+  UserInitialState() : super(user: User.initialUser(), unSeenMessageNum: 0);
   @override
   List<Object?> get props => [user];
 }
 
 final class LoadingUserState extends UserState {
-  const LoadingUserState({super.user});
+  const LoadingUserState({super.user, super.unSeenMessageNum});
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, unSeenMessageNum];
 }
 
 final class LoadedUserState extends UserState {
-  const LoadedUserState({super.user});
+  const LoadedUserState({super.user, super.unSeenMessageNum});
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, unSeenMessageNum];
 }
 
 final class LogOutState extends UserState {
-  const LogOutState({super.user});
+  const LogOutState({super.user, super.unSeenMessageNum});
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, unSeenMessageNum];
 }
 
 class UpdatingOnlineState extends UserState {
-  const UpdatingOnlineState({super.user});
+  const UpdatingOnlineState({super.user, super.unSeenMessageNum});
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, unSeenMessageNum];
 }
 
 class UpdatedOnlineState extends UserState {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
@@ -7,7 +8,7 @@ class SenderMessageCard extends StatelessWidget {
     required this.message,
     required this.date,
   }) : super(key: key);
-  final String message;
+  final Message message;
   final String date;
 
   @override
@@ -37,7 +38,7 @@ class SenderMessageCard extends StatelessWidget {
                   bottom: 20,
                 ),
                 child: Text(
-                  message,
+                  message.message,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -50,17 +51,20 @@ class SenderMessageCard extends StatelessWidget {
             children: [
               Text(
                 date,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
-                  color: Colors.grey[600], // Style to match SenderMessageCard
+                  color: Colors.black54, // Style to match SenderMessageCard
                 ),
               ),
               const SizedBox(width: 5),
-              Icon(
-                Icons.done_all,
-                size: 20,
-                color: Colors.grey[600], // Color to match the text style
-              ),
+              message.isSeen
+                  ? const SizedBox()
+                  : const Icon(
+                      Icons.local_fire_department_outlined,
+                      size: 20,
+                      color: Colors
+                          .black54, // Changed color for visibility outside Card
+                    ),
             ],
           ),
         ],

@@ -3,9 +3,18 @@ const productRouter = express.Router();
 const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
 const redis_controller = require("../redis_controller/redis_controller");
-productRouter.get("/api/all-products", auth, async (req, res) => {
+const { logStart, logEnd, handleError } = require("../functions/logFunction");
+
+productRouter.get("/api/all-products", async (req, res) => {
   logStart("Getting All product API");
   try {
+    let page = 0;
+    if (req.query.page) {
+      page = req.query.page;
+    }
+    const limit = 20;
+    const skip = page * limit;
+
     var products = await redis_controller.getJson("products");
 
     if (products != null && products && products.length != 0) {
@@ -14,12 +23,14 @@ productRouter.get("/api/all-products", auth, async (req, res) => {
     } else {
       console.log("2. Search from database , product file");
       products = await Product.find()
-        .sort({ created_at: -1 })
-        .limit(20)
-        .populate(
-          "seller",
-          "-chatRooms -password -unseenNotifications -unseenMessages"
-        );
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "seller",
+          select: "-myChatRoom -password -unseenNotifications -unseenMessages",
+        });
+
       res.json(products);
 
       console.log("3. Fetching Datata to Redis");
@@ -36,7 +47,7 @@ productRouter.get("/api/all-products", auth, async (req, res) => {
           .limit(20)
           .populate(
             "seller",
-            "-chatRooms -password -unseenNotifications -unseenMessages"
+            "-myChatRoom -password -unseenNotifications -unseenMessages"
           )
       );
       const results = await Promise.all(dbQueries);
@@ -63,12 +74,12 @@ productRouter.get("/api/products/search/:name", auth, async (req, res) => {
       name: { $regex: req.params.name, $options: "i" },
     }).populate(
       "seller",
-      "-chatRooms -password -unseenNotifications -unseenMessages"
+      "-myChatRoom -password -unseenNotifications -unseenMessages"
     );
     res.json(products);
     logEnd("Searching product API");
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 productRouter.get("/api/products", async (req, res) => {
@@ -91,13 +102,13 @@ productRouter.get("/api/products", async (req, res) => {
 productRouter.post("/api/add-product", auth, async (req, res) => {
   logStart("Adding Product");
   try {
-    const { name, forSale, seller, description, images, price, category } =
+    const { name, forSale, sellerId, description, images, price, category } =
       req.body;
     console.log("1. Creating Product Model");
     let product = new Product({
       name,
       forSale,
-      seller,
+      seller: sellerId,
       description,
       images,
       price,
@@ -106,6 +117,10 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
 
     console.log("2. Adding Product to Database and Redis");
     product = await product.save();
+    await product.populate({
+      path: "seller",
+      select: "-myChatRoom -password -unseenNotifications -unseenMessages",
+    });
     res.json(product);
     Promise.all([
       await redis_controller.addJson("products", product),
@@ -117,25 +132,5 @@ productRouter.post("/api/add-product", auth, async (req, res) => {
     handleError(res, e);
   }
 });
-// Middleware for logging
-function logStart(apiName) {
-  console.log(
-    `\x1b[32m----------------- Product API : ${apiName} is triggered -----------------\x1b[0m`
-  );
-  console.log("");
-}
-// Middleware for logging
-function logEnd(apiName) {
-  console.log(
-    `\x1b[32m----------------- Product API : ${apiName} is Successfully completed -----------------\x1b[0m`
-  );
-  console.log("");
-}
-// Middleware for error handling
-function handleError(res, e) {
-  console.log("\x1b[31m There is an issue at Product API \x1b[0m");
-  console.error(e);
-  res.status(500).json({ error: e.message });
-}
 
 module.exports = productRouter;

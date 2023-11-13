@@ -149,7 +149,7 @@ class UserRepository {
     return user;
   }
 
-  Future<Product> uploadProduct({
+  Future<Product?> uploadProduct({
     required BuildContext context,
     required String name,
     required bool forSale,
@@ -159,7 +159,7 @@ class UserRepository {
     required List<File> images,
   }) async {
     print('upload product is called');
-    Product product = Product.initProduct();
+    Product product;
 
     try {
       final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
@@ -176,7 +176,7 @@ class UserRepository {
           data: {
             'name': name,
             'forSale': forSale,
-            'seller': UserRepository.user,
+            'sellerId': UserRepository.user.id,
             'description': description,
             'images': imageUrls,
             'price': price,
@@ -193,10 +193,11 @@ class UserRepository {
       );
 
       product = Product.fromMap(res.data);
+      return product;
     } on DioException catch (e) {
       _handleDioException(e);
     }
-    return product;
+    return null;
   }
 
   void deleteProduct({

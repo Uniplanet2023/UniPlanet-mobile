@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 
 class MyMessageCard extends StatelessWidget {
-  final String message;
+  final Message message;
   final String date;
 
   const MyMessageCard({Key? key, required this.message, required this.date})
@@ -29,12 +30,14 @@ class MyMessageCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 5),
-              const Icon(
-                Icons.done_all,
-                size: 20,
-                color:
-                    Colors.black54, // Changed color for visibility outside Card
-              ),
+              message.isSeen
+                  ? const SizedBox()
+                  : const Icon(
+                      Icons.local_fire_department_outlined,
+                      size: 20,
+                      color: Colors
+                          .black54, // Changed color for visibility outside Card
+                    ),
             ],
           ),
           // Card containing the message
@@ -56,7 +59,7 @@ class MyMessageCard extends StatelessWidget {
                   bottom: 10,
                 ),
                 child: Text(
-                  message,
+                  message.message,
                   style: const TextStyle(
                     fontSize: 16,
                   ),

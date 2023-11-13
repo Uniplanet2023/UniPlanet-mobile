@@ -11,6 +11,7 @@ import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
@@ -69,11 +70,12 @@ class SocketService {
 
     userStatusChange();
     disconnectStatus();
-    joiningAllChatRoom(state.user!.chatRooms);
+    joiningAllChatRoom(state.user!.myChatRoom);
   }
 
   void receiveMessageOn() {
     try {
+      socket?.off("receiveMessage");
       socket!.on("receiveMessage", (data) {
         //TCP chanell
         Message msg = Message.fromMap(data);
@@ -86,12 +88,13 @@ class SocketService {
 
   void userStatusChange() {
     StatusBloc stateBloc = context.read<StatusBloc>();
-    print("this is my User id${UserRepository.user.id}");
+    socket?.off("connectStatus");
+    // print("this is my User id${UserRepository.user.id}");
     socket!.on("connectStatus", (data) {
-      print(data['userId']);
+      // print(data['userId']);
       data['userId'].forEach((userId) {
-        print(
-            "${"User : $userId"} join the chatRoom ${data['chatRoomId'].toString()}");
+        // print(
+        //     "${"User : $userId"} join the chatRoom ${data['chatRoomId'].toString()}");
         stateBloc.add(StatusChangeEvent(userId));
       });
     });
@@ -99,6 +102,7 @@ class SocketService {
 
   void disconnectStatus() {
     StatusBloc stateBloc = context.read<StatusBloc>();
+    socket?.off("disconnectStatus");
     socket!.on('disconnectStatus', (data) {
       print('disconnnectStatus');
 
@@ -107,15 +111,16 @@ class SocketService {
   }
 
   void createChatRoom(BuildContext context, User user) {
+    socket?.off("created_chatRoom");
     socket!.on("created_chatRoom", (data) {
       print("chatRoom data is received(socket.io)");
       ChatRoom chatRoom = ChatRoom.fromMap(data);
     });
   }
 
-  void joiningAllChatRoom(List<String> chatRoomIds) {
-    for (var chatRoomId in chatRoomIds) {
-      socket!.emit("joinChatRoom", chatRoomId);
+  void joiningAllChatRoom(List<MyChatRoom> myChatRooms) {
+    for (var myChatRoom in myChatRooms) {
+      socket!.emit("joinChatRoom", myChatRoom.chatRoom.chatRoomId);
     }
   }
 }

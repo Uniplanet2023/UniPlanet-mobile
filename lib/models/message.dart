@@ -49,7 +49,7 @@ class Message {
       senderId: map['senderId'] as String,
       message: map['message'] as String,
       type: MessageEnum.text,
-      timestamp: DateTime.parse(map['timestamp']).toLocal(),
+      timestamp: DateTime.parse(map['createdAt']).toLocal(),
       messageId: map['_id'] as String,
       isSeen: map['isSeen'] as bool,
     );

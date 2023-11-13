@@ -6,15 +6,13 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
 const redis_controller = require("../redis_controller/redis_controller");
 const mail_verify = require("../middlewares/email_verify.js");
-
+const { logStart, logEnd, handleError } = require("../functions/logFunction");
+const { signInFunction } = require("../functions/userdata.js");
 // SIGN UP
 authRouter.post("/api/signup", async (req, res) => {
   try {
-    console.log(
-      "\x1b[32m----------------- Auth API : Sign Up User API Triggerd -----------------\x1b[0m"
-    );
-    console.log("Sign-Up API triggerd");
-    // console.log(req.body);
+    logStart("Sign Up User API");
+
     const { name, email, password, profileImage, school, verified } = req.body;
     console.log("1. Finding Existing User");
     const existingUser = await User.findOne({ email });
@@ -35,91 +33,63 @@ authRouter.post("/api/signup", async (req, res) => {
       profileImage,
       school,
       verified,
-      unseenNotifications: [],
-      unseenMessages: [],
-      like: [],
-      selling: [],
-      sold: [],
-      bought: [],
-      chatRooms: [],
     });
     console.log("4. Save User into DB");
     user = await user.save();
     res.json(user);
-    console.log(
-      "\x1b[32m----------------- Auth API : Sign Up is Successfully completed -----------------\x1b[0m"
-    );
+    logEnd("Sign Up User API");
   } catch (e) {
-    console.error(
-      "\x1b[31m----------------- Auth API : Issue is occuered at Sign Up API -----------------\x1b[0m"
-    );
-    console.log(e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 
 authRouter.post("api/delete-user", auth, async (req, res) => {
   try {
-    console.log(
-      "\x1b[32m----------------- Auth API : Delete User API Triggerd -----------------\x1b[0m"
-    );
+    logStart("Delete User API");
     console.log("1. Find User and Delete is triggered");
     await User.findByIdAndDelete(req.user);
     console.log("2. Account Successfully Deleted");
     res.status(200).json("Account Successfully Deleted");
-    console.log(
-      "\x1b[32m----------------- Auth API : Delete User API is Successfully completed -----------------\x1b[0m"
-    );
+    logEnd("Delete User API");
   } catch (e) {
-    console.error(
-      "\x1b[31m----------------- Auth API : Issue is occuered at Delete User API -----------------\x1b[0m"
-    );
-    console.log(e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 
 authRouter.post("api/password-update", async (req, res) => {
   try {
-    console.log(
-      "\x1b[32m----------------- Auth API : Password Update API Triggerd -----------------\x1b[0m"
-    );
-    if (req.body.password) {
-      hashedPassword = await bcryptjs.hash(
-        req.body.password,
-        process.env.SECRET_PASS_KEY
-      );
-      const updateUser = await User.findByIdAndUpdate(
-        req.body.id,
-        {
-          $password: req.body.password,
-        },
-        { new: true }
-      );
+    logStart("Password Update API");
+    const { password } = req.body;
+    const hashedPassword = await bcryptjs.hash(password, 8);
 
-      res.status(200).json(updateUser);
-      console.log(
-        "\x1b[32m----------------- Auth API : Password Update API is Successfully completed -----------------\x1b[0m"
-      );
-    }
-  } catch (e) {
-    console.error(
-      "\x1b[31m----------------- Auth API : Issue is occuered at Sign In API -----------------\x1b[0m"
+    hashedPassword = await bcryptjs.hash(
+      req.body.password,
+      process.env.SECRET_PASS_KEY
     );
-    console.log(e);
-    res.status(500).json({ error: e.message });
+
+    const updateUser = await User.findByIdAndUpdate(
+      req.body.id,
+      {
+        $password: req.body.password,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updateUser);
+    logEnd("Password Update API");
+  } catch (e) {
+    handleError(res, e);
   }
 });
 // Sign In Route
 authRouter.post("/api/signin", async (req, res) => {
   try {
-    console.log(
-      "\x1b[32m----------------- Auth API : Sign In API triggerd -----------------\x1b[0m"
-    );
+    logStart("Sign In API");
 
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await signInFunction(email);
+
     if (!user) {
       return res
         .status(400)
@@ -138,22 +108,13 @@ authRouter.post("/api/signin", async (req, res) => {
     const token = jwt.sign({ id: user._id }, "passwordKey");
 
     console.log("3. Set the user's online status to true");
-    user.isOnline = true;
-    await user.save();
     console.log("4. Store User Data into Redis");
     redis_controller.set(user._id, user);
 
     res.json({ token, ...user._doc });
-    console.log(
-      "\x1b[32m----------------- Auth API : Sign In API is Successfully completed -----------------\x1b[0m"
-    );
-    console.log("");
+    logEnd("Sign In API");
   } catch (e) {
-    console.error(
-      "\x1b[31m----------------- Auth API : Issue is occuered at Sign In API -----------------\x1b[0m"
-    );
-    console.log(e);
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 
@@ -174,7 +135,6 @@ authRouter.post("/tokenIsValid", async (req, res) => {
 
     if (!user) return res.json(false);
     console.log("4. Set the user's online status to true");
-    user.isOnline = true;
     await user.save();
     console.log("5. User is Existed");
 

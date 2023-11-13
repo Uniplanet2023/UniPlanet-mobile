@@ -23,19 +23,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoadUserDataEvent>((event, emit) async {
       await _loadingUserFunction(event, emit);
     });
-    on<UpdateUserEvent>((event, emit) async {
+    on<UpdateUserNotificationEvent>((event, emit) async {
       await _updateUserFunction(event, emit);
     });
   }
-  _updateUserFunction(UpdateUserEvent event, emit) async {
-    emit(LoadedUserState(user: event.user));
+  _updateUserFunction(UpdateUserNotificationEvent event, emit) async {
+    emit(LoadedUserState(unSeenMessageNum: event.unSeenMessageNum));
   }
 
   _loadingUserFunction(LoadUserDataEvent event, emit) async {
-    emit(LoadingUserState(user: state.user));
+    emit(LoadingUserState(
+        user: state.user, unSeenMessageNum: state.unSeenMessageNum));
     User user = await _userRepository.getUserData();
     if (user.token != '') {
-      emit(LoadedUserState(user: user));
+      emit(LoadedUserState(
+          user: user, unSeenMessageNum: state.unSeenMessageNum));
     } else {
       emit(const ErrorUserState('No User Data'));
     }
@@ -43,14 +45,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   _signInFunction(SignInEvent event, emit) async {
     try {
-      emit(LoadingUserState(user: state.user));
+      emit(LoadingUserState(
+          user: state.user, unSeenMessageNum: state.unSeenMessageNum));
 
       User user = await _userRepository.signInUser(
           email: event.email, password: event.password);
 
       if (user.token != '') {
         _navigate(event);
-        emit(LoadedUserState(user: user));
+        emit(LoadedUserState(
+            user: user, unSeenMessageNum: state.unSeenMessageNum));
       } else {
         emit(const ErrorUserState('No User Data'));
       }
@@ -73,7 +77,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   _logOutFunction(LogoutEvent event, emit) async {
-    emit(LogOutState(user: User.initialUser()));
+    emit(LogOutState(user: User.initialUser(), unSeenMessageNum: 0));
     _userRepository.logOut(event.context);
   }
 
