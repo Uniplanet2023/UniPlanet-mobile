@@ -1,6 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import User from './user';
 import { IProduct } from './database_model';
+
 const productSchema: Schema = new mongoose.Schema(
   {
     name: {

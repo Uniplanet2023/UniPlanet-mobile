@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IUserChatRoom } from './database_model';
 
 const userRoomSchema: Schema = new mongoose.Schema({

@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import { Document, Model, Schema, model, Types } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 
 // Define an interface that represents a document in MongoDB.
 interface IChatRoom extends Document {

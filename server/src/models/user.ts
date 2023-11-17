@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IUser } from './database_model';
 
 const userSchema: Schema = new mongoose.Schema(
@@ -47,12 +47,12 @@ const userSchema: Schema = new mongoose.Schema(
 );
 
 // Email validation middleware
-userSchema.pre<IUser>('save', function (next) {
-  const user = this;
+userSchema.pre<IUser>('save', function validateEmail(next) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
-  if (!re.test(user.email)) {
-    return next(new Error('Please enter a valid email address'));
+  if (!re.test(this.email)) {
+    next(new Error('Please enter a valid email address'));
+    return;
   }
   next();
 });

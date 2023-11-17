@@ -15,14 +15,14 @@ productRouter.get('/api/all-products', async (req: Request, res: Response) => {
   try {
     let page = 0;
     if (req.query.page) {
-      page = parseInt(req.query.page as string);
+      page = parseInt(req.query.page as string, 10);
     }
     const limit = 20;
     const skip = page * limit;
 
-    var products = await getJson('products');
+    let products = await getJson('products');
 
-    if (products != null && products.length != 0) {
+    if (products !== null && products.length !== 0) {
       console.log('1. Search Data from Redis, product file');
       res.json(products);
     } else {

@@ -1,35 +1,35 @@
 import { createClient, RedisClientType } from 'redis';
-import * as socketController from '../socket/socket_router';
 import { Server } from 'http';
+import socketInit from '../socket/socket_router';
 
 let pubClient: RedisClientType;
 let subClient: RedisClientType;
 
-export const init = async (server: Server): Promise<void> => {
-  console.log(process.env.REDIS_PORT);
-  console.log(process.env.REDIS_HOST);
+const redisInit = async (server: Server): Promise<void> => {
   pubClient = createClient({
     password: process.env.REDIS_PASSWORD, // Use environment variable
     socket: {
       host: process.env.REDIS_HOST,
-      port: parseInt(process.env.REDIS_PORT || '6379'),
+      port: parseInt(process.env.REDIS_PORT || '6379', 10),
     },
   });
 
   subClient = pubClient.duplicate();
 
   // Redis DB Setting
-  pubClient.on('error', (err) => console.log('Redis Client Error', err));
-  pubClient.on('connect', () =>
-    console.log('2-1. Redis Connection: Pub Client Connected')
-  );
-  subClient.on('connect', () =>
-    console.log('2-2. Redis Connection: Sub Client Connected')
-  );
+  pubClient.on('error', () => {
+    // TODO: Handle error
+  });
+  pubClient.on('connect', () => {
+    // TODO: Handle connect
+  });
+  subClient.on('connect', () => {
+    // TODO: Handle connect
+  });
 
   // DB, Redis Connections
   await Promise.all([pubClient.connect(), subClient.connect()]);
-  socketController.init(server, pubClient, subClient);
+  socketInit(server, pubClient, subClient);
 };
 
 export const set = async (key: string, value: any): Promise<void> => {
@@ -91,13 +91,16 @@ export const addJson = async (key: string, value: any): Promise<void> => {
 };
 
 export const getJson = async (key: string): Promise<any> => {
+  let jsonProducts;
   try {
     if (!pubClient) {
       throw new Error('Redis client is not initialized');
     }
-    let jsonProducts = await pubClient.json.get(key);
-    return jsonProducts;
+    jsonProducts = await pubClient.json.get(key);
   } catch (e) {
     console.error(e);
   }
+  return jsonProducts;
 };
+
+export default redisInit;

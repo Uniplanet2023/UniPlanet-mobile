@@ -1,7 +1,7 @@
-import express, { Express } from "express";
+import express from 'express';
 import http, { Server } from 'http';
 import dotenv from 'dotenv';
-import {init} from './redis_controller/redis_controller';
+import redisInit from './redis_controller/redis_controller';
 
 // IMPORTS FROM OTHER FILES
 import authRouter from './routes/auth';
@@ -10,13 +10,12 @@ import userRouter from './routes/user';
 import likeRouter from './routes/like';
 import chatRouter from './routes/chat';
 
-
 // INIT
 dotenv.config();
 
 const app = express();
 const server: Server = http.createServer(app);
-init(server);
+redisInit(server);
 
 // middleware
 app.use(express.json());

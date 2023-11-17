@@ -2,7 +2,7 @@ import User from '../models/user'; // Adjust the path according to your project 
 import UserChatRoom from '../models/user_chat_room';
 
 async function signInFunction(email: string) {
-  return await User.findOne({ email }).populate({
+  const user = await User.findOne({ email }).populate({
     path: 'myChatRoom',
     populate: [
       {
@@ -26,9 +26,10 @@ async function signInFunction(email: string) {
       },
     ],
   });
+  return user;
 }
 async function getUserDataFunction(userId: string) {
-  return await User.findById(userId).populate({
+  const user = await User.findById(userId).populate({
     path: 'myChatRoom',
     populate: [
       {
@@ -52,10 +53,11 @@ async function getUserDataFunction(userId: string) {
       },
     ],
   });
+  return user;
 }
 
 async function getMyChatRoomDataFunction(myChatRoomId: string) {
-  return await UserChatRoom.findById(myChatRoomId).populate([
+  const user = await UserChatRoom.findById(myChatRoomId).populate([
     {
       path: 'chatRoom',
       populate: [
@@ -76,6 +78,7 @@ async function getMyChatRoomDataFunction(myChatRoomId: string) {
         'name email _id school verified profileImage like selling sold bought type',
     },
   ]);
+  return user;
 }
 
 export { signInFunction, getUserDataFunction, getMyChatRoomDataFunction };

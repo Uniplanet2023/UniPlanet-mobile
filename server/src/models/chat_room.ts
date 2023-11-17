@@ -1,13 +1,5 @@
-import mongoose from 'mongoose';
-import { Document, Model, Schema, model } from 'mongoose';
-
-// Define an interface that represents a document in MongoDB.
-interface IChatRoom extends Document {
-  product: mongoose.Types.ObjectId;
-  chatRoomType: string;
-  messages: mongoose.Types.ObjectId[];
-  lastMessage: mongoose.Types.ObjectId;
-}
+import mongoose, { Model, Schema, model } from 'mongoose';
+import { IChatRoom } from './database_model';
 
 // Define the schema
 const chatroomSchema: Schema = new Schema<IChatRoom>(

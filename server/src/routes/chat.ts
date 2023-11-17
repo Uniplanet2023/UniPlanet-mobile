@@ -1,16 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import auth from '../middlewares/auth';
-import Message from '../models/message';
 import User from '../models/user';
 import ChatRoom from '../models/chat_room';
 import UserChatRoom from '../models/user_chat_room';
-import { Types } from 'mongoose';
 import { getUserDataFunction } from '../functions/userdata';
 import { logStart, logEnd, handleError } from '../functions/logFunction';
 
 const chatRouter = express.Router();
-const { ObjectId } = Types;
 
 chatRouter.post('/api/createChatRoom', auth, async (req, res) => {
   try {
@@ -21,10 +18,11 @@ chatRouter.post('/api/createChatRoom', auth, async (req, res) => {
     const user = await User.findOne({ _id: req.user });
 
     console.log('1. Cheking UserID and ReceiverID');
-    if (!receiverId || req.user == receiverId || !user) {
+    if (!receiverId || req.user === receiverId || !user) {
       await session.abortTransaction();
       session.endSession();
-      return res.status(400).json('Something Wrong');
+      res.status(400).json('Something Wrong');
+      return;
     }
 
     // // Efficiently check if a chat room already exists
@@ -53,7 +51,8 @@ chatRouter.post('/api/createChatRoom', auth, async (req, res) => {
       await session.commitTransaction();
       session.endSession();
 
-      return res.status(200).json(myChatRoom);
+      res.status(200).json(myChatRoom);
+      return;
     }
 
     if (!myChatRoom) {
@@ -72,7 +71,7 @@ chatRouter.post('/api/createChatRoom', auth, async (req, res) => {
       const receiverChatRoom = new UserChatRoom({
         receiver: req.user,
         chatRoom: newChatRoom._id,
-        type: 'seller', //Receiver must be selling
+        type: 'seller',
       });
       await Promise.all([
         // runing currently  (not sequential)
@@ -89,7 +88,7 @@ chatRouter.post('/api/createChatRoom', auth, async (req, res) => {
         await User.findByIdAndUpdate(
           receiverId,
           {
-            $addToSet: { myChatRoom: receiverChatRoom._id }, //Receiver
+            $addToSet: { myChatRoom: receiverChatRoom._id },
           },
           { session }
         ),
@@ -131,7 +130,7 @@ chatRouter.get('/api/getChatRooms', auth, async (req, res) => {
     if (!populatedUser) {
       throw Error();
     }
-    res.status(200).json(populatedUser['myChatRoom']);
+    res.status(200).json(populatedUser.myChatRoom);
     logEnd('Getting ChatRoom API');
   } catch (e) {
     handleError(res, e as Error);
@@ -144,11 +143,13 @@ chatRouter.post('/api/getMessages', auth, async (req, res) => {
     const { myChatRoomId, page } = req.body;
 
     if (!myChatRoomId) {
-      return res.status(400).json({ error: 'ChatRoom ID is required' });
+      res.status(400).json({ error: 'ChatRoom ID is required' });
+      return;
     }
 
-    if (page === undefined || isNaN(page)) {
-      return res.status(400).json({ error: 'Valid page number is required' });
+    if (page === undefined) {
+      res.status(400).json({ error: 'Valid page number is required' });
+      return;
     }
 
     console.log('1. getting messages from database');
@@ -161,7 +162,7 @@ chatRouter.post('/api/getMessages', auth, async (req, res) => {
         select: 'messages',
         populate: {
           path: 'messages',
-          options: { sort: { createdAt: -1 }, limit: limit, skip: skip },
+          options: { sort: { createdAt: -1 }, limit, skip },
         },
       })
       .lean();
@@ -171,10 +172,11 @@ chatRouter.post('/api/getMessages', auth, async (req, res) => {
       !myChatRoom.chatRoom ||
       myChatRoom.chatRoom.messages.length === 0
     ) {
-      return res.status(200).json({ messages: [] });
+      res.status(200).json({ messages: [] });
+      return;
     }
 
-    const messages = myChatRoom.chatRoom.messages;
+    const { messages } = myChatRoom.chatRoom;
     res.status(200).json({ messages });
     logEnd('Getting Message API');
   } catch (e) {

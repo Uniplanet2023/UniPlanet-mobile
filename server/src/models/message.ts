@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema, model } from 'mongoose';
+import mongoose, { Model, Schema, model } from 'mongoose';
 import { IMessage } from './database_model';
 
 const messageSchema: Schema<IMessage> = new Schema(

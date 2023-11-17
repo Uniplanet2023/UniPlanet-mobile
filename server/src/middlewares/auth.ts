@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-
 declare module 'express-serve-static-core' {
   interface Request {
     user?: string;

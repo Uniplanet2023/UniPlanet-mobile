@@ -48,7 +48,7 @@ userRouter.post(
     try {
       const { id } = req.body;
       console.log('1. Finding and Delete Product');
-      let product = await Product.findByIdAndDelete(id);
+      const product = await Product.findByIdAndDelete(id);
       if (product) {
         console.log('2. Successfully Deleted');
       } else {

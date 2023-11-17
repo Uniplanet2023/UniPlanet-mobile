@@ -1,5 +1,6 @@
-import mongoose, { Document, Model, Schema, model } from 'mongoose';
+import mongoose, { Model, Schema, model } from 'mongoose';
 import { IEvent } from './database_model';
+
 const eventSchema: Schema<IEvent> = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },

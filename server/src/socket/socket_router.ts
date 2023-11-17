@@ -1,16 +1,13 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { verify } from 'jsonwebtoken';
-import mongoose, { startSession, Document } from 'mongoose';
-import cors from 'cors';
+import mongoose from 'mongoose';
 import { Server as HTTPServer } from 'http';
 import { RedisClientType } from 'redis';
 import Message from '../models/message'; // Update the path according to your project structure
 import ChatRoom from '../models/chat_room'; // Update the path according to your project structure
 import UserChatRoom from '../models/user_chat_room'; // Update the path according to your project structure
-import User from '../models/user'; // Update the path according to your project structure
-import { logStart, logEnd, handleError } from '../functions/logFunction'; // Update the path according to your project structure
-import { NextFunction } from 'express';
+import { logStart, logEnd } from '../functions/logFunction'; // Update the path according to your project structure
 
 interface UserData {
   user?: string;
@@ -22,7 +19,7 @@ let io: SocketIOServer;
 const userSocketIds: Record<string, string> = {};
 let userData: UserData;
 
-export const init = (
+const socketInit = (
   httpServer: HTTPServer,
   pubClient: RedisClientType,
   subClient: RedisClientType
@@ -33,20 +30,22 @@ export const init = (
   io.use((socket: Socket, next) => {
     logStart('Socket Middleware');
 
-    const headers = socket.handshake.headers;
+    const { headers } = socket.handshake;
 
     try {
       console.log('1. Getting Token from header');
       const token = headers['x-auth-token'] as string;
       if (!token) {
         console.log('No token');
-        return next(new Error('No token provided'));
+        next(new Error('No token provided'));
+        return;
       }
       console.log('2. Token Verification');
       const verified = verify(token, 'passwordKey') as { id: string };
       if (!verified) {
         console.log('Token verification failed, authorization denied.');
-        return next(new Error('Token verification failed'));
+        next(new Error('Token verification failed'));
+        return;
       }
       console.log('3. Setting User Id into the Socket');
 
@@ -61,28 +60,40 @@ export const init = (
       console.error(err);
     }
   });
+  const isUserInChatRoom = async (chatRoomId: string) => {
+    // Get the room's data
+    const sockets = await io.in(chatRoomId).fetchSockets(); // let you know who is joining the certain chat room
+    const userList: string[] = [];
+    sockets.forEach((e) => {
+      console.log(e);
+      userList.push(e.rooms.values.arguments);
+    });
+
+    console.log(`isUserInChatRoom ${userList}`);
+    return userList; // User is not in the chat room
+  };
   // socket API
   io.on('connection', (socket) => {
     socket.on('joinChatRoom', async (chatRoomId) => {
       logStart('Joining ChatRoom');
 
-      let userList = await isUserInChatRoom(chatRoomId);
+      const userList = await isUserInChatRoom(chatRoomId);
       console.log(userList);
       console.log(userList.includes(userData.user!));
       if (!userList.includes(chatRoomId)) {
         userData.chatRoomList.push(chatRoomId);
       }
 
-      if (userList.length == 0 || !userList.includes(userData.user!)) {
+      if (userList.length === 0 || !userList.includes(userData.user!)) {
         socket.join(chatRoomId);
         console.log(`1. ${userData.user} joining chatRoom`);
         console.log(`ChatRoom Id: ${chatRoomId}`);
         userList.push(userData.user!);
       }
-      console.log('Final userList is ' + userList);
+      console.log(`Final userList is ${userList}`);
       io.to(chatRoomId).emit('connectStatus', {
         userId: userList,
-        chatRoomId: chatRoomId,
+        chatRoomId,
       });
       logEnd('Joining ChatRoom');
     });
@@ -91,15 +102,15 @@ export const init = (
       logStart('Socket API: SeenMessage');
 
       const session = await mongoose.startSession();
-      const originalMessage = await Message.findById(msgId);
+      // const originalMessage = await Message.findById(msgId);
       try {
         session.startTransaction();
         await Message.findByIdAndUpdate(
           { _id: msgId, __v: 0 },
           { isSeen: true },
           { session }
-        )
-          await session.commitTransaction();
+        );
+        await session.commitTransaction();
 
         socket.broadcast.to(chatRoomId).emit('seenMessageFIN', myChatRoomId);
       } catch (e) {
@@ -113,11 +124,11 @@ export const init = (
 
     socket.on('sendMessage', async (msg, chatRoomId) => {
       logStart('Socket API : Send Message');
-      console.log('chat Room Id is ' + chatRoomId);
+      // console.log('chat Room Id is ' + chatRoomId);
 
       const newMessage = new Message({
         senderId: userData.user,
-        chatRoomId: chatRoomId,
+        chatRoomId,
         message: msg,
         type: 'text',
         isSeen: false,
@@ -130,21 +141,21 @@ export const init = (
           await newMessage.save({ session }), // saving msg to the mongo db
           await UserChatRoom.findOneAndUpdate(
             { receiver: userData.user, chatRoom: chatRoomId },
-            { $push: { unseenMessage: newMessage['_id'] } },
+            { $push: { unseenMessage: newMessage._id } },
             { session }
           ),
           await ChatRoom.findByIdAndUpdate(
             chatRoomId,
             {
-              $push: { messages: newMessage['_id'] },
-              $set: { lastMessage: newMessage['_id'] },
+              $push: { messages: newMessage._id },
+              $set: { lastMessage: newMessage._id },
             },
             { session }
           ),
         ]);
 
         await session.commitTransaction(); // Committing the transaction
-        io.to(chatRoomId).emit('receiveMessage', newMessage); //Front End
+        io.to(chatRoomId).emit('receiveMessage', newMessage);
         logEnd('Socket API : Send Message');
       } catch (error) {
         await session.abortTransaction();
@@ -168,7 +179,6 @@ export const init = (
       userData.chatRoomList = [];
       userData.user = '';
       userData.token = '';
-      socket.handshake.headers['x-auth-token'] = '';
 
       const userId = Object.keys(userSocketIds).find(
         (id) => userSocketIds[id] === socket.id
@@ -178,19 +188,9 @@ export const init = (
       }
     });
     // This function checks if a user is already in a chat room
-    const isUserInChatRoom = async (chatRoomId: string) => {
-      // Get the room's data
-      const sockets = await io.in(chatRoomId).fetchSockets(); // let you know who is joining the certain chat room
-      let userList: string[] = [];
-      sockets.map((e) => {
-        console.log(e);
-        userList.push(e.rooms.values.arguments);
-      });
-
-      console.log('isUserInChatRoom ' + userList);
-      return userList; // User is not in the chat room
-    };
   });
 
   return io;
 };
+
+export default socketInit;
