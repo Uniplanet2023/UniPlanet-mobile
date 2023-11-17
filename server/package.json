@@ -9,7 +9,8 @@
     "prettier:fix": "prettier --write .",
     "start": "node src/index.ts",
     "dev": "nodemon src/index.ts",
-    "test": "jest --watchAll --no-cache --detectOpenHandles"
+    "test": "jest",
+    "test:watch": "jest --watchAll --no-cache --detectOpenHandles"
   },
   "jest": {
     "testEnvironment": "node",
@@ -64,6 +65,7 @@
     "src/**/*.ts": [
       "npm run prettier:fix",
       "npm run lint",
+      "npm run test",
       "git add"
     ]
   }
