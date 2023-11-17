@@ -29,3 +29,15 @@ class EndMessageState extends MessageBlocState {
   @override
   List<Object?> get props => [msgList, page];
 }
+
+class UnReadMessageState extends MessageBlocState {
+  const UnReadMessageState({super.msgList, super.page});
+  @override
+  List<Object?> get props => [];
+}
+
+class ReadMessageState extends MessageBlocState {
+  const ReadMessageState({super.msgList, super.page});
+  @override
+  List<Object?> get props => [];
+}

@@ -115,9 +115,11 @@ class _ChatListState extends State<ChatList> {
           } else {
             if (currentMessage.isSeen == false) {
               print('triggered');
-              SocketService.socket!.emit('seenMessage',
-                  {currentMessage.messageId, widget.myChatRoom.myChatRoomId});
-              currentMessage.isSeen = true;
+              SocketService.socket!.emit('seenMessageACK', {
+                currentMessage.messageId,
+                widget.myChatRoom.myChatRoomId,
+                widget.myChatRoom.chatRoom.chatRoomId
+              });
             }
             return SenderMessageCard(
               message: currentMessage,

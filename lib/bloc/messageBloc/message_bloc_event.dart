@@ -36,3 +36,9 @@ class ReceiveMessageEvent extends MessageBlocEvent {
   @override
   List<Object> get props => [msg];
 }
+
+class ReadMessageEvent extends MessageBlocEvent {
+  const ReadMessageEvent();
+  @override
+  List<Object> get props => [];
+}

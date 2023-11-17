@@ -24,6 +24,12 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     on<GetMoreMessageEvent>((event, emit) async {
       await _getMoreMessage(event, emit);
     });
+    on<ReadMessageEvent>((event, emit) {
+      emit(UnReadMessageState(msgList: state.msgList, page: state.page));
+      state.msgList!.last.isSeen = true;
+
+      emit(ReadMessageState(msgList: state.msgList, page: state.page));
+    });
   }
   _getMoreMessage(GetMoreMessageEvent event, emit) async {
     emit(LoadingMessageState(msgList: state.msgList, page: state.page));

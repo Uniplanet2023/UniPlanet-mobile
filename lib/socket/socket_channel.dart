@@ -69,7 +69,7 @@ class SocketService {
 
     receiveMessageOn();
     createChatRoom(context, state.user!);
-
+    emptyUnSeenMessageOn();
     userStatusChange();
     disconnectStatus();
     joiningAllChatRoom(state.user!.myChatRoom);
@@ -77,9 +77,11 @@ class SocketService {
 
   void emptyUnSeenMessageOn() {
     try {
-      socket?.off("emptyUnseenMessage");
-      socket!.on("emptyUnseenMessage", (data) {
+      socket?.off("seenMessageFIN");
+      socket!.on("seenMessageFIN", (data) {
         print('empty emptyUnseenMessage');
+        print(data);
+        context.read<MessageBloc>().add(const ReadMessageEvent());
         context.read<ChatBloc>().add(EmptyUnseenMessageEvent(data));
       });
     } catch (e) {
