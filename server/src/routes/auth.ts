@@ -19,13 +19,20 @@ const authRouter = express.Router();
 authRouter.post(
 	'/api/signup',
 	[
-		body('email').isEmail().withMessage('Email must be in a valid format'),
+		body('email').isEmail().custom(async (value, { req }) => {
+			// const existingUser = await User.findOne({ value });
+			// if (existingUser) {
+			// 	throw new Error("User Already exist");
+			// }
+		  }).withMessage('Email must be in a valid format'),
 		body('name').isString().withMessage('Name should be String'),
-		body('passowrd')
+		body('password')
+		.trim()
+		.isLength({min:8})
 			.isStrongPassword()
 			.withMessage('Password should be Strong Enough'),
 		body('profileImage').isURL().withMessage('Profile Image should be URL'),
-		body('school').isAlpha().withMessage('School should be Alphabet'),
+		body('school').isString().withMessage('School should be String'),
 		body('verified')
 			.isBoolean()
 			.withMessage('verified should be boolean value'),
@@ -33,9 +40,10 @@ authRouter.post(
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 		try {
+			
 			// logStart('Sign Up User API');
 			if (!errors.isEmpty()) {
-				res.status(422).send({});
+				res.status(422).send({errors:errors.array()});
 				return;
 			}
 
@@ -43,32 +51,36 @@ authRouter.post(
 				req.body;
 
 			// console.log('1. Finding Existing User');
-			const existingUser = await User.findOne({ email });
+			// const existingUser = await User.findOne({ email });
 
-			if (existingUser) {
-				// console.log('2. User Exists!');
-				res.status(400).json({ msg: 'User with same email already exists!' });
-				return;
-			}
-			// console.log('2. Generate Hash Password');
-			const hashedPassword = await bcryptjs.hash(password, 8);
-			// console.log('3. Creating User Model');
-			let user = new User({
-				email,
-				password: hashedPassword,
-				name,
-				profileImage,
-				school,
-				verified,
-			});
-			// console.log('4. Save User into DB');
-			user = await user.save();
-			res.json(user);
+			
+			// // console.log('2. Generate Hash Password');
+			// const hashedPassword = await bcryptjs.hash(password, 8);
+			// // console.log('3. Creating User Model');
+			// let user = new User({
+			// 	email,
+			// 	password: hashedPassword,
+			// 	name,
+			// 	profileImage,
+			// 	school,
+			// 	verified,
+			// });
+			// // console.log('4. Save User into DB');
+			// user = await user.save();
+			// res.json(user);
 			// logEnd('Sign Up User API');
+			res.send({'pass':'pass'});
 		} catch (e) {
 			res.status(422).send({});
-			handleError(res, e as Error);
+			// handleError(res, e as Error);
 		}
+
+
+
+
+
+
+
 	},
 );
 
