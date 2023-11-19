@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 import redisInit from './redis_controller/redis_controller';
 
 // IMPORTS FROM OTHER FILES
-import authRouter from './routes/auth';
+import { authRouter } from './routes';
+
 import productRouter from './routes/product';
 import userRouter from './routes/user';
 import likeRouter from './routes/like';
@@ -21,8 +22,8 @@ redisInit(server);
 app.use(express.json());
 app.use(authRouter);
 app.use(chatRouter);
-app.use(productRouter);
 app.use(userRouter);
+app.use(productRouter);
 app.use(likeRouter);
 
 export default server;
