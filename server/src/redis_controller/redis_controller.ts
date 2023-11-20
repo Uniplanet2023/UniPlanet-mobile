@@ -62,7 +62,7 @@ export const get = async (key: string): Promise<string | false> => {
 export const setJson = async (
 	key: string,
 	path: string,
-	listValue:any[],
+	listValue: any[],
 ): Promise<void> => {
 	try {
 		if (!pubClient) {

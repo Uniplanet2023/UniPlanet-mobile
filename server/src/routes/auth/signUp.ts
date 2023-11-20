@@ -1,53 +1,29 @@
 import express, { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
-import { body, validationResult } from 'express-validator';
+import { validationResult } from 'express-validator';
 import User from '../../models/user';
 import { SIGNUP_ROUTE } from '../route-defs';
 import { sendMail, verifyOtp } from '../../middlewares/email_verify';
-
+import {signUpValidation} from '../validations/signUpValidation';
 const signUpRouter = express.Router();
 signUpRouter.post(
 	SIGNUP_ROUTE,
-	[
-		body('email')
-			.isEmail()
-			.custom(async (value) => {
-				const existingUser = await User.findOne({ email: value });
-				if (existingUser) {
-					throw new Error('User Already exist');
-				}
-			})
-			.withMessage('Email must be in a valid format'),
-		body('name').isString().withMessage('Name should be String'),
-		body('password')
-			.trim()
-			.isLength({ min: 8 })
-			.isStrongPassword()
-			.withMessage('Password should be Strong Enough'),
-		body('profileImage').isURL().withMessage('Profile Image should be URL'),
-		body('school').isString().withMessage('School should be String'),
-		body('verified')
-			.isBoolean()
-			.withMessage('verified should be boolean value'),
-	],
+	signUpValidation,
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 		try {
 			// logStart('Sign Up User API');
 			if (!errors.isEmpty()) {
-				res.status(422).send({});
-				return;
+				console.log('here');
+				return res.status(422).send({});
+				
 			}
 
 			const { name, email, password, profileImage, school, verified } =
 				req.body;
 
-			// console.log('1. Finding Existing User');
-			// const existingUser = await User.findOne({ email });
-
-			// // console.log('2. Generate Hash Password');
 			const hashedPassword = await bcryptjs.hash(password, 8);
-			// // console.log('3. Creating User Model');
+			
 			let user = new User({
 				email,
 				password: hashedPassword,
@@ -56,14 +32,11 @@ signUpRouter.post(
 				school,
 				verified,
 			});
-			// // console.log('4. Save User into DB');
+			
 			user = await user.save();
 			res.json(user);
-			// logEnd('Sign Up User API');
-			// res.send({'pass':'pass'});
-		} catch (e) {
+		} catch (error) {
 			res.status(422).send({});
-			// handleError(res, e as Error);
 		}
 	},
 );
@@ -100,10 +73,6 @@ signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
 	} catch (error) {
 		res.status(400).json({ message: 'Error while sending OTP', data: error });
 	}
-});
-
-signUpRouter.all(`${SIGNUP_ROUTE}*`, (req, res) => {
-	res.status(405).send({});
 });
 
 export default signUpRouter;

@@ -1,7 +1,10 @@
 import request from 'supertest';
 import app from '../../app';
 import { SIGNUP_ROUTE } from '../route-defs';
+<<<<<<< Updated upstream
 import User from '../../models/user';
+=======
+>>>>>>> Stashed changes
 
 /**
  * Valid email conditions:
@@ -135,7 +138,10 @@ describe('tests saving the signed up user to the database', () =>{
 		// Check whether I can find the user in the databse by using the _id or email property
 		const response = await request(app).post(SIGNUP_ROUTE).send(userInfo).expect(200);
 		expect(response.body.email).toEqual(userInfo.email.toLowerCase());
+<<<<<<< Updated upstream
 		const user = User.findOne({email:response.body.email })
+=======
+>>>>>>> Stashed changes
 
 	});
 	it('does not allow saving a user with a duplicate email',()=>{
