@@ -1,5 +1,5 @@
 import User from '../models/user'; // Adjust the path according to your project structure
-import UserChatRoom from '../models/user_chat_room';
+import UserChatRoom from '../models/userChatRoom';
 
 async function signInFunction(email: string) {
 	const user = await User.findOne({ email }).populate({

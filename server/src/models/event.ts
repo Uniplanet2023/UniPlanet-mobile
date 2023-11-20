@@ -1,7 +1,19 @@
-import mongoose, { Model, Schema, model } from 'mongoose';
-import { IEvent } from './database_model';
+import  { Model, Schema, model,Document } from 'mongoose';
+import { UserDocument } from './index';
+export type EventDocument = Document &{
+	title: string;
+	description: string;
+	startDate: Date;
+	endDate: Date;
+	location: string;
+	images: string[];
+	organizer: UserDocument;
+	likes: UserDocument[];
+	createdAt: Date;
+}
+export interface EventModel extends Model<EventDocument> {}
 
-const eventSchema: Schema<IEvent> = new Schema({
+const eventSchema = new Schema({
 	title: { type: String, required: true },
 	description: { type: String, required: true },
 	startDate: { type: Date, required: true },
@@ -9,13 +21,12 @@ const eventSchema: Schema<IEvent> = new Schema({
 	location: { type: String, required: true },
 	images: [String],
 	organizer: {
-		type: mongoose.Schema.Types.ObjectId,
+		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,
 	},
-	likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-	createdAt: { type: Date, default: Date.now },
-});
+	likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+},{timestamps: true});
 
-const Event: Model<IEvent> = model<IEvent>('Event', eventSchema);
+const Event = model<EventDocument,EventModel>('Event', eventSchema);
 export default Event;

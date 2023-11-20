@@ -1,11 +1,15 @@
-import mongoose, { Model, Schema, model } from 'mongoose';
-import User from './user';
-import { INotification } from './database_model';
+import  { Model, Schema, model,Document } from 'mongoose';
+import {User, MessageDocument} from './index'
 
-const notificationSchema: Schema<INotification> = new Schema({
+export type NotificationDocument = Document & {
+	noticeMessages: MessageDocument;
+}
+
+export interface NotificationModel extends Model<NotificationDocument> {}
+const notificationSchema = new Schema({
 	noticeMessages: {
 		senderId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'User',
 			required: true,
 		},
@@ -20,10 +24,7 @@ const notificationSchema: Schema<INotification> = new Schema({
 	},
 });
 
-const Notification: Model<INotification> = model<INotification>(
-	'Notification',
-	notificationSchema,
-);
+const Notification= model<NotificationDocument,NotificationModel>('Notification',notificationSchema);
 
 // Watch the Notification collection
 Notification.watch().on('change', async (change) => {

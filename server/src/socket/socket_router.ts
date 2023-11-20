@@ -5,8 +5,7 @@ import mongoose from 'mongoose';
 import { Server as HTTPServer } from 'http';
 import { RedisClientType } from 'redis';
 import Message from '../models/message'; // Update the path according to your project structure
-import ChatRoom from '../models/chat_room'; // Update the path according to your project structure
-import UserChatRoom from '../models/user_chat_room'; // Update the path according to your project structure
+import {ChatRoom, UserChatRoom} from '../models/index'; // Update the path according to your project structure
 import { logStart, logEnd } from '../functions/logFunction'; // Update the path according to your project structure
 
 interface UserData {

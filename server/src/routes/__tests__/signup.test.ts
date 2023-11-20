@@ -1,155 +1,72 @@
 import request from 'supertest';
 import app from '../../app';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-import {SIGNUP_ROUTE} from '../route-defs'
-let mongoMemoryServer: MongoMemoryServer;
+import { SIGNUP_ROUTE } from '../route-defs';
+import User from '../../models/user';
+
 /**
  * Valid email conditions:
  *  - Standard email formats form 'express-validator' package
  */
-beforeAll(async () => {
-	mongoMemoryServer = new MongoMemoryServer();
-	const mongoUri = process.env.MONGO_DB_HOST;
-	await mongoose.connect(mongoUri as string);
-});
-beforeEach(async () => {
-	const allCollections = await mongoose.connection.db.collections();
-
-	allCollections.forEach(async (collection) => {
-		await collection.deleteMany({});
-	});
-	jest.clearAllMocks();
-});
-
-afterAll(async () => {
-	// await mongoMemoryServer.stop();
-	await mongoose.connection.close();
-});
-/**
- * Available HTTP method in /api/auth/signup:
- * - Post
- */
-describe('tests signup route method availability', () => {
-	let password = '';
-	let profileImage = '';
-	let school = '';
-	let verified = false;
-	let name = '';
-	let email = '';
-	beforeAll(() => {
-		email = 'testUser@stonybrook.edu';
-		password = 'Validpassword1!';
-		profileImage =
-			'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg';
-		school = 'Stony Brook University';
-		verified = true;
-		name = 'sije';
-	});
-	it('should return 405 for non-post requests', async () => {
-		await request(app).get(SIGNUP_ROUTE).expect(405);
-		await request(app).put(SIGNUP_ROUTE).expect(405);
-		await request(app).patch(SIGNUP_ROUTE).expect(405);
-		await request(app).delete(SIGNUP_ROUTE).expect(405);
-	});
-	it('should return 200 for post request', async () => {
-		await request(app)
-			.post(SIGNUP_ROUTE)
-			.send({
-				email,
-				name,
-				password,
-				profileImage,
-				school,
-				verified,
-			})
-			.expect(200);
-	});
-});
+let userInfo ={
+	email : 'test1@stonybrook.edu',
+	profileImage :
+		'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+	school : 'Stony Brook University',
+	verified : true,
+	name : 'sije',
+	password:'TestPassword1!'
+}
 
 describe('test Validify of email input', () => {
-	let password = '';
-	let profileImage = '';
-	let school = '';
-	let verified = false;
-	let name = '';
-	beforeAll(() => {
-		password = 'Validpassword1!';
-		profileImage =
-			'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg';
-		school = 'Stony Brook University';
-		verified = true;
-		name = 'sije';
-	});
-
-	it('should return 422 if the email is not valid', async () => {
+	it('should return 422 if there is no super domain',async()=>{
+		userInfo.email = 'emailTest@gmail.';
 		await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email: 'invalidEmail',
-				password,
-				profileImage,
-				school,
-				verified,
-			})
-			.expect(422);
-		await request(app)
-			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email: 'qkrtlwp1111@gmailcom',
-				password,
-				profileImage,
-				school,
-				verified,
-			})
-			.expect(422);
-		await request(app)
-			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email: 'qkrtlwp1111gmail.com',
-				password,
-				profileImage,
-				school,
-				verified,
-			})
-			.expect(422);
-		await request(app)
-			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email: '@gmail.com',
-				password,
-				profileImage,
-				school,
-				verified,
-			})
-			.expect(422);
-		await request(app)
-			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email: 'qkrtlwp1111@.com',
-				password,
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(422);
 	});
+	it('should return 422 if there is no dot',async()=>{
+		userInfo.email = 'emailTest@gmail';
+		await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(userInfo)
+			.expect(422);
+	});
+	it('should return 422 if there is no subdomain',async()=>{
+		userInfo.email = 'emailTest@.com';
+		await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(userInfo)
+			.expect(422);
+	});
+	it('should return 422 if there is no at',async()=>{
+		userInfo.email = 'emailTestgmail.com';
+		await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(userInfo)
+			.expect(422);
+	});
+	it('should return 422 if there is no user name',async()=>{
+		userInfo.email = '@gmail.com';
+		await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(userInfo)
+			.expect(422);
+	});
+	it('should return 422 if sub-domain is capital',async()=>{
+		userInfo.email = 'emailTest@GMAIL.com';
+		await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(userInfo)
+			.expect(422);
+	});
+		
 	it('should return 200 if the email is valid', async () => {
+		userInfo.email = 'emailTest@gmail.com';
+		console.log(userInfo);
 		await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email: 'qkrtlwp1111@gmail.com',
-				password,
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(200);
 	});
 });
@@ -159,112 +76,71 @@ describe('test Validify of email input', () => {
  * 	- At least 8 characters
  *  - One lower-case letter
  *  - On uppper-case letter
+ *  - One special letter
  *  - One number
  *
  */
 describe('test validity of password input', () => {
-	let email = '';
-	let profileImage = '';
-	let school = '';
-	let verified = false;
-	let name = '';
-	beforeAll(() => {
-		email = 'sije.park@stonybrook.edu';
-		profileImage =
-			'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg';
-		school = 'Stony Brook University';
-		verified = true;
-		name = 'sije';
-	});
+	
+	beforeAll(async() =>{
+		userInfo.email='passTest@gmail.com'
+	})
 	it('should return 422 if the password contains less than 8 characters', async () => {
-		await request(app)
-			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email,
-				password: 'Test1!',
-				profileImage,
-				school,
-				verified,
-			})
-			.expect(422);
+		userInfo.password = 'Test1!';
+		await request(app).post(SIGNUP_ROUTE).send(userInfo).expect(422);
 	});
 	it('should return 422 if the password does not contain one lower-case letter', async () => {
+		userInfo.password = 'TESTPASSWORD1!';
 		await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email,
-				password: 'TESTPASSWORD1!',
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(422);
 	});
 	it('should return 422 if the password does not contain one upper-case letter', async () => {
+		userInfo.password = 'testpassword1!';
 		await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email,
-				password: 'testpassword!!',
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(422);
 	});
 	it('should return 422 if the password does not contain one special charator', async () => {
+		userInfo.password = 'testpassword11';
 		await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email,
-				password: 'testpassword11',
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(422);
 	});
 
 	it('should return 422 if the password does not contain a number', async () => {
+		userInfo.password = 'testpassword!!';
 		await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email,
-				password: 'test',
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(422);
 	});
 	it('should return 200 if the password is valid', async () => {
+		userInfo.password ='TestPassword1!';
 		const response = await request(app)
 			.post(SIGNUP_ROUTE)
-			.send({
-				name,
-				email,
-				password: 'TestPasswrod1!',
-				profileImage,
-				school,
-				verified,
-			})
+			.send(userInfo)
 			.expect(200);
 	});
 });
-// beforeAll(() =>{
-//     //Start the database connection
-// })
 
-// beforeEach(() =>{
-//     // clean up the database.
+describe('tests saving the signed up user to the database', () =>{
+	
+	it('saves the user successfully as long as the information is valid',async ()=>{
+		// Send valid user information
+		// Receive the user information back from the route
+		// Check whether I can find the user in the databse by using the _id or email property
+		const response = await request(app).post(SIGNUP_ROUTE).send(userInfo).expect(200);
+		expect(response.body.email).toEqual(userInfo.email.toLowerCase());
+		const user = User.findOne({email:response.body.email })
 
-// })
-
-// afterAll(() =>{
-//     //Close the database connection.
-// })
+	});
+	it('does not allow saving a user with a duplicate email',()=>{
+		// Send valid user information
+		// Send valid user information again( the sam info)
+		// Should return the respective HTTP error code
+	});
+})

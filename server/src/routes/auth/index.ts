@@ -1,8 +1,8 @@
 import express from 'express';
-import signUpRoute from './sign_up';
-import signInRoute from './sign_in';
-import deleteUserRoute from './delete_user';
-import updateUserRoute from './update_user';
+import signUpRoute from './signUp';
+import signInRoute from './signIn';
+import deleteUserRoute from './deleteUser';
+import updateUserRoute from './updateUser';
 
 const authRouter = express.Router();
 

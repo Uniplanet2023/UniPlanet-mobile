@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Product } from '../models/product';
+import { Product } from '../models/index'
 import auth from '../middlewares/auth';
 import {
 	addJson,

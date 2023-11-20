@@ -1,7 +1,7 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../../models/user';
+import {User} from '../../models/index';
 import { set } from '../../redis_controller/redis_controller';
 import { logStart, logEnd, handleError } from '../../functions/logFunction';
 import { signInFunction } from '../../functions/userdata';
@@ -35,7 +35,7 @@ signInRoute.post('/api/signin', async (req, res) => {
 
 		console.log("3. Set the user's online status to true");
 		console.log('4. Store User Data into Redis');
-		set(user._id, user);
+		set(user._id.toString(), user);
 		const userObject = user.toObject();
 		res.json({ token, ...userObject });
 		logEnd('Sign In API');

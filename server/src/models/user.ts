@@ -1,7 +1,25 @@
-import mongoose, { Schema } from 'mongoose';
-import { IUser } from './database_model';
+import { model, Model, Schema,Document } from 'mongoose';
+import { ProductDocument, UserChatRoomDocument, EventDocument} from './index';
 
-const userSchema: Schema = new mongoose.Schema(
+export type UserDocument = Document & {
+	name: string;
+	email: string;
+	school: string;
+	verified: boolean;
+	password: string;
+	profileImage: string;
+	type: string;
+	recentSearchHistory: string[];
+	like: ProductDocument[];
+	myEvent: EventDocument[]; // Assuming 'Event' schema exists
+	selling: ProductDocument[];
+	sold: ProductDocument[];
+	bought: ProductDocument[];
+	myChatRoom: UserChatRoomDocument[];
+}
+export interface UserModel extends Model<UserDocument> {}
+
+const userSchema: Schema = new Schema(
 	{
 		name: {
 			required: true,
@@ -36,18 +54,20 @@ const userSchema: Schema = new mongoose.Schema(
 			default: 'user',
 		},
 		recentSearchHistory: [{ type: String }],
-		like: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-		myEvent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }], // when you like save button
-		selling: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-		sold: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-		bought: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-		myChatRoom: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserChatRoom' }],
+		like: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+		myEvent: [{ type: Schema.Types.ObjectId, ref: 'Event' }], // when you like save button
+		selling: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+		sold: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+		bought: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+		myChatRoom: [{ type: Schema.Types.ObjectId, ref: 'UserChatRoom' }],
 	},
 	{ timestamps: true },
 );
+const User =model<UserDocument,UserModel>('User',userSchema);
+export default User;
 
 // Email validation middleware
-userSchema.pre<IUser>('save', function validateEmail(next) {
+userSchema.pre<UserDocument>('save', function validateEmail(next) {
 	const re =
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
 	if (!re.test(this.email)) {
@@ -57,5 +77,5 @@ userSchema.pre<IUser>('save', function validateEmail(next) {
 	next();
 });
 
-const User = mongoose.model<IUser>('User', userSchema);
-export default User;
+
+

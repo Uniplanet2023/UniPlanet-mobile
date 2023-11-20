@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import auth from '../middlewares/auth';
-import { Product } from '../models/product'; // Keep as is if Product is a named export
-import User from '../models/user'; // Assuming you have default exports
+import {User, Product } from '../models/index'; // Keep as is if Product is a named export
 
 import { handleError } from '../functions/logFunction';
 
@@ -20,22 +19,21 @@ likeRouter.post('/api/add-like', auth, async (req: Request, res: Response) => {
 		}
 
 		if (user.like.length === 0) {
-			user.like.push({ product, quantity: 1 });
+			user.like.push(product);
 		} else {
 			let isProductFound = false;
 			for (let i = 0; i < user.like.length; i += 1) {
-				if (user.like[i].product._id.equals(product._id)) {
+				if (user.like[i]._id.equals(product._id)) {
 					isProductFound = true;
 				}
 			}
 
 			if (isProductFound) {
-				const producttt = user.like.find((productt) =>
-					productt.product._id.equals(product._id),
+				user.like.find((productt) =>
+					productt._id.equals(product._id),
 				);
-				producttt.quantity += 1;
 			} else {
-				user.like.push({ product, quantity: 1 });
+				user.like.push( product);
 			}
 		}
 		user = await user.save();
@@ -60,12 +58,8 @@ likeRouter.delete(
 			}
 
 			for (let i = 0; i < user.like.length; i += 1) {
-				if (user.like[i].product._id.equals(product._id)) {
-					if (user.like[i].quantity === 1) {
-						user.like.splice(i, 1);
-					} else {
-						user.like[i].quantity -= 1;
-					}
+				if (user.like[i]._id.equals(product._id)) {
+		
 				}
 			}
 			user = await user.save();

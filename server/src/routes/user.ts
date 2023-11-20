@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import auth from '../middlewares/auth';
-import { Product } from '../models/product';
+import { Product } from '../models/index';
 import { get } from '../redis_controller/redis_controller';
 import { getUserDataFunction } from '../functions/userdata';
 import { logStart, logEnd, handleError } from '../functions/logFunction';

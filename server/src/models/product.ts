@@ -1,8 +1,19 @@
-import mongoose, { Schema } from 'mongoose';
-import User from './user';
-import { IProduct } from './database_model';
+import { Model, Schema,model, Document } from 'mongoose';
+import { UserDocument,User } from './index';
 
-const productSchema: Schema = new mongoose.Schema(
+export type ProductDocument = Document & {
+	name: string;
+	forSale: boolean;
+	seller: UserDocument;
+	description: string;
+	images: string[];
+	likes: UserDocument[];
+	price: number;
+	category: string;
+}
+export interface ProductModel extends Model<ProductDocument> {}
+
+const productSchema: Schema = new Schema(
 	{
 		name: {
 			type: String,
@@ -14,7 +25,7 @@ const productSchema: Schema = new mongoose.Schema(
 			required: true,
 		},
 		seller: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'User',
 			required: true,
 		},
@@ -29,7 +40,7 @@ const productSchema: Schema = new mongoose.Schema(
 				required: true,
 			},
 		],
-		likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+		likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 		price: {
 			type: Number,
 			required: true,
@@ -43,8 +54,8 @@ const productSchema: Schema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-const Product = mongoose.model<IProduct>('Product', productSchema);
-export { Product, productSchema, IProduct };
+const Product = model<ProductDocument,ProductModel>('Product', productSchema);
+export default Product;
 
 const changeStream = Product.watch();
 

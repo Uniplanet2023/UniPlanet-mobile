@@ -1,15 +1,24 @@
-import mongoose, { Model, Schema, model } from 'mongoose';
-import { IMessage } from './database_model';
+import  { Model, Schema, model,Document } from 'mongoose';
+import {ChatRoomDocument, UserDocument} from './index'
+export type MessageDocument = Document & {
+	chatRoomId: ChatRoomDocument;
+	senderId: UserDocument;
+	message: string;
+	type: string;
+	isSeen: boolean;
+	seenAt?: Date;
+}
+export interface MessageModel extends Model<MessageDocument> {}
 
-const messageSchema: Schema<IMessage> = new Schema(
+const messageSchema = new Schema(
 	{
 		chatRoomId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'ChatRoom',
 			required: true,
 		},
 		senderId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'User',
 			required: true,
 		},
@@ -32,5 +41,5 @@ const messageSchema: Schema<IMessage> = new Schema(
 	{ timestamps: true },
 );
 
-const Message: Model<IMessage> = model<IMessage>('Message', messageSchema);
+const Message = model<MessageDocument,MessageModel>('Message', messageSchema);
 export default Message;
