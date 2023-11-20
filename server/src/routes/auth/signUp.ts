@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
 import { validationResult } from 'express-validator';
-import User from '../../models/user';
+import {User} from '../../models/index';
 import { SIGNUP_ROUTE } from '../route-defs';
 import { sendMail, verifyOtp } from '../../middlewares/email_verify';
 import {signUpValidation} from '../validations/signUpValidation';
@@ -13,28 +13,14 @@ signUpRouter.post(
 		const errors = validationResult(req);
 		try {
 			// logStart('Sign Up User API');
-			if (!errors.isEmpty()) {
-				console.log('here');
-				return res.status(422).send({});
-				
-			}
 
-			const { name, email, password, profileImage, school, verified } =
-				req.body;
-
-			const hashedPassword = await bcryptjs.hash(password, 8);
+			if (!errors.isEmpty()) return res.status(422).send({});
+			//name, email, password, profileImage, school, verified
+			const hashedPassword = await bcryptjs.hash(req.body.password, 8);
+			req.body.password = hashedPassword;
+			const newUser = await User.create(req.body);
 			
-			let user = new User({
-				email,
-				password: hashedPassword,
-				name,
-				profileImage,
-				school,
-				verified,
-			});
-			
-			user = await user.save();
-			res.json(user);
+			res.status(201).json(newUser);
 		} catch (error) {
 			res.status(422).send({});
 		}

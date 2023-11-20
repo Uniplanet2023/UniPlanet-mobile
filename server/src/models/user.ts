@@ -1,4 +1,4 @@
-import { model, Model, Schema,Document } from 'mongoose';
+import { model, Model, Schema, Document } from 'mongoose';
 import { ProductDocument, UserChatRoomDocument, EventDocument} from './index';
 
 export type UserDocument = Document & {
