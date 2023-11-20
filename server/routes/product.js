@@ -4,47 +4,62 @@ const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
 const redis_controller = require("../redis_controller/redis_controller");
 productRouter.get("/api/all-products", async (req, res) => {
+  logStart("Getting All product API");
   try {
-    console.log("all product API is triggered");
-    const data = await redis_controller.getJson("products");
+    let page = 0;
+    if (req.query.page) {
+      page = parseInt(req.query.page);
+    }
+    const limit = 20;
+    const skip = page * limit;
 
-    if (data != null && data && data.length != 0) {
-      console.log("search from redis , product file");
-      return res.json(data);
+    var products = await getJson("products");
+
+    if (products != null && products.length != 0) {
+      console.log("1. Search Data from Redis, product file");
+      res.json(products);
     } else {
-      console.log("search from database , product file");
-      Promise.all([
-        (products = await Product.find().sort({ created_at: -1 }).limit(20)),
-        (mobileProducts = await Product.find({ category: "Mobiles" })
-          .sort({ created_at: -1 })
-          .limit(20)),
-        (essentialProducts = await Product.find({ category: "Essentials" })
-          .sort({ created_at: -1 })
-          .limit(20)), //Fashion
-        (applianceProducts = await Product.find({ category: "Appliances" })
-          .sort({ created_at: -1 })
-          .limit(20)),
-        (booksProducts = await Product.find({ category: "Books" })
-          .sort({ created_at: -1 })
-          .limit(20)),
-        (fashionProducts = await Product.find({ category: "Fashion" })
-          .sort({ created_at: -1 })
-          .limit(20)),
-      ]);
-      Promise.all([
-        await redis_controller.setJson("products", "$", products),
-        await redis_controller.setJson("Mobiles", "$", mobileProducts),
-        await redis_controller.setJson("Essentials", "$", essentialProducts),
-        await redis_controller.setJson("Appliances", "$", applianceProducts),
-        await redis_controller.setJson("Books", "$", booksProducts),
-        await redis_controller.setJson("Fashion", "$", fashionProducts),
-      ]);
-      console.log("update redis");
+      console.log("2. Search from database, product file");
+      products = await Product.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "seller",
+          select: "-myChatRoom -password -unseenNotifications -unseenMessages",
+        });
 
       res.json(products);
+
+      console.log("3. Fetching Datata to Redis");
+      const categories = [
+        "Mobiles",
+        "Essentials",
+        "Appliances",
+        "Books",
+        "Fashion",
+      ];
+      const dbQueries = categories.map((category) =>
+        Product.find({ category })
+          .sort({ timestamp: -1 })
+          .limit(20)
+          .populate(
+            "seller",
+            "-myChatRoom -password -unseenNotifications -unseenMessages"
+          )
+      );
+      const results = await Promise.all(dbQueries);
+
+      console.log("4. Updating Data to Redis");
+      const redisQueries = categories.map((category, index) =>
+        setJson(category, "$", results[index])
+      );
+      await Promise.all(redisQueries);
     }
+
+    logEnd("Getting All product API");
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    handleError(res, e);
   }
 });
 
