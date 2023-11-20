@@ -1,5 +1,5 @@
 import { model, Model, Schema, Document } from 'mongoose';
-import { ProductDocument, UserChatRoomDocument, EventDocument} from './index';
+import { ProductDocument, UserChatRoomDocument, EventDocument } from './index';
 
 export type UserDocument = Document & {
 	name: string;
@@ -16,7 +16,7 @@ export type UserDocument = Document & {
 	sold: ProductDocument[];
 	bought: ProductDocument[];
 	myChatRoom: UserChatRoomDocument[];
-}
+};
 export interface UserModel extends Model<UserDocument> {}
 
 const userSchema: Schema = new Schema(
@@ -63,19 +63,5 @@ const userSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 );
-const User =model<UserDocument,UserModel>('User',userSchema);
+const User = model<UserDocument, UserModel>('User', userSchema);
 export default User;
-
-// Email validation middleware
-userSchema.pre<UserDocument>('save', function validateEmail(next) {
-	const re =
-		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
-	if (!re.test(this.email)) {
-		next(new Error('Please enter a valid email address'));
-		return;
-	}
-	next();
-});
-
-
-

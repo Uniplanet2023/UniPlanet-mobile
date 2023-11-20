@@ -1,6 +1,6 @@
 import express from 'express';
 import bcryptjs from 'bcryptjs';
-import {User} from '../../models/index';
+import { User } from '../../models/index';
 import auth from '../../middlewares/auth';
 import { sendResetPassword } from '../../middlewares/email_verify';
 import { logStart, logEnd, handleError } from '../../functions/logFunction';

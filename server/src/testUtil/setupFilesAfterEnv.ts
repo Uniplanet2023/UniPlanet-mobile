@@ -1,21 +1,22 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 let mongoMemoryServer: MongoMemoryServer;
-beforeAll(async () =>{
-    mongoMemoryServer = await MongoMemoryServer.create();
-    const mongoUri = mongoMemoryServer.getUri();
+beforeAll(async () => {
+	mongoMemoryServer = await MongoMemoryServer.create();
+	const mongoUri = mongoMemoryServer.getUri();
 	await mongoose.connect(mongoUri);
-})
-beforeEach(async()=>{
-    const allCollections = await mongoose.connection.db.collections();
-    for(let collection of allCollections){
-        await collection.deleteMany({});
-    }
-})
-afterAll(async() =>{
-    await mongoMemoryServer.stop();
-    await mongoose.connection.close();
-})
+});
+beforeEach(async () => {
+	const allCollections = await mongoose.connection.db.collections();
+
+	allCollections.forEach(async (collection) => {
+		await collection.deleteMany({});
+	});
+});
+afterAll(async () => {
+	await mongoMemoryServer.stop();
+	await mongoose.connection.close();
+});
 // Before everything:
 //1. Create an instance of my MongoDB server
 //2. Connect to my MongoDB server via mongoose

@@ -1,5 +1,5 @@
-import { Model, Schema,model, Document } from 'mongoose';
-import { UserDocument,User } from './index';
+import { Model, Schema, model, Document } from 'mongoose';
+import { UserDocument, User } from './index';
 
 export type ProductDocument = Document & {
 	name: string;
@@ -10,7 +10,7 @@ export type ProductDocument = Document & {
 	likes: UserDocument[];
 	price: number;
 	category: string;
-}
+};
 export interface ProductModel extends Model<ProductDocument> {}
 
 const productSchema: Schema = new Schema(
@@ -54,7 +54,7 @@ const productSchema: Schema = new Schema(
 	{ timestamps: true },
 );
 
-const Product = model<ProductDocument,ProductModel>('Product', productSchema);
+const Product = model<ProductDocument, ProductModel>('Product', productSchema);
 export default Product;
 
 const changeStream = Product.watch();

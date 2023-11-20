@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import auth from '../middlewares/auth';
-import {User, Product } from '../models/index'; // Keep as is if Product is a named export
+import { User, Product } from '../models/index'; // Keep as is if Product is a named export
 
 import { handleError } from '../functions/logFunction';
 
@@ -29,11 +29,9 @@ likeRouter.post('/api/add-like', auth, async (req: Request, res: Response) => {
 			}
 
 			if (isProductFound) {
-				user.like.find((productt) =>
-					productt._id.equals(product._id),
-				);
+				user.like.find((productt) => productt._id.equals(product._id));
 			} else {
-				user.like.push( product);
+				user.like.push(product);
 			}
 		}
 		user = await user.save();
@@ -59,7 +57,6 @@ likeRouter.delete(
 
 			for (let i = 0; i < user.like.length; i += 1) {
 				if (user.like[i]._id.equals(product._id)) {
-		
 				}
 			}
 			user = await user.save();

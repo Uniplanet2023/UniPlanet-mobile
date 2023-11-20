@@ -1,11 +1,11 @@
-import { Model, Schema, model,Document} from 'mongoose';
-import { ChatRoomDocument, UserDocument, MessageDocument} from './index';
+import { Model, Schema, model, Document } from 'mongoose';
+import { ChatRoomDocument, UserDocument, MessageDocument } from './index';
 export type UserChatRoomDocument = Document & {
 	receiver: UserDocument;
 	type: string;
 	chatRoom: ChatRoomDocument;
 	unseenMessage: MessageDocument[]; // Assuming 'Message' schema exists
-}
+};
 export interface UserChatRoomModel extends Model<UserChatRoomDocument> {}
 
 const userChatRoomSchema: Schema = new Schema({
@@ -28,5 +28,8 @@ const userChatRoomSchema: Schema = new Schema({
 	],
 });
 
-const UserChatRoom = model<UserChatRoomDocument,UserChatRoomModel>('UserChatRoom',userChatRoomSchema);
+const UserChatRoom = model<UserChatRoomDocument, UserChatRoomModel>(
+	'UserChatRoom',
+	userChatRoomSchema,
+);
 export default UserChatRoom;

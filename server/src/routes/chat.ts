@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import auth from '../middlewares/auth';
-import {User} from '../models/index';
-import {ChatRoom, UserChatRoom} from '../models/index';
+import { User } from '../models/index';
+import { ChatRoom, UserChatRoom } from '../models/index';
 import { getUserDataFunction } from '../functions/userdata';
 import { logStart, logEnd, handleError } from '../functions/logFunction';
 

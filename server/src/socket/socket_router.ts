@@ -4,8 +4,7 @@ import { verify } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Server as HTTPServer } from 'http';
 import { RedisClientType } from 'redis';
-import Message from '../models/message'; // Update the path according to your project structure
-import {ChatRoom, UserChatRoom} from '../models/index'; // Update the path according to your project structure
+import { Message, ChatRoom, UserChatRoom } from '../models'; // Update the path according to your project structure
 import { logStart, logEnd } from '../functions/logFunction'; // Update the path according to your project structure
 
 interface UserData {

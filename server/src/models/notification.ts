@@ -1,9 +1,9 @@
-import  { Model, Schema, model,Document } from 'mongoose';
-import {User, MessageDocument} from './index'
+import { Model, Schema, model, Document } from 'mongoose';
+import { User, MessageDocument } from './index';
 
 export type NotificationDocument = Document & {
 	noticeMessages: MessageDocument;
-}
+};
 
 export interface NotificationModel extends Model<NotificationDocument> {}
 const notificationSchema = new Schema({
@@ -24,7 +24,10 @@ const notificationSchema = new Schema({
 	},
 });
 
-const Notification= model<NotificationDocument,NotificationModel>('Notification',notificationSchema);
+const Notification = model<NotificationDocument, NotificationModel>(
+	'Notification',
+	notificationSchema,
+);
 
 // Watch the Notification collection
 Notification.watch().on('change', async (change) => {

@@ -1,12 +1,11 @@
 import express from 'express';
+import 'express-async-errors';
 import http, { Server } from 'http';
 import dotenv from 'dotenv';
 import redisInit from './redis_controller/redis_controller';
-
+import { errorHandler } from './middlewares';
 // IMPORTS FROM OTHER FILES
-import { authRouter } from './routes';
-
-import productRouter from './routes/product';
+import { authRouter, productRouter } from './routes';
 import userRouter from './routes/user';
 import likeRouter from './routes/like';
 import chatRouter from './routes/chat';
@@ -25,5 +24,6 @@ app.use(chatRouter);
 app.use(userRouter);
 app.use(productRouter);
 app.use(likeRouter);
+app.use(errorHandler);
 
 export default server;
