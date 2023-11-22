@@ -2,9 +2,6 @@ import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import otpGenerator from 'otp-generator';
 import crypto from 'crypto';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 interface MailParams {
 	userEmail: string;

@@ -1,39 +1,38 @@
 import express, { Request, Response } from 'express';
-import bcryptjs from 'bcryptjs';
 import { validationResult } from 'express-validator';
 import { User } from '../../models/index';
 import { SIGNUP_ROUTE } from '../route-defs';
 import { sendMail, verifyOtp } from '../../middlewares/email_verify';
-import { signUpValidation } from '../validations/signUpValidation';
-import { InvalidInput } from '../../errors';
+import { signUpValidation } from '../../validations/signUpValidation';
+import { InvalidInput, DuplicatedEmail } from '../../errors';
+import { UserSignedUp } from '../../events';
+
 const signUpRouter = express.Router();
 signUpRouter.post(
 	SIGNUP_ROUTE,
 	signUpValidation,
 	async (req: Request, res: Response) => {
-		const errors = validationResult(req);
-		const errorsArray = errors.array();
-		try {
-			// logStart('Sign Up User API');
-			if (!errors.isEmpty()) {
-				throw new InvalidInput();
-			}
-			const { name, email, password, profileImage, school, verified } =
-				req.body;
-			const hashedPassword = await bcryptjs.hash(password, 8);
+		const errors = validationResult(req).array();
 
+		if (errors.length > 0) throw new InvalidInput();
+
+		const { name, email, password, profileImage, school, verified } = req.body;
+
+		try {
 			const newUser = await User.create({
 				email,
-				password: hashedPassword,
+				password,
 				name,
 				profileImage,
 				school,
 				verified,
 			});
-
-			res.status(201).json(newUser);
+			const userSignedUp = await new UserSignedUp(newUser);
+			res
+				.status(userSignedUp.getStatusCode())
+				.json(userSignedUp.serializeRest());
 		} catch (error) {
-			res.status(422).send({});
+			throw new DuplicatedEmail();
 		}
 	},
 );

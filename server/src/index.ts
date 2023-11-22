@@ -1,22 +1,17 @@
 import mongoose from 'mongoose';
-import server from './app';
+import dotenv from 'dotenv-safe';
+import app from './app';
+import { EmailSender, NodemailerEmailApi } from './utils';
 
+dotenv.config({});
+
+const emailSender = EmailSender.getInstance();
+emailSender.activate();
+emailSender.setEmailApi(new NodemailerEmailApi());
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGO_DB_HOST as string).then(() => {
-	console.log('3. DB Connection : Mongo DB Connection Successful');
-	console.log(
-		'\x1b[32m------------------- All the Connect is successfully connected -------------------\x1b[0m ',
-	);
-	console.log('');
-});
+mongoose.connect(process.env.MONGO_DB_HOST as string).then(() => {});
 
-server.listen(PORT, () => {
-	console.log('');
-	console.info(
-		'\x1b[32m------------------- Back End Connection is Staring -------------------\x1b[0m',
-	);
-	console.log(
-		`1. BackEnd Connection : BackEnd Server connected at port ${PORT}`,
-	);
+app.listen(PORT, () => {
+	console.log(`BackEnd Connection : BackEnd Server connected at port ${PORT}`);
 });

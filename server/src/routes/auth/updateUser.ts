@@ -1,5 +1,5 @@
 import express from 'express';
-import bcryptjs from 'bcryptjs';
+// import bcryptjs from 'bcryptjs';
 import { User } from '../../models/index';
 import auth from '../../middlewares/auth';
 import { sendResetPassword } from '../../middlewares/email_verify';
@@ -11,10 +11,11 @@ updateUserRoute.post('api/password-update', auth, async (req, res) => {
 	try {
 		logStart('Password Update API');
 
-		const hashedPassword = await bcryptjs.hash(
-			req.body.password,
-			process.env.SECRET_PASS_KEY as string,
-		);
+		// const hashedPassword = await bcryptjs.hash(
+		// 	req.body.password,
+		// 	process.env.SECRET_PASS_KEY as string,
+		// );
+		const hashedPassword = '';
 
 		const updateUser = await User.findByIdAndUpdate(
 			req.body.id,
@@ -46,7 +47,7 @@ updateUserRoute.put('/api/forgottenPassword', async (req, res) => {
 		}
 
 		const ResetPassword = await sendResetPassword(email);
-		const hashedPassword = await bcryptjs.hash(ResetPassword as string, 8);
+		const hashedPassword = '';
 
 		console.log(ResetPassword);
 		console.log(hashedPassword);

@@ -1,5 +1,5 @@
 import express from 'express';
-import bcryptjs from 'bcryptjs';
+// import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../../models/index';
 import { set } from '../../redis_controller/redis_controller';
@@ -21,13 +21,13 @@ signInRoute.post('/api/signin', async (req, res) => {
 			return;
 		}
 
-		const isMatch = await bcryptjs.compare(password, user.password);
+		// const isMatch = await bcryptjs.compare(password, user.password);
 
-		if (!isMatch) {
-			console.log('1. Incorrect Password');
-			res.status(400).json({ msg: 'Incorrect password.' });
-			return;
-		}
+		// if (!isMatch) {
+		// 	console.log('1. Incorrect Password');
+		// 	res.status(400).json({ msg: 'Incorrect password.' });
+		// 	return;
+		// }
 
 		console.log('1. Correct Password');
 		console.log('2. Generate Token');

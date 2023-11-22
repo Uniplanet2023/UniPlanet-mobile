@@ -45,7 +45,6 @@ describe('test Validify of email input', () => {
 
 	it('should return 201 if the email is valid', async () => {
 		validUserInfo.email = 'emailTest@gmail.com';
-		console.log(validUserInfo);
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201);
 	});
 });
@@ -60,9 +59,6 @@ describe('test Validify of email input', () => {
  *
  */
 describe('test validity of password input', () => {
-	beforeAll(async () => {
-		validUserInfo.email = 'passTest@gmail.com';
-	});
 	it('should return 422 if the password contains less than 8 characters', async () => {
 		validUserInfo.password = 'Test1!';
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422);
@@ -111,5 +107,26 @@ describe('tests saving the signed up user to the database', () => {
 		// Should return the respective HTTP error code
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201);
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422);
+		// expect(response.body.errors[0].message).toEqual('The email is already in the database');
+	});
+
+	it('should not include the user password on the response', async () => {
+		const response = await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(validUserInfo)
+			.expect(201);
+		expect(response.body.password).toBeUndefined();
+	});
+	it('encrypts the user password when saving the user to the database', async () => {
+		const response = await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(validUserInfo)
+			.expect(201);
+
+		const newUser = await User.findOne({ email: response.body.email });
+		const newUserPassword = newUser ? newUser.password : '';
+
+		expect(newUserPassword.length).toBeGreaterThan(0);
+		expect(newUserPassword).not.toEqual(validUserInfo.password);
 	});
 });
