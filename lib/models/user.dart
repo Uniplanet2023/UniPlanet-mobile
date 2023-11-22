@@ -9,7 +9,7 @@ class User {
   final String profileImage;
   final String school;
   final bool verified;
-  final List<String> myEvents;
+  final List<String> myEvent;
   final List<String> recentSearchHistory;
   final List<String> like;
   final List<String> selling;
@@ -26,7 +26,7 @@ class User {
     required this.profileImage,
     required this.school,
     required this.verified,
-    required this.myEvents,
+    required this.myEvent,
     required this.recentSearchHistory,
     required this.like,
     required this.selling,
@@ -44,7 +44,7 @@ class User {
         profileImage: '',
         school: '',
         verified: false,
-        myEvents: [],
+        myEvent: [],
         recentSearchHistory: [],
         like: [],
         selling: [],
@@ -63,7 +63,7 @@ class User {
       'profileImage': profileImage,
       'school': school,
       'verified': verified,
-      'myEvents': myEvents,
+      'myEvent': myEvent,
       'recentSearchHistory': recentSearchHistory,
       'like': like,
       'selling': selling,
@@ -84,7 +84,7 @@ class User {
           'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
       school: map['school'] as String,
       verified: map['verified'] as bool,
-      myEvents: List<String>.from(map['myEvent'] ?? []),
+      myEvent: List<String>.from(map['myEvent'] ?? []),
       recentSearchHistory: List<String>.from(map['recentSearchHistory'] ?? []),
       like: List<String>.from(map['like'] ?? []),
       selling: List<String>.from(map['selling'] ?? []),
@@ -112,7 +112,7 @@ class User {
     String? school,
     bool? verified,
     bool? isOnline,
-    List<String>? myEvents,
+    List<String>? myEvent,
     List<String>? recentSearchHistory,
     List<String>? like,
     List<String>? selling,
@@ -129,7 +129,7 @@ class User {
       profileImage: profileImage ?? this.profileImage,
       school: school ?? this.school,
       verified: verified ?? this.verified,
-      myEvents: myEvents ?? this.myEvents,
+      myEvent: myEvent ?? this.myEvent,
       recentSearchHistory: recentSearchHistory ?? this.recentSearchHistory,
       like: like ?? this.like,
       selling: selling ?? this.selling,
