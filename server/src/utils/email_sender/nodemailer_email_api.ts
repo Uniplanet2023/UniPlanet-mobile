@@ -2,30 +2,24 @@ import Mail from 'nodemailer/lib/mailer';
 import {
 	EmailApiSendEmailArgs,
 	EmailApiSendEmailResponse,
-	IEmailSender,
-	EmailSenderEmailApi,
+	EmailApi,
 } from './types';
 import nodemailer from 'nodemailer';
+import NodemailerSmtpServer from './nodemailer_app_smtp_server';
 
-export default class NodemailerEmailApi extends EmailSenderEmailApi {
+export default class NodemailerEmailApi implements EmailApi {
 	private transporter: Mail;
 
 	constructor() {
-		super();
-		this.transporter = nodemailer.createTransport({
-			host: 'localhost',
-			port: 1025,
-			auth: {
-				user: 'project.1',
-				pass: 'secret.1',
-			},
-		});
+		this.transporter = nodemailer.createTransport(new NodemailerSmtpServer().getConfig());
 	}
+
 	async sendSignUpVerificationEmail(
 		args: EmailApiSendEmailArgs,
 	): Promise<EmailApiSendEmailResponse> {
+		const { toEmail } = args;
 		await this.sendEmail({
-			toEmail: 'test@test.com',
+			toEmail,
 		});
 
 		return {
@@ -33,14 +27,14 @@ export default class NodemailerEmailApi extends EmailSenderEmailApi {
 			status: 'success',
 		};
 	}
-	protected async sendEmail(args: EmailApiSendEmailArgs): Promise<void> {
+
+	private async sendEmail(args: EmailApiSendEmailArgs): Promise<void> {
 		const { toEmail } = args;
-		const res = this.transporter.sendMail({
+		await this.transporter.sendMail({
 			from: 'noreply@uniplanet.com',
-			to: 'test@test.com',
+			to: toEmail,
 			subject: `Hello, Your UniPlanet Marketplace verification code`,
 			text: `This is our first test email`,
 		});
-		console.log(res);
 	}
 }

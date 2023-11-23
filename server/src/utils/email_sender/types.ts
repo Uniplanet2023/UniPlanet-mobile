@@ -5,15 +5,20 @@ export type EmailApiSendEmailResponse = {
 	toEmail: string;
 	status: 'success' | 'error';
 };
-export interface IEmailSender {
-	sendSignUpVerificationEmail: (
-		args: EmailApiSendEmailArgs,
-	) => Promise<EmailApiSendEmailResponse>;
-}
-
-export abstract class EmailSenderEmailApi implements IEmailSender {
-	abstract sendSignUpVerificationEmail(
+export type SmtpServerConfigAuth = {
+	user: string;
+	pass: string;
+};
+export type SmtpServerConfig = {
+	host: string;
+	port: number;
+	auth: SmtpServerConfigAuth;
+};
+export interface EmailApi {
+	sendSignUpVerificationEmail(
 		args: EmailApiSendEmailArgs,
 	): Promise<EmailApiSendEmailResponse>;
-	protected abstract sendEmail(args: EmailApiSendEmailArgs): void;
+}
+export interface SmtpServer {
+	getConfig(): SmtpServerConfig;
 }

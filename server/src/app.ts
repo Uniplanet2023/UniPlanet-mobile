@@ -1,6 +1,6 @@
 import express from 'express';
 import 'express-async-errors';
-import { createServer, Server } from 'http';
+import http, { Server } from 'http';
 import redisInit from './redis_controller/redis_controller';
 import { errorHandler } from './middlewares';
 // IMPORTS FROM OTHER FILES
@@ -8,6 +8,7 @@ import { authRouter, productRouter } from './routes';
 import userRouter from './routes/user';
 import likeRouter from './routes/like';
 import chatRouter from './routes/chat';
+import socketInit from './socket/socket_router';
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.use(productRouter);
 app.use(likeRouter);
 app.use(errorHandler);
 
-const server: Server = createServer(app);
-redisInit(server);
+const server: Server = http.createServer(app);
+redisInit();
+socketInit(server);
 
-export default app;
+export default server;

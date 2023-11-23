@@ -1,9 +1,7 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { createAdapter } from '@socket.io/redis-adapter';
 import { verify } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Server as HTTPServer } from 'http';
-import { RedisClientType } from 'redis';
 import { Message, ChatRoom, UserChatRoom } from '../models'; // Update the path according to your project structure
 import { logStart, logEnd } from '../functions/logFunction'; // Update the path according to your project structure
 
@@ -17,13 +15,8 @@ let io: SocketIOServer;
 const userSocketIds: Record<string, string> = {};
 let userData: UserData;
 
-const socketInit = (
-	httpServer: HTTPServer,
-	pubClient: RedisClientType,
-	subClient: RedisClientType,
-): SocketIOServer => {
+const socketInit = (httpServer: HTTPServer): SocketIOServer => {
 	io = new SocketIOServer(httpServer);
-	io.adapter(createAdapter(pubClient, subClient));
 
 	io.use((socket: Socket, next) => {
 		logStart('Socket Middleware');

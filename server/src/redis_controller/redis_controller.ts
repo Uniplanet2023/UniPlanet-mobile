@@ -1,11 +1,8 @@
 import { createClient, RedisClientType } from 'redis';
-import { Server } from 'http';
-import socketInit from '../socket/socket_router';
 
 let pubClient: RedisClientType;
-let subClient: RedisClientType;
 
-const redisInit = async (server: Server): Promise<void> => {
+const redisInit = async (): Promise<void> => {
 	pubClient = createClient({
 		password: process.env.REDIS_PASSWORD, // Use environment variable
 		socket: {
@@ -14,8 +11,6 @@ const redisInit = async (server: Server): Promise<void> => {
 		},
 	});
 
-	subClient = pubClient.duplicate();
-
 	// Redis DB Setting
 	pubClient.on('error', () => {
 		// TODO: Handle error
@@ -23,13 +18,10 @@ const redisInit = async (server: Server): Promise<void> => {
 	pubClient.on('connect', () => {
 		// TODO: Handle connect
 	});
-	subClient.on('connect', () => {
-		// TODO: Handle connect
-	});
 
 	// DB, Redis Connections
-	await Promise.all([pubClient.connect(), subClient.connect()]);
-	socketInit(server, pubClient, subClient);
+
+	await pubClient.connect();
 };
 
 export const set = async (key: string, value: any): Promise<void> => {

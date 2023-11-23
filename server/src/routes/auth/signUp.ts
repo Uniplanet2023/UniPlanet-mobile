@@ -6,6 +6,7 @@ import { sendMail, verifyOtp } from '../../middlewares/email_verify';
 import { signUpValidation } from '../../validations/signUpValidation';
 import { InvalidInput, DuplicatedEmail } from '../../errors';
 import { UserSignedUp } from '../../events';
+import { EmailSender } from '../../utils';
 
 const signUpRouter = express.Router();
 signUpRouter.post(
@@ -28,6 +29,10 @@ signUpRouter.post(
 				verified,
 			});
 			const userSignedUp = await new UserSignedUp(newUser);
+			const emailSender = EmailSender.getInstance();
+			emailSender.sendSignUpVerificationEmail({
+				toEmail:newUser.email
+			})
 			res
 				.status(userSignedUp.getStatusCode())
 				.json(userSignedUp.serializeRest());

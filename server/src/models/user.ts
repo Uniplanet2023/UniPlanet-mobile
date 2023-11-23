@@ -68,10 +68,11 @@ const userSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 );
-const User = model<UserDocument, UserModel>('User', userSchema);
+
 userSchema.pre(
 	'save',
 	async function validateUniqueness(this: UserDocument, next) {
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		const existingUser = await User.findOne({ email: this.email });
 
 		if (existingUser) {
@@ -90,5 +91,5 @@ userSchema.pre('save', async function hashPassword(this: UserDocument, next) {
 	}
 	next();
 });
-
+const User = model<UserDocument, UserModel>('User', userSchema);
 export default User;
