@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
@@ -10,7 +9,7 @@ class Message {
   final MessageEnum type;
   final DateTime timestamp;
   final String messageId;
-  final bool isSeen;
+  bool isSeen;
 
   Message({
     required this.chatRoomId,
@@ -49,8 +48,8 @@ class Message {
       chatRoomId: map['chatRoomId'] as String,
       senderId: map['senderId'] as String,
       message: map['message'] as String,
-      type: MessageEnumExtension.fromString(map['type'] as String),
-      timestamp: DateTime.parse(map['timestamp'].toString()),
+      type: MessageEnum.text,
+      timestamp: DateTime.parse(map['createdAt']).toLocal(),
       messageId: map['_id'] as String,
       isSeen: map['isSeen'] as bool,
     );

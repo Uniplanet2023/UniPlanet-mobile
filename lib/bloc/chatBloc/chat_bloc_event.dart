@@ -4,31 +4,20 @@ import 'package:uniplanet_mobile/models/user.dart';
 
 abstract class ChatBlocEvent extends Equatable {
   const ChatBlocEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class CreateChatRoomEvent extends ChatBlocEvent {
-  final String receiverId;
-  final User user;
-  const CreateChatRoomEvent(this.user, this.receiverId);
+  final User seller;
+  final String productId;
+  const CreateChatRoomEvent(this.seller, this.productId);
   @override
-  List<Object> get props => [receiverId];
-}
-
-class SelectChatRoomEvent extends ChatBlocEvent {
-  final ChatRoom chatroom;
-  const SelectChatRoomEvent(this.chatroom);
-  @override
-  List<Object> get props => [chatroom];
+  List<Object> get props => [seller, productId];
 }
 
 class LoadChatRoomEvent extends ChatBlocEvent {
-  final User user;
-  const LoadChatRoomEvent(this.user);
+  const LoadChatRoomEvent();
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [];
 }
 
 class LoadMessageEvent extends ChatBlocEvent {
@@ -36,9 +25,26 @@ class LoadMessageEvent extends ChatBlocEvent {
   List<Object> get props => [];
 }
 
-class UpdateOnlineStatusEvent extends ChatBlocEvent {
-  final bool isOnline;
-  const UpdateOnlineStatusEvent(this.isOnline);
+class ClientStatusChangeEvent extends ChatBlocEvent {
+  final String userId;
+  const ClientStatusChangeEvent(this.userId);
+
   @override
-  List<Object> get props => [isOnline];
+  List<Object> get props => [userId];
+}
+
+class ClientStatusDisconnectEvent extends ChatBlocEvent {
+  final String userId;
+  const ClientStatusDisconnectEvent(this.userId);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [userId];
+}
+
+class EmptyUnseenMessageEvent extends ChatBlocEvent {
+  final String myChatRoomId;
+  const EmptyUnseenMessageEvent(this.myChatRoomId);
+  @override
+  List<Object?> get props => [myChatRoomId];
 }

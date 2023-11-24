@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
@@ -7,6 +10,8 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup_screen.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class SigninScreen extends StatefulWidget {
   static const String routeName = '/signin-screen';
@@ -23,13 +28,9 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _resetPasswordController =
       TextEditingController();
 
-  void signInUser() {
-    try {
-      context.read<UserBloc>().add(SignInEvent(
-          context, _emailController.text, _passwordController.text));
-    } catch (e) {
-      print(e);
-    }
+  void signInUser() async {
+    context.read<UserBloc>().add(SignInEvent(_emailController.text,
+        _passwordController.text, context)); //add is trigger SignInEvent
   }
 
   void resetPassword() {

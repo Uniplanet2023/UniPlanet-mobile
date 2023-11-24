@@ -1,5 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 
 class User {
   final String id;
@@ -8,14 +9,14 @@ class User {
   final String profileImage;
   final String school;
   final bool verified;
-  final bool isOnline;
-  final List<dynamic> unseenNotifications;
-  final List<dynamic> unseenMessages;
-  final List<dynamic> like;
-  final List<dynamic> selling;
-  final List<dynamic> bought;
-  final List<dynamic> sold;
-  final List<dynamic> chatRooms;
+  final List<String> myEvent;
+  final List<String> recentSearchHistory;
+  final List<String> like;
+  final List<String> selling;
+  final List<String> bought;
+  final List<String> sold;
+  final List<MyChatRoom> myChatRoom;
+
   final String type;
   final String token;
   User({
@@ -25,14 +26,13 @@ class User {
     required this.profileImage,
     required this.school,
     required this.verified,
-    required this.isOnline,
-    required this.unseenNotifications,
-    required this.unseenMessages,
+    required this.myEvent,
+    required this.recentSearchHistory,
     required this.like,
     required this.selling,
     required this.bought,
     required this.sold,
-    required this.chatRooms,
+    required this.myChatRoom,
     required this.type,
     this.token = "",
   });
@@ -44,14 +44,13 @@ class User {
         profileImage: '',
         school: '',
         verified: false,
-        isOnline: false,
-        unseenNotifications: [],
-        unseenMessages: [],
+        myEvent: [],
+        recentSearchHistory: [],
         like: [],
         selling: [],
         bought: [],
         sold: [],
-        chatRooms: [],
+        myChatRoom: [],
         type: '',
         token: '');
   }
@@ -64,14 +63,13 @@ class User {
       'profileImage': profileImage,
       'school': school,
       'verified': verified,
-      'isOnline': isOnline,
-      'unseenNotifications': unseenNotifications,
-      'unseenMessages': unseenMessages,
+      'myEvent': myEvent,
+      'recentSearchHistory': recentSearchHistory,
       'like': like,
       'selling': selling,
       'bought': bought,
       'sold': sold,
-      'chatRooms': chatRooms,
+      'myChatRooms': myChatRoom,
       'type': type,
       'token': token,
     };
@@ -86,16 +84,16 @@ class User {
           'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
       school: map['school'] as String,
       verified: map['verified'] as bool,
-      isOnline: map['isOnline'] as bool,
-      unseenNotifications:
-          List<dynamic>.from(map['unseenNotifications'] as List<dynamic>),
-      unseenMessages:
-          List<dynamic>.from(map['unseenMessages'] as List<dynamic>),
-      like: List<dynamic>.from(map['like'] as List<dynamic>),
-      selling: List<dynamic>.from(map['selling'] as List<dynamic>),
-      bought: List<dynamic>.from(map['bought'] as List<dynamic>),
-      sold: List<dynamic>.from(map['sold'] as List<dynamic>),
-      chatRooms: List<dynamic>.from(map['chatRooms'] as List<dynamic>),
+      myEvent: List<String>.from(map['myEvent'] ?? []),
+      recentSearchHistory: List<String>.from(map['recentSearchHistory'] ?? []),
+      like: List<String>.from(map['like'] ?? []),
+      selling: List<String>.from(map['selling'] ?? []),
+      bought: List<String>.from(map['bought'] ?? []),
+      sold: List<String>.from(map['sold'] ?? []),
+      myChatRoom: (map['myChatRoom'] as List<dynamic>?)
+              ?.map((e) => MyChatRoom.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       type: map['type'] as String,
       token: map['token'] ?? "",
     );
@@ -110,18 +108,17 @@ class User {
     String? id,
     String? name,
     String? email,
-    String? profileImages,
-    String? password,
+    String? profileImage,
     String? school,
     bool? verified,
     bool? isOnline,
-    List<dynamic>? unseenNotifications,
-    List<dynamic>? unseenMessages,
-    List<dynamic>? like,
-    List<dynamic>? selling,
-    List<dynamic>? bought,
-    List<dynamic>? sold,
-    List<dynamic>? chatRooms,
+    List<String>? myEvent,
+    List<String>? recentSearchHistory,
+    List<String>? like,
+    List<String>? selling,
+    List<String>? bought,
+    List<String>? sold,
+    List<MyChatRoom>? myChatRoom,
     String? type,
     String? token,
   }) {
@@ -129,17 +126,16 @@ class User {
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
-      profileImage: profileImages ?? profileImage,
+      profileImage: profileImage ?? this.profileImage,
       school: school ?? this.school,
       verified: verified ?? this.verified,
-      isOnline: isOnline ?? this.isOnline,
-      unseenNotifications: unseenNotifications ?? this.unseenNotifications,
-      unseenMessages: unseenMessages ?? this.unseenMessages,
+      myEvent: myEvent ?? this.myEvent,
+      recentSearchHistory: recentSearchHistory ?? this.recentSearchHistory,
       like: like ?? this.like,
       selling: selling ?? this.selling,
       bought: bought ?? this.bought,
       sold: sold ?? this.sold,
-      chatRooms: chatRooms ?? this.chatRooms,
+      myChatRoom: myChatRoom ?? this.myChatRoom,
       type: type ?? this.type,
       token: token ?? this.token,
     );

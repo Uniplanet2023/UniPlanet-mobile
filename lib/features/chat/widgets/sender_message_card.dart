@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
@@ -7,25 +8,29 @@ class SenderMessageCard extends StatelessWidget {
     required this.message,
     required this.date,
   }) : super(key: key);
-  final String message;
+  final Message message;
   final String date;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width - 45,
-        ),
-        child: Card(
-          elevation: 1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: GlobalVariables.primaryColor,
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          child: Stack(
-            children: [
-              Padding(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          // Card containing the message
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width - 45,
+            ),
+            child: Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              color: GlobalVariables.primaryColor,
+              margin: const EdgeInsets.fromLTRB(15, 5, 5, 5),
+              child: Padding(
                 padding: const EdgeInsets.only(
                   left: 10,
                   right: 30,
@@ -33,26 +38,36 @@ class SenderMessageCard extends StatelessWidget {
                   bottom: 20,
                 ),
                 child: Text(
-                  message,
+                  message.message,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 2,
-                right: 10,
-                child: Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                  ),
+            ),
+          ),
+          // Date and Icon
+          Row(
+            children: [
+              Text(
+                date,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.black54, // Style to match SenderMessageCard
                 ),
               ),
+              const SizedBox(width: 5),
+              message.isSeen
+                  ? const SizedBox()
+                  : const Icon(
+                      Icons.local_fire_department_outlined,
+                      size: 20,
+                      color: Colors
+                          .black54, // Changed color for visibility outside Card
+                    ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

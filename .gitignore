@@ -7,6 +7,9 @@
 .atom/
 .buildlog/
 .history
+.server/node_modules
+
+.node_modules
 .svn/
 
 # IntelliJ related
@@ -45,3 +48,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /server/node_modules
+/server/package-lock.json

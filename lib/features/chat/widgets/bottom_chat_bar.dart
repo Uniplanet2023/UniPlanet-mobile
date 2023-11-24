@@ -2,19 +2,23 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' as foundation;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
+  final Function scrollDownfuction;
   const BottomChatField({
     super.key,
     required this.chatRoomId,
+    required this.scrollDownfuction,
   });
 
   @override
@@ -54,36 +58,21 @@ class _BottomChatFieldState extends State<BottomChatField> {
     isRecorderInit = true;
   }
 
-  void sendTextMessage() async {
-    // if (isShowSendButton) {
-    //   ref.read(chatControllerProvider).sendTextMessage(
-    //         context,
-    //         _messageController.text.trim(),
-    //         widget.recieverUserId,
-    //         widget.isGroupChat,
-    //       );
-    //   setState(() {
-    //     _messageController.text = '';
-    //   });
-    // } else {
-    //   var tempDir = await getTemporaryDirectory();
-    //   var path = '${tempDir.path}/flutter_sound.aac';
-    //   if (!isRecorderInit) {
-    //     return;
-    //   }
-    //   if (isRecording) {
-    //     await _soundRecorder!.stopRecorder();
-    //     sendFileMessage(File(path), MessageEnum.audio);
-    //   } else {
-    //     await _soundRecorder!.startRecorder(
-    //       toFile: path,
-    //     );
-    //   }
-
-    //   setState(() {
-    //     isRecording = !isRecording;
-    //   });
-    // }
+  void sendTextMessage(String msg, String chatRoomId) async {
+    print('sendTextMessage');
+    if (isShowSendButton) {
+      User user = context.read<UserBloc>().state.user!;
+      context.read<MessageBloc>().add(SendMessageEvent(
+            // BLoc
+            chatRoomId,
+            user.id,
+            msg,
+          ));
+      setState(() {
+        _messageController.text = '';
+      });
+      widget.scrollDownfuction();
+    }
   }
 
   void sendFileMessage(
@@ -138,8 +127,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   @override
   Widget build(BuildContext context) {
-    // final messageReply = ref.watch(messageReplyProvider);
-    // final isShowMessageReply = messageReply != null;
     const isShowMessageReply = true;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -214,7 +201,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   backgroundColor: const Color(0xFF128C7E),
                   radius: 20,
                   child: GestureDetector(
-                    onTap: sendTextMessage,
+                    onTap: () => sendTextMessage(
+                        _messageController.text, widget.chatRoomId),
                     child: Icon(
                       isShowSendButton
                           ? Icons.send

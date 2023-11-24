@@ -1,0 +1,79 @@
+import express, { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import { User } from '../../models/index';
+import { SIGNUP_ROUTE } from '../route-defs';
+import { sendMail, verifyOtp } from '../../middlewares/email_verify';
+import { signUpValidation } from '../../validations/signUpValidation';
+import { InvalidInput, DuplicatedEmail } from '../../errors';
+import { UserSignedUp } from '../../events';
+import { EmailSender } from '../../utils';
+
+const signUpRouter = express.Router();
+signUpRouter.post(
+	SIGNUP_ROUTE,
+	signUpValidation,
+	async (req: Request, res: Response) => {
+		const errors = validationResult(req).array();
+
+		if (errors.length > 0) throw new InvalidInput();
+
+		const { name, email, password, profileImage, school, verified } = req.body;
+
+		try {
+			const newUser = await User.create({
+				email,
+				password,
+				name,
+				profileImage,
+				school,
+				verified,
+			});
+			const userSignedUp = await new UserSignedUp(newUser);
+			const emailSender = EmailSender.getInstance();
+			emailSender.sendSignUpVerificationEmail({
+				toEmail:newUser.email
+			})
+			res
+				.status(userSignedUp.getStatusCode())
+				.json(userSignedUp.serializeRest());
+		} catch (error) {
+			throw new DuplicatedEmail();
+		}
+	},
+);
+
+signUpRouter.post(`${SIGNUP_ROUTE}/sendOtp`, async (req, res) => {
+	try {
+		const { userEmail, name } = req.body;
+		const existingUser = await User.findOne({ userEmail });
+
+		if (existingUser) {
+			console.log('User Exists!');
+			res.status(200).json({ message: 'User with same email already exists!' });
+			return;
+		}
+
+		const mailResult = await sendMail({ userEmail, name });
+
+		res.status(200).json({ message: 'Success', hash: mailResult });
+	} catch (error) {
+		res.status(400).json({ message: 'Error while sending OTP', error });
+	}
+});
+
+signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
+	try {
+		const result = await verifyOtp(req.body);
+		if (result === 'Success') {
+			res.status(200).json({ message: result });
+		} else if (result === 'OTP expired') {
+			res.status(200).json({ message: result });
+		} else if (result === 'Invalid Verfication number') {
+			res.status(200).json({ message: result });
+		}
+	} catch (error) {
+		res.status(400).json({ message: 'Error while sending OTP', data: error });
+	}
+});
+
+export default signUpRouter;

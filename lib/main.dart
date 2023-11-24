@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/addProduct/screens/admin_screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/splash_screen.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 void main() {
   runApp(MultiRepositoryProvider(
@@ -20,17 +20,24 @@ void main() {
         RepositoryProvider(create: (context) => UserRepository()),
         RepositoryProvider(create: (context) => ProductRepository()),
         RepositoryProvider(create: (context) => ChatRepository()),
+        RepositoryProvider(create: (context) => SocketService(context))
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
             create: (context) => UserBloc(
-                  context.read<UserRepository>(),
-                )),
+                context.read<UserRepository>(), context.read<SocketService>())),
         BlocProvider(
             create: (context) => ChatBloc(
-                context.read<ProductRepository>(),
-                context.read<UserRepository>(),
-                context.read<ChatRepository>())),
+                context.read<ChatRepository>(), context.read<SocketService>())),
+        BlocProvider(
+            create: (context) => MessageBloc(context.read<ChatRepository>())),
+        BlocProvider(
+          create: (context) => ProductBloc(context.read<ProductRepository>(),
+              context.read<UserRepository>()),
+        ),
+        BlocProvider(
+          create: (context) => StatusBloc(),
+        )
       ], child: const MyApp())));
 }
 
@@ -45,12 +52,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    print('here');
-    _loadUser();
+    _initBloc();
   }
 
-  _loadUser() {
+  _initBloc() async {
     context.read<UserBloc>().add(LoadUserDataEvent());
+    context.read<ProductBloc>();
   }
 
   @override
@@ -61,7 +68,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     var state = context.watch<UserBloc>().state;
-    // print(state == LoadingUserState);
+
+    if (state is LoadedUserState) {
+      print("Set Socket is triggered");
+      SocketService(context);
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: SnackbarGlobal.key,
@@ -80,17 +92,6 @@ class _MyAppState extends State<MyApp> {
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: const SplashScreen(),
-      // home: state is LoadingUserState
-      //     ? const AuthScreen()
-      //     : state is LoadedUserState
-      //         ? const BottomBar()
-      //         : const AuthScreen(),
-
-      // state.user!.token != ''
-      //     ? state.user!.type == 'user'
-      //         ? const BottomBar()
-      //         : const AdminScreen()
-      //     : const AuthScreen(),
     );
   }
 }

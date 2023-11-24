@@ -1,6 +1,4 @@
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/account/widgets/below_app_bar.dart';
-import 'package:uniplanet_mobile/features/account/widgets/orders.dart';
 import 'package:uniplanet_mobile/features/account/widgets/top_buttons.dart';
 import 'package:flutter/material.dart';
 
@@ -50,11 +48,9 @@ class AccountScreen extends StatelessWidget {
       ),
       body: const Column(
         children: [
-          BelowAppBar(),
           SizedBox(height: 10),
           TopButtons(),
           SizedBox(height: 20),
-          Orders(),
         ],
       ),
     );

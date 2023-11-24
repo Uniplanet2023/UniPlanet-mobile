@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class SnackbarGlobal {
   static GlobalKey<ScaffoldMessengerState> key =
@@ -62,6 +64,23 @@ Future<File?> pickVideoFromGallery(BuildContext context) async {
     SnackbarGlobal.showSnackBar(e.toString());
   }
   return video;
+}
+
+String formatTimestamp(DateTime timestamp) {
+  final now = DateTime.now();
+  final difference = now.difference(timestamp);
+
+  if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} min ago';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} hours ago';
+  } else if (difference.inHours < 48) {
+    return 'Yesterday';
+  } else if (difference.inHours <= 8760) {
+    return DateFormat('MMMM d').format(timestamp);
+  } else {
+    return DateFormat('yyyy MMMM d').format(timestamp);
+  }
 }
 
 // Method to open the camera

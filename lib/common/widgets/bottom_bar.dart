@@ -1,4 +1,10 @@
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
@@ -8,7 +14,10 @@ import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -70,7 +79,7 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    final userLikeLen = UserRepository.getUser(context).like.length;
+    User user = context.watch<UserBloc>().state.user!;
 
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
@@ -213,7 +222,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     label: '',
                   ),
-                  // CART
+                  // Chat
                   BottomNavigationBarItem(
                     icon: Container(
                       width: bottomBarWidth,
@@ -228,9 +237,33 @@ class _BottomBarState extends State<BottomBar> {
                         ),
                       ),
                       child: badges.Badge(
-                        badgeContent: Text(userLikeLen.toString()),
+                        badgeContent: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                Colors.red, // Background color for the circle
+                            borderRadius:
+                                BorderRadius.circular(10), // Makes it round
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 10, // Minimum width for the red circle
+                            minHeight: 10, // Minimum height for the red circle
+                          ),
+                          child: const Text(
+                            '0',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize:
+                                  12, // You can adjust the font size as needed
+                            ),
+                          ),
+                        ),
                         badgeStyle: const badges.BadgeStyle(
-                            badgeColor: Colors.white, elevation: 0),
+                          elevation: 0,
+                          shape: badges.BadgeShape.circle,
+                        ),
+                        position: badges.BadgePosition.topEnd(top: -13, end: 2),
                         child: const Icon(
                           Icons.chat_bubble_outline,
                         ),
@@ -238,6 +271,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     label: '',
                   ),
+
                   // ACCOUNT
                   BottomNavigationBarItem(
                     icon: Container(

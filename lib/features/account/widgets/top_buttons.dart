@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/features/account/widgets/account_button.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
@@ -27,7 +29,7 @@ class TopButtons extends StatelessWidget {
             AccountButton(
               text: 'Log Out',
               onTap: () {
-                UserRepository().logOut();
+                context.read<UserBloc>().add(LogoutEvent(context));
               },
             ),
             AccountButton(
