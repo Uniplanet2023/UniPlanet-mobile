@@ -2,7 +2,14 @@ import request from 'supertest';
 import app from '../../app';
 import { SIGNUP_ROUTE } from '../route-defs';
 import { User } from '../../models/index';
+import { EmailSender } from '../../utils';
+import { MockEmailApi } from '../../testUtil/mock_email_api';
+beforeEach(()=>{
+	const emailSender = EmailSender.getInstance();
 
+	emailSender.activate();
+	emailSender.setEmailApi(new MockEmailApi());
+})
 /**
  * Valid email conditions:
  *  - Standard email formats form 'express-validator' package

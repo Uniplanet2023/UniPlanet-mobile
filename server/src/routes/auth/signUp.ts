@@ -32,7 +32,8 @@ signUpRouter.post(
 			const emailSender = EmailSender.getInstance();
 			emailSender.sendSignUpVerificationEmail({
 				toEmail:newUser.email
-			})
+			});
+			
 			res
 				.status(userSignedUp.getStatusCode())
 				.json(userSignedUp.serializeRest());
