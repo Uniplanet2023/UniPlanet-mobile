@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   auth:
-    name: Authentication services
+    name: Authentication service
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository
