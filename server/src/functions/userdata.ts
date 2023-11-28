@@ -1,5 +1,5 @@
-import User from '../models/user'; // Adjust the path according to your project structure
-import UserChatRoom from '../models/userChatRoom';
+import User from '../models/user' // Adjust the path according to your project structure
+import UserChatRoom from '../models/userChatRoom'
 
 async function signInFunction(email: string) {
 	const user = await User.findOne({ email }).populate({
@@ -13,20 +13,18 @@ async function signInFunction(email: string) {
 						path: 'product',
 						populate: {
 							path: 'seller',
-							select:
-								'name email _id school verified profileImage like selling sold bought type',
+							select: 'name email _id school verified profileImage like selling sold bought type',
 						},
 					},
 				],
 			},
 			{
 				path: 'receiver',
-				select:
-					'name email _id school verified profileImage like selling sold bought type',
+				select: 'name email _id school verified profileImage like selling sold bought type',
 			},
 		],
-	});
-	return user;
+	})
+	return user
 }
 async function getUserDataFunction(userId: string) {
 	const user = await User.findById(userId).populate({
@@ -40,20 +38,18 @@ async function getUserDataFunction(userId: string) {
 						path: 'product',
 						populate: {
 							path: 'seller',
-							select:
-								'name email _id school verified profileImage like selling sold bought type',
+							select: 'name email _id school verified profileImage like selling sold bought type',
 						},
 					},
 				],
 			},
 			{
 				path: 'receiver',
-				select:
-					'name email _id school verified profileImage like selling sold bought type',
+				select: 'name email _id school verified profileImage like selling sold bought type',
 			},
 		],
-	});
-	return user;
+	})
+	return user
 }
 
 async function getMyChatRoomDataFunction(myChatRoomId: string) {
@@ -66,19 +62,17 @@ async function getMyChatRoomDataFunction(myChatRoomId: string) {
 					path: 'product',
 					populate: {
 						path: 'seller',
-						select:
-							'name email _id school verified profileImage like selling sold bought type',
+						select: 'name email _id school verified profileImage like selling sold bought type',
 					},
 				},
 			],
 		},
 		{
 			path: 'receiver',
-			select:
-				'name email _id school verified profileImage like selling sold bought type',
+			select: 'name email _id school verified profileImage like selling sold bought type',
 		},
-	]);
-	return user;
+	])
+	return user
 }
 
-export { signInFunction, getUserDataFunction, getMyChatRoomDataFunction };
+export { signInFunction, getUserDataFunction, getMyChatRoomDataFunction }

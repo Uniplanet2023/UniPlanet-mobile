@@ -1,1 +1,1 @@
-export * from './account_verification';
+export * from './account_verification'

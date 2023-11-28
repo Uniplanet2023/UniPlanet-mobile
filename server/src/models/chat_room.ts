@@ -1,12 +1,12 @@
-import { Document, Model, Schema, model } from 'mongoose';
-import { ProductDocument, MessageDocument } from './index';
+import { Document, Model, Schema, model } from 'mongoose'
+import { ProductDocument, MessageDocument } from './index'
 export type ChatRoomDocument = Document & {
-	product: ProductDocument;
-	chatRoomType: string;
-	messages: MessageDocument[];
-	lastMessage: MessageDocument;
-};
-export type ChatRoomModel = Model<ChatRoomDocument>;
+	product: ProductDocument
+	chatRoomType: string
+	messages: MessageDocument[]
+	lastMessage: MessageDocument
+}
+export type ChatRoomModel = Model<ChatRoomDocument>
 
 // Define the schema
 const chatRoomSchema: Schema = new Schema(
@@ -17,10 +17,7 @@ const chatRoomSchema: Schema = new Schema(
 		lastMessage: { type: Schema.Types.ObjectId, ref: 'Message' },
 	},
 	{ timestamps: true },
-);
+)
 // Create the model
-const ChatRoom = model<ChatRoomDocument, ChatRoomModel>(
-	'ChatRoom',
-	chatRoomSchema,
-);
-export default ChatRoom;
+const ChatRoom = model<ChatRoomDocument, ChatRoomModel>('ChatRoom', chatRoomSchema)
+export default ChatRoom
