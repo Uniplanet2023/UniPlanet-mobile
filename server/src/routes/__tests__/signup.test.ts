@@ -5,7 +5,6 @@ import { AccountVerification, User } from '../../models/index'
 import { EmailSender } from '../../utils'
 import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../testUtil/mock_email_api'
 beforeEach(() => {
-	
 	const emailSender = EmailSender.getInstance()
 
 	emailSender.activate()
