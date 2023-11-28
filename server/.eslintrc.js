@@ -6,7 +6,6 @@ module.exports = {
 	},
 	rules: {
 		quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
-		'@typescript-eslint/no-explicit-any': 'off', // any allow
 		'import/prefer-default-export': 'off', //prefer default export
 		'@typescript-eslint/no-empty-interface': 'off', // no empty interface
 		'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }], //no unused vars

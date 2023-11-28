@@ -23,7 +23,7 @@ const redisInit = async (): Promise<void> => {
 
 	await pubClient.connect()
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const set = async (key: string, value: any): Promise<void> => {
 	try {
 		if (!pubClient) {
@@ -50,7 +50,7 @@ export const get = async (key: string): Promise<string | false> => {
 		return false
 	}
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setJson = async (key: string, path: string, listValue: any[]): Promise<void> => {
 	try {
 		if (!pubClient) {
@@ -66,7 +66,7 @@ export const setJson = async (key: string, path: string, listValue: any[]): Prom
 		console.error(e)
 	}
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addJson = async (key: string, value: any): Promise<void> => {
 	try {
 		if (!pubClient) {
@@ -77,7 +77,7 @@ export const addJson = async (key: string, value: any): Promise<void> => {
 		console.error(e)
 	}
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getJson = async (key: string): Promise<any> => {
 	let jsonProducts
 	try {
