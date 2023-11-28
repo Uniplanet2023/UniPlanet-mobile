@@ -28,7 +28,7 @@ const validUserInfo = {
 describe('test Validify of email input', () => {
 	it('should return 422 if there is no super domain', async () => {
 		validUserInfo.email = 'emailTest@gmail.'
-		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(423)
+		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 	it('should return 422 if there is no dot', async () => {
 		validUserInfo.email = 'emailTest@gmail'
