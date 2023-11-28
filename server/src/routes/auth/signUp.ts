@@ -19,7 +19,6 @@ signUpRouter.post(
 		if (errors.length > 0) throw new InvalidInput();
 
 		const { name, email, password, profileImage, school, verified } = req.body;
-		
 
 		const newUser = await User.create({
 			email,
@@ -30,20 +29,21 @@ signUpRouter.post(
 			verified,
 		});
 		const emailVerificationToken = generateEmailVerificationToken();
-		const accountVerification = await AccountVerification.create({userId: newUser._id, emailVerificationToken});
-
+		const accountVerification = await AccountVerification.create({
+			userId: newUser._id,
+			emailVerificationToken,
+		});
 
 		const userSignedUp = await new UserSignedUp(newUser);
 		const emailSender = EmailSender.getInstance();
 		emailSender.sendSignUpVerificationEmail({
 			toEmail: newUser.email,
-			emailVerificationToken: accountVerification.emailVerificationToken
+			emailVerificationToken: accountVerification.emailVerificationToken,
 		});
 
 		return res
 			.status(userSignedUp.getStatusCode())
 			.json(userSignedUp.serializeRest());
-		
 	},
 );
 

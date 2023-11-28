@@ -7,7 +7,7 @@ export type EmailApiSendEmailArgs = {
 	toEmail: string;
 	subject: string;
 	textBody: string;
-	htmlBody:string;
+	htmlBody: string;
 };
 export type EmailApiSendEmailResponse = {
 	toEmail: string;

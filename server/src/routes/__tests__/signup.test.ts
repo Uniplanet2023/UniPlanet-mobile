@@ -149,15 +149,18 @@ describe('tests the email verification behavior on signup', () => {
 	});
 });
 
-describe('tests creating the email verification token on signup', ()=>{
-	it('should create an AccountVerification entity on successful signup', async() =>{
-		const response = await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201);
+describe('tests creating the email verification token on signup', () => {
+	it('should create an AccountVerification entity on successful signup', async () => {
+		const response = await request(app)
+			.post(SIGNUP_ROUTE)
+			.send(validUserInfo)
+			.expect(201);
 
-		const accountVerification  = await AccountVerification.findOne({
-			userId:response.body.id,
-		})
+		const accountVerification = await AccountVerification.findOne({
+			userId: response.body.id,
+		});
 		// null !== undefined (true)
 		expect(accountVerification).not.toBeNull();
 		// expect(accountVerification).toBeDefined();
-	})
-})
+	});
+});

@@ -4,10 +4,10 @@ import {
 	mockSendSignUpVerificationEmail,
 } from '../../../testUtil/mock_email_api';
 
-const sendSignUpVerificationArgs ={
+const sendSignUpVerificationArgs = {
 	toEmail: 'test@test.com',
-	emailVerificationToken : 'whatever'
-}
+	emailVerificationToken: 'whatever',
+};
 
 it('should throw an error when sending an email if the EmailSender is deactivated', async () => {
 	const emailSender = EmailSender.getInstance();
@@ -32,7 +32,9 @@ it('should send the signup verification email if the sender is active and the Em
 	emailSender.activate();
 	emailSender.setEmailApi(mockEmailApi);
 
-	const res = await emailSender.sendSignUpVerificationEmail(sendSignUpVerificationArgs);
+	const res = await emailSender.sendSignUpVerificationEmail(
+		sendSignUpVerificationArgs,
+	);
 	expect(res.toEmail).toEqual('test@test.com');
 	expect(mockSendSignUpVerificationEmail).toHaveBeenCalledTimes(1);
 });

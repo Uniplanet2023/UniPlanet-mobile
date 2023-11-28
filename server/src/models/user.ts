@@ -102,23 +102,29 @@ userSchema.pre(
 	},
 );
 
-userSchema.pre('save', function preHashPassword(this:UserDocument){
-	const newPassword = this.isModified('password')? this.get('password') : null;
-	
-	if(newPassword){
-		this.set('password',PasswordHash.toHashSync({
-			password: newPassword,
-		}));
+userSchema.pre('save', function preHashPassword(this: UserDocument) {
+	const newPassword = this.isModified('password') ? this.get('password') : null;
+
+	if (newPassword) {
+		this.set(
+			'password',
+			PasswordHash.toHashSync({
+				password: newPassword,
+			}),
+		);
 	}
 });
 
-userSchema.pre(/^.*([Uu]pdate).*$/, async function preHashPassword(this: UpdateQuery<UserDocument>) {
-	const newPassword = !!(this._update.password) ? this._update.password : null
-	if(newPassword){
-		this._update.password =PasswordHash.toHashSync({
-			password: newPassword,
-		});
-	}
-});
+userSchema.pre(
+	/^.*([Uu]pdate).*$/,
+	async function preHashPassword(this: UpdateQuery<UserDocument>) {
+		const newPassword = !!this._update.password ? this._update.password : null;
+		if (newPassword) {
+			this._update.password = PasswordHash.toHashSync({
+				password: newPassword,
+			});
+		}
+	},
+);
 const User = model<UserDocument, UserModel>('User', userSchema);
 export default User;
