@@ -3,32 +3,50 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 part 'user_bloc_event.dart';
 part 'user_bloc_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
-  UserBloc(this._userRepository) : super(UserInitialState()) {
+  final SocketService _socketService;
+  UserBloc(this._userRepository, this._socketService)
+      : super(UserInitialState()) {
     on<SignInEvent>((event, emit) async {
+      // listen all the time
       await _signInFunction(event, emit);
     });
-    on<LogOutEvent>((event, emit) async {
+    on<LogoutEvent>((event, emit) async {
       await _logOutFunction(event, emit);
     });
     on<LoadUserDataEvent>((event, emit) async {
       await _loadingUserFunction(event, emit);
     });
+    on<UpdateUserNotificationEvent>((event, emit) async {
+      await _updateUserFunction(event, emit);
+    });
+    _socketService.stream.listen((event) {
+      if (event) {
+        int unSeenMsgNum = state.unSeenMessageNum! + 1;
+        add(UpdateUserNotificationEvent(unSeenMsgNum));
+      }
+    });
   }
+  _updateUserFunction(UpdateUserNotificationEvent event, emit) async {
+    emit(LoadedUserState(unSeenMessageNum: event.unSeenMessageNum));
+  }
+
   _loadingUserFunction(LoadUserDataEvent event, emit) async {
-    emit(LoadingUserState(user: state.user));
+    emit(LoadingUserState(
+        user: state.user, unSeenMessageNum: state.unSeenMessageNum));
     User user = await _userRepository.getUserData();
     if (user.token != '') {
-      emit(LoadedUserState(user: user));
+      emit(LoadedUserState(
+          user: user, unSeenMessageNum: state.unSeenMessageNum));
     } else {
       emit(const ErrorUserState('No User Data'));
     }
@@ -36,14 +54,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   _signInFunction(SignInEvent event, emit) async {
     try {
-      emit(LoadingUserState(user: state.user));
+      emit(LoadingUserState(
+          user: state.user, unSeenMessageNum: state.unSeenMessageNum));
 
       User user = await _userRepository.signInUser(
           email: event.email, password: event.password);
 
       if (user.token != '') {
         _navigate(event);
-        emit(LoadedUserState(user: user));
+        emit(LoadedUserState(
+            user: user, unSeenMessageNum: state.unSeenMessageNum));
       } else {
         emit(const ErrorUserState('No User Data'));
       }
@@ -65,9 +85,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     );
   }
 
-  _logOutFunction(LogOutEvent event, emit) async {
-    emit(LogOutState(user: User.initialUser()));
-    UserRepository().logOut();
+  _logOutFunction(LogoutEvent event, emit) async {
+    emit(LogOutState(user: User.initialUser(), unSeenMessageNum: 0));
+    _userRepository.logOut(event.context);
   }
 
   //Tracking
@@ -79,6 +99,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   @override
   void onTransition(Transition<UserEvent, UserState> transition) {
     super.onTransition(transition);
-    print(transition);
+    // print(transition);
   }
 }

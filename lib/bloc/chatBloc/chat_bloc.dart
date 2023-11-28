@@ -1,21 +1,14 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
-import 'package:uniplanet_mobile/repository/product_repo.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
-  final ProductRepository _productRepository;
-  final UserRepository _userRepository;
   final ChatRepository _chatRepository;
-  final _onlineStatusController = StreamController<bool>.broadcast();
-  Stream<bool> get onlineStatusStream => _onlineStatusController.stream;
-
-  ChatBloc(this._productRepository, this._userRepository, this._chatRepository)
+  final SocketService _socketService;
+  ChatBloc(this._chatRepository, this._socketService)
       : super(InitChatRoomState()) {
     on<CreateChatRoomEvent>((event, emit) async {
       await _creatingChatRoom(event, emit);
@@ -23,29 +16,42 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
-    on<SelectChatRoomEvent>((event, emit) async {
-      await _selectChatRoom(event, emit);
+    on<ClientStatusChangeEvent>((event, emit) {
+      emit(StatusChangingState(
+        chatRoomList: state.chatRoomList,
+      ));
     });
-    on<UpdateOnlineStatusEvent>((event, emit) async {
-      _updateOnlineStatus(event);
+    on<ClientStatusDisconnectEvent>(((event, emit) {
+      emit(StatusChangingState(
+        chatRoomList: state.chatRoomList,
+      ));
+    }));
+    on<EmptyUnseenMessageEvent>(
+      (event, emit) {
+        for (var myChat in state.chatRoomList!) {
+          if (myChat.myChatRoomId == event.myChatRoomId) {
+            myChat.unseenMessage = [];
+            return;
+          }
+        }
+        emit(LoadedChatRoomState(chatRoomList: state.chatRoomList));
+      },
+    );
+    _socketService.stream.listen((event) {
+      if (event) {}
     });
-  }
-  void _updateOnlineStatus(UpdateOnlineStatusEvent event) {
-    _onlineStatusController.sink.add(event.isOnline);
-  }
-
-  _selectChatRoom(SelectChatRoomEvent event, emit) async {
-    emit(SelectChatRoomState(currentChatRoom: event.chatroom));
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
     emit(LoadingChatRoomState(
-        currentChatRoom: ChatRoom.initialChatRoom(),
-        chatRoomList: state.chatRoomList));
+      chatRoomList: state.chatRoomList,
+    ));
     try {
-      List<ChatRoom> chatrooms = await _chatRepository.getChatRoom(event.user);
+      List<MyChatRoom> chatrooms = await _chatRepository.getChatRooms();
+
       emit(LoadedChatRoomState(
-          currentChatRoom: state.currentChatRoom, chatRoomList: chatrooms));
+        chatRoomList: chatrooms,
+      ));
     } catch (e) {
       print(e);
       throw Exception('Loading chat room API error');
@@ -54,38 +60,37 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
     emit(CreatingChatRoomState(
-        currentChatRoom: state.currentChatRoom,
-        chatRoomList: state.chatRoomList));
+      chatRoomList: state.chatRoomList,
+    ));
     try {
-      ChatRoom? room = await _chatRepository.creatingChatRoom(
-          user: event.user, receiverId: event.receiverId);
-      if (room != null || state.chatRoomList != null) {
-        List<ChatRoom> list = state.chatRoomList!;
-        list.add(room!);
-        emit(CreatedChatRoomState(currentChatRoom: room, chatRoomList: list));
+      MyChatRoom myChatRoom = await _chatRepository.creatingChatRoom(
+          receiverId: event.seller.id, productId: event.productId);
+      SocketService.socket!
+          .emit("joinChatRoom", myChatRoom.chatRoom.chatRoomId);
+      state.chatRoomList!.add(myChatRoom);
+      if (state.chatRoomList != null) {
+        state.chatRoomList!.add(myChatRoom);
+        emit(CreatedChatRoomState(
+          chatRoomList: state.chatRoomList!,
+        ));
       } else {
         throw Exception('room or list is not initialized');
       }
     } catch (e) {
+      emit(ErrorChatState(e.toString()));
       throw Exception('creating chat room API error');
     }
   }
 
   @override
-  Future<void> close() {
-    _onlineStatusController.close();
-    return super.close();
-  }
-
-  @override
   void onChange(Change<ChatBlocState> change) {
     super.onChange(change);
-    print(change);
+    // print(change);
   }
 
   @override
   void onTransition(Transition<ChatBlocEvent, ChatBlocState> transition) {
     super.onTransition(transition);
-    print(transition);
+    // print(transition);
   }
 }

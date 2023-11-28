@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 
 import 'package:uniplanet_mobile/features/account/widgets/single_product.dart';
@@ -24,7 +26,7 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   fetchAllProducts() async {
-    products = await ProductRepository().fetchAllProducts();
+    // products = await ProductRepository().fetchAllProducts();
     setState(() {});
   }
 
@@ -80,7 +82,9 @@ class _PostsScreenState extends State<PostsScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.logout),
-                          onPressed: () => UserRepository().logOut(),
+                          onPressed: () => context
+                              .read<UserBloc>()
+                              .add(LogoutEvent(context)),
                         ),
                       ],
                     ),

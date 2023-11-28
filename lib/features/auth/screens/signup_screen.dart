@@ -67,6 +67,13 @@ class _SigninScreenState extends State<SignupScreen> {
         profileImage:
             'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
         school: school!);
+
+    // authService.signUpUser(
+    //   context: context,
+    //   email: _emailController.text,
+    //   password: _passwordController.text,
+    //   name: _nameController.text,
+    // );
   }
 
   @override

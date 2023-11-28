@@ -16,6 +16,7 @@ class ItemBox extends StatefulWidget {
 class _ItemBoxState extends State<ItemBox> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width * 0.58;
     return widget.productList == []
         ? const Loader()
         : SliverList(
@@ -59,7 +60,7 @@ class _ItemBoxState extends State<ItemBox> {
                         Column(
                           children: [
                             Container(
-                              width: 235,
+                              width: screenWidth,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
@@ -71,7 +72,7 @@ class _ItemBoxState extends State<ItemBox> {
                               ),
                             ),
                             Container(
-                              width: 235,
+                              width: screenWidth,
                               padding: const EdgeInsets.only(left: 10, top: 5),
                               child: Text(
                                 '\$${product.price}',
@@ -83,7 +84,7 @@ class _ItemBoxState extends State<ItemBox> {
                               ),
                             ),
                             Container(
-                              width: 235,
+                              width: screenWidth,
                               padding: const EdgeInsets.only(left: 10),
                               child: const Row(
                                 children: [
@@ -93,7 +94,7 @@ class _ItemBoxState extends State<ItemBox> {
                               ),
                             ),
                             Container(
-                              width: 235,
+                              width: screenWidth,
                               padding: const EdgeInsets.only(left: 10, top: 5),
                               child: const Text(
                                 'On Sell',

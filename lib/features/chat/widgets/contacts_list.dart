@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/info.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ContactsList extends StatefulWidget {
-  final List<ChatRoom> list;
+  final List<MyChatRoom> list;
   const ContactsList({Key? key, required this.list}) : super(key: key);
 
   @override
@@ -19,32 +22,32 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
-  selectChatRoom(ChatRoom chatroom) {
-    context.read<ChatBloc>().add(SelectChatRoomEvent(chatroom));
-  }
-
   _loadList() {
-    User user = context.read<UserBloc>().state.user!;
-    context.read<ChatBloc>().add(LoadChatRoomEvent(user));
+    context.read<ChatBloc>().add(const LoadChatRoomEvent());
   }
 
   @override
   Widget build(BuildContext context) {
+    var userOnline = context.watch<StatusBloc>().state.userOnList!;
+
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: widget.list.length,
         itemBuilder: (context, index) {
+          User client = widget.list[index].receiver;
+
           return Column(
             children: [
               InkWell(
                 onTap: () async {
-                  selectChatRoom(widget.list[index]);
                   await Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
                       return ChatScreen(
-                          chatRoomId: widget.list[index].chatRoomId);
+                        client: client,
+                        myChatRoom: widget.list[index],
+                      );
                     }),
                   );
                   _loadList();
@@ -53,7 +56,7 @@ class _ContactsListState extends State<ContactsList> {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: ListTile(
                     title: Text(
-                      widget.list[index].name,
+                      client.name,
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -61,9 +64,9 @@ class _ContactsListState extends State<ContactsList> {
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 6.0),
                       child: Text(
-                        widget.list[index].lastMessage == null
+                        widget.list[index].chatRoom.lastMessage == null
                             ? " "
-                            : widget.list[index].lastMessage!.message,
+                            : widget.list[index].chatRoom.lastMessage!.message,
                         style: const TextStyle(fontSize: 15),
                       ),
                     ),
@@ -77,31 +80,65 @@ class _ContactsListState extends State<ContactsList> {
                           radius: 30,
                         ),
                         Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: StreamBuilder<bool>(
-                            stream: context
-                                .read<ChatBloc>()
-                                .onlineStatusStream, // Replace with your stream source
-                            builder: (context, snapshot) {
-                              if (snapshot.data == true) {
-                                return const Icon(Icons.circle,
-                                    color: Colors.green, size: 16);
-                              } else {
-                                return const Icon(Icons.circle,
-                                    color: Colors.red, size: 16);
-                              }
-                            },
-                          ),
-                        ),
+                            bottom: 0,
+                            right: 0,
+                            child: userOnline.contains(client.id)
+                                ? const Icon(Icons.circle,
+                                    color: Colors.green, size: 16)
+                                : const Icon(Icons.circle,
+                                    color: Colors.red, size: 16)),
                       ],
                     ),
-                    trailing: Text(
-                      TimeOfDay.now().format(context).toString(),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
-                      ),
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 30,
+                          child: Text(
+                            widget.list[index].chatRoom.lastMessage
+                                        ?.timestamp !=
+                                    null
+                                ? formatTimestamp(widget.list[index].chatRoom
+                                    .lastMessage!.timestamp)
+                                : "",
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        widget.list[index].unseenMessage.isEmpty
+                            ? const SizedBox()
+                            : Container(
+                                width: 25,
+                                height: 25,
+                                decoration: BoxDecoration(
+                                  color: Colors
+                                      .red, // Background color for the circle
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Makes it round
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth:
+                                      45, // Minimum width for the red circle
+                                  minHeight:
+                                      25, // Minimum height for the red circle
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    widget.list[index].unseenMessage.length
+                                        .toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize:
+                                          12, // You can adjust the font size as needed
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ],
                     ),
                   ),
                 ),

@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
 import 'package:uniplanet_mobile/features/home/widgets/item_box.dart';
 import 'package:uniplanet_mobile/features/home/widgets/top_categories.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
@@ -18,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final bool _pinned = false;
   final bool _snap = true;
   final bool _floating = true;
-  List<Product> productList = [];
 
   @override
   void initState() {
@@ -28,8 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchProductsAll() async {
     print('fetch Product is triggered');
-    productList = await ProductRepository().fetchAllProducts();
-    setState(() {});
+    context.read<ProductBloc>().add(const LoadProductEvent());
   }
 
   void updateProducts() async {}
@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var state = context.watch<ProductBloc>().state;
     return Scaffold(
         body: CustomScrollView(
       controller: widget.controller,
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         ItemBox(
-          productList: productList,
+          productList: state.productList!,
         ),
         const SliverToBoxAdapter(
           child: SizedBox(

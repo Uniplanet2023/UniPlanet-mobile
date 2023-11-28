@@ -1,23 +1,31 @@
 part of 'product_bloc.dart';
 
 sealed class ProductState extends Equatable {
-  final List<String>? defaultItems;
-  const ProductState({this.defaultItems});
+  final List<Product>? productList;
+  const ProductState({this.productList});
 
   @override
-  List<Object?> get props => [defaultItems];
+  List<Object?> get props => [productList];
 }
 
 final class InitProductState extends ProductState {
-  InitProductState() : super(defaultItems: []);
+  InitProductState() : super(productList: []);
 }
 
 final class LoadingProductState extends ProductState {
-  const LoadingProductState({super.defaultItems});
+  const LoadingProductState({super.productList});
 }
 
 final class LoadedProductState extends ProductState {
-  const LoadedProductState({super.defaultItems});
+  const LoadedProductState({super.productList});
+}
+
+final class UploadingProduct extends ProductState {
+  const UploadingProduct({super.productList});
+}
+
+final class UploadedProduct extends ProductState {
+  const UploadedProduct({super.productList});
 }
 
 final class ErrorProductState extends ProductState {

@@ -61,8 +61,6 @@ class UserHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserRepository.getUser(context);
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -79,7 +77,7 @@ class UserHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.name,
+                  UserRepository.user.name,
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
