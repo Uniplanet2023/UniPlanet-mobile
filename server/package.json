@@ -10,7 +10,7 @@
 		"prettier:fix": "prettier --write .",
 		"start": "NODE_ENV=production ts-node src/index.ts",
 		"dev": "nodemon src/index.ts",
-		"test": "jest --verbose --detectOpenHandles",
+		"test": "jest --verbose",
 		"test:watch": "jest --verbose --watchAll --no-cache --runInBand --detectOpenHandles",
 		"tsc:check": "tsc --noEmit"
 	},
