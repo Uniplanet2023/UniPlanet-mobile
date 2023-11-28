@@ -27,10 +27,6 @@ const accountVerificationSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 )
-const AccountVerification = model<AccountVerificationDocument, AccountVerificationModel>(
-	'AccountVerification',
-	accountVerificationSchema,
-)
 
 accountVerificationSchema.pre('save', async function verifyUserExists(this: AccountVerificationDocument) {
 	const user = await User.findById(this.userId)
@@ -40,16 +36,21 @@ accountVerificationSchema.pre('save', async function verifyUserExists(this: Acco
 })
 
 accountVerificationSchema.pre('save', async function enforceTokenUniqueness(this: AccountVerificationDocument) {
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define
 	let existingEmailVerificationDocument = await AccountVerification.findOne({
 		emailVerificationToken: this.emailVerificationToken,
 	})
 
 	while (existingEmailVerificationDocument) {
 		this.emailVerificationToken = generateEmailVerificationToken()
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
 		existingEmailVerificationDocument = await AccountVerification.findOne({
 			emailVerificationToken: this.emailVerificationToken,
 		})
 	}
 })
-
+const AccountVerification = model<AccountVerificationDocument, AccountVerificationModel>(
+	'AccountVerification',
+	accountVerificationSchema,
+)
 export default AccountVerification
