@@ -1,41 +1,36 @@
-import { BaseAuthEvent } from './base_auth_event';
-import {
-	EventDocument,
-	ProductDocument,
-	UserChatRoomDocument,
-	UserDocument,
-} from '../models';
+import { BaseAuthEvent } from './base_auth_event'
+import { EventDocument, ProductDocument, UserChatRoomDocument, UserDocument } from '../models'
 
 export type UserSignedUpRestPayload = {
-	id: string;
-	name: string;
-	email: string;
-	profileImage: string;
-	school: string;
-	verified: boolean;
-	myEvent: EventDocument[];
-	recentSearchHistory: string[];
-	recentViewHistory: ProductDocument[];
-	like: ProductDocument[];
-	selling: ProductDocument[];
-	bought: ProductDocument[];
-	sold: ProductDocument[];
-	myChatRoom: UserChatRoomDocument[];
-	type: string;
-};
+	id: string
+	name: string
+	email: string
+	profileImage: string
+	school: string
+	verified: boolean
+	myEvent: EventDocument[]
+	recentSearchHistory: string[]
+	recentViewHistory: ProductDocument[]
+	like: ProductDocument[]
+	selling: ProductDocument[]
+	bought: ProductDocument[]
+	sold: ProductDocument[]
+	myChatRoom: UserChatRoomDocument[]
+	type: string
+}
 
 export default class UserSignedUp extends BaseAuthEvent<UserSignedUpRestPayload> {
-	private user: UserDocument;
+	private user: UserDocument
 
-	private statusCode = 201;
+	private statusCode = 201
 
 	constructor(user: UserDocument) {
-		super();
-		this.user = user;
+		super()
+		this.user = user
 	}
 
 	getStatusCode(): number {
-		return this.statusCode;
+		return this.statusCode
 	}
 
 	serializeRest(): UserSignedUpRestPayload {
@@ -55,6 +50,6 @@ export default class UserSignedUp extends BaseAuthEvent<UserSignedUpRestPayload>
 			sold: this.user.sold,
 			myChatRoom: this.user.myChatRoom,
 			type: this.user.type,
-		};
+		}
 	}
 }

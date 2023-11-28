@@ -1,44 +1,41 @@
-import { FieldValidationError } from 'express-validator';
-import { BaseCustomError } from './index';
-import {
-	SerializedErrorField,
-	SerializedErrorOutput,
-} from './type/serialized_error_output';
+import { FieldValidationError } from 'express-validator'
+import { BaseCustomError } from './index'
+import { SerializedErrorField, SerializedErrorOutput } from './type/serialized_error_output'
 
-export type InvalidInputConstructorErrorsParam = FieldValidationError[];
+export type InvalidInputConstructorErrorsParam = FieldValidationError[]
 
 export default class InvalidInput extends BaseCustomError {
-	protected statusCode = 422;
+	private readonly errors: FieldValidationError[] | undefined
 
-	protected errors: FieldValidationError[] | undefined;
+	private statusCode = 422
 
-	protected defaultErrorMessage = 'The input provided is invalid.';
+	private defaultErrorMessage = 'The input provided is invalid.'
 
 	constructor(errors?: InvalidInputConstructorErrorsParam) {
-		super('The input provided is invalid.');
-		this.errors = errors;
-		Object.setPrototypeOf(this, InvalidInput.prototype);
+		super('The input provided is invalid.')
+		this.errors = errors
+		Object.setPrototypeOf(this, InvalidInput.prototype)
 	}
 
 	getStatusCode(): number {
-		return this.statusCode;
+		return this.statusCode
 	}
 
 	serializeErrorOutput(): SerializedErrorOutput {
-		return this.parseValidationErrors();
+		return this.parseValidationErrors()
 	}
 
 	private parseValidationErrors(): SerializedErrorOutput {
-		const parsedErrors: SerializedErrorField = {};
+		const parsedErrors: SerializedErrorField = {}
 
 		if (this.errors && this.errors.length > 0) {
-			this.errors.forEach((error) => {
+			this.errors.forEach(error => {
 				if (parsedErrors[error.path]) {
-					parsedErrors[error.path].push(error.msg);
+					parsedErrors[error.path].push(error.msg)
 				} else {
-					parsedErrors[error.path] = [error.msg];
+					parsedErrors[error.path] = [error.msg]
 				}
-			});
+			})
 		}
 
 		return {
@@ -48,6 +45,6 @@ export default class InvalidInput extends BaseCustomError {
 					fields: parsedErrors,
 				},
 			],
-		};
+		}
 	}
 }

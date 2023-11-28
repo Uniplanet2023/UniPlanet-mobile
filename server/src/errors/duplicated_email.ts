@@ -1,19 +1,19 @@
-import { BaseCustomError } from './index';
-import { SerializedErrorOutput } from './type/serialized_error_output';
+import { BaseCustomError } from './index'
+import { SerializedErrorOutput } from './type/serialized_error_output'
 // TODO: rethink naming
 export default class DuplicatedEmail extends BaseCustomError {
-	protected statusCode = 422;
+	private statusCode = 422
 
-	protected defaultErrorMessage = 'The email is already in the database';
+	private defaultErrorMessage = 'The email is already in the database'
 
 	constructor() {
-		super('The email is already in the database');
+		super('The email is already in the database')
 
-		Object.setPrototypeOf(this, DuplicatedEmail.prototype);
+		Object.setPrototypeOf(this, DuplicatedEmail.prototype)
 	}
 
 	getStatusCode(): number {
-		return this.statusCode;
+		return this.statusCode
 	}
 
 	serializeErrorOutput(): SerializedErrorOutput {
@@ -23,6 +23,6 @@ export default class DuplicatedEmail extends BaseCustomError {
 					message: this.defaultErrorMessage,
 				},
 			],
-		};
+		}
 	}
 }

@@ -1,19 +1,16 @@
-import { body } from 'express-validator';
+import { body } from 'express-validator'
 export const signUpValidation = [
 	body('email')
 		.isEmail()
-		.custom(async (value) => {
+		.custom(async value => {
 			if (/.+@[A-Z]/g.test(value)) {
-				throw new Error('Email is not normalized');
+				throw new Error('Email is not normalized')
 			}
 		})
 		.withMessage('Email is not normalized')
 		.normalizeEmail(),
 	body('name').isString().withMessage('Name should be String'),
-	body('password')
-		.trim()
-		.isLength({ min: 8, max: 32 })
-		.withMessage('Password must be between 8 and 32 characters'),
+	body('password').trim().isLength({ min: 8, max: 32 }).withMessage('Password must be between 8 and 32 characters'),
 	body('password')
 		.matches(/^(.*[a-z].*)$/)
 		.withMessage('Password must contain at least one lowercase letter'),
@@ -23,11 +20,9 @@ export const signUpValidation = [
 	body('password')
 		.matches(/^(.*\d.*)$/)
 		.withMessage('Password must contain at least one digit'),
-	body('password')
-		.isStrongPassword()
-		.withMessage('Password should be Strong Enough'),
+	body('password').isStrongPassword().withMessage('Password should be Strong Enough'),
 	body('password').trim(),
 	body('profileImage').isURL().withMessage('Profile Image should be URL'),
 	body('school').isString().withMessage('School should be String'),
 	body('verified').isBoolean().withMessage('verified should be boolean value'),
-];
+]
