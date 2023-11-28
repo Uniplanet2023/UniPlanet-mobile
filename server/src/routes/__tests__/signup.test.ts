@@ -5,12 +5,14 @@ import { AccountVerification, User } from '../../models/index'
 import { EmailSender } from '../../utils'
 import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../testUtil/mock_email_api'
 beforeEach(() => {
+	
 	const emailSender = EmailSender.getInstance()
 
 	emailSender.activate()
 	emailSender.setEmailApi(new MockEmailApi())
 	jest.clearAllMocks()
 })
+
 /**
  * Valid email conditions:
  *  - Standard email formats form 'express-validator' package
