@@ -6,7 +6,7 @@ export type UserChatRoomDocument = Document & {
 	chatRoom: ChatRoomDocument;
 	unseenMessage: MessageDocument[]; // Assuming 'Message' schema exists
 };
-export interface UserChatRoomModel extends Model<UserChatRoomDocument> {}
+export type UserChatRoomModel = Model<UserChatRoomDocument>;
 
 const userChatRoomSchema: Schema = new Schema({
 	receiver: {

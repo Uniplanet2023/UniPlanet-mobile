@@ -1,15 +1,19 @@
 import request from 'supertest';
 import app from '../../app';
 import { SIGNUP_ROUTE } from '../route-defs';
-import { User } from '../../models/index';
+import { AccountVerification, User } from '../../models/index';
 import { EmailSender } from '../../utils';
-import { MockEmailApi } from '../../testUtil/mock_email_api';
-beforeEach(()=>{
+import {
+	MockEmailApi,
+	mockSendSignUpVerificationEmail,
+} from '../../testUtil/mock_email_api';
+beforeEach(() => {
 	const emailSender = EmailSender.getInstance();
 
 	emailSender.activate();
 	emailSender.setEmailApi(new MockEmailApi());
-})
+	jest.clearAllMocks();
+});
 /**
  * Valid email conditions:
  *  - Standard email formats form 'express-validator' package
@@ -137,3 +141,23 @@ describe('tests saving the signed up user to the database', () => {
 		expect(newUserPassword).not.toEqual(validUserInfo.password);
 	});
 });
+
+describe('tests the email verification behavior on signup', () => {
+	it('triggers the sendSignUpVerificationEmail method from the EmailSender class', async () => {
+		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201);
+		expect(mockSendSignUpVerificationEmail).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe('tests creating the email verification token on signup', ()=>{
+	it('should create an AccountVerification entity on successful signup', async() =>{
+		const response = await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201);
+
+		const accountVerification  = await AccountVerification.findOne({
+			userId:response.body.id,
+		})
+		// null !== undefined (true)
+		expect(accountVerification).not.toBeNull();
+		// expect(accountVerification).toBeDefined();
+	})
+})

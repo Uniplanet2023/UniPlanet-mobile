@@ -5,7 +5,7 @@ export type NotificationDocument = Document & {
 	noticeMessages: MessageDocument;
 };
 
-export interface NotificationModel extends Model<NotificationDocument> {}
+export type NotificationModel = Model<NotificationDocument>;
 const notificationSchema = new Schema({
 	noticeMessages: {
 		senderId: {

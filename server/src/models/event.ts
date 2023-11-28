@@ -11,7 +11,7 @@ export type EventDocument = Document & {
 	likes: UserDocument[];
 	createdAt: Date;
 };
-export interface EventModel extends Model<EventDocument> {}
+export type EventModel = Model<EventDocument>;
 
 const eventSchema = new Schema(
 	{

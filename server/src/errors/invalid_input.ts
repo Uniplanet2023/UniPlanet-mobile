@@ -8,11 +8,11 @@ import {
 export type InvalidInputConstructorErrorsParam = FieldValidationError[];
 
 export default class InvalidInput extends BaseCustomError {
-	protected statusCode = 422;
+	private readonly errors: FieldValidationError[] | undefined;
 
-	protected errors: FieldValidationError[] | undefined;
+	private statusCode = 422;
 
-	protected defaultErrorMessage = 'The input provided is invalid.';
+	private defaultErrorMessage = 'The input provided is invalid.';
 
 	constructor(errors?: InvalidInputConstructorErrorsParam) {
 		super('The input provided is invalid.');

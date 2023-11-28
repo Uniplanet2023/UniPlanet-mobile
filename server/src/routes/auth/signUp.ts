@@ -1,12 +1,13 @@
 import express, { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { User } from '../../models/index';
+import { AccountVerification, User, UserDocument } from '../../models/index';
 import { SIGNUP_ROUTE } from '../route-defs';
 import { sendMail, verifyOtp } from '../../middlewares/email_verify';
 import { signUpValidation } from '../../validations/signUpValidation';
 import { InvalidInput, DuplicatedEmail } from '../../errors';
 import { UserSignedUp } from '../../events';
 import { EmailSender } from '../../utils';
+import { generateEmailVerificationToken } from '../../utils/account_verification';
 
 const signUpRouter = express.Router();
 signUpRouter.post(
@@ -18,28 +19,31 @@ signUpRouter.post(
 		if (errors.length > 0) throw new InvalidInput();
 
 		const { name, email, password, profileImage, school, verified } = req.body;
+		
 
-		try {
-			const newUser = await User.create({
-				email,
-				password,
-				name,
-				profileImage,
-				school,
-				verified,
-			});
-			const userSignedUp = await new UserSignedUp(newUser);
-			const emailSender = EmailSender.getInstance();
-			emailSender.sendSignUpVerificationEmail({
-				toEmail:newUser.email
-			});
-			
-			res
-				.status(userSignedUp.getStatusCode())
-				.json(userSignedUp.serializeRest());
-		} catch (error) {
-			throw new DuplicatedEmail();
-		}
+		const newUser = await User.create({
+			email,
+			password,
+			name,
+			profileImage,
+			school,
+			verified,
+		});
+		const emailVerificationToken = generateEmailVerificationToken();
+		const accountVerification = await AccountVerification.create({userId: newUser._id, emailVerificationToken});
+
+
+		const userSignedUp = await new UserSignedUp(newUser);
+		const emailSender = EmailSender.getInstance();
+		emailSender.sendSignUpVerificationEmail({
+			toEmail: newUser.email,
+			emailVerificationToken: accountVerification.emailVerificationToken
+		});
+
+		return res
+			.status(userSignedUp.getStatusCode())
+			.json(userSignedUp.serializeRest());
+		
 	},
 );
 

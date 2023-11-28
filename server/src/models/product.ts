@@ -11,7 +11,7 @@ export type ProductDocument = Document & {
 	price: number;
 	category: string;
 };
-export interface ProductModel extends Model<ProductDocument> {}
+export type ProductModel = Model<ProductDocument>;
 
 const productSchema: Schema = new Schema(
 	{

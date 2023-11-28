@@ -8,7 +8,7 @@ export type MessageDocument = Document & {
 	isSeen: boolean;
 	seenAt?: Date;
 };
-export interface MessageModel extends Model<MessageDocument> {}
+export type MessageModel = Model<MessageDocument>;
 
 const messageSchema = new Schema(
 	{

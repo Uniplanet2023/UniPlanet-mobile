@@ -1,4 +1,4 @@
-import { model, Model, Schema, Document } from 'mongoose';
+import { model, Model, Schema, Document, UpdateQuery } from 'mongoose';
 import { ProductDocument, UserChatRoomDocument, EventDocument } from './index';
 import { DuplicatedEmail } from '../errors';
 import { PasswordHash } from '../utils';
@@ -20,7 +20,7 @@ export type UserDocument = Document & {
 	bought: ProductDocument[];
 	myChatRoom: UserChatRoomDocument[];
 };
-export interface UserModel extends Model<UserDocument> {}
+export type UserModel = Model<UserDocument>;
 
 const userSchema: Schema = new Schema(
 	{
@@ -48,7 +48,6 @@ const userSchema: Schema = new Schema(
 			type: Boolean,
 			default: false,
 		},
-
 		profileImage: {
 			required: true,
 			type: String,
@@ -68,28 +67,58 @@ const userSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 );
+async function validateUniqueness(userDoc: UserDocument) {
+	// eslint-disable-next-line @typescript-eslint/no-use-before-define
+	const existingUser = await User.findOne({ email: userDoc.email });
+
+	if (existingUser) {
+		throw new DuplicatedEmail();
+	}
+}
 
 userSchema.pre(
 	'save',
-	async function validateUniqueness(this: UserDocument, next) {
-		// eslint-disable-next-line @typescript-eslint/no-use-before-define
-		const existingUser = await User.findOne({ email: this.email });
-
-		if (existingUser) {
-			throw new DuplicatedEmail();
-		}
-		next();
+	async function preValidateUniqueness(this: UserDocument) {
+		await validateUniqueness(this);
 	},
 );
 
-userSchema.pre('save', async function hashPassword(this: UserDocument, next) {
-	if (this.isModified('password')) {
-		const hashedPassword = PasswordHash.toHashSync({
-			password: this.get('password'),
-		});
-		this.set('password', hashedPassword);
+userSchema.pre(
+	/^.*([Uu]pdate).*$/,
+	async function preValidateUniqueness(this: UpdateQuery<UserDocument>) {
+		await validateUniqueness(this._update);
+	},
+);
+
+userSchema.pre(
+	'save',
+	async function setVerifiedToFalseOnFirstSave(this: UserDocument) {
+		// eslint-disable-next-line @typescript-eslint/no-use-before-define
+		const existingUser = await User.findOne({ email: this.email });
+
+		if (!existingUser) {
+			this.set('verified', false);
+		}
+	},
+);
+
+userSchema.pre('save', function preHashPassword(this:UserDocument){
+	const newPassword = this.isModified('password')? this.get('password') : null;
+	
+	if(newPassword){
+		this.set('password',PasswordHash.toHashSync({
+			password: newPassword,
+		}));
 	}
-	next();
+});
+
+userSchema.pre(/^.*([Uu]pdate).*$/, async function preHashPassword(this: UpdateQuery<UserDocument>) {
+	const newPassword = !!(this._update.password) ? this._update.password : null
+	if(newPassword){
+		this._update.password =PasswordHash.toHashSync({
+			password: newPassword,
+		});
+	}
 });
 const User = model<UserDocument, UserModel>('User', userSchema);
 export default User;
