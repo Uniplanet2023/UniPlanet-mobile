@@ -3,8 +3,8 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import { User } from '../../models/index'
 import { set } from '../../redis_controller/redis_controller'
-import { logStart, logEnd, handleError } from '../../functions/logFunction'
-import { signInFunction } from '../../functions/userdata'
+import { logStart, logEnd, handleError } from '../../functions/log_function'
+import { signInFunction } from '../../functions/user_data'
 const signInRoute = express.Router()
 
 // Sign In Route

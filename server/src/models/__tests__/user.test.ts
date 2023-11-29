@@ -2,16 +2,26 @@ import { randomBytes } from 'crypto'
 import { User, UserDocument } from '../index'
 import { BaseCustomError, DuplicatedEmail } from '../../errors'
 import { PasswordHash } from '../../utils'
-
+let validUserInfo = {
+	email: '',
+	profileImage: '',
+	school: '',
+	verified: false,
+	name: '',
+	password: '',
+}
 describe('tests the User mongoose model', () => {
-	const validUserInfo = {
-		email: 'test1@stonybrook.edu',
-		profileImage: 'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-		school: 'Stony Brook University',
-		verified: true,
-		name: 'sije',
-		password: 'TestPassword1!',
-	}
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 
 	it('should not save a user if the email is already in the database', async () => {
 		const newUser1 = await User.create(validUserInfo)

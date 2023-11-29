@@ -1,7 +1,7 @@
 import express from 'express'
 import { User } from '../../models/index'
 import auth from '../../middlewares/auth'
-import { logStart, logEnd, handleError } from '../../functions/logFunction'
+import { logStart, logEnd, handleError } from '../../functions/log_function'
 
 const deleteUserRoute = express.Router()
 

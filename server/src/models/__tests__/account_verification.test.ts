@@ -1,16 +1,26 @@
 import mongoose from 'mongoose'
 import { generateEmailVerificationToken } from '../../utils/account_verification'
 import { AccountVerification, User } from '../index'
-
+let validUserInfo = {
+	email: '',
+	profileImage: '',
+	school: '',
+	verified: false,
+	name: '',
+	password: '',
+}
 describe('tests the AccountVerification mongoose model', () => {
-	const validUserInfo = {
-		email: 'test1@stonybrook.edu',
-		profileImage: 'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-		school: 'Stony Brook University',
-		verified: true,
-		name: 'sije',
-		password: 'TestPassword1!',
-	}
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 	it('should not save a new AccountVerification document if no valid user is provided ', async () => {
 		const emailVerificationToken = generateEmailVerificationToken()
 

@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import auth from '../middlewares/auth'
 import { User, Product } from '../models/index' // Keep as is if Product is a named export
 
-import { handleError } from '../functions/logFunction'
+import { handleError } from '../functions/log_function'
 
 const likeRouter = express.Router()
 

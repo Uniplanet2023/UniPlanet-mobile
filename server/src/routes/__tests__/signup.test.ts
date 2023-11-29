@@ -1,9 +1,9 @@
 import request from 'supertest'
 import app from '../../app'
-import { SIGNUP_ROUTE } from '../route-defs'
+import { SIGNUP_ROUTE } from '../route_defs'
 import { AccountVerification, User } from '../../models/index'
 import { EmailSender } from '../../utils'
-import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../testUtil/mock_email_api'
+import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../test_util/mock_email_api'
 beforeEach(() => {
 	const emailSender = EmailSender.getInstance()
 
@@ -16,16 +16,27 @@ beforeEach(() => {
  * Valid email conditions:
  *  - Standard email formats form 'express-validator' package
  */
-const validUserInfo = {
-	email: 'test1@stonybrook.edu',
-	profileImage: 'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-	school: 'Stony Brook University',
-	verified: true,
-	name: 'sije',
-	password: 'TestPassword1!',
-}
 
+let validUserInfo = {
+	email: '',
+	profileImage: '',
+	school: '',
+	verified: false,
+	name: '',
+	password: '',
+}
 describe('test Validify of email input', () => {
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 	it('should return 422 if there is no super domain', async () => {
 		validUserInfo.email = 'emailTest@gmail.'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
@@ -67,6 +78,17 @@ describe('test Validify of email input', () => {
  *
  */
 describe('test validity of password input', () => {
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 	it('should return 422 if the password contains less than 8 characters', async () => {
 		validUserInfo.password = 'Test1!'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
@@ -95,6 +117,17 @@ describe('test validity of password input', () => {
 })
 
 describe('tests saving the signed up user to the database', () => {
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 	it('saves the user successfully as long as the information is valid', async () => {
 		// Send valid user information
 		// Receive the user information back from the route
@@ -131,6 +164,17 @@ describe('tests saving the signed up user to the database', () => {
 })
 
 describe('tests the email verification behavior on signup', () => {
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 	it('triggers the sendSignUpVerificationEmail method from the EmailSender class', async () => {
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201)
 		expect(mockSendSignUpVerificationEmail).toHaveBeenCalledTimes(1)
@@ -138,6 +182,17 @@ describe('tests the email verification behavior on signup', () => {
 })
 
 describe('tests creating the email verification token on signup', () => {
+	beforeAll(() => {
+		validUserInfo = {
+			email: 'test1@stonybrook.edu',
+			profileImage:
+				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+			school: 'Stony Brook University',
+			verified: true,
+			name: 'sije',
+			password: 'TestPassword1!',
+		}
+	})
 	it('should create an AccountVerification entity on successful signup', async () => {
 		const response = await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201)
 

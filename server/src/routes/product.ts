@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import { Product } from '../models/index'
 import auth from '../middlewares/auth'
 import { addJson, setJson, getJson } from '../redis_controller/redis_controller'
-import { logStart, logEnd, handleError } from '../functions/logFunction'
+import { logStart, logEnd, handleError } from '../functions/log_function'
 
 const productRouter = express.Router()
 
