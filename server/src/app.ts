@@ -3,6 +3,8 @@ import 'express-async-errors'
 import http, { Server } from 'http'
 import redisInit from './redis_controller/redis_controller'
 import { errorHandler } from './middlewares'
+import cors from 'cors'
+
 // IMPORTS FROM OTHER FILES
 import { authRouter, productRouter } from './routes'
 import userRouter from './routes/user'
@@ -14,6 +16,7 @@ const app = express()
 
 // middleware
 app.use(express.json())
+app.use(cors())
 app.use(authRouter)
 app.use(chatRouter)
 app.use(userRouter)
