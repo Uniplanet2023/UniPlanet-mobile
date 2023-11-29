@@ -1,45 +1,63 @@
 import express, { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { AccountVerification, User } from '../../models/index'
-import { SIGNUP_ROUTE } from '../route-defs'
+import { SIGNUP_ROUTE } from '../route_defs'
 import { sendMail, verifyOtp } from '../../middlewares/email_verify'
-import { signUpValidation } from '../../validations/signUpValidation'
+import {
+	emailValidation,
+	nameValidation,
+	passwordValidation,
+	profileImageValidation,
+	schoolValidation,
+	verifiedValidation,
+} from '../../validations/signup_validation'
 import { InvalidInput } from '../../errors'
 import { UserSignedUp } from '../../events'
 import { EmailSender } from '../../utils'
 import { generateEmailVerificationToken } from '../../utils/account_verification'
 
 const signUpRouter = express.Router()
-signUpRouter.post(SIGNUP_ROUTE, signUpValidation, async (req: Request, res: Response) => {
-	const errors = validationResult(req).array()
+signUpRouter.post(
+	SIGNUP_ROUTE,
+	[
+		emailValidation,
+		nameValidation,
+		profileImageValidation,
+		schoolValidation,
+		verifiedValidation,
+		...passwordValidation,
+	],
+	async (req: Request, res: Response) => {
+		const errors = validationResult(req).array()
 
-	if (errors.length > 0) throw new InvalidInput()
+		if (errors.length > 0) throw new InvalidInput()
 
-	const { name, email, password, profileImage, school, verified } = req.body
+		const { name, email, password, profileImage, school, verified } = req.body
 
-	const newUser = await User.create({
-		email,
-		password,
-		name,
-		profileImage,
-		school,
-		verified,
-	})
-	const emailVerificationToken = generateEmailVerificationToken()
-	const accountVerification = await AccountVerification.create({
-		userId: newUser._id,
-		emailVerificationToken,
-	})
+		const newUser = await User.create({
+			email,
+			password,
+			name,
+			profileImage,
+			school,
+			verified,
+		})
+		const emailVerificationToken = generateEmailVerificationToken()
+		const accountVerification = await AccountVerification.create({
+			userId: newUser._id,
+			emailVerificationToken,
+		})
 
-	const userSignedUp = await new UserSignedUp(newUser)
-	const emailSender = EmailSender.getInstance()
-	emailSender.sendSignUpVerificationEmail({
-		toEmail: newUser.email,
-		emailVerificationToken: accountVerification.emailVerificationToken,
-	})
+		const userSignedUp = await new UserSignedUp(newUser)
+		const emailSender = EmailSender.getInstance()
+		emailSender.sendSignUpVerificationEmail({
+			toEmail: newUser.email,
+			emailVerificationToken: accountVerification.emailVerificationToken,
+		})
 
-	return res.status(userSignedUp.getStatusCode()).json(userSignedUp.serializeRest())
-})
+		return res.status(userSignedUp.getStatusCode()).json(userSignedUp.serializeRest())
+	},
+)
 
 signUpRouter.post(`${SIGNUP_ROUTE}/sendOtp`, async (req, res) => {
 	try {

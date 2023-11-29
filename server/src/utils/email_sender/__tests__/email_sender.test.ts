@@ -1,5 +1,5 @@
 import { EmailSender } from '../../index'
-import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../../testUtil/mock_email_api'
+import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../../test_util/mock_email_api'
 
 const sendSignUpVerificationArgs = {
 	toEmail: 'test@test.com',
