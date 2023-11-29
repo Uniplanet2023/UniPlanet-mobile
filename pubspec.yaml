@@ -34,7 +34,7 @@ dependencies:
   bloc_concurrency: 0.2.2
   cached_network_image: 3.3.0
   carousel_slider: 4.2.1
-  cloudinary_public: 0.21.0
+  cloudinary_public: 0.23.1
   cupertino_icons: 1.0.6
   dio: 5.3.4
   dotted_border: 2.1.0
