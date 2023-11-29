@@ -1,6 +1,6 @@
 export type EmailApiSendSignUpVerificationEmailArgs = {
+	name: string
 	toEmail: string
-	emailVerificationToken: string
 }
 
 export type EmailApiSendEmailArgs = {
@@ -12,15 +12,26 @@ export type EmailApiSendEmailArgs = {
 export type EmailApiSendEmailResponse = {
 	toEmail: string
 	status: 'success' | 'error'
+	hash: string
 }
-export type SmtpServerConfigAuth = {
+export type NodemailerServerConfigAuth = {
 	user: string
 	pass: string
 }
+export type GmailServerConfigAuth = {
+	type: string
+	user: string
+	clientId: string
+	clientSecret: string
+	refreshToken: string
+}
+export type SmtpServerConfigAuth = NodemailerServerConfigAuth | GmailServerConfigAuth
+
 export type SmtpServerConfig = {
 	host: string
 	port: number
-	auth: SmtpServerConfigAuth
+	secure?: boolean
+	auth?: SmtpServerConfigAuth
 }
 export interface EmailApi {
 	sendSignUpVerificationEmail(args: EmailApiSendSignUpVerificationEmailArgs): Promise<EmailApiSendEmailResponse>

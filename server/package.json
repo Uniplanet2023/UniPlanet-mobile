@@ -9,7 +9,7 @@
 		"prettier:check": "prettier --check .",
 		"prettier:fix": "prettier --write .",
 		"start": "NODE_ENV=production ts-node src/index.ts",
-		"dev": "nodemon src/index.ts",
+		"dev": "NODE_ENV=production nodemon src/index.ts",
 		"test": "jest --verbose --forceExit --detectOpenHandles",
 		"test:watch": "jest --verbose --watchAll --no-cache --runInBand --detectOpenHandles",
 		"tsc:check": "tsc --noEmit"
@@ -24,9 +24,8 @@
 	"author": "Sije Park",
 	"license": "ISC",
 	"dependencies": {
-
 		"@socket.io/redis-emitter": "5.1.0",
-    "cors": "^2.8.5",
+		"cors": "^2.8.5",
 		"crypto-ts": "1.0.2",
 		"dotenv-safe": "8.2.0",
 		"express": "4.18.2",

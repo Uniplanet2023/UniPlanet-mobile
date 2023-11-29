@@ -1,3 +1,4 @@
+import { generateEmailVerificationToken } from '../utils/account_verification'
 import {
 	EmailApiSendEmailResponse,
 	EmailApi,
@@ -6,7 +7,7 @@ import {
 
 export const mockSendSignUpVerificationEmail = jest.fn(
 	(toEmail: string): Promise<EmailApiSendEmailResponse> =>
-		new Promise(resolve => resolve({ toEmail, status: 'success' })),
+		new Promise(resolve => resolve({ toEmail, status: 'success', hash: generateEmailVerificationToken() })),
 )
 
 export class MockEmailApi implements EmailApi {
