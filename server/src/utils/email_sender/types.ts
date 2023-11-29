@@ -1,11 +1,8 @@
 export type EmailApiSendSignUpVerificationEmailArgs = {
 	name: string
+	toEmail: string
+}
 
-	toEmail: string
-}
-export type EmailApiSendResetPasswordEmailArgs = {
-	toEmail: string
-}
 export type EmailApiSendEmailArgs = {
 	toEmail: string
 	subject: string
@@ -16,12 +13,6 @@ export type EmailApiSendEmailResponse = {
 	toEmail: string
 	status: 'success' | 'error'
 	hash: string
-}
-
-export type EmailApiSendResetPasswordResponse = {
-	toEmail: string
-	status: 'success' | 'error'
-	tempPassword: string
 }
 export type NodemailerServerConfigAuth = {
 	user: string
@@ -44,7 +35,6 @@ export type SmtpServerConfig = {
 }
 export interface EmailApi {
 	sendSignUpVerificationEmail(args: EmailApiSendSignUpVerificationEmailArgs): Promise<EmailApiSendEmailResponse>
-	sendPasswordResetEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendResetPasswordResponse>
 }
 export interface SmtpServer {
 	getConfig(): SmtpServerConfig
