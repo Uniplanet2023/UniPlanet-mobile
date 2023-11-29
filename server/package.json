@@ -18,7 +18,7 @@
 		"testEnvironment": "node",
 		"preset": "ts-jest",
 		"setupFilesAfterEnv": [
-			"./src/testUtil/setupFilesAfterEnv.ts"
+			"./src/test_util/setup_files_after_env.ts"
 		]
 	},
 	"author": "Sije Park",
