@@ -9,9 +9,7 @@ import dotenv from 'dotenv-safe'
 const parsedNodeEnv = process.env.NODE_ENV || 'development'
 
 dotenv.config({
-	path: parsedNodeEnv.trim() === '.env.dev' ? '.env.dev' :
-	 'test'? '.env.example':
-	 '.env.production',
+	path: parsedNodeEnv.trim() === '.env.dev' ? '.env.dev' : 'test' ? '.env.example' : '.env.production',
 })
 
 // IMPORTS FROM OTHER FILES
@@ -19,7 +17,6 @@ import { authRouter, productRouter } from './routes'
 import userRouter from './routes/user'
 import likeRouter from './routes/like'
 import chatRouter from './routes/chat'
-
 
 const app = express()
 
@@ -34,6 +31,5 @@ app.use(likeRouter)
 app.use(errorHandler)
 
 const server: Server = http.createServer(app)
-
 
 export default server
