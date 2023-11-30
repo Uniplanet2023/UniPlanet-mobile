@@ -1,7 +1,7 @@
 import request from 'supertest'
 import app from '../../app'
 import { SIGNUP_ROUTE } from '../route_defs'
-import { AccountVerification, User } from '../../models/index'
+import { User } from '../../models/index'
 import { EmailSender } from '../../utils'
 import { MockEmailApi, mockSendSignUpVerificationEmail } from '../../test_util/mock_email_api'
 beforeEach(() => {
@@ -21,7 +21,7 @@ let validUserInfo = {
 	email: '',
 	profileImage: '',
 	school: '',
-	verified: false,
+	verified: true,
 	name: '',
 	password: '',
 }
@@ -144,6 +144,7 @@ describe('tests saving the signed up user to the database', () => {
 		// Send valid user information again( the sam info)
 		// Should return the respective HTTP error code
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201)
+		await User.findOneAndUpdate({ email: validUserInfo.email }, { verified: true })
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 		// expect(response.body.errors[0].message).toEqual('The email is already in the database');
 	})
@@ -178,29 +179,5 @@ describe('tests the email verification behavior on signup', () => {
 	it('triggers the sendSignUpVerificationEmail method from the EmailSender class', async () => {
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201)
 		expect(mockSendSignUpVerificationEmail).toHaveBeenCalledTimes(1)
-	})
-})
-
-describe('tests creating the email verification token on signup', () => {
-	beforeAll(() => {
-		validUserInfo = {
-			email: 'test1@stonybrook.edu',
-			profileImage:
-				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-			school: 'Stony Brook University',
-			verified: true,
-			name: 'sije',
-			password: 'TestPassword1!',
-		}
-	})
-	it('should create an AccountVerification entity on successful signup', async () => {
-		const response = await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201)
-
-		const accountVerification = await AccountVerification.findOne({
-			userId: response.body.id,
-		})
-		// null !== undefined (true)
-		expect(accountVerification).not.toBeNull()
-		// expect(accountVerification).toBeDefined();
 	})
 })
