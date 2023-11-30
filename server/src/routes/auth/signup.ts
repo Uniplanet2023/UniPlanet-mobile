@@ -2,30 +2,22 @@ import express, { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { User } from '../../models/index'
 import { SIGNUP_ROUTE } from '../route_defs'
-import { verifyOtp } from '../../middlewares/email_verify'
 import {
 	emailValidation,
 	nameValidation,
 	passwordValidation,
 	profileImageValidation,
 	schoolValidation,
-	verifiedValidation,
 } from '../../validations/signup_validation'
 import { DuplicatedEmail, InvalidInput } from '../../errors'
 import { UserSignedUp } from '../../events'
 import { EmailSender } from '../../utils'
+import { verifyOtp } from '../../utils/account_verification'
 
 const signUpRouter = express.Router()
 signUpRouter.post(
 	SIGNUP_ROUTE,
-	[
-		emailValidation,
-		nameValidation,
-		profileImageValidation,
-		schoolValidation,
-		verifiedValidation,
-		...passwordValidation,
-	],
+	[emailValidation, nameValidation, profileImageValidation, schoolValidation, ...passwordValidation],
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req).array()
 
@@ -62,8 +54,10 @@ signUpRouter.post(
 
 signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
 	try {
-		const result = await verifyOtp(req.body)
+		const { otpHash, email, otpCode } = req.body
+		const result = await verifyOtp({ otpHash, email, otpCode })
 		if (result === 'Success') {
+			await User.findOneAndUpdate({ email }, { verified: true })
 			res.status(200).json({ message: result })
 		} else if (result === 'OTP expired') {
 			res.status(200).json({ message: result })
