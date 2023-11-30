@@ -4,18 +4,23 @@ import {
 	EmailApiSendEmailResponse,
 	EmailApi,
 	EmailApiSendSignUpVerificationEmailArgs,
+	EmailApiSendResetPasswordResponse,
+	EmailApiSendResetPasswordEmailArgs,
 } from './types'
 import nodemailer from 'nodemailer'
 import NodemailerSmtpServer from './nodemailer_app_smtp_server'
 import { otpGenerate } from '../account_verification/otp_generater'
-
-export type BuildEmailVerificationLinkArgs = {
-	emailVerificationToken: string
-}
-export type BuildSignUpVerificationEmailTextArgs = {
-	name: string
-	otpCode: string
-}
+import {
+	buildSignUpVerificationEmailHtmlBody,
+	buildSignUpVerificationEmailSubject,
+	buildSignUpVerificationEmailTextBody,
+} from './mail_text'
+import { generatePassword } from '../password_generator'
+import {
+	buildResetPasswordEmailBody,
+	buildResetPasswordEmailHtml,
+	buildResetPasswordEmailSubject,
+} from './mail_text/reset_password_text'
 export default class NodemailerEmailApi implements EmailApi {
 	private transporter: Mail
 
@@ -32,15 +37,9 @@ export default class NodemailerEmailApi implements EmailApi {
 		const [otpCode, fullHash] = otpGenerate(toEmail)
 		console.log(`otpCode is ${otpCode}`)
 		console.log(`fullHash is ${fullHash}`)
-		const subject = `Welcome to Uniplanet, ${name}! Please verify your email address`
-		const textBody = this.buildSignUpVerificationEmailTextBody({
-			name,
-			otpCode,
-		})
-		const htmlBody = this.buildSignUpVerificationEmailHtmlBody({
-			name,
-			otpCode,
-		})
+		const subject = buildSignUpVerificationEmailSubject(name)
+		const textBody = buildSignUpVerificationEmailTextBody({ name, otpCode })
+		const htmlBody = buildSignUpVerificationEmailHtmlBody({ name, otpCode })
 
 		await this.sendEmail({
 			toEmail,
@@ -56,19 +55,23 @@ export default class NodemailerEmailApi implements EmailApi {
 		}
 	}
 
-	private buildSignUpVerificationEmailTextBody = (args: BuildSignUpVerificationEmailTextArgs): string => {
-		const { name, otpCode } = args
-		return `Welcome to UniPlanet the coolest resell market platform!
-		Hi ${name}, Please verify your email address using the following verification code: ${otpCode}.
-		\nThe verification code is valid for 5 minutes. Please complete the verification as soon as possible.`
-	}
-
-	private buildSignUpVerificationEmailHtmlBody = (args: BuildSignUpVerificationEmailTextArgs): string => {
-		const { name, otpCode } = args
-		return `<h2>Welcome to UniPlanet the coolest resell market platform!</h2>
-		<br> Hi ${name}, Please verify your email address using the following verification code: ${otpCode}.
-		<br/><br/>
-		The verification code is valid for 5 minutes. Please complete the verification as soon as possible.`
+	async sendPasswordResetEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendResetPasswordResponse> {
+		const { toEmail } = args
+		const tempPassword = generatePassword()
+		const subject = buildResetPasswordEmailSubject()
+		const textBody = buildResetPasswordEmailBody(tempPassword)
+		const htmlBody = buildResetPasswordEmailHtml(tempPassword)
+		await this.sendEmail({
+			toEmail,
+			subject,
+			textBody,
+			htmlBody,
+		})
+		return {
+			toEmail,
+			status: 'success',
+			tempPassword,
+		}
 	}
 
 	private async sendEmail(args: EmailApiSendEmailArgs): Promise<void> {
