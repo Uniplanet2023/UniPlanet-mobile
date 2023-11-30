@@ -1,16 +1,22 @@
 import express from 'express'
 import 'express-async-errors'
 import http, { Server } from 'http'
-import redisInit from './redis_controller/redis_controller'
+// import redisInit from './redis_controller/redis_controller'
 import { errorHandler } from './middlewares'
 import cors from 'cors'
+import dotenv from 'dotenv-safe'
+
+const parsedNodeEnv = process.env.NODE_ENV || 'development'
+
+dotenv.config({
+	path: parsedNodeEnv.trim() === '.env.dev' ? '.env.dev' : 'test' ? '.env.example' : '.env.production',
+})
 
 // IMPORTS FROM OTHER FILES
 import { authRouter, productRouter } from './routes'
 import userRouter from './routes/user'
 import likeRouter from './routes/like'
 import chatRouter from './routes/chat'
-import socketInit from './socket/socket_router'
 
 const app = express()
 
@@ -25,7 +31,5 @@ app.use(likeRouter)
 app.use(errorHandler)
 
 const server: Server = http.createServer(app)
-redisInit()
-socketInit(server)
 
 export default server
