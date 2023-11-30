@@ -1,4 +1,10 @@
-import { EmailApiSendSignUpVerificationEmailArgs, EmailApiSendEmailResponse, EmailApi } from './types'
+import {
+	EmailApiSendSignUpVerificationEmailArgs,
+	EmailApiSendEmailResponse,
+	EmailApi,
+	EmailApiSendResetPasswordResponse,
+	EmailApiSendResetPasswordEmailArgs,
+} from './types'
 
 export default class EmailSender implements EmailApi {
 	private isActive = false
@@ -39,6 +45,12 @@ export default class EmailSender implements EmailApi {
 		this.validateEmailSender()
 
 		return this.emailApi!.sendSignUpVerificationEmail(args)
+	}
+
+	async sendPasswordResetEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendResetPasswordResponse> {
+		const { toEmail } = args
+		this.validateEmailSender()
+		return this.emailApi!.sendPasswordResetEmail({ toEmail })
 	}
 
 	private validateEmailSender() {
