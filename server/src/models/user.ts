@@ -64,6 +64,8 @@ const userSchema: Schema = new Schema(
 		sold: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
 		bought: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
 		myChatRoom: [{ type: Schema.Types.ObjectId, ref: 'UserChatRoom' }],
+
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
 )

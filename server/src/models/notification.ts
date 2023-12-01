@@ -6,23 +6,23 @@ export type NotificationDocument = Document & {
 }
 
 export type NotificationModel = Model<NotificationDocument>
-const notificationSchema = new Schema({
-	noticeMessages: {
-		senderId: {
-			type: Schema.Types.ObjectId,
-			ref: 'User',
-			required: true,
-		},
-		message: {
-			type: String,
-			required: true,
-		},
-		timestamp: {
-			type: Date,
-			default: Date.now,
+const notificationSchema = new Schema(
+	{
+		noticeMessages: {
+			senderId: {
+				type: Schema.Types.ObjectId,
+				ref: 'User',
+				required: true,
+			},
+			message: {
+				type: String,
+				required: true,
+			},
+			deletionDate: { type: Date, default: null },
 		},
 	},
-})
+	{ timestamps: true },
+)
 
 const Notification = model<NotificationDocument, NotificationModel>('Notification', notificationSchema)
 

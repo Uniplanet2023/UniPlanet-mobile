@@ -14,14 +14,17 @@ import { UserSignedUp } from '../../events'
 import { EmailSender } from '../../utils'
 import { verifyOtp } from '../../utils/account_verification'
 
+// signup -> database is store your user info -> sending verify meesage
+// SignIn -> if you are not verify -> go to OTP page.
+//
 const signUpRouter = express.Router()
 signUpRouter.post(
 	SIGNUP_ROUTE,
-	[emailValidation, nameValidation, profileImageValidation, schoolValidation, ...passwordValidation],
+	[...emailValidation, nameValidation, profileImageValidation, schoolValidation, ...passwordValidation],
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req).array()
 
-		if (errors.length > 0) throw new InvalidInput()
+		if (errors.length > 0) throw new InvalidInput(errors)
 
 		const { name, email, password, profileImage, school, type } = req.body
 
@@ -60,9 +63,9 @@ signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
 			await User.findOneAndUpdate({ email }, { verified: true })
 			res.status(200).json({ message: result })
 		} else if (result === 'OTP expired') {
-			res.status(200).json({ message: result })
+			res.status(401).json({ message: result })
 		} else if (result === 'Invalid Verfication number') {
-			res.status(200).json({ message: result })
+			res.status(401).json({ message: result })
 		}
 	} catch (error) {
 		res.status(400).json({ message: 'Error while sending OTP', data: error })
