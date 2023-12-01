@@ -44,7 +44,6 @@ export default class NodemailerEmailApi implements EmailApi {
 		const textBody = buildSignUpVerificationEmailTextBody({ name, otpCode })
 		const htmlBody = buildSignUpVerificationEmailHtmlBody({ name, otpCode })
 
-
 		await this.sendEmail({
 			toEmail,
 			subject,
@@ -58,7 +57,6 @@ export default class NodemailerEmailApi implements EmailApi {
 			hash: fullHash,
 		}
 	}
-
 
 	async sendPasswordResetEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendResetPasswordResponse> {
 		const { toEmail } = args
