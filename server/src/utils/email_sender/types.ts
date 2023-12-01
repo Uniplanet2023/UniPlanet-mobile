@@ -1,5 +1,6 @@
 export type EmailApiSendSignUpVerificationEmailArgs = {
 	name: string
+
 	toEmail: string
 }
 export type EmailApiSendResetPasswordEmailArgs = {
@@ -16,6 +17,7 @@ export type EmailApiSendEmailResponse = {
 	status: 'success' | 'error'
 	hash: string
 }
+
 export type EmailApiSendResetPasswordResponse = {
 	toEmail: string
 	status: 'success' | 'error'

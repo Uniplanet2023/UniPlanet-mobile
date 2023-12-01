@@ -10,6 +10,7 @@ import {
 import nodemailer from 'nodemailer'
 import NodemailerSmtpServer from './nodemailer_app_smtp_server'
 import { otpGenerate } from '../account_verification/otp_generater'
+
 import {
 	buildSignUpVerificationEmailHtmlBody,
 	buildSignUpVerificationEmailSubject,
@@ -21,6 +22,7 @@ import {
 	buildResetPasswordEmailHtml,
 	buildResetPasswordEmailSubject,
 } from './mail_text/reset_password_text'
+
 export default class NodemailerEmailApi implements EmailApi {
 	private transporter: Mail
 
@@ -37,9 +39,11 @@ export default class NodemailerEmailApi implements EmailApi {
 		const [otpCode, fullHash] = otpGenerate(toEmail)
 		console.log(`otpCode is ${otpCode}`)
 		console.log(`fullHash is ${fullHash}`)
+
 		const subject = buildSignUpVerificationEmailSubject(name)
 		const textBody = buildSignUpVerificationEmailTextBody({ name, otpCode })
 		const htmlBody = buildSignUpVerificationEmailHtmlBody({ name, otpCode })
+
 
 		await this.sendEmail({
 			toEmail,
@@ -54,6 +58,7 @@ export default class NodemailerEmailApi implements EmailApi {
 			hash: fullHash,
 		}
 	}
+
 
 	async sendPasswordResetEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendResetPasswordResponse> {
 		const { toEmail } = args

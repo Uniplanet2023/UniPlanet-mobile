@@ -12,6 +12,7 @@ import {
 import { DuplicatedEmail, InvalidInput } from '../../errors'
 import { UserSignedUp } from '../../events'
 import { EmailSender } from '../../utils'
+
 import { verifyOtp } from '../../utils/account_verification'
 
 // signup -> database is store your user info -> sending verify meesage
