@@ -2,7 +2,7 @@ import { Model, Schema, model, Document } from 'mongoose'
 import { UserDocument, User } from './index'
 
 export type ProductDocument = Document & {
-	name: string
+	productName: string
 	forSale: boolean
 	seller: UserDocument
 	description: string
@@ -56,7 +56,12 @@ const productSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 )
-
+productSchema.pre(/^.*([Ff]ind).*$/,function(){
+	const pageNumber = parseInt(this.getQuery().page ?? 0,10);
+	const limit = 20;
+	const skip = pageNumber * limit
+	this.skip(skip).limit(20).sort({createdAt:-1})
+});
 const Product = model<ProductDocument, ProductModel>('Product', productSchema)
 export default Product
 

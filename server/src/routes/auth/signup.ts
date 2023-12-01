@@ -10,7 +10,7 @@ import {
 	schoolValidation,
 } from '../../validations/signup_validation'
 import { DuplicatedEmail, InvalidInput } from '../../errors'
-import { UserSignedUp } from '../../events'
+import { GetUserInfo } from '../../events'
 import { EmailSender } from '../../utils'
 
 import { verifyOtp } from '../../utils/account_verification'
@@ -45,7 +45,7 @@ signUpRouter.post(
 			})
 		}
 
-		const userSignedUp = await new UserSignedUp(user)
+		const userSignedUp = await new GetUserInfo(user)
 		const emailSender = EmailSender.getInstance()
 		const { status, hash } = await emailSender.sendSignUpVerificationEmail({
 			name: user.name,
