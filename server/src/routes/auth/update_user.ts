@@ -2,34 +2,22 @@ import express from 'express'
 // import bcryptjs from 'bcryptjs';
 import { User } from '../../models/index'
 import auth from '../../middlewares/auth'
-import { sendResetPassword } from '../../middlewares/email_verify'
-import { logStart, logEnd, handleError } from '../../functions/log_function'
+import { EmailSender } from '../../utils'
 
 const updateUserRoute = express.Router()
 
 updateUserRoute.post('api/password-update', auth, async (req, res) => {
-	try {
-		logStart('Password Update API')
+	const { id, password } = req.body
 
-		// const hashedPassword = await bcryptjs.hash(
-		// 	req.body.password,
-		// 	process.env.SECRET_PASS_KEY as string,
-		// );
-		const hashedPassword = ''
+	const updateUser = await User.findByIdAndUpdate(
+		id,
+		{
+			$password: password,
+		},
+		{ new: true },
+	)
 
-		const updateUser = await User.findByIdAndUpdate(
-			req.body.id,
-			{
-				$password: hashedPassword,
-			},
-			{ new: true },
-		)
-
-		res.status(200).json(updateUser)
-		logEnd('Password Update API')
-	} catch (e) {
-		handleError(res, e as Error)
-	}
+	res.status(200).json(updateUser)
 })
 
 updateUserRoute.put('/api/forgottenPassword', async (req, res) => {
@@ -44,13 +32,10 @@ updateUserRoute.put('/api/forgottenPassword', async (req, res) => {
 			return
 		}
 
-		const ResetPassword = await sendResetPassword(email)
-		const hashedPassword = ''
+		const emailSender = EmailSender.getInstance()
+		const ResetPasswordRespond = await emailSender.sendPasswordResetEmail(email)
 
-		console.log(ResetPassword)
-		console.log(hashedPassword)
-
-		existingUser.password = hashedPassword
+		existingUser.password = ResetPasswordRespond.tempPassword
 
 		await existingUser.save()
 

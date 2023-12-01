@@ -1,87 +1,64 @@
 import express, { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
-import { AccountVerification, User } from '../../models/index'
+import { User } from '../../models/index'
 import { SIGNUP_ROUTE } from '../route_defs'
-import { sendMail, verifyOtp } from '../../middlewares/email_verify'
 import {
 	emailValidation,
 	nameValidation,
 	passwordValidation,
 	profileImageValidation,
 	schoolValidation,
-	verifiedValidation,
 } from '../../validations/signup_validation'
-import { InvalidInput } from '../../errors'
+import { DuplicatedEmail, InvalidInput } from '../../errors'
 import { UserSignedUp } from '../../events'
 import { EmailSender } from '../../utils'
-import { generateEmailVerificationToken } from '../../utils/account_verification'
+
+import { verifyOtp } from '../../utils/account_verification'
 
 const signUpRouter = express.Router()
 signUpRouter.post(
 	SIGNUP_ROUTE,
-	[
-		emailValidation,
-		nameValidation,
-		profileImageValidation,
-		schoolValidation,
-		verifiedValidation,
-		...passwordValidation,
-	],
+	[emailValidation, nameValidation, profileImageValidation, schoolValidation, ...passwordValidation],
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req).array()
 
 		if (errors.length > 0) throw new InvalidInput()
 
-		const { name, email, password, profileImage, school, verified } = req.body
+		const { name, email, password, profileImage, school, type } = req.body
 
-		const newUser = await User.create({
-			email,
-			password,
-			name,
-			profileImage,
-			school,
-			verified,
-		})
-		const emailVerificationToken = generateEmailVerificationToken()
-		const accountVerification = await AccountVerification.create({
-			userId: newUser._id,
-			emailVerificationToken,
-		})
+		let user = await User.findOne({ email: email })
+		if (user) {
+			if (user.verified) {
+				throw new DuplicatedEmail()
+			}
+		} else {
+			user = await User.create({
+				email,
+				password,
+				name,
+				profileImage,
+				school,
+				type,
+			})
+		}
 
-		const userSignedUp = await new UserSignedUp(newUser)
+		const userSignedUp = await new UserSignedUp(user)
 		const emailSender = EmailSender.getInstance()
-		emailSender.sendSignUpVerificationEmail({
-			toEmail: newUser.email,
-			emailVerificationToken: accountVerification.emailVerificationToken,
+		const { status, hash } = await emailSender.sendSignUpVerificationEmail({
+			name: user.name,
+			toEmail: user.email,
 		})
 
-		return res.status(userSignedUp.getStatusCode()).json(userSignedUp.serializeRest())
+		return res.status(userSignedUp.getStatusCode()).json({ status, hash, ...userSignedUp.serializeRest() })
 	},
 )
 
-signUpRouter.post(`${SIGNUP_ROUTE}/sendOtp`, async (req, res) => {
-	try {
-		const { userEmail, name } = req.body
-		const existingUser = await User.findOne({ userEmail })
-
-		if (existingUser) {
-			console.log('User Exists!')
-			res.status(200).json({ message: 'User with same email already exists!' })
-			return
-		}
-
-		const mailResult = await sendMail({ userEmail, name })
-
-		res.status(200).json({ message: 'Success', hash: mailResult })
-	} catch (error) {
-		res.status(400).json({ message: 'Error while sending OTP', error })
-	}
-})
-
 signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
 	try {
-		const result = await verifyOtp(req.body)
+		const { otpHash, email, otpCode } = req.body
+		const result = await verifyOtp({ otpHash, email, otpCode })
 		if (result === 'Success') {
+			await User.findOneAndUpdate({ email }, { verified: true })
 			res.status(200).json({ message: result })
 		} else if (result === 'OTP expired') {
 			res.status(200).json({ message: result })

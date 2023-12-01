@@ -4,36 +4,46 @@ import {
 	EmailApiSendEmailResponse,
 	EmailApi,
 	EmailApiSendSignUpVerificationEmailArgs,
+	EmailApiSendResetPasswordResponse,
+	EmailApiSendResetPasswordEmailArgs,
 } from './types'
 import nodemailer from 'nodemailer'
 import NodemailerSmtpServer from './nodemailer_app_smtp_server'
-export type BuildEmailVerificationLinkArgs = {
-	emailVerificationToken: string
-}
-export type BuildSignUpVerificationEmailTextArgs = {
-	emailVerificationLink: string
-}
+import { otpGenerate } from '../account_verification/otp_generater'
+
+import {
+	buildSignUpVerificationEmailHtmlBody,
+	buildSignUpVerificationEmailSubject,
+	buildSignUpVerificationEmailTextBody,
+} from './mail_text'
+import { generatePassword } from '../password_generator'
+import {
+	buildResetPasswordEmailBody,
+	buildResetPasswordEmailHtml,
+	buildResetPasswordEmailSubject,
+} from './mail_text/reset_password_text'
+
 export default class NodemailerEmailApi implements EmailApi {
 	private transporter: Mail
 
+	private smtpServer: NodemailerSmtpServer
+
 	constructor() {
-		this.transporter = nodemailer.createTransport(new NodemailerSmtpServer().getConfig())
+		this.smtpServer = new NodemailerSmtpServer()
+		this.transporter = nodemailer.createTransport(this.smtpServer.getConfig() as nodemailer.SendMailOptions)
 	}
 
 	async sendSignUpVerificationEmail(args: EmailApiSendSignUpVerificationEmailArgs): Promise<EmailApiSendEmailResponse> {
-		const { toEmail, emailVerificationToken } = args
+		const { name, toEmail } = args
 
-		const emailVerificationLink = this.buildEmailVerificationLink({
-			emailVerificationToken,
-		})
+		const [otpCode, fullHash] = otpGenerate(toEmail)
+		console.log(`otpCode is ${otpCode}`)
+		console.log(`fullHash is ${fullHash}`)
 
-		const subject = 'Welcom to Uniplanet! Please verify your email address'
-		const textBody = this.buildSignUpVerificationEmailTextBody({
-			emailVerificationLink,
-		})
-		const htmlBody = this.buildSignUpVerificationEmailHtmlBody({
-			emailVerificationLink,
-		})
+		const subject = buildSignUpVerificationEmailSubject(name)
+		const textBody = buildSignUpVerificationEmailTextBody({ name, otpCode })
+		const htmlBody = buildSignUpVerificationEmailHtmlBody({ name, otpCode })
+
 
 		await this.sendEmail({
 			toEmail,
@@ -45,36 +55,42 @@ export default class NodemailerEmailApi implements EmailApi {
 		return {
 			toEmail,
 			status: 'success',
+			hash: fullHash,
 		}
 	}
 
-	private buildEmailVerificationLink = (args: BuildEmailVerificationLinkArgs): string => {
-		const { emailVerificationToken } = args
-		//TODO: this url will change once we integrate kubernetes in our application
-		return `https://localhost:3000/api/auth/verify/${emailVerificationToken}`
-	}
 
-	private buildSignUpVerificationEmailTextBody = (args: BuildSignUpVerificationEmailTextArgs): string => {
-		const { emailVerificationLink } = args
-		return `Welcome to UniPlanet the coolest resell market platform! Please click on the link below to verify your email address${emailVerificationLink}`
-	}
-
-	private buildSignUpVerificationEmailHtmlBody = (args: BuildSignUpVerificationEmailTextArgs): string => {
-		const { emailVerificationLink } = args
-		return `<h1>Welcome to UniPlanet </h1>
-		<br/>the coolest resell market platform!
-		<br/><br/>
-		Please click on the link below to verify your email address<a href="${emailVerificationLink}">${emailVerificationLink}</a>`
+	async sendPasswordResetEmail(args: EmailApiSendResetPasswordEmailArgs): Promise<EmailApiSendResetPasswordResponse> {
+		const { toEmail } = args
+		const tempPassword = generatePassword()
+		const subject = buildResetPasswordEmailSubject()
+		const textBody = buildResetPasswordEmailBody(tempPassword)
+		const htmlBody = buildResetPasswordEmailHtml(tempPassword)
+		await this.sendEmail({
+			toEmail,
+			subject,
+			textBody,
+			htmlBody,
+		})
+		return {
+			toEmail,
+			status: 'success',
+			tempPassword,
+		}
 	}
 
 	private async sendEmail(args: EmailApiSendEmailArgs): Promise<void> {
 		const { toEmail, subject, htmlBody, textBody } = args
+		const accessToken = await this.smtpServer.getAccessToken()
 		await this.transporter.sendMail({
-			from: 'UniPlanet <noreply@uniplanet.com>',
+			from: 'UniPlanet ✉️ <noreply@uniplanet.com>',
 			to: toEmail,
 			subject,
 			text: textBody,
 			html: htmlBody,
-		})
+			auth: {
+				accessToken: accessToken,
+			},
+		} as nodemailer.SendMailOptions)
 	}
 }

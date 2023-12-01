@@ -1,84 +1,59 @@
-import express from 'express'
-// import bcryptjs from 'bcryptjs';
+import express, { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { User } from '../../models/index'
-import { set } from '../../redis_controller/redis_controller'
-import { logStart, logEnd, handleError } from '../../functions/log_function'
-import { signInFunction } from '../../functions/user_data'
+import { PasswordHash } from '../../utils'
+import { SIGNIN_ROUTE } from '../route_defs'
+import { validationResult } from 'express-validator'
+import { InvalidInput } from '../../errors'
 const signInRoute = express.Router()
 
 // Sign In Route
-signInRoute.post('/api/signin', async (req, res) => {
-	try {
-		logStart('Sign In API')
+signInRoute.post(SIGNIN_ROUTE, async (req, res) => {
+	const { email, password } = req.body
+	const user = await User.findOne({ email })
 
-		// const { email, password } = req.body;
-		const { email } = req.body
-		const user = await signInFunction(email)
-
-		if (!user) {
-			res.status(400).json({ msg: 'User with this email does not exist!' })
-			return
-		}
-
-		// const isMatch = await bcryptjs.compare(password, user.password);
-
-		// if (!isMatch) {
-		// 	console.log('1. Incorrect Password');
-		// 	res.status(400).json({ msg: 'Incorrect password.' });
-		// 	return;
-		// }
-
-		console.log('1. Correct Password')
-		console.log('2. Generate Token')
-		const token = jwt.sign({ id: user._id }, 'passwordKey')
-
-		console.log("3. Set the user's online status to true")
-		console.log('4. Store User Data into Redis')
-		set(user._id.toString(), user)
-		const userObject = user.toObject()
-		res.json({ token, ...userObject })
-		logEnd('Sign In API')
-	} catch (e) {
-		handleError(res, e as Error)
+	if (!user) {
+		return res.status(400).json({ msg: 'User with this email does not exist!' })
 	}
+	if (!user.verified) {
+		return res.status(400).json({ msg: 'User Should be verified!' })
+	}
+
+	const isMatch = PasswordHash.compareSync({ providedPassword: password, storedPassword: user.password })
+
+	if (!isMatch) {
+		res.status(400).json({ msg: 'Incorrect password.' })
+		return
+	}
+	const userInfo = { id: user._id, name: user.name }
+	const secretKey = process.env.JWT_TOKEN_SECRET as string
+	const options = { expiresIn: '10d', issuer: 'UniPlanet', subject: 'userInfo' }
+	const token = jwt.sign(userInfo, secretKey, options)
+
+	const userData = user.toObject()
+	res.json({ token, ...userData })
 })
 
-signInRoute.post('/tokenIsValid', async (req, res) => {
-	try {
-		console.log('\x1b[32m----------------- Auth API : Tocken valid API triggerd -----------------\x1b[0m')
-		const token = req.header('x-auth-token')
-		if (!token) {
-			res.json(false)
-			return
-		}
-		console.log('1. Tocken is Existed')
-		const verified = jwt.verify(token, 'passwordKey')
-		if (!verified) {
-			res.json(false)
-			return
-		}
-		console.log('2. Tocken is Valid')
+signInRoute.post(`${SIGNIN_ROUTE}/tokenIsValid`, async (req: Request, res: Response) => {
+	const errors = validationResult(req).array()
 
-		console.log('3. Serach Tocket from database')
-		const user = await User.findById(verified)
+	if (errors.length > 0) throw new InvalidInput()
 
-		if (!user) {
-			res.json(false)
-			return
-		}
-		console.log("4. Set the user's online status to true")
-		await user.save()
-		console.log('5. User is Existed')
+	const token = req.header('x-auth-token')
 
-		res.json(true)
-		console.log(
-			'\x1b[32m----------------- Auth API : Tocken valid API is Successfully completed -----------------\x1b[0m',
-		)
-		console.log('')
-	} catch (e) {
-		handleError(res, e as Error)
+	const verified = jwt.verify(token!, process.env.JWT_TOKEN_SECRET as string) as { id: string }
+
+	if (!verified) {
+		return res.json(false)
 	}
+
+	const user = await User.findById(verified.id)
+
+	if (!user) {
+		return res.json(false)
+	}
+
+	return res.json(true)
 })
 
 export default signInRoute
