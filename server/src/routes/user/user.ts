@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express'
-import auth from '../middlewares/auth'
-import { Product } from '../models/index'
-import { get } from '../redis_controller/redis_controller'
-import { getUserDataFunction } from '../functions/user_data'
-import { logStart, logEnd, handleError } from '../functions/log_function'
+import auth from '../../middlewares/auth'
+import { Product } from '../../models/index'
+import { get } from '../../redis_controller/redis_controller'
+import { getUserDataFunction } from '../../functions/user_data'
+import { logStart, logEnd, handleError } from '../../functions/log_function'
 
 const userRouter = express.Router()
 

@@ -1,20 +1,12 @@
 import express from 'express'
 import { User } from '../../models/index'
 import auth from '../../middlewares/auth'
-import { logStart, logEnd, handleError } from '../../functions/log_function'
 
 const deleteUserRoute = express.Router()
 
-deleteUserRoute.post('api/delete-user', auth, async (req, res) => {
-	try {
-		logStart('Delete User API')
-		console.log('1. Find User and Delete is triggered')
-		await User.findByIdAndDelete(req.user)
-		console.log('2. Account Successfully Deleted')
-		res.status(200).json('Account Successfully Deleted')
-		logEnd('Delete User API')
-	} catch (e) {
-		handleError(res, e as Error)
-	}
+deleteUserRoute.delete('/api/auth/delete_user', auth, async (req, res) => {
+	// Delete User 7 days after
+	await User.findByIdAndUpdate({ _id: req.user }, { deletionDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) })
+	res.status(200).json('Account Successfully Deleted')
 })
 export default deleteUserRoute

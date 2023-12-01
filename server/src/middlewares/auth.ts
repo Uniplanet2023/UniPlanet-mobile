@@ -16,7 +16,7 @@ const auth = async (req: Request, res: Response, next: NextFunction): Promise<vo
 			return
 		}
 
-		const verified = jwt.verify(token, 'passwordKey') as jwt.JwtPayload
+		const verified = jwt.verify(token, process.env.JWT_TOKEN_SECRET as string) as jwt.JwtPayload
 		if (!verified) {
 			res.status(401).json({ msg: 'Token verification failed, authorization denied.' })
 			return

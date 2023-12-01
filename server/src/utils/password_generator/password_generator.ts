@@ -1,11 +1,14 @@
-import otpGenerator from 'otp-generator'
+import passwordGenerator from 'generate-password'
 
 export const generatePassword = () => {
-	const password = otpGenerator.generate(7, {
-		digits: true,
-		upperCaseAlphabets: true,
-		lowerCaseAlphabets: true,
-		specialChars: true,
+	const password = passwordGenerator.generate({
+		length: 10,
+		numbers: true,
+		uppercase: true,
+		symbols: true,
+		lowercase: true,
+		strict: true,
+		exclude: '@#$%^&*()_+{}();\'"<>/',
 	})
 	return password
 }
