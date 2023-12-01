@@ -2,7 +2,6 @@ import otpGenerator from 'otp-generator'
 import crypto from 'crypto'
 
 export const otpGenerate = (email: string) => {
-
 	const otpCode = otpGenerator.generate(5, {
 		digits: true,
 		upperCaseAlphabets: false,
