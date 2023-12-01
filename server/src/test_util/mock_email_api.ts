@@ -1,4 +1,3 @@
-
 import { generatePassword } from '../utils'
 
 import { generateEmailVerificationToken } from '../utils/account_verification'
@@ -13,7 +12,6 @@ import {
 export const mockSendSignUpVerificationEmail = jest.fn(
 	(toEmail: string): Promise<EmailApiSendEmailResponse> =>
 		new Promise(resolve => resolve({ toEmail, status: 'success', hash: generateEmailVerificationToken() })),
-
 )
 export const mockSendResetPasswordEmail = jest.fn(
 	(toEmail: string): Promise<EmailApiSendResetPasswordResponse> =>
