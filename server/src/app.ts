@@ -19,7 +19,6 @@ import userRouter from './routes/user/user'
 import likeRouter from './routes/like/like'
 import chatRouter from './routes/chat/chat'
 
-
 const app = express()
 
 // middleware
