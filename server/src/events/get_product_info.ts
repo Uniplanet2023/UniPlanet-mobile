@@ -1,7 +1,7 @@
 import { BaseAuthEvent } from './base_auth_event'
 import { ProductDocument } from '../models'
 import { GetProductRestPayload } from './type_def'
-import {GetSellerInfo} from './index'
+import { GetSellerInfo } from './index'
 
 export default class GetProductInfo extends BaseAuthEvent<GetProductRestPayload> {
 	private product: ProductDocument
@@ -27,7 +27,7 @@ export default class GetProductInfo extends BaseAuthEvent<GetProductRestPayload>
 			images: this.product.images,
 			likes: this.product.likes,
 			price: this.product.price,
-			category: this.product.category
+			category: this.product.category,
 		}
 	}
 }

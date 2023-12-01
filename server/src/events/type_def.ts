@@ -1,4 +1,4 @@
-import { EventDocument, ProductDocument, UserChatRoomDocument, UserDocument } from "../models"
+import { EventDocument, ProductDocument, UserChatRoomDocument, UserDocument } from '../models'
 
 export type UserSignedUpRestPayload = {
 	id: string
@@ -19,7 +19,7 @@ export type UserSignedUpRestPayload = {
 }
 
 export type GetProductRestPayload = {
-	id: string,
+	id: string
 	productName: string
 	forSale: boolean
 	seller: SellerRestPayload

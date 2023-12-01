@@ -1,14 +1,12 @@
 import express, { Request, Response } from 'express'
 import { Product } from '../../models/index'
 import { PRODUCT_ROUTE } from '../route_defs'
-import { GetProductInfo } from '../../events'
-import {GetProductRestPayload} from '../../events/type_def';
-import GetProductsInfo from '../../events/get_products_info';
+import GetProductsInfo from '../../events/get_products_info'
 const getRecentProductRouter = express.Router()
 
 getRecentProductRouter.get(`${PRODUCT_ROUTE}`, async (req: Request, res: Response) => {
 	const products = await Product.find().populate('seller')
-	const productsInfo = new GetProductsInfo(products);
-	res.status(productsInfo.getStatusCode()).json(productsInfo.serializeRest());
+	const productsInfo = new GetProductsInfo(products)
+	res.status(productsInfo.getStatusCode()).json(productsInfo.serializeRest())
 })
 export default getRecentProductRouter

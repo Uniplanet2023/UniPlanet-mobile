@@ -20,8 +20,8 @@ uploadProductRouter.post(`${PRODUCT_ROUTE}/upload_product`, auth, async (req, re
 		category,
 	})
 	product = await product.save()
-	await product.populate('seller');
+	await product.populate('seller')
 	const productInfo = await new GetProductInfo(product)
-	return res.status(productInfo.getStatusCode()).json(productInfo.serializeRest());
+	return res.status(productInfo.getStatusCode()).json(productInfo.serializeRest())
 })
 export default uploadProductRouter

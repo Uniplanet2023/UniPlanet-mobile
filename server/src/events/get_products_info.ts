@@ -1,7 +1,7 @@
 import { BaseAuthEvent } from './base_auth_event'
 import { ProductDocument } from '../models'
 import { GetProductRestPayload } from './type_def'
-import {GetProductInfo, GetSellerInfo} from './index'
+import { GetProductInfo } from './index'
 
 export default class GetProductsInfo extends BaseAuthEvent<GetProductRestPayload[]> {
 	private products: ProductDocument[]
@@ -18,10 +18,10 @@ export default class GetProductsInfo extends BaseAuthEvent<GetProductRestPayload
 	}
 
 	serializeRest(): GetProductRestPayload[] {
-        const productsInfo:GetProductRestPayload[] = [];
-		this.products.map((product)=>{
-            productsInfo.push(new GetProductInfo(product).serializeRest())
-        });
-		return productsInfo;
+		const productsInfo: GetProductRestPayload[] = []
+		this.products.map(product => {
+			productsInfo.push(new GetProductInfo(product).serializeRest())
+		})
+		return productsInfo
 	}
 }

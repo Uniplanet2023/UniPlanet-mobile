@@ -1,5 +1,5 @@
 import { User } from '../../models'
-import { UserSignedUp } from '../index'
+import { GetUserInfo } from '../index'
 
 let validUserInfo = {
 	email: '',
@@ -22,7 +22,7 @@ beforeAll(() => {
 
 it('should expose only the id and the email when serializing to REST', async () => {
 	const newUser = await User.create(validUserInfo)
-	const userSignedUpEvent = new UserSignedUp(newUser)
+	const userSignedUpEvent = new GetUserInfo(newUser)
 	const serializedResponse = userSignedUpEvent.serializeRest()
 
 	expect(Object.keys(serializedResponse).sort()).toEqual(
