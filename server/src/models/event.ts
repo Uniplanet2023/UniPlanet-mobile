@@ -27,6 +27,7 @@ const eventSchema = new Schema(
 			required: true,
 		},
 		likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
 )

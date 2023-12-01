@@ -15,7 +15,7 @@ export type ProductModel = Model<ProductDocument>
 
 const productSchema: Schema = new Schema(
 	{
-		name: {
+		productName: {
 			type: String,
 			required: true,
 			trim: true,
@@ -23,6 +23,7 @@ const productSchema: Schema = new Schema(
 		forSale: {
 			type: Boolean,
 			required: true,
+			default: true,
 		},
 		seller: {
 			type: Schema.Types.ObjectId,
@@ -33,6 +34,7 @@ const productSchema: Schema = new Schema(
 			type: String,
 			required: true,
 			trim: true,
+			default: '',
 		},
 		images: [
 			{
@@ -50,6 +52,7 @@ const productSchema: Schema = new Schema(
 			required: true,
 			index: true,
 		},
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
 )
