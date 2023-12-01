@@ -1,5 +1,5 @@
 import { IScheduler, Scheduler } from '../scheduler'
-import { User } from '../../models'
+import { Product, User, UserChatRoom } from '../../models'
 
 class UserDeleteScheduler extends Scheduler {
 	constructor() {
@@ -10,9 +10,12 @@ class UserDeleteScheduler extends Scheduler {
 
 	executeJob(): Promise<IScheduler> {
 		const now = new Date()
-
+		console.log(now.toLocaleTimeString())
+		// TODO: Delete All the product, messages, userchat related to the User
 		return new Promise(async resolve => {
 			await User.deleteMany({ deletionDate: { $lte: now } })
+			await Product.deleteMany({ deletionDate: { $lte: now } })
+			await UserChatRoom.deleteMany({ deletionDate: { $lte: now } })
 			resolve({
 				success: true,
 			})

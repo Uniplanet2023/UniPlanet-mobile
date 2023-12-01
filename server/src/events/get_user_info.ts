@@ -1,25 +1,8 @@
 import { BaseAuthEvent } from './base_auth_event'
-import { EventDocument, ProductDocument, UserChatRoomDocument, UserDocument } from '../models'
+import { UserDocument } from '../models'
+import { UserSignedUpRestPayload } from './type_def'
 
-export type UserSignedUpRestPayload = {
-	id: string
-	name: string
-	email: string
-	profileImage: string
-	school: string
-	verified: boolean
-	myEvent: EventDocument[]
-	recentSearchHistory: string[]
-	recentViewHistory: ProductDocument[]
-	like: ProductDocument[]
-	selling: ProductDocument[]
-	bought: ProductDocument[]
-	sold: ProductDocument[]
-	myChatRoom: UserChatRoomDocument[]
-	type: string
-}
-
-export default class UserSignedUp extends BaseAuthEvent<UserSignedUpRestPayload> {
+export default class GetUserInfo extends BaseAuthEvent<UserSignedUpRestPayload> {
 	private user: UserDocument
 
 	private statusCode = 201
