@@ -8,9 +8,9 @@ import dotenv from 'dotenv-safe'
 
 const parsedNodeEnv = process.env.NODE_ENV || 'development'
 
-console.log(parsedNodeEnv.trim() === 'production' ? '.env.production' : 'development' ? '.env.dev' : '.env.example')
+console.log(parsedNodeEnv.trim() === 'production' ? '.env.production' : 'development' ? '.env.example':'.env.dev' )
 dotenv.config({
-	path: parsedNodeEnv.trim() === 'production' ? '.env.production' : 'development' ? '.env.dev' : '.env.example',
+	path: parsedNodeEnv.trim() === 'production' ? '.env.production' : 'development' ? '.env.example' : '.env.dev'
 })
 
 // IMPORTS FROM OTHER FILES
