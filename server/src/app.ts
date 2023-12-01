@@ -14,9 +14,10 @@ dotenv.config({
 
 // IMPORTS FROM OTHER FILES
 import { authRouter, productRouter } from './routes'
-import userRouter from './routes/user'
-import likeRouter from './routes/like'
-import chatRouter from './routes/chat'
+import userRouter from './routes/user/user'
+import likeRouter from './routes/like/like'
+import chatRouter from './routes/chat/chat'
+
 
 const app = express()
 

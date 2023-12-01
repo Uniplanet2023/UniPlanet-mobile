@@ -5,24 +5,29 @@ import { PasswordHash } from '../../utils'
 import { SIGNIN_ROUTE } from '../route_defs'
 import { validationResult } from 'express-validator'
 import { InvalidInput } from '../../errors'
+import { emailValidation, passwordValidation } from '../../validations/signup_validation'
 const signInRoute = express.Router()
 
 // Sign In Route
-signInRoute.post(SIGNIN_ROUTE, async (req, res) => {
+signInRoute.post(SIGNIN_ROUTE, [...emailValidation, ...passwordValidation], async (req: Request, res: Response) => {
+	const errors = validationResult(req).array()
+
+	if (errors.length > 0) throw new InvalidInput(errors)
+
 	const { email, password } = req.body
 	const user = await User.findOne({ email })
 
 	if (!user) {
-		return res.status(400).json({ msg: 'User with this email does not exist!' })
+		return res.status(401).json({ msg: 'User with this email does not exist!' })
 	}
 	if (!user.verified) {
-		return res.status(400).json({ msg: 'User Should be verified!' })
+		return res.status(401).json({ msg: 'User Should be verified!' })
 	}
 
 	const isMatch = PasswordHash.compareSync({ providedPassword: password, storedPassword: user.password })
 
 	if (!isMatch) {
-		res.status(400).json({ msg: 'Incorrect password.' })
+		res.status(401).json({ msg: 'Incorrect password.' })
 		return
 	}
 	const userInfo = { id: user._id, name: user.name }
@@ -34,11 +39,7 @@ signInRoute.post(SIGNIN_ROUTE, async (req, res) => {
 	res.json({ token, ...userData })
 })
 
-signInRoute.post(`${SIGNIN_ROUTE}/tokenIsValid`, async (req: Request, res: Response) => {
-	const errors = validationResult(req).array()
-
-	if (errors.length > 0) throw new InvalidInput()
-
+signInRoute.get(`${SIGNIN_ROUTE}/tokenIsValid`, async (req: Request, res: Response) => {
 	const token = req.header('x-auth-token')
 
 	const verified = jwt.verify(token!, process.env.JWT_TOKEN_SECRET as string) as { id: string }

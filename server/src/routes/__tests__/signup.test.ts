@@ -38,32 +38,32 @@ describe('test Validify of email input', () => {
 		}
 	})
 	it('should return 422 if there is no super domain', async () => {
-		validUserInfo.email = 'emailTest@gmail.'
+		validUserInfo.email = 'emailTest@stonybrook.'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 	it('should return 422 if there is no dot', async () => {
-		validUserInfo.email = 'emailTest@gmail'
+		validUserInfo.email = 'emailTest@stonybrook'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 	it('should return 422 if there is no subdomain', async () => {
-		validUserInfo.email = 'emailTest@.com'
+		validUserInfo.email = 'emailTest@.edu'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 	it('should return 422 if there is no at', async () => {
-		validUserInfo.email = 'emailTestgmail.com'
+		validUserInfo.email = 'emailTeststonybrook.edu'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 	it('should return 422 if there is no user name', async () => {
-		validUserInfo.email = '@gmail.com'
+		validUserInfo.email = '@stonybrook.edu'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 	it('should return 422 if sub-domain is capital', async () => {
-		validUserInfo.email = 'emailTest@GMAIL.com'
+		validUserInfo.email = 'emailTest@STONYBROOK.edu'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(422)
 	})
 
 	it('should return 201 if the email is valid', async () => {
-		validUserInfo.email = 'emailTest@gmail.com'
+		validUserInfo.email = 'emailTest@stonybrook.edu'
 		await request(app).post(SIGNUP_ROUTE).send(validUserInfo).expect(201)
 	})
 })
@@ -82,7 +82,7 @@ describe('test validity of password input', () => {
 		validUserInfo = {
 			email: 'test1@stonybrook.edu',
 			profileImage:
-				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+				'https://res.cloudinary.edu/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
 			school: 'Stony Brook University',
 			verified: true,
 			name: 'sije',
@@ -121,7 +121,7 @@ describe('tests saving the signed up user to the database', () => {
 		validUserInfo = {
 			email: 'test1@stonybrook.edu',
 			profileImage:
-				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+				'https://res.cloudinary.edu/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
 			school: 'Stony Brook University',
 			verified: true,
 			name: 'sije',
@@ -169,7 +169,7 @@ describe('tests the email verification behavior on signup', () => {
 		validUserInfo = {
 			email: 'test1@stonybrook.edu',
 			profileImage:
-				'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+				'https://res.cloudinary.edu/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
 			school: 'Stony Brook University',
 			verified: true,
 			name: 'sije',

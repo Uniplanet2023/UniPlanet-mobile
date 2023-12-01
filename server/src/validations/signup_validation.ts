@@ -1,13 +1,26 @@
 import { body } from 'express-validator'
-export const emailValidation = body('email')
-	.isEmail()
-	.custom(async value => {
-		if (/.+@[A-Z]/g.test(value)) {
-			throw new Error('Email is not normalized')
-		}
-	})
-	.withMessage('Email is not normalized')
-	.normalizeEmail()
+import { urlInfo } from '../utils/domain_check'
+
+export const emailValidation = [
+	body('email')
+		.isEmail()
+		.custom(async value => {
+			if (/.+@[A-Z]/g.test(value)) {
+				throw new Error('Email is not normalized')
+			}
+		})
+		.withMessage('Email is not normalized')
+		.normalizeEmail(),
+	body('email')
+		.custom(async value => {
+			const info = urlInfo(value)
+			console.log(`${value}  D=${info.domain}  S=${info.subdomain ? info.subdomain : 'None'}  TLD:${info.tld}`)
+			if (info.tld !== 'edu') {
+				throw new Error('It should be .edu email')
+			}
+		})
+		.withMessage('It should be .edu email'),
+]
 export const nameValidation = body('name').isString().withMessage('Name should be String')
 export const profileImageValidation = body('profileImage').isURL().withMessage('Profile Image should be URL')
 export const schoolValidation = body('school').isString().withMessage('School should be String')
