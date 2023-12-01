@@ -1,4 +1,3 @@
-
 /*
 verifies incoming request to check validity of email address
 receive OTP number emailed to user, Hashed value of (user email + OTP code + expiry time)
@@ -84,4 +83,3 @@ const sendResetPassword = async (userEmail: string): Promise<string | Error> => 
 }
 
 export { otpGenerate, verifyOtp, generatePassword, sendResetPassword }
-
