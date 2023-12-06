@@ -1,7 +1,7 @@
 import express from 'express'
 
 import getRecentProductRouter from './get_product'
-import searchProductRouter from './search_product'
+import searchProductRouter from './search_products'
 import uploadProductRouter from './upload_product'
 
 const productRouter = express.Router()

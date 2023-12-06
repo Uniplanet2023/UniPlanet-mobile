@@ -55,8 +55,36 @@ signUpRouter.post(
 		return res.status(userSignedUp.getStatusCode()).json({ status, hash, ...userSignedUp.serializeRest() })
 	},
 )
+signUpRouter.post(
+	`${SIGNUP_ROUTE}/send_OTP`,
+	[...emailValidation],
+	async (req: Request, res: Response) => {
+		const errors = validationResult(req).array()
 
-signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
+		if (errors.length > 0) throw new InvalidInput(errors)
+
+		const { email } = req.body
+
+		let user = await User.findOne({ email: email })
+		if (user) {
+			if (user.verified) {
+				throw new DuplicatedEmail()
+			}
+		} else {
+			throw new Error("No User")
+		}
+
+		const userSignedUp = await new GetUserInfo(user)
+		const emailSender = EmailSender.getInstance()
+		const { status, hash } = await emailSender.sendSignUpVerificationEmail({
+			name: user.name,
+			toEmail: user.email,
+		})
+
+		return res.status(userSignedUp.getStatusCode()).json({ status, hash, ...userSignedUp.serializeRest() })
+	}
+)
+signUpRouter.post(`${SIGNUP_ROUTE}/verify_OTP`, async (req, res) => {
 	try {
 		const { otpHash, email, otpCode } = req.body
 		const result = await verifyOtp({ otpHash, email, otpCode })
