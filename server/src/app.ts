@@ -1,28 +1,36 @@
-import express from 'express';
-import 'express-async-errors';
-import http, { Server } from 'http';
-import redisInit from './redis_controller/redis_controller';
-import { errorHandler } from './middlewares';
-// IMPORTS FROM OTHER FILES
-import { authRouter, productRouter } from './routes';
-import userRouter from './routes/user';
-import likeRouter from './routes/like';
-import chatRouter from './routes/chat';
-import socketInit from './socket/socket_router';
+import express from 'express'
+import 'express-async-errors'
+import http, { Server } from 'http'
+// import redisInit from './redis_controller/redis_controller'
+import { errorHandler } from './middlewares'
+import cors from 'cors'
+import dotenv from 'dotenv-safe'
 
-const app = express();
+const parsedNodeEnv = process.env.NODE_ENV || 'development'
+
+console.log(parsedNodeEnv.trim() === 'production' ? '.env.production' : 'development' ? '.env.example' : '.env.dev')
+dotenv.config({
+	path: parsedNodeEnv.trim() === 'production' ? '.env.production' : 'development' ? '.env.example' : '.env.dev',
+})
+
+// IMPORTS FROM OTHER FILES
+import { authRouter, productRouter } from './routes'
+import userRouter from './routes/user/user'
+import likeRouter from './routes/like/like'
+import chatRouter from './routes/chat/chat'
+
+const app = express()
 
 // middleware
-app.use(express.json());
-app.use(authRouter);
-app.use(chatRouter);
-app.use(userRouter);
-app.use(productRouter);
-app.use(likeRouter);
-app.use(errorHandler);
+app.use(express.json())
+app.use(cors())
+app.use(authRouter)
+app.use(chatRouter)
+app.use(userRouter)
+app.use(productRouter)
+app.use(likeRouter)
+app.use(errorHandler)
 
-const server: Server = http.createServer(app);
-redisInit();
-socketInit(server);
+const server: Server = http.createServer(app)
 
-export default server;
+export default server

@@ -1,28 +1,30 @@
-import { Model, Schema, model, Document } from 'mongoose';
-import { UserDocument, User } from './index';
+import { Model, Schema, model, Document } from 'mongoose'
+import { UserDocument, User } from './index'
 
 export type ProductDocument = Document & {
-	name: string;
-	forSale: boolean;
-	seller: UserDocument;
-	description: string;
-	images: string[];
-	likes: UserDocument[];
-	price: number;
-	category: string;
-};
-export interface ProductModel extends Model<ProductDocument> {}
+	productName: string
+	forSale: boolean
+	seller: UserDocument
+	description: string
+	images: string[]
+	likes: UserDocument[]
+	price: number
+	category: string
+}
+export type ProductModel = Model<ProductDocument>
 
 const productSchema: Schema = new Schema(
 	{
-		name: {
+		productName: {
 			type: String,
 			required: true,
 			trim: true,
+			index:true,
 		},
 		forSale: {
 			type: Boolean,
 			required: true,
+			default: true,
 		},
 		seller: {
 			type: Schema.Types.ObjectId,
@@ -33,6 +35,7 @@ const productSchema: Schema = new Schema(
 			type: String,
 			required: true,
 			trim: true,
+			default: '',
 		},
 		images: [
 			{
@@ -50,34 +53,39 @@ const productSchema: Schema = new Schema(
 			required: true,
 			index: true,
 		},
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
-);
+)
 
-const Product = model<ProductDocument, ProductModel>('Product', productSchema);
-export default Product;
+productSchema.pre(/^.*([Ff]ind).*$/, function () {
+	const pageNumber = parseInt(this.getQuery().page ?? 0, 10)
+	const limit = 20
+	const skip = pageNumber * limit
+	this.skip(skip).limit(20).sort({ createdAt: -1 })
+})
 
-const changeStream = Product.watch();
+const Product = model<ProductDocument, ProductModel>('Product', productSchema)
+export default Product
 
-changeStream.on('change', async (change) => {
+const changeStream = Product.watch()
+
+changeStream.on('change', async change => {
 	if (change.operationType === 'insert') {
-		const productId = change.documentKey._id;
-		const sellerId = change.fullDocument.seller;
+		const productId = change.documentKey._id
+		const sellerId = change.fullDocument.seller
 
 		try {
-			await User.updateOne(
-				{ _id: sellerId },
-				{ $push: { selling: productId } },
-			);
-			console.log(`Updated seller ${sellerId} with new product ${productId}`);
+			await User.updateOne({ _id: sellerId }, { $push: { selling: productId } })
+			console.log(`Updated seller ${sellerId} with new product ${productId}`)
 		} catch (error) {
-			console.error(`Error updating seller ${sellerId}: ${error}`);
+			console.error(`Error updating seller ${sellerId}: ${error}`)
 		}
 	}
-});
+})
 
 // Make sure to handle errors and close the change stream when the application is terminating
-changeStream.on('error', (error) => {
-	console.error('Error watching Product collection:', error);
-	changeStream.close();
-});
+changeStream.on('error', error => {
+	console.error('Error watching Product collection:', error)
+	changeStream.close()
+})

@@ -1,14 +1,14 @@
-import { Model, Schema, model, Document } from 'mongoose';
-import { ChatRoomDocument, UserDocument } from './index';
+import { Model, Schema, model, Document } from 'mongoose'
+import { ChatRoomDocument, UserDocument } from './index'
 export type MessageDocument = Document & {
-	chatRoomId: ChatRoomDocument;
-	senderId: UserDocument;
-	message: string;
-	type: string;
-	isSeen: boolean;
-	seenAt?: Date;
-};
-export interface MessageModel extends Model<MessageDocument> {}
+	chatRoomId: ChatRoomDocument
+	senderId: UserDocument
+	message: string
+	type: string
+	isSeen: boolean
+	seenAt?: Date
+}
+export type MessageModel = Model<MessageDocument>
 
 const messageSchema = new Schema(
 	{
@@ -37,9 +37,10 @@ const messageSchema = new Schema(
 		seenAt: {
 			type: Date,
 		},
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
-);
+)
 
-const Message = model<MessageDocument, MessageModel>('Message', messageSchema);
-export default Message;
+const Message = model<MessageDocument, MessageModel>('Message', messageSchema)
+export default Message

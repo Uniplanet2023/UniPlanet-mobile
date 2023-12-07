@@ -1,26 +1,25 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv-safe';
-import server from './app';
-import { EmailSender, NodemailerEmailApi } from './utils';
+import mongoose from 'mongoose'
 
-dotenv.config({
-	path: '.env.dev',
-});
-const PORT = process.env.PORT || 3000;
+import server from './app'
+import { EmailSender, NodemailerEmailApi } from './utils'
+import redisInit from './redis_controller/redis_controller'
+import socketInit from './socket/socket_router'
+import { UserDeleteScheduler } from './scheduler'
 
-const emailSender = EmailSender.getInstance();
+const PORT = process.env.PORT || 3000
 
-emailSender.activate();
-emailSender.setEmailApi(new NodemailerEmailApi());
+const emailSender = EmailSender.getInstance()
 
+emailSender.activate()
+emailSender.setEmailApi(new NodemailerEmailApi())
+new UserDeleteScheduler().taskInitializer()
+
+redisInit()
+socketInit(server)
 server.listen(PORT, async () => {
-	console.log(`BackEnd Connection : BackEnd Server connected at port ${PORT}`);
-	
-	const res = await emailSender.sendSignUpVerificationEmail({
-		toEmail:'test@test.com'
-	})
-	console.log(res);
+	console.log(`BackEnd Connection : BackEnd Server connected at port ${PORT}`)
+
 	await mongoose.connect(process.env.MONGO_DB_HOST as string).then(() => {
-		console.log('DB connection');
-	});
-});
+		console.log('DB connection')
+	})
+})

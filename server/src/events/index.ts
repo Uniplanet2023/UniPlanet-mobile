@@ -1,1 +1,5 @@
-export { default as UserSignedUp } from './user_signed_up';
+export { default as GetUserInfo } from './get_user_info'
+export { default as UserVerified } from './user_verified'
+export { default as GetSellerInfo } from './get_seller_info'
+export { default as GetProductsInfo} from './get_products_info'
+
