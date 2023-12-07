@@ -19,7 +19,6 @@ const productSchema: Schema = new Schema(
 			type: String,
 			required: true,
 			trim: true,
-			index:true,
 		},
 		forSale: {
 			type: Boolean,
@@ -57,14 +56,12 @@ const productSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 )
-
 productSchema.pre(/^.*([Ff]ind).*$/, function () {
 	const pageNumber = parseInt(this.getQuery().page ?? 0, 10)
 	const limit = 20
 	const skip = pageNumber * limit
 	this.skip(skip).limit(20).sort({ createdAt: -1 })
 })
-
 const Product = model<ProductDocument, ProductModel>('Product', productSchema)
 export default Product
 

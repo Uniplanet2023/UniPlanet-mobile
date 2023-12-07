@@ -33,35 +33,13 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   void verifyUser(BuildContext context) async {
     if (widget.email != null && widget.otpHash != null) {
-      String res = await UserRepository().verifyUser(
+      await UserRepository().verifyUser(
           context: context,
           email: widget.email!,
           otpHash: widget.otpHash!,
           otpCode: _otpController.text);
 
-      print(res);
-      if (res == "Success") {
-        await UserRepository().signUpUser(
-            context: context,
-            verified: true,
-            name: widget.name!,
-            password: widget.password!,
-            email: widget.email!,
-            profileImage: widget.profileImage!,
-            school: widget.school!);
-      } else if (res == "OTP expired") {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('OTP expired'),
-        ));
-      } else if (res == "Invalid Verfication number") {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Invalid Verfication number'),
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Something went wrong'),
-        ));
-      }
+      
     }
   }
 
