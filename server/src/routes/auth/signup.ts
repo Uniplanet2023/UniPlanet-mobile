@@ -10,7 +10,7 @@ import {
 	schoolValidation,
 } from '../../validations/signup_validation'
 import { DuplicatedEmail, InvalidInput } from '../../errors'
-import { UserSignedUp } from '../../events'
+import { GetUserInfo } from '../../events'
 import { EmailSender } from '../../utils'
 
 import { verifyOtp } from '../../utils/account_verification'
@@ -45,7 +45,7 @@ signUpRouter.post(
 			})
 		}
 
-		const userSignedUp = await new UserSignedUp(user)
+		const userSignedUp = await new GetUserInfo(user)
 		const emailSender = EmailSender.getInstance()
 		const { status, hash } = await emailSender.sendSignUpVerificationEmail({
 			name: user.name,
@@ -55,8 +55,32 @@ signUpRouter.post(
 		return res.status(userSignedUp.getStatusCode()).json({ status, hash, ...userSignedUp.serializeRest() })
 	},
 )
+signUpRouter.post(`${SIGNUP_ROUTE}/send_OTP`, [...emailValidation], async (req: Request, res: Response) => {
+	const errors = validationResult(req).array()
 
-signUpRouter.post(`${SIGNUP_ROUTE}/verifyOtp`, async (req, res) => {
+	if (errors.length > 0) throw new InvalidInput(errors)
+
+	const { email } = req.body
+
+	const user = await User.findOne({ email: email })
+	if (user) {
+		if (user.verified) {
+			throw new DuplicatedEmail()
+		}
+	} else {
+		throw new Error('No User')
+	}
+
+	const userSignedUp = await new GetUserInfo(user)
+	const emailSender = EmailSender.getInstance()
+	const { status, hash } = await emailSender.sendSignUpVerificationEmail({
+		name: user.name,
+		toEmail: user.email,
+	})
+
+	return res.status(userSignedUp.getStatusCode()).json({ status, hash, ...userSignedUp.serializeRest() })
+})
+signUpRouter.post(`${SIGNUP_ROUTE}/verify_OTP`, async (req, res) => {
 	try {
 		const { otpHash, email, otpCode } = req.body
 		const result = await verifyOtp({ otpHash, email, otpCode })
