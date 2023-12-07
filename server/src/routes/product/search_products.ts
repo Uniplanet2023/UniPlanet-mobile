@@ -1,13 +1,12 @@
 import express from 'express'
 import { Product } from '../../models/index'
-import auth from '../../middlewares/auth'
 import { PRODUCT_ROUTE } from '../route_defs'
 import { GetProductsInfo } from '../../events'
 
 const searchProductRouter = express.Router()
 
 searchProductRouter.get(`${PRODUCT_ROUTE}/search/:productName`, async (req, res) => {
-	const {productName } = req.params;
+	const { productName } = req.params
 	const products = await Product.find({
 		productName: { $regex: productName.trim(), $options: 'i' },
 	}).populate('seller')
