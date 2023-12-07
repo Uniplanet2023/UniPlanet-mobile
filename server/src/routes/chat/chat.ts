@@ -1,10 +1,10 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import auth from '../middlewares/auth'
-import { User } from '../models/index'
-import { ChatRoom, UserChatRoom } from '../models/index'
-import { getUserDataFunction } from '../functions/user_data'
-import { logStart, logEnd, handleError } from '../functions/log_function'
+import auth from '../../middlewares/auth'
+import { User } from '../../models/index'
+import { ChatRoom, UserChatRoom } from '../../models/index'
+import { getUserDataFunction } from '../../functions/user_data'
+import { logStart, logEnd, handleError } from '../../functions/log_function'
 
 const chatRouter = express.Router()
 

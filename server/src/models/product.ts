@@ -2,7 +2,7 @@ import { Model, Schema, model, Document } from 'mongoose'
 import { UserDocument, User } from './index'
 
 export type ProductDocument = Document & {
-	name: string
+	productName: string
 	forSale: boolean
 	seller: UserDocument
 	description: string
@@ -15,14 +15,16 @@ export type ProductModel = Model<ProductDocument>
 
 const productSchema: Schema = new Schema(
 	{
-		name: {
+		productName: {
 			type: String,
 			required: true,
 			trim: true,
+			index:true,
 		},
 		forSale: {
 			type: Boolean,
 			required: true,
+			default: true,
 		},
 		seller: {
 			type: Schema.Types.ObjectId,
@@ -33,6 +35,7 @@ const productSchema: Schema = new Schema(
 			type: String,
 			required: true,
 			trim: true,
+			default: '',
 		},
 		images: [
 			{
@@ -50,9 +53,17 @@ const productSchema: Schema = new Schema(
 			required: true,
 			index: true,
 		},
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
 )
+
+productSchema.pre(/^.*([Ff]ind).*$/, function () {
+	const pageNumber = parseInt(this.getQuery().page ?? 0, 10)
+	const limit = 20
+	const skip = pageNumber * limit
+	this.skip(skip).limit(20).sort({ createdAt: -1 })
+})
 
 const Product = model<ProductDocument, ProductModel>('Product', productSchema)
 export default Product

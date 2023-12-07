@@ -1,6 +1,6 @@
 import { createClient, RedisClientType } from 'redis'
 
-let pubClient: RedisClientType
+export let pubClient: RedisClientType
 
 const redisInit = async (): Promise<void> => {
 	pubClient = createClient({

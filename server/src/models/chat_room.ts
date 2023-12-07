@@ -15,6 +15,7 @@ const chatRoomSchema: Schema = new Schema(
 		chatRoomType: { type: String },
 		messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
 		lastMessage: { type: Schema.Types.ObjectId, ref: 'Message' },
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
 )

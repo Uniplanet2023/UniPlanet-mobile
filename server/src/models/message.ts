@@ -37,6 +37,7 @@ const messageSchema = new Schema(
 		seenAt: {
 			type: Date,
 		},
+		deletionDate: { type: Date, default: null },
 	},
 	{ timestamps: true },
 )
