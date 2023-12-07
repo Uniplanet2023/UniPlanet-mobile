@@ -18,7 +18,12 @@ class ProductRepository {
     List<Product> productList = [];
     try {
       Response res =
-          await dio.get('$uri/api/all-products', options: _getDioOptions());
+          await dio.get('$uri/api/product', options: _getDioOptions());
+      print(
+          'fadfadfadsfadsfadsfasdfadsfadsfasdfadfadfadfasdfadfasdfsdfadsfasdfasdfasdfasdf');
+      print(res);
+      print(
+          'fadfadfadsfadsfadsfasdfadsfadsfasdfadfadfadfasdfadfasdfsdfadsfasdfasdfasdfasdf');
 
       httpErrorHandle(
         response: res,
@@ -31,7 +36,7 @@ class ProductRepository {
         },
       );
     } on DioException catch (e) {
-      _handleDioException(e);
+      // _handleDioException(e);
     }
     return productList;
   }
@@ -54,17 +59,17 @@ class ProductRepository {
             }
           });
     } on DioException catch (e) {
-      _handleDioException(e);
+      // _handleDioException(e);
     }
     return productList;
   }
 
-  void _handleDioException(DioException e) {
-    if (e.response != null) {
-      SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
-    } else {
-      // Log error or handle it accordingly
-      print(e);
-    }
-  }
+  // void _handleDioException(DioException e) {
+  //   if (e.response != null) {
+  //     SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
+  //   } else {
+  //     // Log error or handle it accordingly
+  //     print(e);
+  //   }
+  // }
 }

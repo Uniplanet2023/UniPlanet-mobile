@@ -24,7 +24,7 @@ class UserRepository {
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': UserRepository.user.token
       });
-  Future<User> signUpUser(
+  Future<String> signUpUser(
       {required BuildContext context,
       required String email,
       required String password,
@@ -33,7 +33,7 @@ class UserRepository {
       required String school,
       required bool verified}) async {
     try {
-      Response res = await dio.post('$uri/api/signup',
+      Response res = await dio.post('$uri/api/auth/signup',
           data: json.encode({
             'email': email,
             'password': password,
@@ -46,22 +46,51 @@ class UserRepository {
             'Content-Type': 'application/json; charset=UTF-8'
           }));
 
-      user = User.fromMap(res.data);
+      // user = User.fromMap(res.data);
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      print(res);
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 
-      httpErrorHandle(
-        response: res,
-        onSuccess: () {
-          SnackbarGlobal.showSnackBar(
-            'Account created! Login with the same credentials!',
-          );
-          Navigator.pushReplacementNamed(context, SigninScreen.routeName);
-        },
-      );
-      return user;
-    } on DioException catch (e) {
-      _handleDioException(e);
+      if (res.data != null &&
+          res.data is Map<String, dynamic> &&
+          res.data.containsKey('hash')) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpVerifyScreen(
+                otpHash: res.data['hash'],
+                email: email,
+                password: password,
+                name: name,
+                profileImage: profileImage,
+                school: school,
+                verified: verified),
+          ),
+        );
+        return res.data['hash'];
+      } else {
+        return 'Something went wrong';
+      }
+
+      // httpErrorHandle(
+      //   response: res,
+      //   onSuccess: () {
+      //     SnackbarGlobal.showSnackBar(
+      //       'Account created! Login with the same credentials!',
+      //     );
+      //     Navigator.pushReplacementNamed(context, SigninScreen.routeName);
+      //   },
+      // );
+      // return user;
+    } catch (e) {
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      print(e);
+      print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      Response res = (e as DioException).response!;
+      _handleException(res);
     }
-    return user;
+    return "something went wrong";
+    // return user;
   }
 
   Future<User> signInUser({
@@ -69,7 +98,7 @@ class UserRepository {
     required String password,
   }) async {
     try {
-      Response res = await dio.post('$uri/api/signin',
+      Response res = await dio.post('$uri/api/auth/signin',
           data: jsonEncode({
             'email': email,
             'password': password,
@@ -294,53 +323,56 @@ class UserRepository {
     return productList;
   }
 
-  Future<String> sendOtp(
-      {required BuildContext context,
-      required String email,
-      required String password,
-      required String name,
-      required String profileImage,
-      required String school,
-      required bool verified}) async {
-    try {
-      var res = await dio.post('$uri/api/sendOtp',
-          data: jsonEncode({
-            'email': email,
-            'name': name,
-          }),
-          options: Options(headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
-          }));
-      if (res.data['message'] == "User with same email already exists!") {
-        SnackbarGlobal.showSnackBar(
-          "User with same email already exists!",
-        );
-      }
-      // print(res.data);
-      if (res.data != null &&
-          res.data is Map<String, dynamic> &&
-          res.data.containsKey('hash')) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OtpVerifyScreen(
-                  otpHash: res.data['hash'],
-                  email: email,
-                  password: password,
-                  name: name,
-                  profileImage: profileImage,
-                  school: school,
-                  verified: verified)),
-        );
-        return res.data['hash'];
-      } else {
-        return 'Something went wrong';
-      }
-    } on DioException catch (e) {
-      _handleDioException(e);
-      return "Dio Error";
-    }
-  }
+  // Future<String> sendOtp(
+  //     {required BuildContext context,
+  //     required String email,
+  //     required String password,
+  //     required String name,
+  //     required String profileImage,
+  //     required String school,
+  //     required bool verified}) async {
+  //   try {
+  //     var res = await dio.post('$uri/api/sendOtp',
+  //         data: jsonEncode({
+  //           'email': email,
+  //           'name': name,
+  //         }),
+  //         options: Options(headers: <String, String>{
+  //           'Content-Type': 'application/json; charset=UTF-8'
+  //         }));
+  //     if (res.data['message'] == "User with same email already exists!") {
+  //       SnackbarGlobal.showSnackBar(
+  //         "User with same email already exists!",
+  //       );
+  //     }
+  //     print(res);
+  //     print(res.data != null &&
+  //         res.data is Map<String, dynamic> &&
+  //         res.data.containsKey('hash'));
+  //     // if (res.data != null &&
+  //     //     res.data is Map<String, dynamic> &&
+  //     //     res.data.containsKey('hash')) {
+  //     //   Navigator.push(
+  //     //     context,
+  //     //     MaterialPageRoute(
+  //     //         builder: (context) => OtpVerifyScreen(
+  //     //             otpHash: res.data['hash'],
+  //     //             email: email,
+  //     //             password: password,
+  //     //             name: name,
+  //     //             profileImage: profileImage,
+  //     //             school: school,
+  //     //             verified: verified)),
+  //     //   );
+  //     //   return res.data['hash'];
+  //     // } else {
+  //     //   return 'Something went wrong';
+  //     // }
+  //   } on DioException catch (e) {
+  //     _handleDioException(e);
+  //     return "Dio Error";
+  //   }
+  // }
 
   Future<String> verifyUser({
     required BuildContext context,
@@ -349,12 +381,15 @@ class UserRepository {
     required String otpCode,
   }) async {
     try {
-      var res = await dio.post('$uri/api/verifyOtp',
+      var res = await dio.post('$uri/api/auth/signup/verifyOtp',
           data: jsonEncode(
               {'email': email, 'otpHash': otpHash, 'otpCode': otpCode}),
           options: Options(headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8'
           }));
+      print("###############################################");
+      print(res);
+      print("###############################################");
       httpErrorHandle(
         response: res,
         onSuccess: () async {
@@ -363,7 +398,15 @@ class UserRepository {
         },
       );
       if (res.data != null) {
-        return res.data['message'];
+        if (res.data['message'] == "Success") {
+          SnackbarGlobal.showSnackBar(res.data['message']);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => SigninScreen()),
+              (route) => false);
+          return res.data['message'];
+        }
+        return 'Something went wrong';
       } else {
         return 'Something went wrong';
       }
@@ -382,12 +425,22 @@ class UserRepository {
     }
   }
 
+  void _handleException(Response e) {
+    print(e);
+    if (e != null) {
+      SnackbarGlobal.showSnackBar(e.data[0].value[0]['value'].toString());
+    } else {
+      // Log error or handle it accordingly
+      print(e);
+    }
+  }
+
   Future<void> forgottenPassword({
     required BuildContext context,
     required String email,
   }) async {
     Dio dio = Dio();
-    var res = await dio.put('$uri/api/forgottenPassword',
+    var res = await dio.put('$uri/api/auth/forgotten_password',
         data: jsonEncode({'email': email}),
         options: Options(headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'

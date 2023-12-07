@@ -60,7 +60,7 @@ class SocketService {
       socket!.onConnectError((data) async {
         throw Exception(data);
       });
-      socket!.connect();
+      // socket!.connect();
     }
   }
 
