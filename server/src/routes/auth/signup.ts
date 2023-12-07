@@ -14,12 +14,10 @@ import { GetUserInfo } from '../../events'
 import { EmailSender } from '../../utils'
 import { verifyOtp } from '../../utils/account_verification'
 
-import { verifyOtp } from '../../utils/account_verification'
-
 const signUpRouter = express.Router()
 signUpRouter.post(
 	SIGNUP_ROUTE,
-	[emailValidation, nameValidation, profileImageValidation, schoolValidation, ...passwordValidation],
+	[...emailValidation, nameValidation, profileImageValidation, schoolValidation, ...passwordValidation],
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req).array()
 
