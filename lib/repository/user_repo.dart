@@ -96,7 +96,7 @@ class UserRepository {
   void logOut(BuildContext context) async {
     try {
       print("logOut Event");
-      SocketService.socket!.disconnect();
+      // SocketService.socket!.disconnect();
       context.read<StatusBloc>().add(StatusDisconnectEvent(user.id));
       user = User.initialUser();
       if (!context.mounted) throw Error();

@@ -20,15 +20,12 @@ void main() {
         RepositoryProvider(create: (context) => UserRepository()),
         RepositoryProvider(create: (context) => ProductRepository()),
         RepositoryProvider(create: (context) => ChatRepository()),
-        RepositoryProvider(create: (context) => SocketService(context))
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
-            create: (context) => UserBloc(
-                context.read<UserRepository>(), context.read<SocketService>())),
+            create: (context) => UserBloc(context.read<UserRepository>())),
         BlocProvider(
-            create: (context) => ChatBloc(
-                context.read<ChatRepository>(), context.read<SocketService>())),
+            create: (context) => ChatBloc(context.read<ChatRepository>())),
         BlocProvider(
             create: (context) => MessageBloc(context.read<ChatRepository>())),
         BlocProvider(
@@ -42,7 +39,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -71,7 +68,7 @@ class _MyAppState extends State<MyApp> {
 
     if (state is LoadedUserState) {
       print("Set Socket is triggered");
-      SocketService(context);
+      // SocketService(context);
     }
 
     return MaterialApp(

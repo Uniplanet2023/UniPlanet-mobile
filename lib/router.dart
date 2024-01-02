@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:uniplanet_mobile/common/widgets/bottom_bar.dart";
-import "package:uniplanet_mobile/features/address/screens/address_screen.dart";
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
@@ -78,14 +77,6 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => ProductDetailScreen(
           product: product,
-        ),
-      );
-    case AddressScreen.routeName:
-      var totalAmount = routeSettings.arguments as String;
-      return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => AddressScreen(
-          totalAmount: totalAmount,
         ),
       );
 

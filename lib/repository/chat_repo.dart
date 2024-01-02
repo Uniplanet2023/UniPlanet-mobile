@@ -69,7 +69,7 @@ class ChatRepository {
       {required String msg,
       required String chatRoomId,
       required String senderId}) async {
-    SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
+    // SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
 
     return Message(
       chatRoomId: chatRoomId,
