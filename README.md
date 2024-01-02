@@ -37,6 +37,11 @@ cd ./server
 
 npm run lint
 
+# Frontend install
+
+flutter pub get
+
+
 # SMTP DevMode
 Turn on Nodemailer (Start Mail Server)
 
