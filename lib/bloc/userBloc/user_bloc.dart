@@ -13,9 +13,8 @@ part 'user_bloc_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
-  final SocketService _socketService;
-  UserBloc(this._userRepository, this._socketService)
-      : super(UserInitialState()) {
+  // final SocketService _socketService;
+  UserBloc(this._userRepository) : super(UserInitialState()) {
     on<SignInEvent>((event, emit) async {
       // listen all the time
       await _signInFunction(event, emit);
@@ -29,12 +28,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUserNotificationEvent>((event, emit) async {
       await _updateUserFunction(event, emit);
     });
-    _socketService.stream.listen((event) {
-      if (event) {
-        int unSeenMsgNum = state.unSeenMessageNum! + 1;
-        add(UpdateUserNotificationEvent(unSeenMsgNum));
-      }
-    });
+    // _socketService.stream.listen((event) {
+    //   if (event) {
+    //     int unSeenMsgNum = state.unSeenMessageNum! + 1;
+    //     add(UpdateUserNotificationEvent(unSeenMsgNum));
+    //   }
+    // });
   }
   _updateUserFunction(UpdateUserNotificationEvent event, emit) async {
     emit(LoadedUserState(unSeenMessageNum: event.unSeenMessageNum));

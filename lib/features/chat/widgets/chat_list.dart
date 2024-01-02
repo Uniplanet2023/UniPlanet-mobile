@@ -19,8 +19,7 @@ class ChatList extends StatefulWidget {
   final ScrollController scrollController;
   final MyChatRoom myChatRoom;
   const ChatList(
-      {Key? key, required this.scrollController, required this.myChatRoom})
-      : super(key: key);
+      {super.key, required this.scrollController, required this.myChatRoom});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -115,11 +114,11 @@ class _ChatListState extends State<ChatList> {
           } else {
             if (currentMessage.isSeen == false) {
               print('triggered');
-              SocketService.socket!.emit('seenMessageACK', {
-                currentMessage.messageId,
-                widget.myChatRoom.myChatRoomId,
-                widget.myChatRoom.chatRoom.chatRoomId
-              });
+              // SocketService.socket!.emit('seenMessageACK', {
+              //   currentMessage.messageId,
+              //   widget.myChatRoom.myChatRoomId,
+              //   widget.myChatRoom.chatRoom.chatRoomId
+              // });
             }
             return SenderMessageCard(
               message: currentMessage,

@@ -7,9 +7,8 @@ import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;
-  final SocketService _socketService;
-  ChatBloc(this._chatRepository, this._socketService)
-      : super(InitChatRoomState()) {
+  // final SocketService _socketService;
+  ChatBloc(this._chatRepository) : super(InitChatRoomState()) {
     on<CreateChatRoomEvent>((event, emit) async {
       await _creatingChatRoom(event, emit);
     });
@@ -37,9 +36,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         emit(LoadedChatRoomState(chatRoomList: state.chatRoomList));
       },
     );
-    _socketService.stream.listen((event) {
-      if (event) {}
-    });
+    // _socketService.stream.listen((event) {
+    //   if (event) {}
+    // });
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
