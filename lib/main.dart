@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
+import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/splash_screen.dart';
+import 'package:uniplanet_mobile/repository/auth-repository/auth-repo.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 void main() {
   runApp(MultiRepositoryProvider(
       providers: [
+        RepositoryProvider(create: (context) => AuthRepository()),
         RepositoryProvider(create: (context) => UserRepository()),
         RepositoryProvider(create: (context) => ProductRepository()),
         RepositoryProvider(create: (context) => ChatRepository()),
       ],
       child: MultiBlocProvider(providers: [
+        BlocProvider(
+            create: (context) => AuthBloc(context.read<AuthRepository>())),
         BlocProvider(
             create: (context) => UserBloc(context.read<UserRepository>())),
         BlocProvider(
@@ -53,8 +59,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   _initBloc() async {
-    context.read<UserBloc>().add(LoadUserDataEvent());
-    context.read<ProductBloc>();
+    context.read<AuthBloc>().add(const TokenValidationEvent());
   }
 
   @override
@@ -64,11 +69,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var state = context.watch<UserBloc>().state;
-
-    if (state is LoadedUserState) {
-      print("Set Socket is triggered");
-      // SocketService(context);
+    var authState = context.read<AuthBloc>().state;
+    if (authState is Authorized) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        BottomBar.routeName,
+        (route) => false,
+      );
     }
 
     return MaterialApp(

@@ -11,14 +11,13 @@ class ProductRepository {
   Dio dio = Dio();
   Options _getDioOptions() => Options(headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': UserRepository.user.token
       });
 
   Future<List<Product>> fetchAllProducts() async {
     List<Product> productList = [];
     try {
-      Response res =
-          await dio.get('$uri/api/all-products', options: _getDioOptions());
+      Response res = await dio.get('$productURI/api/all-products',
+          options: _getDioOptions());
 
       httpErrorHandle(
         response: res,
@@ -43,7 +42,8 @@ class ProductRepository {
     try {
       Dio dio = Dio();
 
-      Response res = await dio.get('$uri/api/products?category=$category',
+      Response res = await dio.get(
+          '$productURI/api/products?category=$category',
           options: _getDioOptions());
 
       httpErrorHandle(

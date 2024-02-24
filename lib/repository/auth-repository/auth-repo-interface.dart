@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/models/user.dart';
+
+abstract class IAuthRepository {
+  Future<String?> signUpUser({
+    required String email,
+    required String password,
+    required String name,
+    required String school,
+  });
+
+  Future<bool> tokenValidation();
+
+  Future<bool> signInUser({
+    required String email,
+    required String password,
+  });
+
+  Future<String> sendOtp({
+    required BuildContext context,
+    required String email,
+  });
+
+  Future<void> forgottenPassword({
+    required BuildContext context,
+    required String email,
+  });
+
+  Future<bool> otpValidation(String email, String hash, String otpCode);
+
+  void logOut(BuildContext context);
+}

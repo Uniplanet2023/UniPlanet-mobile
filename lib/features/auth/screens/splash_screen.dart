@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 
 class SplashScreen extends StatefulWidget {
+  static const String routeName = '/splash-screen';
   const SplashScreen({super.key});
 
   @override
@@ -18,13 +20,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    final userBloc = context.read<UserBloc>(); // Access UserBloc
+    final authState = context.read<AuthBloc>().state; // Access UserBloc
 
     Future.delayed(const Duration(seconds: 2), () {
       Widget route;
-      if (userBloc.state is LoadingUserState) {
+      if (authState is LoadingUserState) {
         route = const AuthScreen();
-      } else if (userBloc.state is LoadedUserState) {
+      } else if (authState is Authorized) {
         route = const BottomBar();
       } else {
         route = const AuthScreen();
@@ -45,9 +47,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    var state = context.watch<UserBloc>().state;
-    print(state == LoadingUserState);
-
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

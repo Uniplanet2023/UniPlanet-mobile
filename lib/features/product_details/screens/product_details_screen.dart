@@ -15,8 +15,7 @@ class ProductDetailScreen extends StatefulWidget {
   static const String routeName = '/product-details';
   final Product product;
 
-  const ProductDetailScreen({Key? key, required this.product})
-      : super(key: key);
+  const ProductDetailScreen({super.key, required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -137,7 +136,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           onPressed: () => state is CreatingChatRoomState
               ? null
               : context.read<ChatBloc>().add(CreateChatRoomEvent(
-                  widget.product.seller, widget.product.id)),
+                  //created ChatRoom State
+                  widget.product.seller,
+                  widget.product.id)),
           style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor),
           child: state is CreatingChatRoomState
