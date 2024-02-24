@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/models/user.dart';
 
 abstract class IAuthRepository {
   Future<String?> signUpUser({

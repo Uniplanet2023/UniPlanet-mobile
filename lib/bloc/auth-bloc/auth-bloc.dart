@@ -37,7 +37,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _tokenValidationFunction(TokenValidationEvent event, emit) async {
     emit(const TokenValidatingState());
-    var result = await _authRepository.tokenValidation();
 
     await _authRepository.tokenValidation()
         ? emit(const Authorized())
