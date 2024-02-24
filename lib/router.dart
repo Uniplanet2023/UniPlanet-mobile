@@ -5,15 +5,14 @@ import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/signin_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/signup_screen.dart";
+import "package:uniplanet_mobile/features/auth/screens/splash_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
 import 'package:uniplanet_mobile/features/home/screens/category_screen.dart';
 import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
-import "package:uniplanet_mobile/models/chat_room.dart";
 import "package:uniplanet_mobile/models/myChatRoom.dart";
-import "package:uniplanet_mobile/models/order.dart";
 import "package:uniplanet_mobile/models/product.dart";
 import "package:uniplanet_mobile/models/user.dart";
 
@@ -24,15 +23,22 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
       );
+    case SplashScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SplashScreen(),
+      );
     case SignupScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SignupScreen(),
       );
+
     case OtpVerifyScreen.routeName:
+      var email = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const OtpVerifyScreen(),
+        builder: (_) => OtpVerifyScreen(email: email),
       );
     case SigninScreen.routeName:
       return MaterialPageRoute(

@@ -28,44 +28,37 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUserNotificationEvent>((event, emit) async {
       await _updateUserFunction(event, emit);
     });
-    // _socketService.stream.listen((event) {
-    //   if (event) {
-    //     int unSeenMsgNum = state.unSeenMessageNum! + 1;
-    //     add(UpdateUserNotificationEvent(unSeenMsgNum));
-    //   }
-    // });
   }
+
   _updateUserFunction(UpdateUserNotificationEvent event, emit) async {
-    emit(LoadedUserState(unSeenMessageNum: event.unSeenMessageNum));
+    emit(const LoadedUserState());
   }
 
   _loadingUserFunction(LoadUserDataEvent event, emit) async {
-    emit(LoadingUserState(
-        user: state.user, unSeenMessageNum: state.unSeenMessageNum));
+    emit(LoadingUserState(user: state.user));
     User user = await _userRepository.getUserData();
-    if (user.token != '') {
-      emit(LoadedUserState(
-          user: user, unSeenMessageNum: state.unSeenMessageNum));
-    } else {
-      emit(const ErrorUserState('No User Data'));
-    }
+    // if (user.token != '') {
+    //   emit(LoadedUserState(
+    //       user: user, unSeenMessageNum: state.unSeenMessageNum));
+    // } else {
+    //   emit(const ErrorUserState('No User Data'));
+    // }
   }
 
   _signInFunction(SignInEvent event, emit) async {
     try {
-      emit(LoadingUserState(
-          user: state.user, unSeenMessageNum: state.unSeenMessageNum));
+      emit(LoadingUserState(user: state.user));
 
-      User user = await _userRepository.signInUser(
-          email: event.email, password: event.password);
+      // User user = await _userRepository.signInUser(
+      //     email: event.email, password: event.password);
 
-      if (user.token != '') {
-        _navigate(event);
-        emit(LoadedUserState(
-            user: user, unSeenMessageNum: state.unSeenMessageNum));
-      } else {
-        emit(const ErrorUserState('No User Data'));
-      }
+      // if (user.token != '') {
+      //   _navigate(event);
+      //   emit(LoadedUserState(
+      //       user: user, unSeenMessageNum: state.unSeenMessageNum));
+      // } else {
+      //   emit(const ErrorUserState('No User Data'));
+      // }
     } catch (e) {
       if (e is DioException) {
         if (e.response != null) {
@@ -85,8 +78,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   _logOutFunction(LogoutEvent event, emit) async {
-    emit(LogOutState(user: User.initialUser(), unSeenMessageNum: 0));
-    _userRepository.logOut(event.context);
+    emit(LogOutState(user: User.initialUser()));
+    // _userRepository.logOut(event.context);
   }
 
   //Tracking
