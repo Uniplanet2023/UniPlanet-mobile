@@ -10,10 +10,11 @@ import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/models/user.dart';
 import 'package:uniplanet_mobile/repository/auth-repository/auth-repo-interface.dart';
+import 'package:uniplanet_mobile/repository/dio_client.dart';
 
 class AuthRepository implements IAuthRepository {
   static User user = User.initialUser();
-  final Dio dio = Dio();
+
   Options _getDioOptions() => Options(headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       });
@@ -28,7 +29,7 @@ class AuthRepository implements IAuthRepository {
     try {
       String hash = "";
 
-      Response res = await dio.post('$authURI/signup',
+      Response res = await DioClient.instance.dio.post('$authURI/signup',
           data: {
             'name': name,
             'email': email,
@@ -45,10 +46,7 @@ class AuthRepository implements IAuthRepository {
     } on DioException catch (e) {
       httpErrorHandle(
         response: e.response!,
-        onSuccess: () async {
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // await prefs.setString('x-auth-token', res.data['token']);
-        },
+        onSuccess: () async {},
       );
     }
     return null;
@@ -60,10 +58,14 @@ class AuthRepository implements IAuthRepository {
     required String password,
   }) async {
     try {
-      Response res = await dio.post('$authURI/signin', data: {
+      String token = '';
+      Response res =
+          await DioClient.instance.dio.post('$authURI/signin', data: {
         'email': email,
         'password': password,
       });
+
+      await DioClient.instance.dio.post('$authURI/token-login');
       if (res.data['access']) {
         return res.data['access'];
       }
@@ -72,10 +74,7 @@ class AuthRepository implements IAuthRepository {
       //TODO: Handle error
       httpErrorHandle(
         response: e.response!,
-        onSuccess: () async {
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // await prefs.setString('x-auth-token', res.data['token']);
-        },
+        onSuccess: () async {},
       );
     }
     return false;
@@ -101,7 +100,7 @@ class AuthRepository implements IAuthRepository {
     required String email,
   }) async {
     try {
-      var res = await dio.post('$authURI/sendOtp',
+      var res = await DioClient.instance.dio.post('$authURI/sendOtp',
           data: jsonEncode({
             'email': email,
           }));
@@ -120,10 +119,12 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<bool> tokenValidation() async {
     try {
-      var res =
-          await dio.post('$authURI/token-login', options: _getDioOptions());
+      var res = await DioClient.instance.dio
+          .post('$authURI/token-login', options: _getDioOptions());
 
-      if (res.data != null && res.data['access'] != null) {
+      if (res.data != null &&
+          res.data['access'] != null &&
+          res.data['access'] == true) {
         return res.data['access'];
       }
     } on DioException catch (e) {
@@ -146,8 +147,7 @@ class AuthRepository implements IAuthRepository {
     required BuildContext context,
     required String email,
   }) async {
-    Dio dio = Dio();
-    var res = await dio.put('$authURI/forgottenPassword',
+    var res = await DioClient.instance.dio.put('$authURI/forgottenPassword',
         data: jsonEncode({'email': email}),
         options: Options(headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -173,7 +173,7 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<bool> otpValidation(String email, String hash, String otpCode) async {
     try {
-      var res = await dio.post('$authURI/verify_OTP',
+      var res = await DioClient.instance.dio.post('$authURI/verify_OTP',
           data: jsonEncode({
             'email': email,
             'otpHash': hash,

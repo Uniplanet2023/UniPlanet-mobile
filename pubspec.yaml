@@ -35,8 +35,10 @@ dependencies:
   cached_network_image: 3.3.0
   carousel_slider: 4.2.1
   cloudinary_public: 0.23.1
+  cookie_jar: ^4.0.8
   cupertino_icons: 1.0.6
   dio: 5.4.0
+  dio_cookie_manager: ^3.1.1
   dotted_border: 2.1.0
   dropdown_search: 5.0.6
   equatable: 2.0.5
@@ -48,6 +50,7 @@ dependencies:
   image_picker: 1.0.4
   intl: 0.19.0
   page_transition: 2.1.0
+  path_provider: ^2.1.2
   shared_preferences: 2.2.2
   socket_io_client: 2.0.3
 

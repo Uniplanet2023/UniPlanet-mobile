@@ -13,11 +13,15 @@ import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/splash_screen.dart';
 import 'package:uniplanet_mobile/repository/auth-repository/auth-repo.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:uniplanet_mobile/repository/cookie-manager.dart';
+import 'package:uniplanet_mobile/repository/dio_client.dart';
 import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DioClient.instance.initCookie();
   runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => AuthRepository()),
@@ -44,40 +48,11 @@ void main() {
       ], child: const MyApp())));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    _initBloc();
-  }
-
-  _initBloc() async {
-    context.read<AuthBloc>().add(const TokenValidationEvent());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var authState = context.read<AuthBloc>().state;
-    if (authState is Authorized) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        BottomBar.routeName,
-        (route) => false,
-      );
-    }
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: SnackbarGlobal.key,
