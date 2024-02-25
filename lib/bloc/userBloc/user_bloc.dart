@@ -36,7 +36,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   _loadingUserFunction(LoadUserDataEvent event, emit) async {
     emit(LoadingUserState(user: state.user));
-    User user = await _userRepository.getUserData();
+    // User user = await _userRepository.getUserData();
     // if (user.token != '') {
     //   emit(LoadedUserState(
     //       user: user, unSeenMessageNum: state.unSeenMessageNum));

@@ -25,41 +25,9 @@ class UserRepository {
       });
 
 // get user data
-  Future<User> getUserData() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('x-auth-token');
+  // Future<User> getUserData() async {
 
-      if (token == null) {
-        prefs.setString('x-auth-token', '');
-      }
-      var tokenRes = await dio.post('$authURI/tokenIsValid',
-          options: Options(
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              'x-auth-token': token!
-            },
-          ));
-
-      var response = tokenRes.data;
-
-      if (response == true) {
-        Response userRes = await dio.get(
-          '$authURI/',
-          options: Options(
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-              'x-auth-token': token
-            },
-          ),
-        );
-
-        user = User.fromMap(userRes.data);
-        return user;
-      }
-    } on DioException catch (e) {}
-    return user;
-  }
+  // }
 
   Future<Product?> uploadProduct({
     required BuildContext context,
@@ -70,7 +38,6 @@ class UserRepository {
     required String category,
     required List<File> images,
   }) async {
-    print('upload product is called');
     Product product;
 
     try {
