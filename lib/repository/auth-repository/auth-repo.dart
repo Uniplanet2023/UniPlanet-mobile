@@ -28,7 +28,7 @@ class AuthRepository implements IAuthRepository {
   }) async {
     try {
       String hash = "";
-
+      print('$authURI/signin');
       Response res = await DioClient.instance.dio.post('$authURI/signup',
           data: {
             'name': name,
@@ -59,13 +59,13 @@ class AuthRepository implements IAuthRepository {
   }) async {
     try {
       String token = '';
+      print('$authURI/signin');
       Response res =
           await DioClient.instance.dio.post('$authURI/signin', data: {
         'email': email,
         'password': password,
       });
 
-      await DioClient.instance.dio.post('$authURI/token-login');
       if (res.data['access']) {
         return res.data['access'];
       }
