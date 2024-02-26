@@ -42,10 +42,9 @@ class SignInEvent extends AuthEvent {
 }
 
 class LogoutEvent extends AuthEvent {
-  final BuildContext context;
-  const LogoutEvent(this.context);
+  const LogoutEvent();
   @override
-  List<Object> get props => [context];
+  List<Object> get props => [];
 }
 
 class LoadUserDataEvent extends AuthEvent {

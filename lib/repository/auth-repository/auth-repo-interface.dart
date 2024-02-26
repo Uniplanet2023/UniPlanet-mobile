@@ -27,5 +27,5 @@ abstract class IAuthRepository {
 
   Future<bool> otpValidation(String email, String hash, String otpCode);
 
-  void logOut(BuildContext context);
+  Future<String> logOut();
 }

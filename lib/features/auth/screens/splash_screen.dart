@@ -20,22 +20,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    print('trigger');
     context.read<AuthBloc>().add(const TokenValidationEvent());
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   Widget route;
-    //   if (authBloc.state is LoadingUserState) {
-    //     route = const AuthScreen();
-    //   } else if (authBloc.state is Authorized) {
-    //     route = const BottomBar();
-    //   } else {
-    //     route = const AuthScreen();
-    //   }
-
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (_) => route),
-    //   );
-    // });
   }
 
   @override
