@@ -16,7 +16,6 @@ class ChatRepository {
 
   Options _getDioOptions() => Options(headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': UserRepository.user.token
       });
 
   Future<MyChatRoom> creatingChatRoom(
@@ -24,7 +23,7 @@ class ChatRepository {
     MyChatRoom chatRoom = MyChatRoom.initMyChatRoom();
     try {
       Response res = await dio.post(
-        '$uri/api/createChatRoom',
+        '$chatURI/api/createChatRoom',
         options: _getDioOptions(),
         data: {'receiverId': receiverId, 'productId': productId},
       );
@@ -40,7 +39,7 @@ class ChatRepository {
       {required String myChatRoomId, required int page}) async {
     try {
       Response res = await dio.post(
-        '$uri/api/getMessages',
+        '$chatURI/api/getMessages',
         options: _getDioOptions(),
         data: {'myChatRoomId': myChatRoomId, 'page': page},
       );
@@ -55,7 +54,7 @@ class ChatRepository {
   Future<List<MyChatRoom>> getChatRooms() async {
     try {
       Response res =
-          await dio.get('$uri/api/getChatRooms', options: _getDioOptions());
+          await dio.get('$chatURI/api/getChatRooms', options: _getDioOptions());
 
       return List<MyChatRoom>.from(
           res.data.map((data) => MyChatRoom.fromMap(data)));
@@ -69,7 +68,7 @@ class ChatRepository {
       {required String msg,
       required String chatRoomId,
       required String senderId}) async {
-    SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
+    // SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
 
     return Message(
       chatRoomId: chatRoomId,

@@ -52,7 +52,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
 
   _sendMessage(SendMessageEvent event, emit) async {
     try {
-      SocketService.socket!.emit('sendMessage', {event.msg, event.chatRoomId});
+      // SocketService.socket!.emit('sendMessage', {event.msg, event.chatRoomId});
     } catch (e) {
       print(e);
       // handle errors

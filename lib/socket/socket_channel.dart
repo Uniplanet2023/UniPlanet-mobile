@@ -34,7 +34,7 @@ class SocketService {
       print('There is No token');
     } else {
       socket = socketio.io(
-          uri,
+          authURI,
           socketio.OptionBuilder()
               .enableForceNew()
               .setTransports(['websocket'])
@@ -72,7 +72,7 @@ class SocketService {
     emptyUnSeenMessageOn();
     userStatusChange();
     disconnectStatus();
-    joiningAllChatRoom(state.user!.myChatRoom);
+    // joiningAllChatRoom(state.user!.myChatRoom);
   }
 
   void emptyUnSeenMessageOn() {
