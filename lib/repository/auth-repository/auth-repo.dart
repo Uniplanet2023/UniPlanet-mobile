@@ -58,8 +58,6 @@ class AuthRepository implements IAuthRepository {
     required String password,
   }) async {
     try {
-      String token = '';
-      print('$authURI/signin');
       Response res =
           await DioClient.instance.dio.post('$authURI/signin', data: {
         'email': email,
@@ -81,17 +79,25 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  void logOut(BuildContext context) async {
+  Future<String> logOut() async {
     try {
-      context.read<StatusBloc>().add(StatusDisconnectEvent(user.id));
       user = User.initialUser();
-      if (!context.mounted) throw Error();
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AuthScreen.routeName,
-        (route) => false,
+
+      Response res = await DioClient.instance.dio.delete('$authURI/logout');
+      await DioClient.instance.clearCookie();
+
+      if (res.data['message'] != "Logged Out Successfully") {
+        return "Logout Failed";
+      } else {
+        return res.data['message'];
+      }
+    } on DioException catch (e) {
+      httpErrorHandle(
+        response: e.response!,
+        onSuccess: () async {},
       );
-    } on DioException catch (e) {}
+      return "Dio Error";
+    }
   }
 
   @override

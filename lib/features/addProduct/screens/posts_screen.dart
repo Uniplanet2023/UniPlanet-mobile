@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 
@@ -10,7 +11,7 @@ import 'package:uniplanet_mobile/repository/product_repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class PostsScreen extends StatefulWidget {
-  const PostsScreen({Key? key}) : super(key: key);
+  const PostsScreen({super.key});
 
   @override
   State<PostsScreen> createState() => _PostsScreenState();
@@ -82,9 +83,8 @@ class _PostsScreenState extends State<PostsScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.logout),
-                          onPressed: () => context
-                              .read<UserBloc>()
-                              .add(LogoutEvent(context)),
+                          onPressed: () =>
+                              context.read<AuthBloc>().add(const LogoutEvent()),
                         ),
                       ],
                     ),

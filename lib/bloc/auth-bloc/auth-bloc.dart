@@ -105,7 +105,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _logOutFunction(LogoutEvent event, emit) async {
     emit(const LogOutState());
-    _authRepository.logOut(event.context);
+    String message = await _authRepository.logOut();
+    if (message == 'Logged Out Successfully') {
+      emit(const LogOutCompleteState());
+    } else {
+      emit(const LogOutFailedState());
+    }
   }
 
   //Tracking
