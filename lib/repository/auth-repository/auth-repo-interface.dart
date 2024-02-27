@@ -10,18 +10,16 @@ abstract class IAuthRepository {
 
   Future<bool> tokenValidation();
 
-  Future<bool> signInUser({
+  Future<String> signInUser({
     required String email,
     required String password,
   });
 
-  Future<String> sendOtp({
-    required BuildContext context,
+  Future<String> requestOtp({
     required String email,
   });
 
   Future<void> forgottenPassword({
-    required BuildContext context,
     required String email,
   });
 

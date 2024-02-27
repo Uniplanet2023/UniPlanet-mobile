@@ -21,7 +21,7 @@ import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
-  const BottomBar({Key? key}) : super(key: key);
+  const BottomBar({super.key});
 
   @override
   State<BottomBar> createState() => _BottomBarState();
@@ -79,7 +79,7 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.watch<UserBloc>().state.user!;
+    // User user = context.watch<UserBloc>().state.user!;
 
     List<Widget> pages = [
       HomeScreen(controller: _controller!),

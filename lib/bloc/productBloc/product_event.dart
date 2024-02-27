@@ -15,14 +15,14 @@ class LoadProductEvent extends ProductEvent {
 class UploadProductEvent extends ProductEvent {
   final BuildContext context;
   final String name;
-  final bool forSale;
+  final String status;
   final String description;
   final double price;
   final String category;
   final List<File> images;
-  const UploadProductEvent(this.context, this.name, this.forSale,
+  const UploadProductEvent(this.context, this.name, this.status,
       this.description, this.price, this.category, this.images);
   @override
   List<Object?> get props =>
-      [name, forSale, description, price, category, images];
+      [name, status, description, price, category, images];
 }

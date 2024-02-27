@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
+import 'package:uniplanet_mobile/common/status/product-status.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const String routeName = '/add-product';
-  const AddProductScreen({Key? key}) : super(key: key);
+  const AddProductScreen({super.key});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -24,7 +25,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
 
-  bool isForSale = true; // Initial toggle state for "For Sale"
+  String status = ON_SALE; // Initial toggle state for "For Sale"
   String category = 'Mobiles';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
@@ -47,11 +48,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void sellProduct(BuildContext context) {
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
-      print('sell Product is called');
       context.read<ProductBloc>().add(UploadProductEvent(
           context,
           productNameController.text,
-          isForSale,
+          status,
           descriptionController.text,
           double.parse(priceController.text),
           category,
@@ -166,18 +166,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       borderRadius: BorderRadius.circular(30),
                       onPressed: (int index) {
                         setState(() {
-                          isForSale = index == 0;
-                          if (!isForSale) {
+                          if (index == 0) {
+                            status = ON_SALE;
+                          } else {
+                            status = FREE_STOCK;
+                          }
+                          if (status == FREE_STOCK) {
                             priceController.clear();
                           }
                         });
                       },
-                      isSelected: [isForSale, !isForSale],
+                      isSelected: [status == ON_SALE, status == FREE_STOCK],
                       children: <Widget>[
                         Container(
                           margin: const EdgeInsets.only(right: 10),
                           decoration: BoxDecoration(
-                            color: isForSale ? Colors.black : Colors.white,
+                            color:
+                                status == ON_SALE ? Colors.black : Colors.white,
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(width: 1, color: Colors.black45),
                           ),
@@ -187,13 +192,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             'For Sale',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color:
-                                    !isForSale ? Colors.black : Colors.white),
+                                color: status == FREE_STOCK
+                                    ? Colors.black
+                                    : Colors.white),
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: !isForSale ? Colors.black : Colors.white,
+                            color: status == FREE_STOCK
+                                ? Colors.black
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(width: 1, color: Colors.black45),
                           ),
@@ -203,8 +211,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             'Free',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color:
-                                    !isForSale ? Colors.white : Colors.black),
+                                color: status == FREE_STOCK
+                                    ? Colors.white
+                                    : Colors.black),
                           ),
                         ),
                       ],
@@ -219,7 +228,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   CustomTextField(
                     controller: priceController,
                     hintText: 'Price',
-                    enabled: isForSale,
+                    enabled: status == ON_SALE,
                     keyboardType: const TextInputType.numberWithOptions(
                         signed: false,
                         decimal: true), // Set the keyboard type to number
@@ -227,7 +236,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       FilteringTextInputFormatter.allow(
                           RegExp(r'^\d+\.?\d{0,9}')),
                     ],
-                    prefixText: isForSale ? '\$' : '',
+                    prefixText: status == ON_SALE ? '\$' : '',
                   ),
                   const SizedBox(height: 10),
                   CustomTextField(

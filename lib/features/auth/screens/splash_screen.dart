@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signin-state.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';

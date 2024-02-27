@@ -5,6 +5,7 @@ import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniplanet_mobile/network/api-server-address.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class ProductRepository {

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signup-state.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/features/auth/functions/opt-request.dart';
 import 'package:uniplanet_mobile/features/auth/functions/opt-verification.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
 
@@ -21,70 +24,90 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Verify Email address',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is OTPValidationCompleteState) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, SigninScreen.routeName, (route) => false);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Verify Email address',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(8),
-        color: GlobalVariables.backgroundColor,
-        child: Form(
-          key: _otpFormKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/Logo.png',
-                width: 200,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  'Enter the verification number sent to your Email address to continue:',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+        body: Container(
+          padding: const EdgeInsets.all(8),
+          color: GlobalVariables.backgroundColor,
+          child: Form(
+            key: _otpFormKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/Logo.png',
+                  width: 200,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    'Enter the verification number sent to your Email address to continue:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              TextFormField(
-                controller: _otpController,
-                maxLength: 5,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                    hintText: 'Verification number',
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                      color: Colors.black38,
-                    )),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                      color: Colors.black38,
-                    ))),
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return 'Enter your verification number';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomButton(
-                text: 'Submit',
-                onTap: () {
-                  if (_otpFormKey.currentState!.validate()) {
-                    optVerification(context, widget.email, _otpController.text);
-                  }
-                },
-              ),
-            ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: _otpController,
+                      maxLength: 5,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          hintText: 'Verification number',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Colors.black38,
+                          )),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Colors.black38,
+                          ))),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return 'Enter your verification number';
+                        }
+                        return null;
+                      },
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        optRequest(context, widget.email);
+                      },
+                      child: const Text('Resend OTP'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  text: 'Submit',
+                  onTap: () {
+                    if (_otpFormKey.currentState!.validate()) {
+                      optVerification(
+                          context, widget.email, _otpController.text);
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

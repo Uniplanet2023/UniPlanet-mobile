@@ -30,7 +30,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           context: event.context,
           category: event.category,
           name: event.name,
-          forSale: event.forSale,
+          status: event.status,
           description: event.description,
           price: event.price,
           images: event.images);

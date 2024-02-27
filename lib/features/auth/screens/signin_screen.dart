@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signin-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signup-state.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/functions/forgotten-password.dart';
 import 'package:uniplanet_mobile/features/auth/functions/signin.dart';
+import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup_screen.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -36,6 +40,10 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        if (state is UserNotVerifiedState) {
+          Navigator.pushNamed(context, OtpVerifyScreen.routeName,
+              arguments: _emailController.text);
+        }
         if (state is Authorized) {
           Navigator.pushNamedAndRemoveUntil(
               context, BottomBar.routeName, (route) => false);

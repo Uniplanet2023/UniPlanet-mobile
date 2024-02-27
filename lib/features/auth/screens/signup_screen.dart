@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signup-state.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -61,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
         if (state is OTPValidationRequireState) {
           Navigator.pushNamed(context, OtpVerifyScreen.routeName,
               arguments: _emailController.text);
-        } else if (state is OtpValidationCompleteState) {
+        } else if (state is OTPValidationCompleteState) {
           Navigator.pushNamedAndRemoveUntil(
               context, AuthScreen.routeName, (Route<dynamic> route) => false);
         } else if (state is SignupFailedState) {
