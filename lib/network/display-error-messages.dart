@@ -7,7 +7,9 @@ String displayErrorMessages(String responseBody) {
   final decoded = jsonDecode(responseBody);
   var message = "success";
   // Check if 'errors' key exists and is a list
-  if (decoded.containsKey('errors') && decoded['errors'] is List) {
+  if (decoded is! List &&
+      decoded.containsKey('errors') &&
+      decoded['errors'] is List) {
     final errors = decoded['errors'] as List;
 
     // Iterate through each error in the 'errors' list

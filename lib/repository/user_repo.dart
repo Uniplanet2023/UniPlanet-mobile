@@ -32,55 +32,6 @@ class UserRepository {
 
   // }
 
-  Future<Product?> uploadProduct({
-    required BuildContext context,
-    required String name,
-    required String status,
-    required String description,
-    required double price,
-    required String category,
-    required List<File> images,
-  }) async {
-    Product product;
-
-    try {
-      final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
-      List<String> imageUrls = [];
-
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: 'product-images'),
-        );
-        imageUrls.add(res.secureUrl);
-      }
-
-      Response res =
-          await DioClient.instance.dio.post('$productURI/upload-product',
-              data: {
-                'productName': name,
-                'status': status,
-                'description': description,
-                'images': imageUrls,
-                'price': price,
-                'category': category,
-              },
-              options: _getDioOptions());
-
-      String msg = displayErrorMessages(res.toString());
-      if (msg == "success") {
-        SnackbarGlobal.showSnackBar('Product Added Successfully!');
-        // Navigator.pop(context);
-        product = Product.fromMap(res.data);
-        return product;
-      } else {
-        return null;
-      }
-    } on DioException catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
   void deleteProduct({
     required BuildContext context,
     required Product product,

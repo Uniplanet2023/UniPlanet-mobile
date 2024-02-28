@@ -5,24 +5,31 @@ abstract class ProductEvent extends Equatable {
 }
 
 class LoadProductEvent extends ProductEvent {
-  const LoadProductEvent();
+  final String? category;
+  final int? page;
+  const LoadProductEvent({this.category, this.page});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [category, page];
 }
 
 class UploadProductEvent extends ProductEvent {
-  final BuildContext context;
-  final String name;
+  final String productName;
   final String status;
   final String description;
   final double price;
   final String category;
   final List<File> images;
-  const UploadProductEvent(this.context, this.name, this.status,
-      this.description, this.price, this.category, this.images);
+  const UploadProductEvent({
+    required this.productName,
+    required this.status,
+    required this.description,
+    required this.price,
+    required this.category,
+    required this.images,
+  });
   @override
   List<Object?> get props =>
-      [name, status, description, price, category, images];
+      [productName, status, description, price, category, images];
 }

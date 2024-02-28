@@ -12,7 +12,7 @@ import 'package:uniplanet_mobile/features/auth/screens/splash_screen.dart';
 import 'package:uniplanet_mobile/repository/auth-repository/auth-repo.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
-import 'package:uniplanet_mobile/repository/product_repo.dart';
+import 'package:uniplanet_mobile/repository/product-repository/product-repo.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/router.dart';
 
@@ -29,16 +29,16 @@ void main() async {
       child: MultiBlocProvider(providers: [
         BlocProvider(
             create: (context) => AuthBloc(context.read<AuthRepository>())),
+        BlocProvider(
+          create: (context) => ProductBloc(context.read<ProductRepository>()),
+        ),
         // BlocProvider(
         //     create: (context) => UserBloc(context.read<UserRepository>())),
         BlocProvider(
             create: (context) => ChatBloc(context.read<ChatRepository>())),
         BlocProvider(
             create: (context) => MessageBloc(context.read<ChatRepository>())),
-        BlocProvider(
-          create: (context) => ProductBloc(context.read<ProductRepository>(),
-              context.read<UserRepository>()),
-        ),
+
         BlocProvider(
           create: (context) => StatusBloc(),
         )

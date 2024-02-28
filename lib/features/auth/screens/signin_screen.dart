@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signin-state.dart';
 import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signup-state.dart';
+import 'package:uniplanet_mobile/bloc/productBloc/product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
@@ -45,6 +46,7 @@ class _SigninScreenState extends State<SigninScreen> {
               arguments: _emailController.text);
         }
         if (state is Authorized) {
+          context.read<ProductBloc>().add(const LoadProductEvent());
           Navigator.pushNamedAndRemoveUntil(
               context, BottomBar.routeName, (route) => false);
         }
