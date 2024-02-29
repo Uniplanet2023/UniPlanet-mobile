@@ -70,7 +70,7 @@ class AuthRepository implements IAuthRepository {
     try {
       user = User.initialUser();
 
-      Response res = await DioClient.instance.dio.delete('$authURI/logout',
+      Response res = await DioClient.instance.dio.delete('$authURI/signout',
           options: DioClient.instance.getDioOptions());
       await DioClient.instance.clearCookie();
 
