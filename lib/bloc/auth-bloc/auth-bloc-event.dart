@@ -32,6 +32,13 @@ class SignUpEvent extends AuthEvent {
   List<Object> get props => [name, email, password, school];
 }
 
+class RequestOtpEvent extends AuthEvent {
+  final String email;
+  const RequestOtpEvent(this.email);
+  @override
+  List<Object> get props => [email];
+}
+
 class SignInEvent extends AuthEvent {
   final String email;
   final String password;

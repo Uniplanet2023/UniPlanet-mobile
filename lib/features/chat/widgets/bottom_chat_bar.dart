@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' as foundation;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
@@ -61,13 +62,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void sendTextMessage(String msg, String chatRoomId) async {
     print('sendTextMessage');
     if (isShowSendButton) {
-      User user = context.read<UserBloc>().state.user!;
-      context.read<MessageBloc>().add(SendMessageEvent(
-            // BLoc
-            chatRoomId,
-            user.id,
-            msg,
-          ));
+      // User user = context.read<AuthBloc>().state.user!;
+      // context.read<MessageBloc>().add(SendMessageEvent(
+      //       // BLoc
+      //       chatRoomId,
+      //       user.id,
+      //       msg,
+      //     ));
       setState(() {
         _messageController.text = '';
       });

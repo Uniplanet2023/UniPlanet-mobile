@@ -1,15 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
-import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
-import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/logout-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signin-state.dart';
+import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signup-state.dart';
+import 'package:uniplanet_mobile/network/api-status/signup.dart';
 import 'package:uniplanet_mobile/repository/auth-repository/auth-repo.dart';
 
 part 'auth-bloc-event.dart';
-part 'auth-bloc-state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -23,6 +21,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // listen all the time
       await _otpValidationFunction(event, emit);
     });
+    on<RequestOtpEvent>((event, emit) async {
+      // listen all the time
+      await _otpRequestFunction(event, emit);
+    });
     on<SignUpEvent>((event, emit) async {
       await _signupFunction(event, emit);
     });
@@ -33,6 +35,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutEvent>((event, emit) async {
       await _logOutFunction(event, emit);
     });
+  }
+  _otpRequestFunction(RequestOtpEvent event, emit) async {
+    emit(const OTPValidationRequestState());
+    String hash = await _authRepository.requestOtp(email: event.email);
+    if (hash != 'Failed') {
+      emit(OTPValidationRequireState(hash: hash));
+    } else {
+      emit(const OTPValidationRequestFailState());
+    }
   }
 
   _tokenValidationFunction(TokenValidationEvent event, emit) async {
@@ -48,58 +59,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     await _authRepository.otpValidation(
             event.email, event.otpHash, event.otpCode)
-        ? emit(const OtpValidationCompleteState())
-        : emit(const ValidationFailedState());
+        ? emit(const OTPValidationCompleteState())
+        : emit(OtpValidationFailedState(hash: event.otpHash));
   }
 
   _signupFunction(SignUpEvent event, emit) async {
     try {
       emit(const SignupState());
-      String? hash = await _authRepository.signUpUser(
+      String hash = await _authRepository.signUpUser(
           email: event.email,
           password: event.password,
           name: event.name,
           school: event.school);
-      if (hash != null) {
+      if (hash != 'Failed') {
         emit(OTPValidationRequireState(hash: hash));
       } else {
-        emit(const SignupFailedState());
+        emit(const OTPValidationRequestFailState());
       }
     } catch (e) {
       emit(const SignupFailedState());
     }
   }
 
-  // _updateUserFunction(UpdateUserNotificationEvent event, emit) async {
-  //   emit(const LoadedAuthState());
-  // }
-
-  // _loadingUserFunction(LoadUserDataEvent event, emit) async {
-  //   emit(LoadingAuthState(user: state.user));
-  //   // User user = await _authRepository.getUserData();
-  //   // if (user.token != '') {
-  //   //   emit(LoadedAuthState(
-  //   //       user: user, unSeenMessageNum: state.unSeenMessageNum));
-  //   // } else {
-  //   //   emit(const ErrorAuthState('No User Data'));
-  //   // }
-  // }
-
   _signInFunction(SignInEvent event, emit) async {
     try {
       emit(const SigninState());
 
-      await _authRepository.signInUser(
+      String msg = await _authRepository.signInUser(
           email: event.email, password: event.password);
-
-      emit(const Authorized());
-    } catch (e) {
-      if (e is DioException) {
-        if (e.response != null) {
-          SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
-        }
+      if (msg == 'success') {
+        emit(const Authorized());
+      } else if (msg == USER_NOT_VERIFIED) {
+        emit(const UserNotVerifiedState());
+      } else {
+        emit(const SigninFailedState());
       }
-      throw Exception('No user Data');
+    } catch (e) {
+      throw Exception('Something Went Wrong');
     }
   }
 

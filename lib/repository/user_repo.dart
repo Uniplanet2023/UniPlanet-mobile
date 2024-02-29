@@ -14,6 +14,9 @@ import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/network/api-server-address.dart';
+import 'package:uniplanet_mobile/network/dio_client.dart';
+import 'package:uniplanet_mobile/network/display-error-messages.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class UserRepository {
@@ -28,54 +31,6 @@ class UserRepository {
   // Future<User> getUserData() async {
 
   // }
-
-  Future<Product?> uploadProduct({
-    required BuildContext context,
-    required String name,
-    required bool forSale,
-    required String description,
-    required double price,
-    required String category,
-    required List<File> images,
-  }) async {
-    Product product;
-
-    try {
-      final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
-      List<String> imageUrls = [];
-
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: name),
-        );
-        imageUrls.add(res.secureUrl);
-      }
-
-      Response res = await dio.post('$authURI/api/add-product',
-          data: {
-            'name': name,
-            'forSale': forSale,
-            'sellerId': UserRepository.user.id,
-            'description': description,
-            'images': imageUrls,
-            'price': price,
-            'category': category,
-          },
-          options: _getDioOptions());
-
-      httpErrorHandle(
-        response: res,
-        onSuccess: () {
-          SnackbarGlobal.showSnackBar('Product Added Successfully!');
-          Navigator.pop(context);
-        },
-      );
-
-      product = Product.fromMap(res.data);
-      return product;
-    } on DioException catch (e) {}
-    return null;
-  }
 
   void deleteProduct({
     required BuildContext context,

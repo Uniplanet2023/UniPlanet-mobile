@@ -1,10 +1,4 @@
 import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
 import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
@@ -14,14 +8,10 @@ import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
-  const BottomBar({Key? key}) : super(key: key);
+  const BottomBar({super.key});
 
   @override
   State<BottomBar> createState() => _BottomBarState();
@@ -79,7 +69,7 @@ class _BottomBarState extends State<BottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    User user = context.watch<UserBloc>().state.user!;
+    // User user = context.watch<UserBloc>().state.user!;
 
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
@@ -96,7 +86,7 @@ class _BottomBarState extends State<BottomBar> {
         pages[_page],
         AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
-          bottom: _isVisible ? -20 : -100,
+          bottom: _isVisible ? -20 : -120,
           left: 0,
           right: 0,
           child: Column(
