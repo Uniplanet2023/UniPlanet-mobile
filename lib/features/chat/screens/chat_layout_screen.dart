@@ -8,12 +8,11 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 
 class ChatList extends StatefulWidget {
   static const String routeName = '/chat_list';
-  const ChatList({Key? key}) : super(key: key);
+  const ChatList({super.key});
 
   @override
   State<ChatList> createState() => _ChatListState();

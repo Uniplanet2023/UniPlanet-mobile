@@ -10,12 +10,11 @@ import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 
 class ContactsList extends StatefulWidget {
   final List<MyChatRoom> list;
-  const ContactsList({Key? key, required this.list}) : super(key: key);
+  const ContactsList({super.key, required this.list});
 
   @override
   State<ContactsList> createState() => _ContactsListState();

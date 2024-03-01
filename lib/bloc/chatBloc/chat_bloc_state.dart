@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 
 abstract class ChatBlocState extends Equatable {
   final List<MyChatRoom>? chatRoomList;

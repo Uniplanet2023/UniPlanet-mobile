@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 import 'package:uniplanet_mobile/network/api-server-address.dart';
 import 'package:uniplanet_mobile/network/display-error-messages.dart';
 import 'package:uniplanet_mobile/repository/auth-repository/auth-repo-interface.dart';
-import 'package:uniplanet_mobile/network/dio_client.dart';
+import 'package:uniplanet_mobile/network/dio-client.dart';
 
 class AuthRepository implements IAuthRepository {
   static User user = User.initialUser();
@@ -30,11 +30,11 @@ class AuthRepository implements IAuthRepository {
             'school': school
           },
           options: DioClient.instance.getDioOptions());
-      SnackbarGlobal.showSnackBar(
-        'Account created! Please Verify your email',
-      );
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
+        SnackbarGlobal.showSnackBar(
+          'Account created! Please Verify your email',
+        );
         return res.data['hash'];
       } else {
         return 'Failed';

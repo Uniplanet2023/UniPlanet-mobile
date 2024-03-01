@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/common/enums/message-enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
@@ -9,7 +9,6 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/message_list.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/network/api-server-address.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatRepository {

@@ -1,20 +1,20 @@
 import "package:flutter/material.dart";
-import "package:uniplanet_mobile/common/widgets/bottom_bar.dart";
-import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
+import 'package:uniplanet_mobile/common/widgets/BottomBar.dart';
+import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
-import "package:uniplanet_mobile/features/auth/screens/signin_screen.dart";
-import "package:uniplanet_mobile/features/auth/screens/signup_screen.dart";
-import "package:uniplanet_mobile/features/auth/screens/splash_screen.dart";
+import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
-import 'package:uniplanet_mobile/features/home/screens/category_screen.dart';
-import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
+import "package:uniplanet_mobile/features/home/screens/category_screen.dart";
+import 'package:uniplanet_mobile/features/home/screens/home-screen.dart';
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
 import "package:uniplanet_mobile/models/myChatRoom.dart";
-import "package:uniplanet_mobile/models/product.dart";
-import "package:uniplanet_mobile/models/user.dart";
+import 'package:uniplanet_mobile/models/Product.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -73,9 +73,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       var searchQuery = routeSettings.arguments as String?;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => SearchScreen(
-          searchQuery: searchQuery,
-        ),
+        builder: (_) => const SearchScreen(),
       );
     case ProductDetailScreen.routeName:
       var product = routeSettings.arguments as Product;

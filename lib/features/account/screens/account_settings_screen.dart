@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/logout-state.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
+
+import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_state/logout_state.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 
 class AccountSettingsScreen extends StatefulWidget {

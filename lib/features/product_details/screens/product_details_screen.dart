@@ -7,9 +7,8 @@ import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/models/Product.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   static const String routeName = '/product-details';
@@ -102,7 +101,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: BlocConsumer<ChatBloc, ChatBlocState>(
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
-            navigateToChatScreen(widget.product.seller, state);
+            // navigateToChatScreen(widget.product.seller, state);
           }
         },
         builder: (context, state) {
@@ -113,10 +112,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.pop(context),
               ),
-              _buildPriceText(widget.product.price),
-              widget.product.seller.id == UserRepository.user.id
-                  ? const SizedBox()
-                  : _buildChatAndFavoriteButtons(state),
+              // _buildPriceText(widget.product.price),
+              // widget.product.seller.id == UserRepository.user.id
+              //     ? const SizedBox()
+              //     : _buildChatAndFavoriteButtons(state),
             ],
           );
         },
@@ -129,22 +128,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       children: [
         IconButton(
           icon: const Icon(Icons.favorite_border),
-          onPressed: () => UserRepository()
-              .addToLikes(context: context, product: widget.product),
+          onPressed: () => {},
         ),
-        TextButton(
-          onPressed: () => state is CreatingChatRoomState
-              ? null
-              : context.read<ChatBloc>().add(CreateChatRoomEvent(
-                  //created ChatRoom State
-                  widget.product.seller,
-                  widget.product.id)),
-          style: TextButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor),
-          child: state is CreatingChatRoomState
-              ? const CircularProgressIndicator()
-              : const Text('Chat', style: TextStyle(color: Colors.white)),
-        ),
+        // TextButton(
+        //   onPressed: () => state is CreatingChatRoomState
+        //       ? null
+        //       : context.read<ChatBloc>().add(CreateChatRoomEvent(
+        //           //created ChatRoom State
+        //           widget.product.seller,
+        //           widget.product.id)),
+        //   style: TextButton.styleFrom(
+        //       backgroundColor: Theme.of(context).primaryColor),
+        //   child: state is CreatingChatRoomState
+        //       ? const CircularProgressIndicator()
+        //       : const Text('Chat', style: TextStyle(color: Colors.white)),
+        // ),
       ],
     );
   }

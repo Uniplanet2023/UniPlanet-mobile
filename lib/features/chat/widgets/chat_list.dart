@@ -11,8 +11,7 @@ import 'package:uniplanet_mobile/features/chat/widgets/sender_message_card.dart'
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatList extends StatefulWidget {
@@ -104,27 +103,28 @@ class _ChatListState extends State<ChatList> {
               hidePreviousDate = true;
             }
           }
+          return null;
 
           // Card assignment with conditional date visibility
-          if (currentMessage.senderId == UserRepository.user.id) {
-            return MyMessageCard(
-              message: currentMessage,
-              date: index == 0 || !hidePreviousDate ? formattedDate : '',
-            );
-          } else {
-            if (currentMessage.isSeen == false) {
-              print('triggered');
-              // SocketService.socket!.emit('seenMessageACK', {
-              //   currentMessage.messageId,
-              //   widget.myChatRoom.myChatRoomId,
-              //   widget.myChatRoom.chatRoom.chatRoomId
-              // });
-            }
-            return SenderMessageCard(
-              message: currentMessage,
-              date: index == 0 || !hidePreviousDate ? formattedDate : '',
-            );
-          }
+          // if (currentMessage.senderId == UserRepository.user.id) {
+          //   return MyMessageCard(
+          //     message: currentMessage,
+          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
+          //   );
+          // } else {
+          //   if (currentMessage.isSeen == false) {
+          //     print('triggered');
+          //     // SocketService.socket!.emit('seenMessageACK', {
+          //     //   currentMessage.messageId,
+          //     //   widget.myChatRoom.myChatRoomId,
+          //     //   widget.myChatRoom.chatRoom.chatRoomId
+          //     // });
+          //   }
+          //   return SenderMessageCard(
+          //     message: currentMessage,
+          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
+          //   );
+          // }
         },
       ),
     );

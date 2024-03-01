@@ -7,14 +7,13 @@ import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
+import 'package:uniplanet_mobile/models/User.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';
   final MyChatRoom myChatRoom;
   final User client;
-  const ChatScreen({Key? key, required this.client, required this.myChatRoom})
-      : super(key: key);
+  const ChatScreen({super.key, required this.client, required this.myChatRoom});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
