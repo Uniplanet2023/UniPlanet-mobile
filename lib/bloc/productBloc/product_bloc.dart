@@ -52,17 +52,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   _loadProduct(LoadProductEvent event, emit) async {
     emit(LoadingProductState(productList: state.productList));
     List<Product> result = await _productRepository.fetchProducts();
-    if (result.isEmpty) {
-      emit(const ErrorProductLoadState("No products found"));
+
+    if (event.category != null) {
+      emit(LoadedProductState(
+          categoryProductList: result, productList: state.productList));
     } else {
-      if (event.category != null) {
-        emit(LoadedProductState(
-            categoryProductList: result, productList: state.productList));
-      } else {
-        emit(LoadedProductState(
-            productList: result,
-            categoryProductList: state.categoryProductList));
-      }
+      emit(LoadedProductState(
+          productList: result, categoryProductList: state.categoryProductList));
     }
   }
 
