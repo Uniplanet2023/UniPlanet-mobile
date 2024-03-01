@@ -5,6 +5,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/product/product-bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product-state/basic-state.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/Product.dart';
@@ -48,12 +50,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  void navigateToChatScreen(User seller, ChatBlocState state) {
-    if (state is CreatedChatRoomState) {
-      Navigator.pushNamed(context, ChatScreen.routeName,
-          arguments: {"seller": seller, "chatRoom": state.chatRoomList!.last});
-    }
-  }
+  // void navigateToChatScreen(User seller, ChatBlocState state) {
+  //   // if (state is CreatedChatRoomState) {
+  //   //   Navigator.pushNamed(context, ChatScreen.routeName,
+  //   //       arguments: {"seller": seller, "chatRoom": state.chatRoomList!.last});
+  //   // }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -98,11 +100,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   BottomAppBar _buildBottomAppBar() {
     return BottomAppBar(
-      child: BlocConsumer<ChatBloc, ChatBlocState>(
+      child: BlocConsumer<ProductBloc, ProductState>(
         listener: (context, state) {
-          if (state is CreatedChatRoomState) {
-            // navigateToChatScreen(widget.product.seller, state);
-          }
+          // if (state is CreatedChatRoomState) {
+          //   // navigateToChatScreen(widget.product.seller, state);
+          // }
         },
         builder: (context, state) {
           return Row(
@@ -130,19 +132,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           icon: const Icon(Icons.favorite_border),
           onPressed: () => {},
         ),
-        // TextButton(
-        //   onPressed: () => state is CreatingChatRoomState
-        //       ? null
-        //       : context.read<ChatBloc>().add(CreateChatRoomEvent(
-        //           //created ChatRoom State
-        //           widget.product.seller,
-        //           widget.product.id)),
-        //   style: TextButton.styleFrom(
-        //       backgroundColor: Theme.of(context).primaryColor),
-        //   child: state is CreatingChatRoomState
-        //       ? const CircularProgressIndicator()
-        //       : const Text('Chat', style: TextStyle(color: Colors.white)),
-        // ),
+        TextButton(
+          onPressed: () => {},
+          style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor),
+          child: state is CreatingChatRoomState
+              ? const CircularProgressIndicator()
+              : const Text('Chat', style: TextStyle(color: Colors.white)),
+        ),
       ],
     );
   }

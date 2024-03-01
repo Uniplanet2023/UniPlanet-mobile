@@ -41,8 +41,8 @@ void main() async {
           create: (context) =>
               SearchProductBloc(context.read<ProductRepository>()),
         ),
-        BlocProvider(
-            create: (context) => ChatBloc(context.read<ChatRepository>())),
+        // BlocProvider(
+        //     create: (context) => ChatBloc(context.read<ChatRepository>())),
         BlocProvider(
             create: (context) => MessageBloc(context.read<ChatRepository>())),
         BlocProvider(
