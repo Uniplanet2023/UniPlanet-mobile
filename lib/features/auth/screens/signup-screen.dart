@@ -5,6 +5,7 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -18,7 +19,6 @@ import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/constants/university_list.dart';
 
 class SignupScreen extends StatefulWidget {
-  static const String routeName = '/signup-screen';
   const SignupScreen({super.key});
 
   @override
@@ -60,11 +60,11 @@ class _SignupScreenState extends State<SignupScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is OTPValidationRequireState) {
-          Navigator.pushNamed(context, OtpVerifyScreen.routeName,
+          Navigator.pushNamed(context, AppRoutes.otpVerifyPage,
               arguments: _emailController.text);
         } else if (state is OTPValidationCompleteState) {
           Navigator.pushNamedAndRemoveUntil(
-              context, AuthScreen.routeName, (Route<dynamic> route) => false);
+              context, AppRoutes.authPage, (Route<dynamic> route) => false);
         } else if (state is SignupFailedState) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Signup failed. Please try again.')),

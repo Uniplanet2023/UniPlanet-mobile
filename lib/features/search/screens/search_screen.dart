@@ -7,7 +7,6 @@ import 'package:uniplanet_mobile/features/search/widget/searched-product-list.da
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
-  static const String routeName = '/search-screen';
   const SearchScreen({
     super.key,
   });

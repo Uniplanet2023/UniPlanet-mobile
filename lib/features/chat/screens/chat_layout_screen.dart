@@ -8,7 +8,6 @@ import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
 
 class ChatList extends StatefulWidget {
-  static const String routeName = '/chat_list';
   const ChatList({super.key});
 
   @override

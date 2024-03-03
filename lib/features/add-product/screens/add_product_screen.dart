@@ -17,7 +17,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class AddProductScreen extends StatefulWidget {
-  static const String routeName = '/add-product';
   const AddProductScreen({super.key});
 
   @override

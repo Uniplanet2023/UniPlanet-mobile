@@ -6,7 +6,6 @@ import 'package:uniplanet_mobile/features/home/widgets/buildProductBox.dart';
 import 'package:uniplanet_mobile/features/home/widgets/top_categories.dart';
 
 class HomeScreen extends StatelessWidget {
-  static const String routeName = '/home';
   final ScrollController controller;
   const HomeScreen({super.key, required this.controller});
 

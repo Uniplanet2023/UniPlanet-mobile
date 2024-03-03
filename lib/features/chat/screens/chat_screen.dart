@@ -10,7 +10,6 @@ import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
 class ChatScreen extends StatefulWidget {
-  static const String routeName = '/chat-screen';
   final MyChatRoom myChatRoom;
   final User client;
   const ChatScreen({super.key, required this.client, required this.myChatRoom});

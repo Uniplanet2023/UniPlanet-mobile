@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class AuthScreen extends StatefulWidget {
-  static const String routeName = '/auth-screen';
   const AuthScreen({super.key});
 
   @override

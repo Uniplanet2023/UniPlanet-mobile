@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:uniplanet_mobile/common/routes/names.dart";
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
@@ -18,34 +19,34 @@ import "package:uniplanet_mobile/models/user_model.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
-    case AuthScreen.routeName:
+    case AppRoutes.authPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
       );
-    case SplashScreen.routeName:
+    case AppRoutes.splashScreenPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SplashScreen(),
       );
-    case SignupScreen.routeName:
+    case AppRoutes.signupPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SignupScreen(),
       );
 
-    case OtpVerifyScreen.routeName:
+    case AppRoutes.otpVerifyPage:
       var email = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => OtpVerifyScreen(email: email),
       );
-    case SigninScreen.routeName:
+    case AppRoutes.signinPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SigninScreen(),
       );
-    case HomeScreen.routeName:
+    case AppRoutes.homePage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => HomeScreen(controller: ScrollController()),
@@ -55,13 +56,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const BottomBar(),
       );
-    case AddProductScreen.routeName:
+    case AppRoutes.addProductPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AddProductScreen(),
       );
-
-    case CategoryScreen.routeName:
+    case AppRoutes.categoryPage:
       var category = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
@@ -69,13 +69,13 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           category: category,
         ),
       );
-    case SearchScreen.routeName:
+    case AppRoutes.searchScreenPage:
       var searchQuery = routeSettings.arguments as String?;
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SearchScreen(),
       );
-    case ProductDetailScreen.routeName:
+    case AppRoutes.productDetailsPage:
       var product = routeSettings.arguments as Product;
       return MaterialPageRoute(
         settings: routeSettings,
@@ -84,7 +84,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         ),
       );
 
-    case ChatScreen.routeName:
+    case AppRoutes.chatPage:
       final arguments = routeSettings.arguments as Map<String, dynamic>;
 
       User client = arguments['seller'] as User;
@@ -96,7 +96,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           myChatRoom: myChatRoom,
         ),
       );
-    case ChatList.routeName:
+    case AppRoutes.chatLayoutPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const ChatList(),

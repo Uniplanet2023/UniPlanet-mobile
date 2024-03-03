@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched-product.dart';
 import 'package:uniplanet_mobile/models/product_model.dart';
@@ -22,7 +23,7 @@ class SearchedProductList extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(
                     context,
-                    ProductDetailScreen.routeName,
+                    AppRoutes.productDetailsPage,
                     arguments: products[index],
                   );
                 },

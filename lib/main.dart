@@ -13,7 +13,7 @@ import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
 import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
-import 'package:uniplanet_mobile/router.dart';
+import 'package:uniplanet_mobile/common/routes/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

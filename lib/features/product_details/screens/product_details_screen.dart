@@ -12,7 +12,6 @@ import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/product_model.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  static const String routeName = '/product-details';
   final Product product;
 
   const ProductDetailScreen({super.key, required this.product});

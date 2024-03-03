@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/bloc/auth/auth_state/signin_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
@@ -17,7 +18,6 @@ import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 
 class SigninScreen extends StatefulWidget {
-  static const String routeName = '/signin-screen';
   const SigninScreen({super.key});
 
   @override
@@ -44,7 +44,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is UserNotVerifiedState) {
-          Navigator.pushNamed(context, OtpVerifyScreen.routeName,
+          Navigator.pushNamed(context, AppRoutes.otpVerifyPage,
               arguments: _emailController.text);
         }
         if (state is Authorized) {
