@@ -1,4 +1,4 @@
-import 'package:uniplanet_mobile/bloc/product/product-state/basic-state.dart';
+import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
 
 final class LoadingProductState extends ProductState {
   const LoadingProductState({super.productList});

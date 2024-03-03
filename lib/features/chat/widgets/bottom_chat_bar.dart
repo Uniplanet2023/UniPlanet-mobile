@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/common/enums/message-enum.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 

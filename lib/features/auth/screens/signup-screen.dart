@@ -14,7 +14,7 @@ import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
-import 'package:uniplanet_mobile/repository/auth-repository/auth-repo.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/constants/university_list.dart';
 
 class SignupScreen extends StatefulWidget {

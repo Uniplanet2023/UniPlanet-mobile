@@ -1,4 +1,6 @@
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
@@ -23,6 +25,7 @@ class _BottomBarState extends State<BottomBar> {
   double bottomBarBorderWidth = 5;
   ScrollController? _controller;
   bool _isVisible = true;
+  String? profileImage;
 
   void navigateToAddProduct() {
     Navigator.pushNamed(context, AddProductScreen.routeName);
@@ -234,15 +237,19 @@ class _BottomBarState extends State<BottomBar> {
                             minWidth: 10, // Minimum width for the red circle
                             minHeight: 10, // Minimum height for the red circle
                           ),
-                          child: const Text(
-                            '0',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize:
-                                  12, // You can adjust the font size as needed
-                            ),
+                          child: BlocBuilder<AccountBloc, AccountState>(
+                            builder: (context, state) {
+                              return Text(
+                                state.account.unreadMessage.toString(),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize:
+                                      12, // You can adjust the font size as needed
+                                ),
+                              );
+                            },
                           ),
                         ),
                         badgeStyle: const badges.BadgeStyle(

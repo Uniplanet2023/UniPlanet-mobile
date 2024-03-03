@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/models/User.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 
 abstract class ChatBlocEvent extends Equatable {
   const ChatBlocEvent();

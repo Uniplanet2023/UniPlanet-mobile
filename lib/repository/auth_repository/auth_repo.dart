@@ -5,15 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/models/User.dart';
-import 'package:uniplanet_mobile/network/api-server-address.dart';
-import 'package:uniplanet_mobile/network/display-error-messages.dart';
-import 'package:uniplanet_mobile/repository/auth-repository/auth-repo-interface.dart';
-import 'package:uniplanet_mobile/network/dio-client.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/network/api_server_address.dart';
+import 'package:uniplanet_mobile/network/display_error_messages.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo_interface.dart';
+import 'package:uniplanet_mobile/network/dio_client.dart';
 
 class AuthRepository implements IAuthRepository {
-  static User user = User.initialUser();
-
   @override
   Future<String> signUpUser({
     required String email,
@@ -68,8 +66,6 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<String> logOut() async {
     try {
-      user = User.initialUser();
-
       Response res = await DioClient.instance.dio.delete('$authURI/signout',
           options: DioClient.instance.getDioOptions());
       await DioClient.instance.clearCookie();

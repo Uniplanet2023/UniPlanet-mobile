@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:uniplanet_mobile/common/widgets/BottomBar.dart';
+import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
 import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
 import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
@@ -13,8 +13,8 @@ import 'package:uniplanet_mobile/features/home/screens/home-screen.dart';
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
 import "package:uniplanet_mobile/models/myChatRoom.dart";
-import 'package:uniplanet_mobile/models/Product.dart';
-import 'package:uniplanet_mobile/models/User.dart';
+import 'package:uniplanet_mobile/models/product_model.dart';
+import "package:uniplanet_mobile/models/user_model.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {

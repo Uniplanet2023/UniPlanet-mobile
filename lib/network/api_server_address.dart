@@ -1,5 +1,6 @@
 String authURI = 'http://auth.uniplanet-back.autos/api/auth';
 String productURI = 'http://products.uniplanet-back.autos/api/products';
+String accountURI = 'http://account.uniplanet-back.autos/api/account';
 String chatURI = 'http://chat.uniplanet-back.autos';
 
 // String authURI = 'http://auth.uniplanet.com:3000/api/auth';

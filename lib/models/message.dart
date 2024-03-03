@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:uniplanet_mobile/common/enums/message-enum.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 
 class Message {
   final String chatRoomId;

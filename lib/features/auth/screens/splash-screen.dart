@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signin_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product-bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-import 'package:uniplanet_mobile/common/widgets/BottomBar.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
+import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,6 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
         listener: (context, state) {
           if (state is Authorized) {
             context.read<ProductBloc>().add(const LoadProductEvent());
+            context.read<AccountBloc>().add(const GetAccountInfoEvent());
             Navigator.pushNamedAndRemoveUntil(
                 context, BottomBar.routeName, (route) => false);
           } else if (state is AuthenticationDeny) {

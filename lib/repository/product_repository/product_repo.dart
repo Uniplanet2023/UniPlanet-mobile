@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
-import 'package:uniplanet_mobile/models/Product.dart';
-import 'package:uniplanet_mobile/network/api-server-address.dart';
-import 'package:uniplanet_mobile/network/dio-client.dart';
-import 'package:uniplanet_mobile/network/display-error-messages.dart';
+import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/network/api_server_address.dart';
+import 'package:uniplanet_mobile/network/dio_client.dart';
+import 'package:uniplanet_mobile/network/display_error_messages.dart';
 
 class ProductRepository {
   final DioClient _dioClient;
@@ -112,6 +112,7 @@ class ProductRepository {
     required String description,
     required double price,
     required String category,
+    required String profileImage,
   }) async {
     try {
       final response = await _dioClient.dio.post(
@@ -122,6 +123,7 @@ class ProductRepository {
           'description': description,
           'price': price,
           'category': category,
+          'profileImage': profileImage,
         },
         options: _dioClient.getDioOptions(),
       );

@@ -1,18 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/my_message_card.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/sender_message_card.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/User.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;

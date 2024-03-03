@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product-bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product-state/basic-state.dart';
-import 'package:uniplanet_mobile/bloc/product/product-state/upload-product.dart';
-import 'package:uniplanet_mobile/common/status/product-status.dart';
-import 'package:uniplanet_mobile/common/widgets/BottomBar.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
+import 'package:uniplanet_mobile/bloc/product/product_state/upload_product.dart';
+import 'package:uniplanet_mobile/common/status/product_status.dart';
+import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -62,7 +63,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
           price: status == ON_SALE ? double.parse(priceController.text) : 0,
           category: category,
           status: status,
-          images: images));
+          images: images,
+          profileImage:
+              context.read<AccountBloc>().state.account.profileImage));
     }
   }
 

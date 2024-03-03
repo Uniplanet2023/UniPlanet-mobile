@@ -3,12 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/User.dart';
 
 class ChatList extends StatefulWidget {
   static const String routeName = '/chat_list';

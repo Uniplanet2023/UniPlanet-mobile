@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_settings_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/app_settings_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/buying_screen.dart';
@@ -62,32 +64,38 @@ class UserHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(
-                'https://via.placeholder.com/150'), // Placeholder pfp
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "test",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: BlocBuilder<AccountBloc, AccountState>(
+        builder: (context, state) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundImage:
+                    NetworkImage(state.account.profileImage), // Placeholder pfp
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      state.account.name,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                        'User ID: ${state.account.id}'), // Replace with actual data
+                    Text(
+                      'Basic description goes here.', // Replace with actual data
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
                 ),
-                const Text('User ID: 12345'), // Replace with actual data
-                Text(
-                  'Basic description goes here.', // Replace with actual data
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

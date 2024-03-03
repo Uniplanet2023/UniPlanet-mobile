@@ -7,7 +7,7 @@ import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/User.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat-screen';

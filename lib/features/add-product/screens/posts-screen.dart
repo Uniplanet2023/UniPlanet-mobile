@@ -5,7 +5,7 @@ import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/features/account/widgets/single_product.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/models/Product.dart';
+import 'package:uniplanet_mobile/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class PostsScreen extends StatefulWidget {

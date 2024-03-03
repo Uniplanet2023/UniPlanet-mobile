@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signin_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product-bloc.dart';
-import 'package:uniplanet_mobile/common/widgets/BottomBar.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
+import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -48,6 +49,7 @@ class _SigninScreenState extends State<SigninScreen> {
         }
         if (state is Authorized) {
           context.read<ProductBloc>().add(const LoadProductEvent());
+          context.read<AccountBloc>().add(const GetAccountInfoEvent());
           Navigator.pushNamedAndRemoveUntil(
               context, BottomBar.routeName, (route) => false);
         }

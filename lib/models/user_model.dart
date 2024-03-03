@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:uniplanet_mobile/models/myChatRoom.dart';
-
 class User {
   final String id;
   final String name;

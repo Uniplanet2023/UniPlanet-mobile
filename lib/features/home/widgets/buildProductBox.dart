@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
-import 'package:uniplanet_mobile/models/Product.dart';
+import 'package:uniplanet_mobile/models/product_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ItemBox extends StatefulWidget {

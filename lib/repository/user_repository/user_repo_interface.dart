@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/models/Product.dart';
-import 'package:uniplanet_mobile/models/User.dart';
+import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 
 abstract class IUserRepository {
   Future<User> getUserData();

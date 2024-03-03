@@ -5,8 +5,8 @@ import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/logout_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signin_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
-import 'package:uniplanet_mobile/network/api-status/signup.dart';
-import 'package:uniplanet_mobile/repository/auth-repository/auth-repo.dart';
+import 'package:uniplanet_mobile/network/api_status/signup.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
