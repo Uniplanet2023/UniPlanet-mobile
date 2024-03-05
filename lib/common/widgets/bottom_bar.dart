@@ -8,6 +8,7 @@ import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class BottomBar extends StatefulWidget {
   static const String routeName = '/actual-home';
@@ -174,12 +175,35 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.home_outlined,
+                      child: Column(
+                        children: [
+                          _page == 0
+                              ? const Icon(
+                                  Icons.home,
+                                )
+                              : const Icon(
+                                  Icons.home_outlined,
+                                ),
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: _page == 0
+                                  ? FontWeight.w800
+                                  : FontWeight.normal,
+                              color: _page == 0
+                                  ? GlobalVariables.selectedNavBarColor
+                                  : Colors.black,
+                              overflow: TextOverflow.visible,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     label: '',
                   ),
+
+                  // My Cart
                   BottomNavigationBarItem(
                     icon: Container(
                       width: bottomBarWidth,
@@ -193,25 +217,67 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.menu,
+                      child: Column(
+                        children: [
+                          _page == 1
+                              ? const Icon(
+                                  Icons.shopping_cart,
+                                )
+                              : const Icon(
+                                  Icons.shopping_cart_outlined,
+                                ),
+                          Text(
+                            'Cart',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: _page == 1
+                                  ? FontWeight.w800
+                                  : FontWeight.normal,
+                              color: _page == 1
+                                  ? GlobalVariables.selectedNavBarColor
+                                  : Colors.black,
+                              overflow: TextOverflow.visible,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     label: '',
                   ),
+
                   //add
                   BottomNavigationBarItem(
-                    icon: SizedBox(
-                      width: bottomBarWidth,
-                      child: IconButton(
-                        onPressed: navigateToAddProduct,
-                        icon: const Icon(
-                          Icons.add_box_outlined,
+                    icon: InkWell(
+                      onTap: navigateToAddProduct,
+                      child: Container(
+                        width: bottomBarWidth,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: GlobalVariables.backgroundColor,
+                              width: bottomBarBorderWidth,
+                            ),
+                          ),
+                        ),
+                        child: const Column(
+                          children: [
+                            Icon(
+                              Icons.add_box_outlined,
+                            ),
+                            Text(
+                              'Sell',
+                              style: TextStyle(
+                                fontSize: 10,
+                                overflow: TextOverflow.visible,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
                     label: '',
                   ),
+
                   // Chat
                   BottomNavigationBarItem(
                     icon: Container(
@@ -253,9 +319,30 @@ class _BottomBarState extends State<BottomBar> {
                           elevation: 0,
                           shape: badges.BadgeShape.circle,
                         ),
-                        position: badges.BadgePosition.topEnd(top: -13, end: 2),
-                        child: const Icon(
-                          Icons.chat_bubble_outline,
+                        position: badges.BadgePosition.topEnd(top: -12, end: 5),
+                        child: Column(
+                          children: [
+                            _page == 3
+                                ? const Icon(
+                                    Icons.chat,
+                                  )
+                                : const Icon(
+                                    Icons.chat_bubble_outline,
+                                  ),
+                            Text(
+                              'Chat',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: _page == 3
+                                    ? FontWeight.w800
+                                    : FontWeight.normal,
+                                color: _page == 3
+                                    ? GlobalVariables.selectedNavBarColor
+                                    : Colors.black,
+                                overflow: TextOverflow.visible,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -276,8 +363,29 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.person_outline_outlined,
+                      child: Column(
+                        children: [
+                          _page == 4
+                              ? const Icon(
+                                  Icons.person,
+                                )
+                              : const Icon(
+                                  Icons.person_outline_outlined,
+                                ),
+                          Text(
+                            'Profile',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: _page == 4
+                                  ? FontWeight.w800
+                                  : FontWeight.normal,
+                              color: _page == 4
+                                  ? GlobalVariables.selectedNavBarColor
+                                  : Colors.black,
+                              overflow: TextOverflow.visible,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     label: '',

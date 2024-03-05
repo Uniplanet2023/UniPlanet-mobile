@@ -88,12 +88,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         return null;
                       },
                     ),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     optRequest(context, widget.email);
-                    //   },
-                    //   child: const Text('Resend OTP'),
-                    // ),
                   ],
                 ),
                 const SizedBox(height: 20),

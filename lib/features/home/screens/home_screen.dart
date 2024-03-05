@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
           floating: _floating,
           expandedHeight: 30.0,
           flexibleSpace: const FlexibleSpaceBar(
-            titlePadding: EdgeInsets.only(left: 20),
+            titlePadding: EdgeInsets.fromLTRB(20, 5, 20, 0),
             title: TopCategories(),
             background: DecoratedBox(
               decoration: BoxDecoration(
