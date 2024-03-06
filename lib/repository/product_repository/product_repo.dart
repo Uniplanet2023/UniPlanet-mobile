@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
-import 'package:uniplanet_mobile/constants/error_handling.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
 import 'package:uniplanet_mobile/network/display_error_messages.dart';

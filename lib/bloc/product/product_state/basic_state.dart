@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 
 abstract class ProductState extends Equatable {
   final List<Product> productList;

@@ -5,7 +5,7 @@ import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
-import 'package:uniplanet_mobile/models/myChatRoom.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});

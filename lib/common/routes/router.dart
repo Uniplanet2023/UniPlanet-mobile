@@ -13,8 +13,8 @@ import "package:uniplanet_mobile/features/home/screens/category_screen.dart";
 import 'package:uniplanet_mobile/features/home/screens/home-screen.dart';
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
-import "package:uniplanet_mobile/models/myChatRoom.dart";
-import 'package:uniplanet_mobile/models/product_model.dart';
+import "package:uniplanet_mobile/models/chat_room.dart";
+import "package:uniplanet_mobile/models/product.dart";
 import "package:uniplanet_mobile/models/user_model.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {

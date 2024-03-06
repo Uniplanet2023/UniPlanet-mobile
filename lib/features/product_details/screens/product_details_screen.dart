@@ -5,12 +5,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
-import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+
+import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 
 class ProductDetailScreen extends StatefulWidget {

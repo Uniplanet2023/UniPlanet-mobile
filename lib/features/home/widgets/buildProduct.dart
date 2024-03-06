@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 
 Widget buildProductItem(
     {required BuildContext context, required Product product}) {

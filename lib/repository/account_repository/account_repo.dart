@@ -1,7 +1,6 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:uniplanet_mobile/models/account_model.dart';
+import 'package:uniplanet_mobile/models/account.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';

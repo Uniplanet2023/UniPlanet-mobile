@@ -423,11 +423,12 @@ class MenuSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
-        title: Text(titleLarge,
-            style: TextStyle(fontSize: 18, color: colorScheme.background)),
+        title: const Text('titleLarge',
+            style: TextStyle(
+                fontSize: 18, color: GlobalVariables.backgroundColor)),
         leading: Icon(
           icon,
-          color: colorScheme.background,
+          color: GlobalVariables.backgroundColor,
         ),
         trailing: const Icon(Icons.arrow_forward), // Replace with actual icon
         onTap: ontap,

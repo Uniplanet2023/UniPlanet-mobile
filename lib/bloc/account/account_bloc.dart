@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/account_model.dart';
+import 'package:uniplanet_mobile/models/account.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 
 part 'account_event.dart';

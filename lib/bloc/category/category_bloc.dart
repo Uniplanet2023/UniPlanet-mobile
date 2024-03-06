@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
 
 part 'category_event.dart';

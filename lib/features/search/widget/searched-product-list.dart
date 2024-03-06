@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched-product.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 
 class SearchedProductList extends StatelessWidget {
   final List<Product> products;
