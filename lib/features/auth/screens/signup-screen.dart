@@ -10,6 +10,9 @@ import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/functions/signup.dart';
+import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
+import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
 import 'package:uniplanet_mobile/constants/university_list.dart';
 
@@ -36,6 +39,29 @@ class _SignupScreenState extends State<SignupScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+  }
+
+  Widget _backButton() {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(left: 0, top: 10, bottom: 10),
+              child: const Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.black,
+                size: 40,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -67,160 +93,165 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Sign up',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+        body: Stack(
+          children: [
+            Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: const BezierContainer(),
             ),
-          ),
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            color: GlobalVariables.backgroundColor,
-            child: Form(
-              key: _signUpFormKey,
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/Logo.png',
-                    width: 200,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      'Please sign up to continue',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  CustomTextField(
-                    controller: _nameController,
-                    hintText: 'Name',
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextField(
-                    controller: _emailController,
-                    hintText: 'Email (.edu only)',
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownSearch<String>(
-                    popupProps: const PopupProps.menu(
-                        showSearchBox: true,
-                        showSelectedItems: true,
-                        scrollbarProps: ScrollbarProps(
-                          trackBorderColor: Colors.amber,
-                        )),
-                    items: universities,
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        hintText: "Select School",
-                        focusColor: GlobalVariables.secondaryColor,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black38,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        school = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextField(
-                    controller: _passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 10),
-                  FlutterPwValidator(
-                      controller: _passwordController,
-                      minLength: 6,
-                      uppercaseCharCount: 1,
-                      lowercaseCharCount: 2,
-                      numericCharCount: 1,
-                      specialCharCount: 1,
-                      width: 350,
-                      height: 150,
-                      onSuccess: () {
-                        setState(() {
-                          validPassword = true;
-                        });
-                      },
-                      onFail: () {
-                        setState(() {
-                          validPassword = false;
-                        });
-                      }),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Checkbox(
-                        checkColor: GlobalVariables.secondaryColor,
-                        fillColor: MaterialStateProperty.resolveWith(getColor),
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        },
-                      ),
-                      const Expanded(
-                        child: TermsAndConditions(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  CustomButton(
-                    text: 'Sign Up',
-                    onTap: () {
-                      if (_signUpFormKey.currentState!.validate()) {
-                        signUpUser(
-                            context,
-                            _emailController.text,
-                            _nameController.text,
-                            school,
-                            validPassword,
-                            _passwordController.text,
-                            isChecked);
-                      }
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            SingleChildScrollView(
+              child: SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Form(
+                    key: _signUpFormKey,
+                    child: Column(
                       children: [
-                        const Text('Already have an account? '),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Sign In",
+                        const SizedBox(height: 50),
+                        Image.asset(
+                          'assets/images/Logo.png',
+                          width: 200,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            'Please sign up to continue',
                             style: TextStyle(
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: GlobalVariables.secondaryColor,
                             ),
                           ),
                         ),
+                        CustomTextField(
+                          controller: _nameController,
+                          hintText: 'Name',
+                        ),
+                        const SizedBox(height: 10),
+                        CustomTextField(
+                          controller: _emailController,
+                          hintText: 'Email (.edu only)',
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownSearch<String>(
+                          popupProps: const PopupProps.menu(
+                              showSearchBox: true,
+                              showSelectedItems: true,
+                              scrollbarProps: ScrollbarProps(
+                                trackBorderColor: Colors.amber,
+                              )),
+                          items: universities,
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              hintText: "Select School",
+                              focusColor: GlobalVariables.secondaryColor,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black38,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(4.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              school = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        CustomTextField(
+                          controller: _passwordController,
+                          hintText: 'Password',
+                          obscureText: true,
+                        ),
+                        const SizedBox(height: 10),
+                        FlutterPwValidator(
+                            controller: _passwordController,
+                            minLength: 6,
+                            uppercaseCharCount: 1,
+                            lowercaseCharCount: 2,
+                            numericCharCount: 1,
+                            specialCharCount: 1,
+                            width: 350,
+                            height: 150,
+                            onSuccess: () {
+                              setState(() {
+                                validPassword = true;
+                              });
+                            },
+                            onFail: () {
+                              setState(() {
+                                validPassword = false;
+                              });
+                            }),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Checkbox(
+                              checkColor: GlobalVariables.secondaryColor,
+                              fillColor:
+                                  MaterialStateProperty.resolveWith(getColor),
+                              value: isChecked,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  isChecked = value!;
+                                });
+                              },
+                            ),
+                            const Expanded(
+                              child: TermsAndConditions(),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        CustomButton(
+                          text: 'Sign Up',
+                          onTap: () {
+                            if (_signUpFormKey.currentState!.validate()) {
+                              signUpUser(
+                                  context,
+                                  _emailController.text,
+                                  _nameController.text,
+                                  school,
+                                  validPassword,
+                                  _passwordController.text,
+                                  isChecked);
+                            }
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Already have an account? '),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  "Sign In",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: GlobalVariables.secondaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
+            Positioned(top: 40, left: 0, child: _backButton()),
+          ],
         ),
       ),
     );

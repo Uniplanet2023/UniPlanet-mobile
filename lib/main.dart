@@ -21,6 +21,7 @@ import 'package:uniplanet_mobile/common/routes/router.dart';
 
 void main() async {
   await Global.init();
+
   runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/get_product.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/upload_product.dart';
-import 'package:uniplanet_mobile/models/product_model.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
 part 'product_event.dart';
 
