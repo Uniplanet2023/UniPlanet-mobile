@@ -1,42 +1,40 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
-import 'package:uniplanet_mobile/features/search/widget/searched_product.dart';
-import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniplanet_mobile/features/search/widget/searched-product-list.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class SearchScreen extends StatefulWidget {
-  static const String routeName = '/search-screen';
-  final String? searchQuery;
   const SearchScreen({
-    Key? key,
-    this.searchQuery,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Product>? products;
-
+  final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    if (widget.searchQuery != null) {
-      fetchSearchedProduct();
-    }
   }
 
-  fetchSearchedProduct() async {
-    products = await UserRepository().fetchSearchedProduct(
-        context: context, searchQuery: widget.searchQuery!);
-    setState(() {});
+  @override
+  void dispose() {
+    _searchController
+        .dispose(); // Dispose the controller when the widget is disposed
+    super.dispose();
   }
 
   void navigateToSearchScreen(String query) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
+    if (query.isNotEmpty) {
+      context
+          .read<SearchProductBloc>()
+          .add(SearchProductEvent(productName: _searchController.text));
+    }
   }
 
   @override
@@ -60,10 +58,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderRadius: BorderRadius.circular(7),
                     elevation: 1,
                     child: TextFormField(
-                      onFieldSubmitted: navigateToSearchScreen,
+                      controller: _searchController,
+                      autofocus: true,
+                      onFieldSubmitted: (query) =>
+                          navigateToSearchScreen(query),
                       decoration: InputDecoration(
                         prefixIcon: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            context.read<SearchProductBloc>().add(
+                                SearchProductEvent(
+                                    productName: _searchController.text));
+                          },
                           child: const Padding(
                             padding: EdgeInsets.only(
                               left: 6,
@@ -107,31 +112,21 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: products == null
-          ? const Loader()
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: products!.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            ProductDetailScreen.routeName,
-                            arguments: products![index],
-                          );
-                        },
-                        child: SearchedProduct(
-                          product: products![index],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+      body: BlocBuilder<SearchProductBloc, SearchProductState>(
+        builder: (context, state) {
+          if (state is SearchingProductState) {
+            return const Center(
+              child: Loader(),
+            );
+          }
+          if (state is SearchedProductState) {
+            return SearchedProductList(products: state.productList);
+          }
+          return const Center(
+            child: Text('Search for products'),
+          );
+        },
+      ),
     );
   }
 }

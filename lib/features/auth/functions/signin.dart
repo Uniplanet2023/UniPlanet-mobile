@@ -1,4 +1,5 @@
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
 
 void signInUser(email, password, context) async {
   context

@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-String authURI = 'http://auth.uniplanet-back.autos/api/auth';
-String productURI = 'http://product.uniplanet-back.autos';
-String chatURI = 'http://chat.uniplanet-back.autos';
-
-// String authURI = 'http://auth.com:3000/api/auth';
-// String productURI = 'http://product.com:3001/api/product';
-// String chatURI = 'http://chat:3002.com';
-
 class GlobalVariables {
   // COLORS
   static const appBarGradient = LinearGradient(

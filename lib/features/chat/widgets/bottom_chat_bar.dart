@@ -1,16 +1,8 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart' as foundation;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
@@ -61,13 +53,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void sendTextMessage(String msg, String chatRoomId) async {
     print('sendTextMessage');
     if (isShowSendButton) {
-      User user = context.read<UserBloc>().state.user!;
-      context.read<MessageBloc>().add(SendMessageEvent(
-            // BLoc
-            chatRoomId,
-            user.id,
-            msg,
-          ));
+      // User user = context.read<AuthBloc>().state.user!;
+      // context.read<MessageBloc>().add(SendMessageEvent(
+      //       // BLoc
+      //       chatRoomId,
+      //       user.id,
+      //       msg,
+      //     ));
       setState(() {
         _messageController.text = '';
       });

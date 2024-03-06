@@ -1,27 +1,19 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/account/screens/new_account_screen.dart';
-import 'package:uniplanet_mobile/features/addProduct/screens/add_product_screen.dart';
+import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
+import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/event/screens/category.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
-import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
+import 'package:uniplanet_mobile/features/home/screens/home-screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
-  static const String routeName = '/actual-home';
-  const BottomBar({Key? key}) : super(key: key);
+  const BottomBar({super.key});
 
   @override
   State<BottomBar> createState() => _BottomBarState();
@@ -33,9 +25,10 @@ class _BottomBarState extends State<BottomBar> {
   double bottomBarBorderWidth = 5;
   ScrollController? _controller;
   bool _isVisible = true;
+  String? profileImage;
 
   void navigateToAddProduct() {
-    Navigator.pushNamed(context, AddProductScreen.routeName);
+    Navigator.pushNamed(context, AppRoutes.addProductPage);
   }
 
   @override
@@ -74,21 +67,17 @@ class _BottomBarState extends State<BottomBar> {
   }
 
   void navigateToSearchScreen() {
-    Navigator.pushNamed(context, SearchScreen.routeName);
+    Navigator.pushNamed(context, AppRoutes.searchScreenPage);
   }
 
   @override
   Widget build(BuildContext context) {
-    User user = context.watch<UserBloc>().state.user!;
-
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
       const CategoryPage(),
       const AddProductScreen(),
       const ChatList(),
-      // const CartScreen(),
-      // const AccountScreen(),
-      const NewAccountScreen(),
+      const AccountScreen(),
     ];
     return Scaffold(
         body: Stack(
@@ -96,7 +85,7 @@ class _BottomBarState extends State<BottomBar> {
         pages[_page],
         AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
-          bottom: _isVisible ? -20 : -100,
+          bottom: _isVisible ? -20 : -120,
           left: 0,
           right: 0,
           child: Column(
@@ -248,15 +237,19 @@ class _BottomBarState extends State<BottomBar> {
                             minWidth: 10, // Minimum width for the red circle
                             minHeight: 10, // Minimum height for the red circle
                           ),
-                          child: const Text(
-                            '0',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize:
-                                  12, // You can adjust the font size as needed
-                            ),
+                          child: BlocBuilder<AccountBloc, AccountState>(
+                            builder: (context, state) {
+                              return Text(
+                                state.account.unreadMessage.toString(),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize:
+                                      12, // You can adjust the font size as needed
+                                ),
+                              );
+                            },
                           ),
                         ),
                         badgeStyle: const badges.BadgeStyle(

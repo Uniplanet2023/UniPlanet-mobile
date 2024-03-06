@@ -5,6 +5,7 @@ import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 class Message {
   final String chatRoomId;
   final String senderId;
+  final String receiverId;
   final String message;
   final MessageEnum type;
   final DateTime timestamp;
@@ -15,6 +16,7 @@ class Message {
     required this.chatRoomId,
     required this.messageId,
     required this.senderId,
+    required this.receiverId,
     required this.message,
     required this.type,
     required this.isSeen,
@@ -25,6 +27,7 @@ class Message {
         chatRoomId: '',
         messageId: '',
         senderId: '',
+        receiverId: '',
         message: '',
         type: MessageEnum.text,
         isSeen: false,
@@ -35,6 +38,7 @@ class Message {
     return <String, dynamic>{
       'chatRoomId': chatRoomId,
       'senderId': senderId,
+      'receiverId': receiverId,
       'message': message,
       'type': type.value,
       'timestamp': timestamp.millisecondsSinceEpoch,
@@ -47,6 +51,7 @@ class Message {
     return Message(
       chatRoomId: map['chatRoomId'] as String,
       senderId: map['senderId'] as String,
+      receiverId: map['receiverId'] as String,
       message: map['message'] as String,
       type: MessageEnum.text,
       timestamp: DateTime.parse(map['createdAt']).toLocal(),
