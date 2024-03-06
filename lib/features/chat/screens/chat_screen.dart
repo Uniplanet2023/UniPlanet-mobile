@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
+import 'package:uniplanet_mobile/models/chat_room_test.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 

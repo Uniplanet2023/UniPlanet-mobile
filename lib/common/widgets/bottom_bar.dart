@@ -7,7 +7,7 @@ import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/event/screens/category.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
-import 'package:uniplanet_mobile/features/home/screens/home-screen.dart';
+import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';

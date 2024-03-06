@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet_mobile/models/chat_room_test.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 
 abstract class ChatBlocState extends Equatable {

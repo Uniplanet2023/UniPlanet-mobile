@@ -2,9 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;

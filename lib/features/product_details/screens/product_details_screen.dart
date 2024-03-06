@@ -7,7 +7,6 @@ import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 

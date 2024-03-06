@@ -1,12 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
+
 import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
+
 import 'package:uniplanet_mobile/features/home/widgets/buildProductBox.dart';
+
 import 'package:uniplanet_mobile/features/home/widgets/top_categories.dart';
 
 class HomeScreen extends StatelessWidget {
   final ScrollController controller;
+
   const HomeScreen({super.key, required this.controller});
 
   final bool _pinned = false;
