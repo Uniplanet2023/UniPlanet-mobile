@@ -13,7 +13,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
-  static const String routeName = '/actual-home';
   const BottomBar({super.key});
 
   @override

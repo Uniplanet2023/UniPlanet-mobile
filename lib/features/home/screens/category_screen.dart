@@ -6,7 +6,6 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/home/widgets/buildProductGrid.dart';
 
 class CategoryScreen extends StatefulWidget {
-  static const String routeName = '/category-deals';
   final String category;
 
   const CategoryScreen({super.key, required this.category});

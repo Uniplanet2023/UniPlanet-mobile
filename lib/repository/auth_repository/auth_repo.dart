@@ -12,6 +12,8 @@ import 'package:uniplanet_mobile/repository/auth_repository/auth_repo_interface.
 import 'package:uniplanet_mobile/network/dio_client.dart';
 
 class AuthRepository implements IAuthRepository {
+  final DioClient _dioClient;
+  AuthRepository(this._dioClient);
   @override
   Future<String> signUpUser({
     required String email,
@@ -20,14 +22,14 @@ class AuthRepository implements IAuthRepository {
     required String school,
   }) async {
     try {
-      Response res = await DioClient.instance.dio.post('$authURI/signup',
+      Response res = await _dioClient.dio.post('$authURI/signup',
           data: {
             'name': name,
             'email': email,
             'password': password,
             'school': school
           },
-          options: DioClient.instance.getDioOptions());
+          options: _dioClient.getDioOptions());
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
         SnackbarGlobal.showSnackBar(
@@ -48,12 +50,12 @@ class AuthRepository implements IAuthRepository {
     required String password,
   }) async {
     try {
-      Response res = await DioClient.instance.dio.post('$authURI/signin',
+      Response res = await _dioClient.dio.post('$authURI/signin',
           data: {
             'email': email,
             'password': password,
           },
-          options: DioClient.instance.getDioOptions());
+          options: _dioClient.getDioOptions());
       // Use the function to display error messages
 
       return displayErrorMessages(res.toString());
@@ -66,9 +68,9 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<String> logOut() async {
     try {
-      Response res = await DioClient.instance.dio.delete('$authURI/signout',
-          options: DioClient.instance.getDioOptions());
-      await DioClient.instance.clearCookie();
+      Response res = await _dioClient.dio
+          .delete('$authURI/signout', options: _dioClient.getDioOptions());
+      await _dioClient.clearCookie();
 
       if (res.data['message'] != "Logged Out Successfully") {
         return "Logout Failed";
@@ -89,8 +91,8 @@ class AuthRepository implements IAuthRepository {
     required String email,
   }) async {
     try {
-      var res = await DioClient.instance.dio.post('$authURI/request-OTP',
-          data: {'email': email}, options: DioClient.instance.getDioOptions());
+      var res = await _dioClient.dio.post('$authURI/request-OTP',
+          data: {'email': email}, options: _dioClient.getDioOptions());
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
         return res.data['hash'];
@@ -105,8 +107,8 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<bool> tokenValidation() async {
     try {
-      var res = await DioClient.instance.dio.post('$authURI/token-login',
-          options: DioClient.instance.getDioOptions());
+      var res = await _dioClient.dio
+          .post('$authURI/token-login', options: _dioClient.getDioOptions());
 
       if (res.data != null &&
           res.data['access'] != null &&
@@ -121,9 +123,9 @@ class AuthRepository implements IAuthRepository {
   Future<void> forgottenPassword({
     required String email,
   }) async {
-    var res = await DioClient.instance.dio.put('$authURI/forgotten-password',
+    var res = await _dioClient.dio.put('$authURI/forgotten-password',
         data: jsonEncode({'email': email}),
-        options: DioClient.instance.getDioOptions());
+        options: _dioClient.getDioOptions());
 
     if (res.data['message'] ==
         "User with the given email address doesn't exists!") {
@@ -145,13 +147,13 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<bool> otpValidation(String email, String hash, String otpCode) async {
     try {
-      var res = await DioClient.instance.dio.post('$authURI/verify-OTP',
+      var res = await _dioClient.dio.post('$authURI/verify-OTP',
           data: {
             'email': email,
             'otpHash': hash,
             'otpCode': otpCode,
           },
-          options: DioClient.instance.getDioOptions());
+          options: _dioClient.getDioOptions());
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
         return true;

@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
             context.read<ProductBloc>().add(const LoadProductEvent());
             context.read<AccountBloc>().add(const GetAccountInfoEvent());
             Navigator.pushNamedAndRemoveUntil(
-                context, AppRoutes.homePage, (route) => false);
+                context, AppRoutes.bottomBarPage, (route) => false);
           } else if (state is AuthenticationDeny) {
             Navigator.pushNamedAndRemoveUntil(
                 context, AppRoutes.authPage, (route) => false);

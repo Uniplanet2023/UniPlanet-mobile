@@ -1,3 +1,4 @@
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ class TopCategories extends StatelessWidget {
   const TopCategories({super.key});
 
   void navigateToCategoryPage(BuildContext context, String category) {
-    Navigator.pushNamed(context, CategoryScreen.routeName, arguments: category);
+    Navigator.pushNamed(context, AppRoutes.categoryPage, arguments: category);
   }
 
   @override

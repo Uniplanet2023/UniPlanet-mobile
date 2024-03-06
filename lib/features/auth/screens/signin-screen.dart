@@ -8,13 +8,10 @@ import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/functions/forgotten-password.dart';
-import 'package:uniplanet_mobile/features/auth/functions/signin.dart';
-import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -51,7 +48,7 @@ class _SigninScreenState extends State<SigninScreen> {
           context.read<ProductBloc>().add(const LoadProductEvent());
           context.read<AccountBloc>().add(const GetAccountInfoEvent());
           Navigator.pushNamedAndRemoveUntil(
-              context, BottomBar.routeName, (route) => false);
+              context, AppRoutes.bottomBarPage, (route) => false);
         }
       },
       child: Scaffold(

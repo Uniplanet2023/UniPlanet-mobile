@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+// import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
@@ -10,7 +10,7 @@ import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
 class ChatScreen extends StatefulWidget {
-  final MyChatRoom myChatRoom;
+  final ChatRoom myChatRoom;
   final User client;
   const ChatScreen({super.key, required this.client, required this.myChatRoom});
 
@@ -30,14 +30,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<MessageBloc>()
-        .add(GetMessageEvent(widget.myChatRoom.myChatRoomId));
+    // context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
   }
 
   @override
   Widget build(BuildContext context) {
-    var userOnline = context.watch<StatusBloc>().state.userOnList!;
+    // var userOnline = context.watch<StatusBloc>().state.userOnList!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: GlobalVariables.backgroundColor,
@@ -45,27 +43,27 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.client.name),
-            userOnline.contains(widget.client.id)
-                ? const Row(
-                    children: [
-                      Text(
-                        'online',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.normal),
-                      ),
-                      Icon(Icons.circle, color: Colors.green, size: 16),
-                    ],
-                  )
-                : const Row(
-                    children: [
-                      Text(
-                        'offline',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.normal),
-                      ),
-                      Icon(Icons.circle, color: Colors.red, size: 16),
-                    ],
-                  ),
+            // userOnline.contains(widget.client.id)
+            //     ? const Row(
+            //         children: [
+            //           Text(
+            //             'online',
+            //             style: TextStyle(
+            //                 fontSize: 13, fontWeight: FontWeight.normal),
+            //           ),
+            //           Icon(Icons.circle, color: Colors.green, size: 16),
+            //         ],
+            //       )
+            //     :
+            const Row(
+              children: [
+                Text(
+                  'offline',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
+                ),
+                Icon(Icons.circle, color: Colors.red, size: 16),
+              ],
+            ),
           ],
         ),
         centerTitle: false,
@@ -89,10 +87,10 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
               child: ChatList(
             scrollController: _scrollController,
-            myChatRoom: widget.myChatRoom,
+            chatRoom: widget.myChatRoom,
           )),
           BottomChatField(
-            chatRoomId: widget.myChatRoom.chatRoom.chatRoomId,
+            chatRoomId: widget.myChatRoom.id,
             scrollDownfuction: _scrollToBottom,
           ),
           const SizedBox(

@@ -71,8 +71,8 @@ class UserHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage:
-                    NetworkImage(state.account.profileImage), // Placeholder pfp
+                backgroundImage: NetworkImage(
+                    state.account.user.profileImage), // Placeholder pfp
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -80,12 +80,12 @@ class UserHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      state.account.name,
+                      state.account.user.name,
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                        'User ID: ${state.account.id}'), // Replace with actual data
+                        'User ID: ${state.account.user.id}'), // Replace with actual data
                     Text(
                       'Basic description goes here.', // Replace with actual data
                       style: TextStyle(color: Colors.grey[600]),

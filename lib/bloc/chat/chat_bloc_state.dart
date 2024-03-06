@@ -3,7 +3,7 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
 
 abstract class ChatBlocState extends Equatable {
-  final List<MyChatRoom>? chatRoomList;
+  final List<ChatRoom>? chatRoomList;
 
   const ChatBlocState({
     this.chatRoomList,

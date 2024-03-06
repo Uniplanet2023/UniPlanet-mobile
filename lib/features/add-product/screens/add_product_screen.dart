@@ -6,6 +6,7 @@ import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/upload_product.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/status/product_status.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
@@ -64,7 +65,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           status: status,
           images: images,
           profileImage:
-              context.read<AccountBloc>().state.account.profileImage));
+              context.read<AccountBloc>().state.account.user.profileImage));
     }
   }
 
@@ -85,7 +86,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         if (state is ProductUploadedState ||
             state is ProductImageUploadedState) {
           Navigator.pushNamedAndRemoveUntil(
-              context, BottomBar.routeName, (route) => false);
+              context, AppRoutes.bottomBarPage, (route) => false);
         }
       },
       child: Scaffold(

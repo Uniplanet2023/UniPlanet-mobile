@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/myChatRoom.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
-  final MyChatRoom myChatRoom;
+  final ChatRoom chatRoom;
   const ChatList(
-      {super.key, required this.scrollController, required this.myChatRoom});
+      {super.key, required this.scrollController, required this.chatRoom});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -36,7 +36,7 @@ class _ChatListState extends State<ChatList> {
           widget.scrollController.position.maxScrollExtent) {
         context
             .read<MessageBloc>()
-            .add(GetMoreMessageEvent(widget.myChatRoom.myChatRoomId));
+            .add(GetMoreMessageEvent(widget.chatRoom.id));
       }
     });
   }
@@ -108,8 +108,8 @@ class _ChatListState extends State<ChatList> {
           //     print('triggered');
           //     // SocketService.socket!.emit('seenMessageACK', {
           //     //   currentMessage.messageId,
-          //     //   widget.myChatRoom.myChatRoomId,
-          //     //   widget.myChatRoom.chatRoom.chatRoomId
+          //     //   widget.chatRoom.chatRoomId,
+          //     //   widget.chatRoom.chatRoom.chatRoomId
           //     // });
           //   }
           //   return SenderMessageCard(

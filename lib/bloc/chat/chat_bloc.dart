@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
@@ -28,8 +29,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<EmptyUnseenMessageEvent>(
       (event, emit) {
         for (var myChat in state.chatRoomList!) {
-          if (myChat.myChatRoomId == event.myChatRoomId) {
-            myChat.unseenMessage = [];
+          if (myChat.id == event.myChatRoomId) {
             return;
           }
         }
@@ -46,7 +46,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       chatRoomList: state.chatRoomList,
     ));
     try {
-      List<MyChatRoom> chatrooms = await _chatRepository.getChatRooms();
+      List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
 
       emit(LoadedChatRoomState(
         chatRoomList: chatrooms,
@@ -63,11 +63,12 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       chatRoomList: state.chatRoomList, // previous data
     ));
     try {
-      MyChatRoom myChatRoom = await _chatRepository.creatingChatRoom(
-          receiverId: event.seller.id, productId: event.productId);
+      ChatRoom myChatRoom = await _chatRepository.creatingChatRoom(
+          seller: event.seller,
+          productId: event.productId,
+          profileImage: event.profileImage);
       // SocketService.socket!
       //     .emit("joinChatRoom", myChatRoom.chatRoom.chatRoomId);
-      state.chatRoomList!.add(myChatRoom); // store new
       if (state.chatRoomList != null) {
         state.chatRoomList!.add(myChatRoom);
         emit(CreatedChatRoomState(

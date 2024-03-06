@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet_mobile/models/myChatRoom.dart';
@@ -25,16 +25,16 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     final state = context.watch<ChatBloc>().state;
 
-    List<MyChatRoom> buyingChatRoom = [];
-    List<MyChatRoom> sellingChatRooms = [];
+    List<ChatRoom> buyingChatRoom = [];
+    List<ChatRoom> sellingChatRooms = [];
 
     if (state is LoadedChatRoomState) {
-      sellingChatRooms = state.chatRoomList!
-          .where((myChatRoom) => myChatRoom.type == "seller")
-          .toList();
-      buyingChatRoom = state.chatRoomList!
-          .where((myChatRoom) => myChatRoom.type == "buyer")
-          .toList();
+      // sellingChatRooms = state.chatRoomList!
+      //     .where((myChatRoom) => myChatRoom.type == "seller")
+      //     .toList();
+      // buyingChatRoom = state.chatRoomList!
+      //     .where((myChatRoom) => myChatRoom.type == "buyer")
+      //     .toList();
     }
 
     return DefaultTabController(

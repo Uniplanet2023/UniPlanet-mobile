@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
@@ -45,37 +46,37 @@ class _AuthScreenState extends State<AuthScreen> {
               children: [
                 Image.asset(
                   'assets/images/Logo.png',
-                  width: 300,
+                  width: 300.w,
                 ),
-                const Text(
+                Text(
                   'Selling Smarter,',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 30.sp,
                     fontWeight: FontWeight.w200,
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
+                SizedBox(height: 10.h),
+                Text(
                   'Buying Better,',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 30.sp,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 SizedBox(
-                  width: 250.0,
+                  width: 250.w,
                   child: TextLiquidFill(
                     text: 'All on Campus',
                     waveColor: Colors.blueAccent,
                     boxBackgroundColor: GlobalVariables.greyBackgroundCOlor,
-                    textStyle: const TextStyle(
-                      fontSize: 30.0,
+                    textStyle: TextStyle(
+                      fontSize: 30.sp,
                       fontWeight: FontWeight.w800,
                     ),
-                    boxHeight: 50.0,
+                    boxHeight: 50.h,
                   ),
                 ),
-                const SizedBox(height: 50),
+                SizedBox(height: 50.h),
                 CustomButton(
                   text: 'Sign Up',
                   onTap: () {
@@ -88,7 +89,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 CustomButton(
                   text: 'Sign In',
                   color: GlobalVariables.backgroundColor,

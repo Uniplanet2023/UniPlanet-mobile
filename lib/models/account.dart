@@ -1,22 +1,16 @@
 import 'dart:convert';
 
+import 'package:uniplanet_mobile/models/user_model.dart';
+
 class Account {
-  final String id;
-  final String name;
-  final String email;
-  final String school;
-  final String profileImage;
+  final User user;
   final int unreadNotification;
   final int unreadMessage;
   final List<String> searchHistory;
   final List<String> recentViewHistory;
 
   Account({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.school,
-    required this.profileImage,
+    required this.user,
     required this.unreadNotification,
     required this.unreadMessage,
     required this.searchHistory,
@@ -25,11 +19,7 @@ class Account {
 
   static initialAccount() {
     return Account(
-      id: '',
-      name: '',
-      email: '',
-      school: '',
-      profileImage: '',
+      user: User.initialUser(),
       unreadNotification: 0,
       unreadMessage: 0,
       searchHistory: [],
@@ -39,11 +29,7 @@ class Account {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'email': email,
-      'school': school,
-      'profileImage': profileImage,
+      'user': user.toMap(),
       'unreadNotification': unreadNotification,
       'unreadMessage': unreadMessage,
       'searchHistory': searchHistory,
@@ -53,11 +39,7 @@ class Account {
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
-      id: map['id'],
-      name: map['name'] as String,
-      email: map['email'] as String,
-      school: map['school'] as String,
-      profileImage: map['profileImage'] as String,
+      user: User.fromMap(map),
       unreadNotification: map['unreadNotification'] as int,
       unreadMessage: map['unreadMessage'] as int,
       searchHistory: List<String>.from(

@@ -51,7 +51,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => HomeScreen(controller: ScrollController()),
       );
-    case BottomBar.routeName:
+    case AppRoutes.bottomBarPage:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const BottomBar(),
@@ -88,7 +88,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       final arguments = routeSettings.arguments as Map<String, dynamic>;
 
       User client = arguments['seller'] as User;
-      MyChatRoom myChatRoom = arguments['myChatRoom'] as MyChatRoom;
+      ChatRoom myChatRoom = arguments['chatRoom'] as ChatRoom;
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => ChatScreen(

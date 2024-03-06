@@ -10,12 +10,7 @@ import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/functions/signup.dart';
-import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
-import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/constants/university_list.dart';
 
 class SignupScreen extends StatefulWidget {
