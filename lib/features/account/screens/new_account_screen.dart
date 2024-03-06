@@ -4,10 +4,10 @@ import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_settings_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/app_settings_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/buying_screen.dart';
+import 'package:uniplanet_mobile/features/event/screens/inventory_products_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/help_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/payment_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/selling_screen.dart';
+import 'package:uniplanet_mobile/features/event/screens/hot_products_screen.dart';
+import 'package:uniplanet_mobile/features/event/screens/liked_products_screen.dart';
 import 'package:uniplanet_mobile/repository/user_repo.dart';
 
 class NewAccountScreen extends StatefulWidget {
