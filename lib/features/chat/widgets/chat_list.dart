@@ -1,25 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/my_message_card.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/sender_message_card.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
-  final MyChatRoom myChatRoom;
+  final ChatRoom chatRoom;
   const ChatList(
-      {super.key, required this.scrollController, required this.myChatRoom});
+      {super.key, required this.scrollController, required this.chatRoom});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -45,7 +36,7 @@ class _ChatListState extends State<ChatList> {
           widget.scrollController.position.maxScrollExtent) {
         context
             .read<MessageBloc>()
-            .add(GetMoreMessageEvent(widget.myChatRoom.myChatRoomId));
+            .add(GetMoreMessageEvent(widget.chatRoom.id));
       }
     });
   }
@@ -104,27 +95,28 @@ class _ChatListState extends State<ChatList> {
               hidePreviousDate = true;
             }
           }
+          return null;
 
           // Card assignment with conditional date visibility
-          if (currentMessage.senderId == UserRepository.user.id) {
-            return MyMessageCard(
-              message: currentMessage,
-              date: index == 0 || !hidePreviousDate ? formattedDate : '',
-            );
-          } else {
-            if (currentMessage.isSeen == false) {
-              print('triggered');
-              // SocketService.socket!.emit('seenMessageACK', {
-              //   currentMessage.messageId,
-              //   widget.myChatRoom.myChatRoomId,
-              //   widget.myChatRoom.chatRoom.chatRoomId
-              // });
-            }
-            return SenderMessageCard(
-              message: currentMessage,
-              date: index == 0 || !hidePreviousDate ? formattedDate : '',
-            );
-          }
+          // if (currentMessage.senderId == UserRepository.user.id) {
+          //   return MyMessageCard(
+          //     message: currentMessage,
+          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
+          //   );
+          // } else {
+          //   if (currentMessage.isSeen == false) {
+          //     print('triggered');
+          //     // SocketService.socket!.emit('seenMessageACK', {
+          //     //   currentMessage.messageId,
+          //     //   widget.chatRoom.chatRoomId,
+          //     //   widget.chatRoom.chatRoom.chatRoomId
+          //     // });
+          //   }
+          //   return SenderMessageCard(
+          //     message: currentMessage,
+          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
+          //   );
+          // }
         },
       ),
     );

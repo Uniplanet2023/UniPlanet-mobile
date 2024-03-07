@@ -2,17 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  static const String routeName = '/product-details';
   final Product product;
 
   const ProductDetailScreen({super.key, required this.product});
@@ -47,13 +45,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           .toList(),
       options: CarouselOptions(viewportFraction: 1, height: 400),
     );
-  }
-
-  void navigateToChatScreen(User seller, ChatBlocState state) {
-    if (state is CreatedChatRoomState) {
-      Navigator.pushNamed(context, ChatScreen.routeName,
-          arguments: {"seller": seller, "chatRoom": state.chatRoomList!.last});
-    }
   }
 
   @override
@@ -102,7 +93,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: BlocConsumer<ChatBloc, ChatBlocState>(
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
-            navigateToChatScreen(widget.product.seller, state);
+            Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
+              "seller": state.chatRoomList!.last.seller,
+              "chatRoom": state.chatRoomList!.last
+            });
           }
         },
         builder: (context, state) {
@@ -114,7 +108,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               _buildPriceText(widget.product.price),
-              widget.product.seller.id == UserRepository.user.id
+              widget.product.seller.id == AccountRepository.currentUser.id
                   ? const SizedBox()
                   : _buildChatAndFavoriteButtons(state),
             ],
@@ -129,16 +123,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       children: [
         IconButton(
           icon: const Icon(Icons.favorite_border),
-          onPressed: () => UserRepository()
-              .addToLikes(context: context, product: widget.product),
+          onPressed: () => {},
         ),
         TextButton(
-          onPressed: () => state is CreatingChatRoomState
-              ? null
-              : context.read<ChatBloc>().add(CreateChatRoomEvent(
-                  //created ChatRoom State
+          onPressed: () => {
+            context.read<ChatBloc>().add(CreateChatRoomEvent(
                   widget.product.seller,
-                  widget.product.id)),
+                  widget.product.id,
+                  AccountRepository.currentUser.profileImage,
+                ))
+          },
           style: TextButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor),
           child: state is CreatingChatRoomState

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/basic-state.dart';
-import 'package:uniplanet_mobile/bloc/auth-bloc/auth-state/signup-state.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/functions/opt-request.dart';
 import 'package:uniplanet_mobile/features/auth/functions/opt-verification.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signin_screen.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
-  static const String routeName = '/opt-verify-screen';
   final String email;
   const OtpVerifyScreen({super.key, required this.email});
 
@@ -28,7 +28,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       listener: (context, state) {
         if (state is OTPValidationCompleteState) {
           Navigator.pushNamedAndRemoveUntil(
-              context, SigninScreen.routeName, (route) => false);
+              context, AppRoutes.signinPage, (route) => false);
         }
       },
       child: Scaffold(
@@ -52,14 +52,14 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               children: [
                 Image.asset(
                   'assets/images/Logo.png',
-                  width: 200,
+                  width: 200.w,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
                     'Enter the verification number sent to your Email address to continue:',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -90,7 +90,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 CustomButton(
                   text: 'Submit',
                   onTap: () {

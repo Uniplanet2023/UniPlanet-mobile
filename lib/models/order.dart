@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:uniplanet_mobile/models/product.dart';
 
 class Order {

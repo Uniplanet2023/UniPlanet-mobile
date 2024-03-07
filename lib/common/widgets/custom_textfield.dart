@@ -9,9 +9,10 @@ class CustomTextField extends StatelessWidget {
   final dynamic inputFormatters;
   final String prefixText;
   final bool obscureText;
+  final bool validatorEnabled;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     this.keyboardType = TextInputType.text,
@@ -20,7 +21,8 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatters,
     this.prefixText = "",
     this.obscureText = false,
-  }) : super(key: key);
+    this.validatorEnabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,9 @@ class CustomTextField extends StatelessWidget {
             color: Colors.black38,
           ))),
       validator: (val) {
+        if (!validatorEnabled) {
+          return null;
+        }
         if (val == null || val.isEmpty) {
           return 'Enter your $hintText';
         }

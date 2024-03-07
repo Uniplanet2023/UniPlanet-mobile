@@ -1,21 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chatBloc/chat_bloc_event.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
-import 'package:uniplanet_mobile/bloc/userBloc/user_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/models/myChatRoom.dart';
-import 'package:uniplanet_mobile/models/user.dart';
-import 'package:uniplanet_mobile/repository/user_repo.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 
 class ContactsList extends StatefulWidget {
-  final List<MyChatRoom> list;
-  const ContactsList({Key? key, required this.list}) : super(key: key);
+  final List<ChatRoom> list;
+  const ContactsList({super.key, required this.list});
 
   @override
   State<ContactsList> createState() => _ContactsListState();
@@ -36,7 +33,7 @@ class _ContactsListState extends State<ContactsList> {
         shrinkWrap: true,
         itemCount: widget.list.length,
         itemBuilder: (context, index) {
-          User client = widget.list[index].receiver;
+          User client = widget.list[index].seller;
 
           return Column(
             children: [
@@ -61,13 +58,14 @@ class _ContactsListState extends State<ContactsList> {
                         fontSize: 18,
                       ),
                     ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
+                    subtitle: const Padding(
+                      padding: EdgeInsets.only(top: 6.0),
                       child: Text(
-                        widget.list[index].chatRoom.lastMessage == null
-                            ? " "
-                            : widget.list[index].chatRoom.lastMessage!.message,
-                        style: const TextStyle(fontSize: 15),
+                        // widget.list[index].chatRoom.lastMessage == null
+                        //     ? " "
+                        //     : widget.list[index].chatRoom.lastMessage!.message,
+                        "",
+                        style: TextStyle(fontSize: 15),
                       ),
                     ),
                     leading: Stack(
@@ -89,55 +87,57 @@ class _ContactsListState extends State<ContactsList> {
                                     color: Colors.red, size: 16)),
                       ],
                     ),
-                    trailing: Column(
+                    trailing: const Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
                           height: 30,
                           child: Text(
-                            widget.list[index].chatRoom.lastMessage
-                                        ?.timestamp !=
-                                    null
-                                ? formatTimestamp(widget.list[index].chatRoom
-                                    .lastMessage!.timestamp)
-                                : "",
-                            style: const TextStyle(
+                            // widget.list[index].chatRoom.lastMessage
+                            //             ?.timestamp !=
+                            //         null
+                            //     ? formatTimestamp(widget.list[index].chatRoom
+                            //         .lastMessage!.timestamp)
+                            //     : "",
+                            "",
+                            style: TextStyle(
                               color: Colors.grey,
                               fontSize: 13,
                             ),
                           ),
                         ),
-                        widget.list[index].unseenMessage.isEmpty
-                            ? const SizedBox()
-                            : Container(
-                                width: 25,
-                                height: 25,
-                                decoration: BoxDecoration(
-                                  color: Colors
-                                      .red, // Background color for the circle
-                                  borderRadius: BorderRadius.circular(
-                                      10), // Makes it round
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth:
-                                      45, // Minimum width for the red circle
-                                  minHeight:
-                                      25, // Minimum height for the red circle
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    widget.list[index].unseenMessage.length
-                                        .toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize:
-                                          12, // You can adjust the font size as needed
-                                    ),
-                                  ),
-                                ),
-                              ),
+                        // widget.list[index].unseenMessage.isEmpty
+                        //     ? const SizedBox()
+                        //     : Container(
+                        //         width: 25,
+                        //         height: 25,
+                        //         decoration: BoxDecoration(
+                        //           color: Colors
+                        //               .red, // Background color for the circle
+                        //           borderRadius: BorderRadius.circular(
+                        //               10), // Makes it round
+                        //         ),
+                        //         constraints: const BoxConstraints(
+                        //           minWidth:
+                        //               45, // Minimum width for the red circle
+                        //           minHeight:
+                        //               25, // Minimum height for the red circle
+                        //         ),
+                        //         child: Center(
+                        //           child: Text(
+                        //             widget.list[index].unseenMessage.length
+                        //                 .toString(),
+                        //             style: const TextStyle(
+                        //               color: Colors.white,
+                        //               fontWeight: FontWeight.w900,
+                        //               fontSize:
+                        //                   12, // You can adjust the font size as needed
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        SizedBox()
                       ],
                     ),
                   ),
