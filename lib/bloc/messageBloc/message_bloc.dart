@@ -34,8 +34,8 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   _getMoreMessage(GetMoreMessageEvent event, emit) async {
     emit(LoadingMessageState(msgList: state.msgList, page: state.page));
     int nextPage = state.page! + 1;
-    List<Message> listMessage = await _chatRepository.getMessages(
-        myChatRoomId: event.myChatRoomId, page: nextPage);
+    List<Message> listMessage =
+        await _chatRepository.getMessages(chatId: event.chatId, page: nextPage);
     if (listMessage.isEmpty) {
       emit(EndMessageState(msgList: state.msgList, page: state.page));
     } else {
@@ -62,8 +62,8 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   _loadMessages(GetMessageEvent event, emit) async {
     emit(LoadingMessageState(msgList: state.msgList, page: state.page));
     try {
-      List<Message> msgList = await _chatRepository.getMessages(
-          myChatRoomId: event.myChatRoomId, page: 0);
+      List<Message> msgList =
+          await _chatRepository.getMessages(chatId: event.chatId, page: 0);
 
       emit(LoadedMessageState(msgList: msgList, page: 0));
     } catch (e) {

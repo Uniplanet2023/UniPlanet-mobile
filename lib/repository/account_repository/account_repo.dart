@@ -8,8 +8,8 @@ import 'package:uniplanet_mobile/network/display_error_messages.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo_interface.dart';
 
 class AccountRepository implements IAccountRepository {
-  static User currentUser = User.initialUser();
   final DioClient _dioClient;
+  static User user = User.initialUser();
   AccountRepository(this._dioClient);
 
   @override
@@ -17,10 +17,11 @@ class AccountRepository implements IAccountRepository {
     try {
       Response res = await _dioClient.dio
           .get('$accountURI/myinfo', options: _dioClient.getDioOptions());
+
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
         Account result = Account.fromJson(res.data);
-        currentUser = result.user;
+        user = User.fromJson(res.data);
         return result;
       } else {
         throw Exception('Failed to get account info');

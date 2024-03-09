@@ -17,9 +17,7 @@ class ChatRepository {
   ChatRepository(this._dioClient);
 
   Future<ChatRoom> creatingChatRoom(
-      {required String productId,
-      required String profileImage,
-      required User seller}) async {
+      {required String productId, required String sellerId}) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
     try {
       Response res = await _dioClient.dio.post(
@@ -27,12 +25,7 @@ class ChatRepository {
         options: _dioClient.getDioOptions(),
         data: {
           'productId': productId,
-          'buyerProfileImage': profileImage,
-          'sellerId': seller.id,
-          'sellerName': seller.name,
-          'sellerProfileImage': seller.profileImage,
-          'sellerEmail': seller.email,
-          'sellerSchool': seller.school,
+          'sellerId': sellerId,
         },
       );
 
@@ -44,12 +37,12 @@ class ChatRepository {
   }
 
   Future<List<Message>> getMessages(
-      {required String myChatRoomId, required int page}) async {
+      {required String chatId, required int page}) async {
     try {
-      Response res = await _dioClient.dio.post(
-        '$chatURI/api/getMessages',
+      Response res = await _dioClient.dio.get(
+        '$chatURI/get-mechssages',
         options: _dioClient.getDioOptions(),
-        data: {'myChatRoomId': myChatRoomId, 'page': page},
+        queryParameters: {'chatId': chatId, 'page': page},
       );
 
       return MessageList.fromMap(res.data).msgList;

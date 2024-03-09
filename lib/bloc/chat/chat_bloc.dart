@@ -62,9 +62,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     ));
     try {
       ChatRoom myChatRoom = await _chatRepository.creatingChatRoom(
-          seller: event.seller,
-          productId: event.productId,
-          profileImage: event.profileImage);
+        sellerId: event.sellerId,
+        productId: event.productId,
+      );
       // SocketService.socket!
       //     .emit("joinChatRoom", myChatRoom.chatRoom.chatRoomId);
       if (state.chatRoomList != null) {

@@ -57,7 +57,6 @@ class AuthRepository implements IAuthRepository {
           },
           options: _dioClient.getDioOptions());
       // Use the function to display error messages
-
       return displayErrorMessages(res.toString());
     } on DioException catch (e) {
       //TODO: Handle error
