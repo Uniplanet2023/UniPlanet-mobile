@@ -50,7 +50,7 @@ class _ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    var state = context.watch<MessageBloc>().state;
+    var state = context.read<MessageBloc>().state;
 
     final DateFormat formatter = DateFormat('h:mm a');
 

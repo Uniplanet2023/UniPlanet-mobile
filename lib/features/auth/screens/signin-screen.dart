@@ -70,7 +70,7 @@ class _SigninScreenState extends State<SigninScreen> {
       listener: (context, state) {
         if (state is UserNotVerifiedState) {
           Navigator.pushNamed(context, AppRoutes.otpVerifyPage,
-              arguments: _emailController.text);
+              arguments: {'email': _emailController.text});
         }
         if (state is Authorized) {
           context.read<ProductBloc>().add(const LoadProductEvent());

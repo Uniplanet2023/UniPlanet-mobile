@@ -2,17 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
-
   const ProductDetailScreen({super.key, required this.product});
 
   @override
@@ -20,9 +20,11 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  late User currentUser;
   @override
   void initState() {
     super.initState();
+    currentUser = context.read<AccountBloc>().state.account.user;
   }
 
   CarouselSlider _buildCarouselSlider() {
@@ -108,7 +110,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               _buildPriceText(widget.product.price),
-              widget.product.seller.id == AccountRepository.currentUser.id
+              widget.product.seller.id == currentUser.id
                   ? const SizedBox()
                   : _buildChatAndFavoriteButtons(state),
             ],
@@ -128,9 +130,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         TextButton(
           onPressed: () => {
             context.read<ChatBloc>().add(CreateChatRoomEvent(
-                  widget.product.seller,
+                  widget.product.seller.id,
                   widget.product.id,
-                  AccountRepository.currentUser.profileImage,
                 ))
           },
           style: TextButton.styleFrom(

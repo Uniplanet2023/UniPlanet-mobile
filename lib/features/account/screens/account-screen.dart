@@ -5,12 +5,8 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_settings_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/app_settings_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/buying_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/help_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/payment_screen.dart';
-import 'package:uniplanet_mobile/features/account/screens/selling_screen.dart';
-import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -23,8 +19,14 @@ class _AccountScreen extends State<AccountScreen> {
   final TextEditingController _updateNameController = TextEditingController();
   final TextEditingController _updatePasswordController =
       TextEditingController();
+  late final User currentUser;
 
   bool validPassword = false;
+  @override
+  void initState() {
+    super.initState();
+    currentUser = context.read<AccountBloc>().state.account.user;
+  }
 
   void updateName(String newName) {}
   void updatePassword(String newPassword) {}
@@ -48,7 +50,9 @@ class _AccountScreen extends State<AccountScreen> {
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 300),
         child: Column(
           children: [
-            const UserHeader(), // User info widget
+            UserHeader(
+              currentUser: currentUser,
+            ), // User info widget
             const SizedBox(
               height: 30,
             ),
@@ -359,7 +363,8 @@ class _AccountScreen extends State<AccountScreen> {
 }
 
 class UserHeader extends StatelessWidget {
-  const UserHeader({super.key});
+  final User currentUser;
+  const UserHeader({super.key, required this.currentUser});
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +391,7 @@ class UserHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AccountRepository.currentUser.name,
+                    currentUser.name,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -423,12 +428,11 @@ class MenuSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
-        title: const Text('titleLarge',
-            style: TextStyle(
-                fontSize: 18, color: GlobalVariables.backgroundColor)),
+        title: Text(title,
+            style: const TextStyle(fontSize: 18, color: Colors.black)),
         leading: Icon(
           icon,
-          color: GlobalVariables.backgroundColor,
+          color: Colors.black,
         ),
         trailing: const Icon(Icons.arrow_forward), // Replace with actual icon
         onTap: ontap,
