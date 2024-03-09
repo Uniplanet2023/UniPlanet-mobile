@@ -5,8 +5,8 @@ import 'package:uniplanet_mobile/features/event/screens/inventory_products_scree
 import 'package:uniplanet_mobile/features/event/screens/liked_products_screen.dart';
 import 'package:uniplanet_mobile/features/event/screens/sold_products_screen.dart';
 
-class CartPage extends StatelessWidget {
-  const CartPage({
+class CategoriesPage extends StatelessWidget {
+  const CategoriesPage({
     super.key,
   });
 
@@ -81,7 +81,7 @@ class _LocationListItemState extends State<LocationListItem> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
       child: AspectRatio(
-        aspectRatio: 15 / 7,
+        aspectRatio: 15 / 6,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Stack(
@@ -348,31 +348,34 @@ const locations = [
     screen: HotProductsScreen(),
   ),
   Location(
-    name: 'Liked Products',
+    name: 'Mobiles',
     place: '',
-    imageUrl: '$urlPrefix/liked.jpeg',
+    imageUrl: '$urlPrefix/mobile_c.jpeg',
     screen: LikedProductsScreen(),
   ),
   Location(
-    name: 'Inventory Products',
+    name: 'Essentials',
     place: '',
-    imageUrl: '$urlPrefix/available.jpeg',
+    imageUrl: '$urlPrefix/essentials_c.jpeg',
     screen: InventoryProductsScreen(),
   ),
   Location(
-    name: 'Sold Products',
+    name: 'Appliances',
     place: '',
-    imageUrl: '$urlPrefix/sold.jpeg',
+    imageUrl: '$urlPrefix/appliance_c.jpeg',
     screen: SoldProductsScreen(),
   ),
-  // Location(
-  //   name: 'Trip',
-  //   place: '',
-  //   imageUrl: '$urlPrefix/trip.jpeg',
-  // ),
-  // Location(
-  //   name: 'House',
-  //   place: '',
-  //   imageUrl: '$urlPrefix/house.jpeg',
-  // ),
+  Location(
+    name: 'Books',
+    place: '',
+    imageUrl: '$urlPrefix/books_c.jpeg',
+    screen: SoldProductsScreen(),
+  ),
+  Location(
+    name: 'Fashion',
+    place: '',
+    imageUrl: '$urlPrefix/fashion_c.jpeg',
+    screen: SoldProductsScreen(),
+  ),
+  
 ];

@@ -5,7 +5,7 @@ import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/event/screens/cart.dart';
+import 'package:uniplanet_mobile/features/event/screens/categories.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
@@ -75,7 +75,7 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
-      const CartPage(),
+      const CategoriesPage(),
       const AddProductScreen(),
       const ChatList(),
       const AccountScreen(),
@@ -86,7 +86,7 @@ class _BottomBarState extends State<BottomBar> {
         pages[_page],
         AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
-          bottom: _isVisible ? -20 : -120,
+          bottom: _isVisible ? -15 : -120,
           left: 0,
           right: 0,
           child: Column(
@@ -156,315 +156,76 @@ class _BottomBarState extends State<BottomBar> {
                 type: BottomNavigationBarType.fixed,
                 selectedItemColor: GlobalVariables.selectedNavBarColor,
                 unselectedItemColor: GlobalVariables.unselectedNavBarColor,
+                selectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.bold),
                 backgroundColor: GlobalVariables.backgroundColor,
+                enableFeedback: true,
                 iconSize: 28,
                 onTap: updatePage,
                 items: <BottomNavigationBarItem>[
-                  // HOME
-                  BottomNavigationBarItem(
-                    icon: Container(
-                      width: bottomBarWidth,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: _page == 0
-                                ? GlobalVariables.selectedNavBarColor
-                                : GlobalVariables.backgroundColor,
-                            width: bottomBarBorderWidth,
-                          ),
-                        ),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.home_outlined,
                       ),
-                      child: Column(
-                        children: [
-                          _page == 0
-                              ? const Icon(
-                                  Icons.home,
-                                )
-                              : const Icon(
-                                  Icons.home_outlined,
-                                ),
-                          Text(
-                            'Home',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: _page == 0
-                                  ? FontWeight.w800
-                                  : FontWeight.normal,
-                              color: _page == 0
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : Colors.black,
-                              overflow: TextOverflow.visible,
-                            ),
-                          )
-                        ],
+                      label: 'Home'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.list,
                       ),
+                      label: "Categories"),
+                  const BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.add_box_outlined,
                     ),
-                    label: '',
+                    label: "sell",
                   ),
-
-                    // My Cart
-                    BottomNavigationBarItem(
-                      icon: Container(
-                        width: bottomBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _page == 1
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : GlobalVariables.backgroundColor,
-                              width: bottomBarBorderWidth,
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _page == 1
-                                ? const Icon(
-                                    Icons.shopping_cart,
-                                  )
-                                : const Icon(
-                                    Icons.shopping_cart_outlined,
+                  BottomNavigationBarItem(
+                      icon: BlocBuilder<AccountBloc, AccountState>(
+                        builder: (context, state) {
+                          if (state.account.unreadMessage != 0) {
+                            return badges.Badge(
+                              badgeContent: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 10,
+                                  minHeight: 10,
+                                ),
+                                child: Text(
+                                  state.account.unreadMessage.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
                                   ),
-                            Text(
-                              'Cart',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: _page == 1
-                                    ? FontWeight.w800
-                                    : FontWeight.normal,
-                                color: _page == 1
-                                    ? GlobalVariables.selectedNavBarColor
-                                    : Colors.black,
-                                overflow: TextOverflow.visible,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      label: '',
-                    ),
-
-                    //add
-                    BottomNavigationBarItem(
-                      icon: InkWell(
-                        onTap: navigateToAddProduct,
-                        child: Container(
-                          width: bottomBarWidth,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: GlobalVariables.backgroundColor,
-                                width: bottomBarBorderWidth,
-                              ),
-                            ),
-                          ),
-                          child: const Column(
-                            children: [
-                              Icon(
-                                Icons.add_box_outlined,
-                              ),
-                              Text(
-                                'Sell',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  overflow: TextOverflow.visible,
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      label: '',
-                    ),
-
-                    // Chat
-                    BottomNavigationBarItem(
-                      icon: Container(
-                        width: bottomBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _page == 3
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : GlobalVariables.backgroundColor,
-                              width: bottomBarBorderWidth,
-                            ),
-                          ),
-                        ),
-                        child: badges.Badge(
-                          badgeContent: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  Colors.red, // Background color for the circle
-                              borderRadius:
-                                  BorderRadius.circular(10), // Makes it round
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 10, // Minimum width for the red circle
-                              minHeight:
-                                  10, // Minimum height for the red circle
-                            ),
-                            child: const Text(
-                              '0',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
-                                fontSize:
-                                    12, // You can adjust the font size as needed
                               ),
-                            ),
-                          ),
-                          badgeStyle: const badges.BadgeStyle(
-                            elevation: 0,
-                            shape: badges.BadgeShape.circle,
-                          ),
-                          position:
-                              badges.BadgePosition.topEnd(top: -12, end: 5),
-                          child: Column(
-                            children: [
-                              _page == 3
-                                  ? const Icon(
-                                      Icons.chat,
-                                    )
-                                  : const Icon(
-                                      Icons.chat_bubble_outline,
-                                    ),
-                              Text(
-                                'Chat',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: _page == 3
-                                      ? FontWeight.w800
-                                      : FontWeight.normal,
-                                  color: _page == 3
-                                      ? GlobalVariables.selectedNavBarColor
-                                      : Colors.black,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      label: '',
-                    ),
-                  // Chat
-                  BottomNavigationBarItem(
-                    icon: Container(
-                      width: bottomBarWidth,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: _page == 3
-                                ? GlobalVariables.selectedNavBarColor
-                                : GlobalVariables.backgroundColor,
-                            width: bottomBarBorderWidth,
-                          ),
-                        ),
-                      ),
-                      child: badges.Badge(
-                        badgeContent: Container(
-                          decoration: BoxDecoration(
-                            color:
-                                Colors.red, // Background color for the circle
-                            borderRadius:
-                                BorderRadius.circular(10), // Makes it round
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 10, // Minimum width for the red circle
-                            minHeight: 10, // Minimum height for the red circle
-                          ),
-                          child: BlocBuilder<AccountBloc, AccountState>(
-                            builder: (context, state) {
-                              return Text(
-                                state.account.unreadMessage.toString(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize:
-                                      12, // You can adjust the font size as needed
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        badgeStyle: const badges.BadgeStyle(
-                          elevation: 0,
-                          shape: badges.BadgeShape.circle,
-                        ),
-                        position: badges.BadgePosition.topEnd(top: -12, end: 5),
-                        child: Column(
-                          children: [
-                            _page == 3
-                                ? const Icon(
-                                    Icons.chat,
-                                  )
-                                : const Icon(
-                                    Icons.chat_bubble_outline,
-                                  ),
-                            Text(
-                              'Chat',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: _page == 3
-                                    ? FontWeight.w800
-                                    : FontWeight.normal,
-                                color: _page == 3
-                                    ? GlobalVariables.selectedNavBarColor
-                                    : Colors.black,
-                                overflow: TextOverflow.visible,
+                              badgeStyle: const badges.BadgeStyle(
+                                elevation: 0,
+                                shape: badges.BadgeShape.circle,
                               ),
-                            )
-                          ],
-                        ),
+                              position: badges.BadgePosition.topEnd(
+                                  top: -12, end: -6),
+                              child: const Icon(
+                                Icons.chat_bubble_outline_sharp,
+                              ),
+                            );
+                          } else {
+                            return const Icon(
+                              Icons.chat_bubble_outline_sharp,
+                            );
+                          }
+                        },
                       ),
-                    ),
-                    label: '',
-                  ),
-
-                  // ACCOUNT
-                  BottomNavigationBarItem(
-                    icon: Container(
-                      width: bottomBarWidth,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: _page == 4
-                                ? GlobalVariables.selectedNavBarColor
-                                : GlobalVariables.backgroundColor,
-                            width: bottomBarBorderWidth,
-                          ),
-                        ),
+                      label: "Chat"),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.person_outline_sharp,
                       ),
-                      child: Column(
-                        children: [
-                          _page == 4
-                              ? const Icon(
-                                  Icons.person,
-                                )
-                              : const Icon(
-                                  Icons.person_outline_outlined,
-                                ),
-                          Text(
-                            'Profile',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: _page == 4
-                                  ? FontWeight.w800
-                                  : FontWeight.normal,
-                              color: _page == 4
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : Colors.black,
-                              overflow: TextOverflow.visible,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    label: '',
-                  ),
+                      label: 'Profile'),
                 ],
               ),
             ],
