@@ -36,8 +36,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       );
 
     case AppRoutes.otpVerifyPage:
-      var arguments = routeSettings.arguments as Map<String, dynamic>;
-      String email = arguments['email'];
+      var email = routeSettings.arguments as String;
+
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => OtpVerifyScreen(email: email),
