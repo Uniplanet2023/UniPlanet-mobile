@@ -19,7 +19,7 @@ class AccountRepository implements IAccountRepository {
           .get('$accountURI/myinfo', options: _dioClient.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
-      user = User.fromJson(res.data);
+
       if (msg == "success") {
         Account result = Account.fromJson(res.data);
         user = User.fromJson(res.data);
