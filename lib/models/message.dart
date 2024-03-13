@@ -1,67 +1,68 @@
 import 'dart:convert';
 
-import 'package:uniplanet_mobile/common/enums/message_enum.dart';
-
 class Message {
-  final String chatRoomId;
-  final String senderId;
-  final String receiverId;
+  final String sender;
   final String message;
-  final MessageEnum type;
-  final DateTime timestamp;
-  final String messageId;
-  bool isSeen;
+  final String messageType;
+  final String receiver;
+  final String chat;
+  final DateTime createdAt = DateTime.now();
+  final DateTime? updatedAt;
+  final DateTime? readDate;
 
   Message({
-    required this.chatRoomId,
-    required this.messageId,
-    required this.senderId,
-    required this.receiverId,
+    required this.sender,
     required this.message,
-    required this.type,
-    required this.isSeen,
-    required this.timestamp,
+    required this.messageType,
+    required this.receiver,
+    required this.chat,
+    this.updatedAt,
+    this.readDate,
   });
-  static initialMessage() {
-    return Message(
-        chatRoomId: '',
-        messageId: '',
-        senderId: '',
-        receiverId: '',
-        message: '',
-        type: MessageEnum.text,
-        isSeen: false,
-        timestamp: DateTime.now());
-  }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'chatRoomId': chatRoomId,
-      'senderId': senderId,
-      'receiverId': receiverId,
-      'message': message,
-      'type': type.value,
-      'timestamp': timestamp.millisecondsSinceEpoch,
-      'messageId': messageId,
-      'isSeen': isSeen,
-    };
-  }
+  Message copyWith({
+    String? sender,
+    String? message,
+    String? messageType,
+    String? receiver,
+    String? chat,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? readDate,
+  }) =>
+      Message(
+        sender: sender ?? this.sender,
+        message: message ?? this.message,
+        messageType: messageType ?? this.messageType,
+        receiver: receiver ?? this.receiver,
+        chat: chat ?? this.chat,
+        updatedAt: updatedAt ?? this.updatedAt,
+        readDate: readDate ?? this.readDate,
+      );
 
-  factory Message.fromMap(Map<String, dynamic> map) {
-    return Message(
-      chatRoomId: map['chatRoomId'] as String,
-      senderId: map['senderId'] as String,
-      receiverId: map['receiverId'] as String,
-      message: map['message'] as String,
-      type: MessageEnum.text,
-      timestamp: DateTime.parse(map['createdAt']).toLocal(),
-      messageId: map['_id'] as String,
-      isSeen: map['isSeen'] as bool,
-    );
-  }
+  factory Message.fromRawJson(String str) => Message.fromJson(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  String toRawJson() => json.encode(toJson());
 
-  factory Message.fromJson(String source) =>
-      Message.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Message.fromJson(Map<String, dynamic> json) => Message(
+        sender: json["sender"],
+        message: json["message"],
+        messageType: json["messageType"],
+        receiver: json["receiver"],
+        chat: json["chat"],
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        readDate:
+            json["readDate"] == null ? null : DateTime.parse(json["readDate"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "sender": sender,
+        "message": message,
+        "messageType": messageType,
+        "receiver": receiver,
+        "chat": chat,
+        "createdAt": createdAt.toIso8601String(),
+        "updatedAt": updatedAt ?? updatedAt?.toIso8601String(),
+        "readDate": readDate ?? readDate?.toIso8601String(),
+      };
 }

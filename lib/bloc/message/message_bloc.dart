@@ -26,7 +26,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     });
     on<ReadMessageEvent>((event, emit) {
       emit(UnReadMessageState(msgList: state.msgList, page: state.page));
-      state.msgList!.last.isSeen = true;
+      // state.msgList!.last.readDate = DateTime.now();
 
       emit(ReadMessageState(msgList: state.msgList, page: state.page));
     });

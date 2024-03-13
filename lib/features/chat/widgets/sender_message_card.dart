@@ -4,10 +4,10 @@ import 'package:uniplanet_mobile/models/message.dart';
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
-    Key? key,
+    super.key,
     required this.message,
     required this.date,
-  }) : super(key: key);
+  });
   final Message message;
   final String date;
 
@@ -57,7 +57,7 @@ class SenderMessageCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 5),
-              message.isSeen
+              message.readDate == null
                   ? const SizedBox()
                   : const Icon(
                       Icons.local_fire_department_outlined,

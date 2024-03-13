@@ -10,6 +10,7 @@ import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
           if (state is Authorized) {
             context.read<ProductBloc>().add(const LoadProductEvent());
             context.read<AccountBloc>().add(const GetAccountInfoEvent());
+
             Navigator.pushNamedAndRemoveUntil(
                 context, AppRoutes.bottomBarPage, (route) => false);
           } else if (state is AuthenticationDeny) {

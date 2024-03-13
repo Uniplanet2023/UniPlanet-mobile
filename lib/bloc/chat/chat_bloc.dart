@@ -14,16 +14,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
-    on<ClientStatusChangeEvent>((event, emit) {
-      emit(StatusChangingState(
-        chatRoomList: state.chatRoomList,
-      ));
-    });
-    on<ClientStatusDisconnectEvent>(((event, emit) {
-      emit(StatusChangingState(
-        chatRoomList: state.chatRoomList,
-      ));
-    }));
     on<EmptyUnseenMessageEvent>(
       (event, emit) {
         for (var myChat in state.chatRoomList!) {
@@ -34,9 +24,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         emit(LoadedChatRoomState(chatRoomList: state.chatRoomList));
       },
     );
-    // _socketService.stream.listen((event) {
-    //   if (event) {}
-    // });
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {

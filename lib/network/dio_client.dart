@@ -7,7 +7,8 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 class DioClient {
   static final DioClient _instance = DioClient._internal();
   static DioClient get instance => _instance;
-
+  late Directory _tempDir;
+  late String? _sessionToken;
   late final Dio _dio;
   Options getDioOptions() => Options(
         headers: <String, String>{
@@ -20,8 +21,8 @@ class DioClient {
   }
 
   Future<void> initCookie() async {
-    Directory tempDir = await path_provider.getTemporaryDirectory();
-    final tempPath = tempDir.path;
+    _tempDir = await path_provider.getTemporaryDirectory();
+    final tempPath = _tempDir.path;
     var cookieJar = PersistCookieJar(
       storage: FileStorage(tempPath),
       ignoreExpires: true,
@@ -31,16 +32,38 @@ class DioClient {
   }
 
   Future<void> clearCookie() async {
-    Directory tempDir = await path_provider.getTemporaryDirectory();
-    final tempPath = tempDir.path;
+    final tempPath = _tempDir.path;
+
+    var cookieJar = PersistCookieJar(
+      storage: FileStorage(tempPath),
+      ignoreExpires: true,
+    );
+    _sessionToken = null;
+    cookieJar.deleteAll();
+  }
+
+  Future<void> getSessionToken() async {
+    final tempPath = _tempDir.path;
 
     var cookieJar = PersistCookieJar(
       storage: FileStorage(tempPath),
       ignoreExpires: true,
     );
 
-    cookieJar.deleteAll();
+    // Assuming the server you're connecting to is 'example.com'
+    List<Cookie> cookies = await cookieJar
+        .loadForRequest(Uri.parse("http://uniplanet-back.autos"));
+    String? sessionToken;
+
+    for (var cookie in cookies) {
+      if (cookie.name == 'session') {
+        sessionToken = cookie.value;
+        break;
+      }
+    }
+    _sessionToken = sessionToken;
   }
 
+  String? get session => _sessionToken;
   Dio get dio => _dio;
 }

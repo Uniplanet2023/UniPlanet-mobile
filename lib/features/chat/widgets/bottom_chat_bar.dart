@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
   final Function scrollDownfuction;
+  final SocketService socketService;
+  final String sellerId;
+  final List<Message>? messages;
   const BottomChatField({
     super.key,
     required this.chatRoomId,
     required this.scrollDownfuction,
+    required this.socketService,
+    required this.sellerId,
+    required this.messages,
   });
 
   @override
@@ -50,7 +58,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
     isRecorderInit = true;
   }
 
-  void sendTextMessage(String msg, String chatRoomId) async {
+  void sendTextMessage() async {
     print('sendTextMessage');
     if (isShowSendButton) {
       // User user = context.read<AuthBloc>().state.user!;
@@ -60,9 +68,15 @@ class _BottomChatFieldState extends State<BottomChatField> {
       //       user.id,
       //       msg,
       //     ));
-      setState(() {
-        _messageController.text = '';
+      widget.socketService.sendMessage(
+          _messageController.text, widget.chatRoomId, 'text', widget.sellerId,
+          (message) {
+        setState(() {
+          widget.messages!.insert(0, message);
+          _messageController.clear();
+        });
       });
+
       widget.scrollDownfuction();
     }
   }
@@ -193,8 +207,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   backgroundColor: const Color(0xFF128C7E),
                   radius: 20,
                   child: GestureDetector(
-                    onTap: () => sendTextMessage(
-                        _messageController.text, widget.chatRoomId),
+                    onTap: () => sendTextMessage(),
                     child: Icon(
                       isShowSendButton
                           ? Icons.send

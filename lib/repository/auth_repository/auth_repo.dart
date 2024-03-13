@@ -57,7 +57,11 @@ class AuthRepository implements IAuthRepository {
           },
           options: _dioClient.getDioOptions());
       // Use the function to display error messages
-      return displayErrorMessages(res.toString());
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        await DioClient.instance.getSessionToken();
+      }
+      return msg;
     } on DioException catch (e) {
       //TODO: Handle error
       return e.response!.data['message'];
@@ -108,13 +112,14 @@ class AuthRepository implements IAuthRepository {
     try {
       var res = await _dioClient.dio
           .post('$authURI/token-login', options: _dioClient.getDioOptions());
-
-      if (res.data != null &&
-          res.data['access'] != null &&
-          res.data['access'] == true) {
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        await DioClient.instance.getSessionToken();
         return res.data['access'];
       }
-    } on DioException catch (e) {}
+    } on DioException catch (e) {
+      print(e);
+    }
     return false; // Return false if the condition is not met
   }
 

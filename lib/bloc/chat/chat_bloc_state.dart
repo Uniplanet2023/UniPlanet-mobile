@@ -52,21 +52,6 @@ class SelectChatRoomState extends ChatBlocState {
   List<Object?> get props => [chatRoomList];
 }
 
-//setting client
-class StatusChangingState extends ChatBlocState {
-  const StatusChangingState({super.chatRoomList});
-  @override
-  // TODO: implement props
-  List<Object?> get props => [chatRoomList];
-}
-
-class StatusChangedState extends ChatBlocState {
-  const StatusChangedState({super.chatRoomList});
-  @override
-  // TODO: implement props
-  List<Object?> get props => [chatRoomList];
-}
-
 //Error
 class ErrorChatState extends ChatBlocState {
   final String errMsg;

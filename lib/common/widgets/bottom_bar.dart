@@ -11,6 +11,7 @@ import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class BottomBar extends StatefulWidget {
@@ -35,7 +36,6 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==

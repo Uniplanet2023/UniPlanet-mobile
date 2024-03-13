@@ -6,10 +6,11 @@ import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/bloc/category/category_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
-import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
+import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
+import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
@@ -58,7 +59,8 @@ void main() async {
             create: (context) => MessageBloc(context.read<ChatRepository>())),
         BlocProvider(
           create: (context) => StatusBloc(),
-        )
+        ),
+        BlocProvider(create: (context) => TypingBloc()),
       ], child: const MyApp())));
 }
 

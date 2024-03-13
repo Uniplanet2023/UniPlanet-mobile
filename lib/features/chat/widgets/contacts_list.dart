@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/statusBloc/status_bloc.dart';
+import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
@@ -25,7 +25,7 @@ class _ContactsListState extends State<ContactsList> {
 
   @override
   Widget build(BuildContext context) {
-    var userOnline = context.watch<StatusBloc>().state.userOnList!;
+    var userOnline = context.watch<StatusBloc>().state.online;
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),

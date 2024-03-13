@@ -10,6 +10,7 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
+import 'package:uniplanet_mobile/network/display_error_messages.dart';
 
 class ChatRepository {
   final DioClient _dioClient;
@@ -39,13 +40,20 @@ class ChatRepository {
   Future<List<Message>> getMessages(
       {required String chatId, required int page}) async {
     try {
+      List<Message> messages = [];
       Response res = await _dioClient.dio.get(
-        '$chatURI/get-mechssages',
+        '$chatURI/get-messages',
         options: _dioClient.getDioOptions(),
         queryParameters: {'chatId': chatId, 'page': page},
       );
-
-      return MessageList.fromMap(res.data).msgList;
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        messages =
+            List<Message>.from(res.data.map((data) => Message.fromJson(data)));
+        return messages;
+      } else {
+        return [];
+      }
     } on DioException catch (e) {
       _handleDioException(e);
       return [];
@@ -63,24 +71,6 @@ class ChatRepository {
       _handleDioException(e);
       return [];
     }
-  }
-
-  Future<Message> sendMessage(
-      {required String msg,
-      required String chatRoomId,
-      required String senderId}) async {
-    // SocketService.socket!.emit('sendMessage', {msg, chatRoomId});
-
-    return Message(
-      chatRoomId: chatRoomId,
-      messageId: '',
-      senderId: senderId,
-      receiverId: '',
-      message: msg,
-      type: MessageEnum.text,
-      isSeen: false,
-      timestamp: DateTime.now(),
-    );
   }
 
   void _handleDioException(DioException e) {

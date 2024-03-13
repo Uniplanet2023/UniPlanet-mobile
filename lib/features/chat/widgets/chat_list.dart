@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:uniplanet_mobile/bloc/messageBloc/message_bloc.dart';
+import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
+import 'package:uniplanet_mobile/features/chat/widgets/my_message_card.dart';
+import 'package:uniplanet_mobile/features/chat/widgets/sender_message_card.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
@@ -22,6 +25,7 @@ class _ChatListState extends State<ChatList> {
   void initState() {
     super.initState();
     // Add a listener to the scrollController here
+
     widget.scrollController.addListener(_scrollListener);
   }
 
@@ -75,7 +79,7 @@ class _ChatListState extends State<ChatList> {
           }
 
           final Message currentMessage = state.msgList![index];
-          String formattedDate = formatter.format(currentMessage.timestamp);
+          String formattedDate = formatter.format(currentMessage.createdAt);
 
           // Check for one-minute gap if not the first message and the same sender
           bool hidePreviousDate = false;
@@ -83,11 +87,11 @@ class _ChatListState extends State<ChatList> {
             final Message previousMessage = state.msgList![index - 1];
 
             final bool isSameSender =
-                currentMessage.senderId == previousMessage.senderId;
+                currentMessage.sender == previousMessage.sender;
 
             if (isSameSender &&
-                currentMessage.timestamp
-                        .difference(previousMessage.timestamp)
+                currentMessage.createdAt
+                        .difference(previousMessage.createdAt)
                         .inMinutes
                         .abs() <
                     1) {
@@ -95,28 +99,27 @@ class _ChatListState extends State<ChatList> {
               hidePreviousDate = true;
             }
           }
-          return null;
 
           // Card assignment with conditional date visibility
-          // if (currentMessage.senderId == UserRepository.user.id) {
-          //   return MyMessageCard(
-          //     message: currentMessage,
-          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
-          //   );
-          // } else {
-          //   if (currentMessage.isSeen == false) {
-          //     print('triggered');
-          //     // SocketService.socket!.emit('seenMessageACK', {
-          //     //   currentMessage.messageId,
-          //     //   widget.chatRoom.chatRoomId,
-          //     //   widget.chatRoom.chatRoom.chatRoomId
-          //     // });
-          //   }
-          //   return SenderMessageCard(
-          //     message: currentMessage,
-          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
-          //   );
-          // }
+          if (currentMessage.sender == AccountRepository.user!.id) {
+            return MyMessageCard(
+              message: currentMessage,
+              date: index == 0 || !hidePreviousDate ? formattedDate : '',
+            );
+          } else {
+            if (currentMessage.readDate == null) {
+              print('triggered');
+              // SocketService.socket!.emit('seenMessageACK', {
+              //   currentMessage.messageId,
+              //   widget.chatRoom.chatRoomId,
+              //   widget.chatRoom.chatRoom.chatRoomId
+              // });
+            }
+            return SenderMessageCard(
+              message: currentMessage,
+              date: index == 0 || !hidePreviousDate ? formattedDate : '',
+            );
+          }
         },
       ),
     );
