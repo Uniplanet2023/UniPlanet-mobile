@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:uniplanet_mobile/features/event/screens/hot_products_screen.dart';
-import 'package:uniplanet_mobile/features/event/screens/inventory_products_screen.dart';
-import 'package:uniplanet_mobile/features/event/screens/liked_products_screen.dart';
-import 'package:uniplanet_mobile/features/event/screens/sold_products_screen.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({
     super.key,
   });
+
+  void navigateToCategoryPage(BuildContext context, String category) {
+    Navigator.pushNamed(context, AppRoutes.categoryPage, arguments: category);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +20,18 @@ class CategoriesPage extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          for (final location in locations)
+          for (final category in categories)
             InkWell(
               onTap: () {
-                Navigator.push(
+                navigateToCategoryPage(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => location.screen,
-                  ),
+                  category.name,
                 );
               },
-              child: LocationListItem(
-                imageUrl: location.imageUrl,
-                name: location.name,
-                country: location.place,
+              child: CategoryListItem(
+                imageUrl: category.imageUrl,
+                name: category.name,
+                category: category.description,
               ),
             ),
           const SizedBox(
@@ -44,23 +43,23 @@ class CategoriesPage extends StatelessWidget {
   }
 }
 
-class LocationListItem extends StatefulWidget {
-  const LocationListItem({
+class CategoryListItem extends StatefulWidget {
+  const CategoryListItem({
     super.key,
     required this.imageUrl,
     required this.name,
-    required this.country,
+    required this.category,
   });
 
   final String imageUrl;
   final String name;
-  final String country;
+  final String category;
 
   @override
-  State<LocationListItem> createState() => _LocationListItemState();
+  State<CategoryListItem> createState() => _CategoryListItemState();
 }
 
-class _LocationListItemState extends State<LocationListItem> {
+class _CategoryListItemState extends State<CategoryListItem> {
   final GlobalKey _backgroundImageKey = GlobalKey();
   late Image imageFile;
   @override
@@ -139,7 +138,7 @@ class _LocationListItemState extends State<LocationListItem> {
             ),
           ),
           Text(
-            widget.country,
+            widget.category,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -325,57 +324,48 @@ class RenderParallax extends RenderBox
   }
 }
 
-class Location {
-  const Location({
+class Category {
+  const Category({
     required this.name,
-    required this.place,
+    required this.description,
     required this.imageUrl,
-    required this.screen,
   });
 
   final String name;
-  final String place;
+  final String description;
   final String imageUrl;
-  final Widget screen;
 }
 
 const urlPrefix = 'assets/images';
-const locations = [
-  Location(
+const categories = [
+  Category(
     name: 'Hot Products',
-    place: '',
+    description: '',
     imageUrl: '$urlPrefix/hotdeal.avif',
-    screen: HotProductsScreen(),
   ),
-  Location(
+  Category(
     name: 'Mobiles',
-    place: '',
+    description: '',
     imageUrl: '$urlPrefix/mobile_c.jpeg',
-    screen: LikedProductsScreen(),
   ),
-  Location(
+  Category(
     name: 'Essentials',
-    place: '',
+    description: '',
     imageUrl: '$urlPrefix/essentials_c.jpeg',
-    screen: InventoryProductsScreen(),
   ),
-  Location(
+  Category(
     name: 'Appliances',
-    place: '',
+    description: '',
     imageUrl: '$urlPrefix/appliance_c.jpeg',
-    screen: SoldProductsScreen(),
   ),
-  Location(
+  Category(
     name: 'Books',
-    place: '',
+    description: '',
     imageUrl: '$urlPrefix/books_c.jpeg',
-    screen: SoldProductsScreen(),
   ),
-  Location(
+  Category(
     name: 'Fashion',
-    place: '',
+    description: '',
     imageUrl: '$urlPrefix/fashion_c.jpeg',
-    screen: SoldProductsScreen(),
   ),
-  
 ];
