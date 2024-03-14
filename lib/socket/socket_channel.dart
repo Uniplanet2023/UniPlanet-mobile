@@ -10,28 +10,30 @@ import 'package:uniplanet_mobile/network/dio_client.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 
 class SocketService {
+  late String userId;
   static final SocketService _instance = SocketService._internal();
   static SocketService get instance => _instance;
   late final IO.Socket socket;
   SocketService._internal() {
+    userId = AccountRepository.user!.id;
     socket = IO.io(
         messageURI,
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
-            .setReconnectionAttempts(3)
-            .setReconnectionDelay(300)
-            .setQuery({"session_token": DioClient.instance.session})
+            .setReconnectionAttempts(10)
+            .setReconnectionDelay(1000)
+            .setQuery({"userId": userId})
             .build());
   }
 
   void connect(BuildContext context) {
     socket.onConnect((_) {
       print('Connected');
-      socket.on('online-user', (userId) {
+      socket.on('online user', (userId) {
         context.read<StatusBloc>().add(StatusChangeEvent(userId: userId));
       });
-      socket.on('offline-user', (userId) {
+      socket.on('offline user', (userId) {
         context.read<StatusBloc>().add(StatusDisconnectEvent(userId: userId));
       });
     });
@@ -42,10 +44,8 @@ class SocketService {
     socket.onReconnectAttempt((data) => print('ReconnectAttempt $data'));
     socket.onReconnecting((data) => print('Reconnecting $data'));
     //TODO: add the token to the header
-    if (AccountRepository.user == null) {
-      throw Exception("User is not logged in");
-    }
-    socket.emit("setup", AccountRepository.user!.id);
+
+    socket.emit("setup");
     socket.connect();
   }
 
@@ -82,7 +82,7 @@ class SocketService {
   void sendMessage(String content, String chatId, String messageType,
       String receiver, Function(Message) messageStoreCallback) {
     Message message = Message(
-      sender: AccountRepository.user!.id,
+      sender: userId,
       message: content,
       messageType: messageType,
       chat: chatId,

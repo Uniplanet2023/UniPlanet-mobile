@@ -52,7 +52,7 @@ class DioClient {
 
     // Assuming the server you're connecting to is 'example.com'
     List<Cookie> cookies = await cookieJar
-        .loadForRequest(Uri.parse("http://uniplanet-back.autos"));
+        .loadForRequest(Uri.parse("http://auth.uniplanet-back.autos"));
     String? sessionToken;
 
     for (var cookie in cookies) {

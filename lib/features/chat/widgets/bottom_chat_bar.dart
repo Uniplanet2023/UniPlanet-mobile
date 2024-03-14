@@ -9,14 +9,12 @@ import 'package:uniplanet_mobile/socket/socket_channel.dart';
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
   final Function scrollDownfuction;
-  final SocketService socketService;
   final String sellerId;
   final List<Message>? messages;
   const BottomChatField({
     super.key,
     required this.chatRoomId,
     required this.scrollDownfuction,
-    required this.socketService,
     required this.sellerId,
     required this.messages,
   });
@@ -68,7 +66,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
       //       user.id,
       //       msg,
       //     ));
-      widget.socketService.sendMessage(
+      SocketService.instance.sendMessage(
           _messageController.text, widget.chatRoomId, 'text', widget.sellerId,
           (message) {
         setState(() {

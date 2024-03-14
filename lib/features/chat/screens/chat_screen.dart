@@ -21,8 +21,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
-  late SocketService socketService;
-  List<Message>? messages;
+  List<Message> messages = [];
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -40,18 +39,18 @@ class _ChatScreenState extends State<ChatScreen> {
     //   });
     // });
     // socketService.connect(context);
-    socketService.onConnectChat(context, widget.myChatRoom.id, (message) {
+    SocketService.instance.onConnectChat(context, widget.myChatRoom.id,
+        (message) {
       setState(() {
-        messages!.insert(0, message);
+        messages.insert(0, message);
       });
     });
-    socketService.joinChat(widget.myChatRoom.id);
+    SocketService.instance.joinChat(widget.myChatRoom.id);
     super.initState();
   }
 
   @override
   void dispose() {
-    socketService.socket.disconnect();
     _scrollController.dispose();
     super.dispose();
   }
@@ -120,7 +119,6 @@ class _ChatScreenState extends State<ChatScreen> {
           BottomChatField(
             chatRoomId: widget.myChatRoom.id,
             scrollDownfuction: _scrollToBottom,
-            socketService: socketService,
             sellerId: widget.client.id,
             messages: messages,
           ),
