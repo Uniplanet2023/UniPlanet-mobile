@@ -5,7 +5,7 @@ import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/event/screens/category.dart';
+import 'package:uniplanet_mobile/features/event/screens/categories.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
@@ -75,340 +75,170 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
-      const CategoryPage(),
+      const CategoriesPage(),
       const AddProductScreen(),
       const ChatList(),
       const AccountScreen(),
     ];
+
     return BlocListener<AccountBloc, AccountState>(
-      listener: (context, state) {
-        // TODO: implement listener
-        if (state is GotAccountInfoState) {
-          SocketService.instance.connect(context);
-        }
-      },
-      child: Scaffold(
-          body: Stack(
-        children: [
-          pages[_page],
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            bottom: _isVisible ? -20 : -120,
-            left: 0,
-            right: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  color: Colors.white,
-                  padding: _isVisible
-                      ? const EdgeInsets.fromLTRB(0, 8, 0, 10)
-                      : const EdgeInsets.fromLTRB(0, 8, 0, 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 42,
-                          margin: const EdgeInsets.only(left: 15),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(7),
-                            elevation: 1,
-                            child: InkWell(
-                              // Use InkWell to capture the tap event
-                              onTap: () =>
-                                  navigateToSearchScreen(), // Navigate to search screen on tap
-                              child: Container(
-                                padding: const EdgeInsets.only(left: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: Colors.black38, width: 1),
-                                  borderRadius: BorderRadius.circular(7),
-                                ),
-                                child: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.search,
-                                      color: Colors.black54,
-                                      size: 23,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Search College Market',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+        listener: (context, state) {
+          // TODO: implement listener
+          if (state is GotAccountInfoState) {
+            SocketService.instance.connect(context);
+          }
+        },
+        child: Scaffold(
+          body: Stack(children: [
+            pages[_page],
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              bottom: _isVisible ? -20 : -120,
+              left: 0,
+              right: 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    color: Colors.white,
+                    padding: _isVisible
+                        ? const EdgeInsets.fromLTRB(0, 8, 0, 10)
+                        : const EdgeInsets.fromLTRB(0, 8, 0, 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 42,
+                            margin: const EdgeInsets.only(left: 15),
+                            child: Material(
+                              borderRadius: BorderRadius.circular(7),
+                              elevation: 1,
+                              child: InkWell(
+                                // Use InkWell to capture the tap event
+                                onTap: () =>
+                                    navigateToSearchScreen(), // Navigate to search screen on tap
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black38, width: 1),
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.search,
+                                        color: Colors.black54,
+                                        size: 23,
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Search College Market',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        height: 42,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: const Icon(Icons.mic,
-                            color: Colors.black, size: 25),
-                      ),
-                    ],
+                        Container(
+                          color: Colors.white,
+                          height: 42,
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          child: const Icon(Icons.mic,
+                              color: Colors.black, size: 25),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                BottomNavigationBar(
-                  currentIndex: _page,
-                  type: BottomNavigationBarType.fixed,
-                  selectedItemColor: GlobalVariables.selectedNavBarColor,
-                  unselectedItemColor: GlobalVariables.unselectedNavBarColor,
-                  backgroundColor: GlobalVariables.backgroundColor,
-                  iconSize: 28,
-                  onTap: updatePage,
-                  items: <BottomNavigationBarItem>[
-                    // HOME
-                    BottomNavigationBarItem(
-                      icon: Container(
-                        width: bottomBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _page == 0
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : GlobalVariables.backgroundColor,
-                              width: bottomBarBorderWidth,
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _page == 0
-                                ? const Icon(
-                                    Icons.home,
-                                  )
-                                : const Icon(
-                                    Icons.home_outlined,
-                                  ),
-                            Text(
-                              'Home',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: _page == 0
-                                    ? FontWeight.w800
-                                    : FontWeight.normal,
-                                color: _page == 0
-                                    ? GlobalVariables.selectedNavBarColor
-                                    : Colors.black,
-                                overflow: TextOverflow.visible,
-                              ),
-                            )
-                          ],
-                        ),
+                ],
+              ),
+              BottomNavigationBar(
+                currentIndex: _page,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: GlobalVariables.selectedNavBarColor,
+                unselectedItemColor: GlobalVariables.unselectedNavBarColor,
+                selectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.bold),
+                backgroundColor: GlobalVariables.backgroundColor,
+                enableFeedback: true,
+                iconSize: 28,
+                onTap: updatePage,
+                items: <BottomNavigationBarItem>[
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.home_outlined,
                       ),
-                      label: '',
-                    ),
-
-                    // My Cart
-                    BottomNavigationBarItem(
-                      icon: Container(
-                        width: bottomBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _page == 1
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : GlobalVariables.backgroundColor,
-                              width: bottomBarBorderWidth,
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _page == 1
-                                ? const Icon(
-                                    Icons.shopping_cart,
-                                  )
-                                : const Icon(
-                                    Icons.shopping_cart_outlined,
-                                  ),
-                            Text(
-                              'Cart',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: _page == 1
-                                    ? FontWeight.w800
-                                    : FontWeight.normal,
-                                color: _page == 1
-                                    ? GlobalVariables.selectedNavBarColor
-                                    : Colors.black,
-                                overflow: TextOverflow.visible,
-                              ),
-                            )
-                          ],
-                        ),
+                      label: 'Home'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.list,
                       ),
-                      label: '',
+                      label: "Categories"),
+                  const BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.add_box_outlined,
                     ),
-
-                    //add
-                    BottomNavigationBarItem(
-                      icon: InkWell(
-                        onTap: navigateToAddProduct,
-                        child: Container(
-                          width: bottomBarWidth,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: GlobalVariables.backgroundColor,
-                                width: bottomBarBorderWidth,
-                              ),
-                            ),
-                          ),
-                          child: const Column(
-                            children: [
-                              Icon(
-                                Icons.add_box_outlined,
-                              ),
-                              Text(
-                                'Sell',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  overflow: TextOverflow.visible,
+                    label: "sell",
+                  ),
+                  BottomNavigationBarItem(
+                      icon: BlocBuilder<AccountBloc, AccountState>(
+                        builder: (context, state) {
+                          if (state.account.unreadMessage != 0) {
+                            return badges.Badge(
+                              badgeContent: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      label: '',
-                    ),
-
-                    // Chat
-                    BottomNavigationBarItem(
-                      icon: Container(
-                        width: bottomBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _page == 3
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : GlobalVariables.backgroundColor,
-                              width: bottomBarBorderWidth,
-                            ),
-                          ),
-                        ),
-                        child: badges.Badge(
-                          badgeContent: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  Colors.red, // Background color for the circle
-                              borderRadius:
-                                  BorderRadius.circular(10), // Makes it round
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 10, // Minimum width for the red circle
-                              minHeight:
-                                  10, // Minimum height for the red circle
-                            ),
-                            child: BlocBuilder<AccountBloc, AccountState>(
-                              builder: (context, state) {
-                                return Text(
+                                constraints: const BoxConstraints(
+                                  minWidth: 10,
+                                  minHeight: 10,
+                                ),
+                                child: Text(
                                   state.account.unreadMessage.toString(),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize:
-                                        12, // You can adjust the font size as needed
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                          badgeStyle: const badges.BadgeStyle(
-                            elevation: 0,
-                            shape: badges.BadgeShape.circle,
-                          ),
-                          position:
-                              badges.BadgePosition.topEnd(top: -12, end: 5),
-                          child: Column(
-                            children: [
-                              _page == 3
-                                  ? const Icon(
-                                      Icons.chat,
-                                    )
-                                  : const Icon(
-                                      Icons.chat_bubble_outline,
-                                    ),
-                              Text(
-                                'Chat',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: _page == 3
-                                      ? FontWeight.w800
-                                      : FontWeight.normal,
-                                  color: _page == 3
-                                      ? GlobalVariables.selectedNavBarColor
-                                      : Colors.black,
-                                  overflow: TextOverflow.visible,
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      label: '',
-                    ),
-
-                    // ACCOUNT
-                    BottomNavigationBarItem(
-                      icon: Container(
-                        width: bottomBarWidth,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _page == 4
-                                  ? GlobalVariables.selectedNavBarColor
-                                  : GlobalVariables.backgroundColor,
-                              width: bottomBarBorderWidth,
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _page == 4
-                                ? const Icon(
-                                    Icons.person,
-                                  )
-                                : const Icon(
-                                    Icons.person_outline_outlined,
-                                  ),
-                            Text(
-                              'Profile',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: _page == 4
-                                    ? FontWeight.w800
-                                    : FontWeight.normal,
-                                color: _page == 4
-                                    ? GlobalVariables.selectedNavBarColor
-                                    : Colors.black,
-                                overflow: TextOverflow.visible,
                               ),
-                            )
-                          ],
-                        ),
+                              badgeStyle: const badges.BadgeStyle(
+                                elevation: 0,
+                                shape: badges.BadgeShape.circle,
+                              ),
+                              position: badges.BadgePosition.topEnd(
+                                  top: -12, end: -6),
+                              child: const Icon(
+                                Icons.chat_bubble_outline_sharp,
+                              ),
+                            );
+                          } else {
+                            return const Icon(
+                              Icons.chat_bubble_outline_sharp,
+                            );
+                          }
+                        },
                       ),
-                      label: '',
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      )),
-    );
+                      label: "Chat"),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.person_outline_sharp,
+                      ),
+                      label: 'Profile'),
+                ],
+              ),
+            )
+          ]),
+        ));
   }
 }

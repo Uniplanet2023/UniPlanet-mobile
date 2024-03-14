@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account_settings_screen.dart';
 import 'package:uniplanet_mobile/features/account/screens/help_screen.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -377,33 +378,55 @@ class UserHeader extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CircleAvatar(
-              radius: 40,
-              backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150'), // Placeholder pfp
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    currentUser.name,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const Text('User ID: 12345'), // Replace with actual data
-                  Text(
-                    'Basic description goes here.', // Replace with actual data
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ],
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Badge(
+                alignment: Alignment.bottomRight,
+                offset: Offset(-6, -6),
+                label: Icon(
+                  Icons.add_a_photo,
+                  weight: BorderSide.strokeAlignOutside,
+                  size: 18,
+                  color: GlobalVariables.primaryColor,
+                ),
+                backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage:
+                      NetworkImage('https://via.placeholder.com/150'),
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: 8),
+              const VerticalDivider(
+                width: 20,
+                thickness: 1,
+                indent: 5,
+                endIndent: 0,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      currentUser.name,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const Text('User ID: 12345'), // Replace with actual data
+                    Text(
+                      'Basic description goes here.', // Replace with actual data
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -428,22 +451,13 @@ class MenuSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
-        title: Text(title,
-            style: const TextStyle(fontSize: 18, color: Colors.black)),
+        title: Text(title, style: TextStyle(fontSize: 18, color: color)),
         leading: Icon(
           icon,
-          color: Colors.black,
+          color: color,
         ),
         trailing: const Icon(Icons.arrow_forward), // Replace with actual icon
         onTap: ontap,
-        // () {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => screen,
-        //     ),
-        //   );
-        // },
       ),
     );
   }

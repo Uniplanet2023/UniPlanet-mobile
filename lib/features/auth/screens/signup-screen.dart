@@ -170,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(height: 10),
                         FlutterPwValidator(
                             controller: _passwordController,
-                            minLength: 6,
+                            minLength: 8,
                             uppercaseCharCount: 1,
                             lowercaseCharCount: 2,
                             numericCharCount: 1,

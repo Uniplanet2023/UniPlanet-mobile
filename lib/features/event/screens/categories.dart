@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:uniplanet_mobile/features/event/screens/hot_products_screen.dart';
+import 'package:uniplanet_mobile/features/event/screens/inventory_products_screen.dart';
+import 'package:uniplanet_mobile/features/event/screens/liked_products_screen.dart';
+import 'package:uniplanet_mobile/features/event/screens/sold_products_screen.dart';
 
-class CategoryPage extends StatelessWidget {
-  const CategoryPage({
+class CategoriesPage extends StatelessWidget {
+  const CategoriesPage({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
       child: Column(
         children: [
           const SizedBox(
             height: 50,
           ),
           for (final location in locations)
-            LocationListItem(
-              imageUrl: location.imageUrl,
-              name: location.name,
-              country: location.place,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => location.screen,
+                  ),
+                );
+              },
+              child: LocationListItem(
+                imageUrl: location.imageUrl,
+                name: location.name,
+                country: location.place,
+              ),
             ),
           const SizedBox(
             height: 150,
@@ -315,43 +330,52 @@ class Location {
     required this.name,
     required this.place,
     required this.imageUrl,
+    required this.screen,
   });
 
   final String name;
   final String place;
   final String imageUrl;
+  final Widget screen;
 }
 
 const urlPrefix = 'assets/images';
 const locations = [
   Location(
-    name: 'Hot Item',
+    name: 'Hot Products',
     place: '',
     imageUrl: '$urlPrefix/hotdeal.avif',
+    screen: HotProductsScreen(),
   ),
   Location(
-    name: 'Events',
+    name: 'Mobiles',
     place: '',
-    imageUrl: '$urlPrefix/event.jpeg',
+    imageUrl: '$urlPrefix/mobile_c.jpeg',
+    screen: LikedProductsScreen(),
   ),
   Location(
-    name: 'Hair Shop',
+    name: 'Essentials',
     place: '',
-    imageUrl: '$urlPrefix/hairshop.jpeg',
+    imageUrl: '$urlPrefix/essentials_c.jpeg',
+    screen: InventoryProductsScreen(),
   ),
   Location(
-    name: 'Restaurant',
+    name: 'Appliances',
     place: '',
-    imageUrl: '$urlPrefix/restaurant.jpeg',
+    imageUrl: '$urlPrefix/appliance_c.jpeg',
+    screen: SoldProductsScreen(),
   ),
   Location(
-    name: 'Trip',
+    name: 'Books',
     place: '',
-    imageUrl: '$urlPrefix/trip.jpeg',
+    imageUrl: '$urlPrefix/books_c.jpeg',
+    screen: SoldProductsScreen(),
   ),
   Location(
-    name: 'House',
+    name: 'Fashion',
     place: '',
-    imageUrl: '$urlPrefix/house.jpeg',
+    imageUrl: '$urlPrefix/fashion_c.jpeg',
+    screen: SoldProductsScreen(),
   ),
+  
 ];
