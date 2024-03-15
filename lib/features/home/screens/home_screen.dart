@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
             pinned: _pinned,
             snap: _snap,
             floating: _floating,
-            expandedHeight: 30.0,
+            expandedHeight: 30.0.h,
             flexibleSpace: const FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(left: 20),
               title: TopCategories(),
@@ -48,9 +49,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: SizedBox(
-              height: 10,
+              height: 10.h,
             ),
           ),
           BlocBuilder<ProductBloc, ProductState>(
@@ -60,9 +61,9 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: SizedBox(
-              height: 100,
+              height: 100.h,
             ),
           ),
         ],

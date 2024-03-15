@@ -26,7 +26,6 @@ class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     var userOnline = context.watch<StatusBloc>().state.online;
-
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: ListView.builder(
@@ -58,14 +57,13 @@ class _ContactsListState extends State<ContactsList> {
                         fontSize: 18,
                       ),
                     ),
-                    subtitle: const Padding(
-                      padding: EdgeInsets.only(top: 6.0),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
                       child: Text(
-                        // widget.list[index].chatRoom.lastMessage == null
-                        //     ? " "
-                        //     : widget.list[index].chatRoom.lastMessage!.message,
-                        "",
-                        style: TextStyle(fontSize: 15),
+                        widget.list[index].lastMessage == null
+                            ? " "
+                            : widget.list[index].lastMessage!.message,
+                        style: const TextStyle(fontSize: 15),
                       ),
                     ),
                     leading: Stack(
@@ -87,21 +85,18 @@ class _ContactsListState extends State<ContactsList> {
                                     color: Colors.red, size: 16)),
                       ],
                     ),
-                    trailing: const Column(
+                    trailing: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
                           height: 30,
                           child: Text(
-                            // widget.list[index].chatRoom.lastMessage
-                            //             ?.timestamp !=
-                            //         null
-                            //     ? formatTimestamp(widget.list[index].chatRoom
-                            //         .lastMessage!.timestamp)
-                            //     : "",
-                            "",
-                            style: TextStyle(
+                            widget.list[index].lastMessage?.createdAt != null
+                                ? formatTimestamp(
+                                    widget.list[index].lastMessage!.createdAt)
+                                : "",
+                            style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 13,
                             ),
@@ -137,7 +132,7 @@ class _ContactsListState extends State<ContactsList> {
                         //           ),
                         //         ),
                         //       ),
-                        SizedBox()
+                        const SizedBox()
                       ],
                     ),
                   ),

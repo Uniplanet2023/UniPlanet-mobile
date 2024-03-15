@@ -25,29 +25,29 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
       await _getMoreMessage(event, emit);
     });
     on<ReadMessageEvent>((event, emit) {
-      emit(UnReadMessageState(msgList: state.msgList, page: state.page));
-      // state.msgList!.last.readDate = DateTime.now();
+      emit(UnReadMessageState(messages: state.messages, page: state.page));
+      // state.messages!.last.readDate = DateTime.now();
 
-      emit(ReadMessageState(msgList: state.msgList, page: state.page));
+      emit(ReadMessageState(messages: state.messages, page: state.page));
     });
   }
   _getMoreMessage(GetMoreMessageEvent event, emit) async {
-    emit(LoadingMessageState(msgList: state.msgList, page: state.page));
+    emit(LoadingMessageState(messages: state.messages, page: state.page));
     int nextPage = state.page! + 1;
     List<Message> listMessage =
         await _chatRepository.getMessages(chatId: event.chatId, page: nextPage);
     if (listMessage.isEmpty) {
-      emit(EndMessageState(msgList: state.msgList, page: state.page));
+      emit(EndMessageState(messages: state.messages, page: state.page));
     } else {
-      state.msgList!.addAll(listMessage);
-      emit(LoadedMessageState(msgList: state.msgList, page: nextPage));
+      state.messages.addAll(listMessage);
+      emit(LoadedMessageState(messages: state.messages, page: nextPage));
     }
   }
 
   _receiveMessage(ReceiveMessageEvent event, emit) {
-    emit(LoadingMessageState(msgList: state.msgList, page: state.page));
-    state.msgList!.insertAll(0, [event.msg]);
-    emit(LoadedMessageState(msgList: state.msgList, page: state.page));
+    emit(LoadingMessageState(messages: state.messages, page: state.page));
+    state.messages.insertAll(0, [event.msg]);
+    emit(LoadedMessageState(messages: state.messages, page: state.page));
   }
 
   _sendMessage(SendMessageEvent event, emit) async {
@@ -60,12 +60,12 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
 
   _loadMessages(GetMessageEvent event, emit) async {
-    emit(LoadingMessageState(msgList: state.msgList, page: state.page));
+    emit(LoadingMessageState(messages: state.messages, page: state.page));
     try {
-      List<Message> msgList =
+      List<Message> messages =
           await _chatRepository.getMessages(chatId: event.chatId, page: 0);
 
-      emit(LoadedMessageState(msgList: msgList, page: 0));
+      emit(LoadedMessageState(messages: messages, page: 0));
     } catch (e) {
       print(e);
     }

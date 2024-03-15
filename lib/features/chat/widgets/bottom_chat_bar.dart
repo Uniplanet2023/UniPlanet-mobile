@@ -10,13 +10,11 @@ class BottomChatField extends StatefulWidget {
   final String chatRoomId;
   final Function scrollDownfuction;
   final String sellerId;
-  final List<Message>? messages;
   const BottomChatField({
     super.key,
     required this.chatRoomId,
     required this.scrollDownfuction,
     required this.sellerId,
-    required this.messages,
   });
 
   @override
@@ -57,24 +55,10 @@ class _BottomChatFieldState extends State<BottomChatField> {
   }
 
   void sendTextMessage() async {
-    print('sendTextMessage');
     if (isShowSendButton) {
-      // User user = context.read<AuthBloc>().state.user!;
-      // context.read<MessageBloc>().add(SendMessageEvent(
-      //       // BLoc
-      //       chatRoomId,
-      //       user.id,
-      //       msg,
-      //     ));
       SocketService.instance.sendMessage(
-          _messageController.text, widget.chatRoomId, 'text', widget.sellerId,
-          (message) {
-        setState(() {
-          widget.messages!.insert(0, message);
-          _messageController.clear();
-        });
-      });
-
+          _messageController.text, widget.chatRoomId, 'text', widget.sellerId);
+      _messageController.clear();
       widget.scrollDownfuction();
     }
   }

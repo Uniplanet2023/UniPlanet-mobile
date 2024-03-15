@@ -12,8 +12,12 @@ import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
   final ChatRoom chatRoom;
+  final List<Message> messages;
   const ChatList(
-      {super.key, required this.scrollController, required this.chatRoom});
+      {super.key,
+      required this.scrollController,
+      required this.chatRoom,
+      required this.messages});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -54,8 +58,6 @@ class _ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    var state = context.read<MessageBloc>().state;
-
     final DateFormat formatter = DateFormat('h:mm a');
 
     return GestureDetector(
@@ -63,38 +65,44 @@ class _ChatListState extends State<ChatList> {
         FocusScope.of(context).unfocus();
       },
       child: ListView.builder(
-        itemCount: state.msgList!.length + 1,
+        itemCount: widget.messages.length + 1,
         controller: widget.scrollController,
         cacheExtent: 100.0,
         reverse: true,
         itemBuilder: (context, index) {
-          if (index == state.msgList!.length) {
-            if (state.msgList!.length > 19 && state is! EndMessageState) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return const SizedBox();
-            }
+          if (index == widget.messages.length) {
+            // if (widget.messages.length > 19 && state is! EndMessageState) {
+            //   return const Center(
+            //     child: CircularProgressIndicator(),
+            //   );
+            // } else {
+            //   return const SizedBox();
+            // }
+            return const SizedBox();
           }
-
-          final Message currentMessage = state.msgList![index];
-          String formattedDate = formatter.format(currentMessage.createdAt);
+          if (widget.messages.isEmpty) {
+            return const SizedBox();
+          }
+          final Message currentMessage = widget.messages[index];
+          String formattedDate =
+              formatter.format(currentMessage.createdAt.toLocal());
 
           // Check for one-minute gap if not the first message and the same sender
           bool hidePreviousDate = false;
           if (index > 0) {
-            final Message previousMessage = state.msgList![index - 1];
+            final Message previousMessage = widget.messages[index - 1];
 
             final bool isSameSender =
                 currentMessage.sender == previousMessage.sender;
 
             if (isSameSender &&
-                currentMessage.createdAt
-                        .difference(previousMessage.createdAt)
-                        .inMinutes
-                        .abs() <
-                    1) {
+                previousMessage.createdAt.year ==
+                    currentMessage.createdAt.year &&
+                previousMessage.createdAt.day == currentMessage.createdAt.day &&
+                previousMessage.createdAt.hour ==
+                    currentMessage.createdAt.hour &&
+                currentMessage.createdAt.minute ==
+                    previousMessage.createdAt.minute) {
               // Flag to hide date for the previous message
               hidePreviousDate = true;
             }

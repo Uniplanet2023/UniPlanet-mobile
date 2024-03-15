@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
@@ -48,8 +49,13 @@ class ChatRepository {
       );
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
-        messages =
-            List<Message>.from(res.data.map((data) => Message.fromJson(data)));
+        var dataList = jsonDecode(res.toString());
+
+        if (dataList != null) {
+          messages = List<Message>.from(
+            dataList.map((data) => Message.fromMap(data)).toList(),
+          );
+        }
         return messages;
       } else {
         return [];
@@ -62,8 +68,8 @@ class ChatRepository {
 
   Future<List<ChatRoom>> getChatRooms() async {
     try {
-      Response res = await _dioClient.dio.get('$chatURI/api/getChatRooms',
-          options: _dioClient.getDioOptions());
+      Response res = await _dioClient.dio
+          .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
 
       return List<ChatRoom>.from(
           res.data.map((data) => ChatRoom.fromMap(data)));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
@@ -30,21 +31,16 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void messageAddFunction(Message message) {
+    setState(() {
+      messages.insert(0, message);
+    });
+  }
+
   @override
   void initState() {
-    getMessages();
-    // socketService = SocketService(context);, (message) {
-    //   setState(() {
-    //     messages!.insert(0, message);
-    //   });
-    // });
-    // socketService.connect(context);
-    SocketService.instance.onConnectChat(context, widget.myChatRoom.id,
-        (message) {
-      setState(() {
-        messages.insert(0, message);
-      });
-    });
+    context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
+    SocketService.instance.onConnectChat(context, widget.myChatRoom.id);
     SocketService.instance.joinChat(widget.myChatRoom.id);
     super.initState();
   }
@@ -55,43 +51,41 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  // context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
-  void getMessages() {
-    context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
-  }
-
   @override
   Widget build(BuildContext context) {
-    // var userOnline = context.watch<StatusBloc>().state.userOnList!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: GlobalVariables.backgroundColor,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.client.name),
-            // userOnline.contains(widget.client.id)
-            //     ? const Row(
-            //         children: [
-            //           Text(
-            //             'online',
-            //             style: TextStyle(
-            //                 fontSize: 13, fontWeight: FontWeight.normal),
-            //           ),
-            //           Icon(Icons.circle, color: Colors.green, size: 16),
-            //         ],
-            //       )
-            //     :
-            const Row(
+        title: BlocBuilder<StatusBloc, StatusState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'offline',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
-                ),
-                Icon(Icons.circle, color: Colors.red, size: 16),
+                Text(widget.client.name),
+                state.online.contains(widget.client.id)
+                    ? const Row(
+                        children: [
+                          Text(
+                            'online',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.normal),
+                          ),
+                          Icon(Icons.circle, color: Colors.green, size: 16),
+                        ],
+                      )
+                    : const Row(
+                        children: [
+                          Text(
+                            'offline',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.normal),
+                          ),
+                          Icon(Icons.circle, color: Colors.red, size: 16),
+                        ],
+                      ),
               ],
-            ),
-          ],
+            );
+          },
         ),
         centerTitle: false,
         actions: [
@@ -109,23 +103,33 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-              child: ChatList(
-            scrollController: _scrollController,
-            chatRoom: widget.myChatRoom,
-          )),
-          BottomChatField(
-            chatRoomId: widget.myChatRoom.id,
-            scrollDownfuction: _scrollToBottom,
-            sellerId: widget.client.id,
-            messages: messages,
-          ),
-          const SizedBox(
-            height: 10,
-          )
-        ],
+      body: BlocListener<MessageBloc, MessageBlocState>(
+        listener: (context, state) {
+          // TODO: implement listener
+          if (state is LoadedMessageState) {
+            setState(() {
+              messages = state.messages;
+            });
+          }
+        },
+        child: Column(
+          children: [
+            Expanded(
+                child: ChatList(
+              scrollController: _scrollController,
+              chatRoom: widget.myChatRoom,
+              messages: messages,
+            )),
+            BottomChatField(
+              chatRoomId: widget.myChatRoom.id,
+              scrollDownfuction: _scrollToBottom,
+              sellerId: widget.client.id,
+            ),
+            const SizedBox(
+              height: 10,
+            )
+          ],
+        ),
       ),
     );
   }

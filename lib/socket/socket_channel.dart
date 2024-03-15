@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/models/message.dart';
@@ -49,21 +50,19 @@ class SocketService {
     socket.connect();
   }
 
-  void onConnectChat(BuildContext context, String chatId,
-      Function(Message) messageStoreCallback) {
+  void onConnectChat(BuildContext context, String chatId) {
     socket.on('typing', (status) {
       context.read<TypingBloc>().add(const TypingStartEvent());
     });
     socket.on('stop typing', (status) {
+      print('stop typing');
       context.read<TypingBloc>().add(const TypingStopEvent());
     });
     socket.on('message received', (newMessageReceived) {
+      print(newMessageReceived);
       sendStopTypingEvent(chatId);
-      Message receivedMessage = Message.fromJson(newMessageReceived);
-      if (receivedMessage.sender != AccountRepository.user!.id) {
-        messageStoreCallback(receivedMessage);
-      }
-      // context.read<StatusBloc>().add(StatusChangeEvent(userId: newMessageReceived));
+      Message receivedMessage = Message.fromMap(newMessageReceived);
+      context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
     });
   }
 
@@ -79,18 +78,20 @@ class SocketService {
     socket.emit('join chat', chatId);
   }
 
-  void sendMessage(String content, String chatId, String messageType,
-      String receiver, Function(Message) messageStoreCallback) {
+  Message sendMessage(
+      String content, String chatId, String messageType, String receiver) {
     Message message = Message(
       sender: userId,
       message: content,
       messageType: messageType,
       chat: chatId,
       receiver: receiver,
+      createdAt: DateTime.now().toUtc(),
     );
     socket.emit('new message', message);
-    sendTypingEvent(chatId);
-    messageStoreCallback(message);
+    // sendStopTypingEvent(chatId);
+    // messageStoreCallback(message);
+    return message;
   }
 
   // void setSocket(BuildContext context) {

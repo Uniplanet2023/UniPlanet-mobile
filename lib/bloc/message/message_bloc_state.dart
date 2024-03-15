@@ -1,43 +1,56 @@
 part of 'message_bloc.dart';
 
 abstract class MessageBlocState extends Equatable {
-  final List<Message>? msgList;
+  final List<Message> messages;
   final int? page;
-  const MessageBlocState({this.msgList, this.page});
+  const MessageBlocState({required this.messages, this.page});
 }
 
 class InitMessageState extends MessageBlocState {
-  InitMessageState() : super(msgList: [], page: 0);
+  InitMessageState() : super(messages: [], page: 0);
   @override
-  List<Object?> get props => [msgList, page];
+  List<Object?> get props => [messages, page];
 }
 
 class LoadingMessageState extends MessageBlocState {
-  const LoadingMessageState({super.msgList, super.page});
+  const LoadingMessageState({required super.messages, super.page});
   @override
-  List<Object?> get props => [msgList, page];
+  List<Object?> get props => [messages, page];
 }
 
 class LoadedMessageState extends MessageBlocState {
-  const LoadedMessageState({super.msgList, super.page});
+  const LoadedMessageState({required super.messages, super.page});
   @override
-  List<Object?> get props => [msgList, page];
+  List<Object?> get props => [messages, page];
+}
+
+//Receive Message
+class ReceivingMessageState extends MessageBlocState {
+  const ReceivingMessageState({required super.messages, super.page});
+  @override
+  List<Object?> get props => [messages, page];
+}
+
+class ReceivedMessageState extends MessageBlocState {
+  const ReceivedMessageState({required super.messages, super.page});
+  @override
+  List<Object?> get props => [messages, page];
 }
 
 class EndMessageState extends MessageBlocState {
-  const EndMessageState({super.msgList, super.page});
+  const EndMessageState({required super.messages, super.page});
   @override
-  List<Object?> get props => [msgList, page];
+  List<Object?> get props => [messages, page];
 }
 
 class UnReadMessageState extends MessageBlocState {
-  const UnReadMessageState({super.msgList, super.page});
+  const UnReadMessageState({required super.messages, super.page});
   @override
   List<Object?> get props => [];
 }
 
 class ReadMessageState extends MessageBlocState {
-  const ReadMessageState({super.msgList, super.page});
+  const ReadMessageState({required super.messages, super.page});
   @override
   List<Object?> get props => [];
 }

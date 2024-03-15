@@ -7,12 +7,14 @@ class ChatRoom {
   final String id;
   final User seller;
   final User buyer;
+  final Message? lastMessage;
 
   ChatRoom(
       {required this.id,
       required this.seller,
       required this.buyer,
-      required this.productId});
+      required this.productId,
+      this.lastMessage});
 
   static initChatRoom() {
     return ChatRoom(
@@ -23,25 +25,17 @@ class ChatRoom {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'seller': seller.toMap(),
-      'buyer': buyer.toMap(),
-      'productId': productId,
-    };
-  }
-
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
       id: map['id'],
       seller: User.fromMap(map['seller']),
       buyer: User.fromMap(map['buyer']),
       productId: map['productId'],
+      lastMessage: map['lastMessage'] != null
+          ? Message.fromMap(map['lastMessage'])
+          : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory ChatRoom.fromJson(String source) =>
       ChatRoom.fromMap(json.decode(source) as Map<String, dynamic>);

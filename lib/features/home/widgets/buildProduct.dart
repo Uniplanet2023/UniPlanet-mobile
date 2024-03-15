@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet_mobile/models/product.dart';
@@ -17,8 +18,8 @@ Widget buildProductItem(
     child: Column(
       children: [
         SizedBox(
-          height: 130,
-          width: 150,
+          height: 130.h,
+          width: 150.w,
           child: DecoratedBox(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black12, width: 0.5),

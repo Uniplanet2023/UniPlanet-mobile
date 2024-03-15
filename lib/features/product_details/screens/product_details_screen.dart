@@ -96,8 +96,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
-              "seller": state.chatRoomList!.last.seller,
-              "chatRoom": state.chatRoomList!.last
+              "seller": state.buyingChatRoom.last.seller,
+              "chatRoom": state.buyingChatRoom.last
             });
           }
         },
