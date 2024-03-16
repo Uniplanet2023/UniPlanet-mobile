@@ -1,11 +1,12 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/event/screens/categories.dart';
+import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
@@ -22,7 +23,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _page = 0;
-  double bottomBarWidth = 42;
+  double bottomBarWidth = 42.w;
   double bottomBarBorderWidth = 5;
   ScrollController? _controller;
   bool _isVisible = true;
@@ -157,7 +158,7 @@ class _BottomBarState extends State<BottomBar> {
                 selectedItemColor: GlobalVariables.selectedNavBarColor,
                 unselectedItemColor: GlobalVariables.unselectedNavBarColor,
                 selectedLabelStyle:
-                    const TextStyle(fontWeight: FontWeight.bold),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 0.035.sw),
                 backgroundColor: GlobalVariables.backgroundColor,
                 enableFeedback: true,
                 iconSize: 28,
@@ -228,6 +229,9 @@ class _BottomBarState extends State<BottomBar> {
                       label: 'Profile'),
                 ],
               ),
+              const SizedBox(
+                height: 12,
+              )
             ],
           ),
         ),
