@@ -14,3 +14,8 @@ class SearchProductEvent extends BaseSearchProductEvent {
   @override
   List<Object> get props => [productName];
 }
+
+class InitalSearchProductEvent extends BaseSearchProductEvent {
+  @override
+  List<Object> get props => [];
+}

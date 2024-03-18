@@ -1,8 +1,6 @@
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/features/home/screens/category_screen.dart';
 
 class TopCategories extends StatelessWidget {
   const TopCategories({super.key});

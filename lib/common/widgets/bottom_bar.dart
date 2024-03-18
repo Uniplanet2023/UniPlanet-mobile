@@ -2,6 +2,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
+import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
@@ -69,7 +70,11 @@ class _BottomBarState extends State<BottomBar> {
   }
 
   void navigateToSearchScreen() {
-    Navigator.pushNamed(context, AppRoutes.searchScreenPage);
+    Navigator.pushNamed(context, AppRoutes.searchScreenPage).then(
+      (value) => context.read<SearchProductBloc>().add(
+            InitalSearchProductEvent(),
+          ),
+    );
   }
 
   @override

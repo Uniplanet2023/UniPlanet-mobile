@@ -20,14 +20,15 @@ class SnackbarGlobal {
 Future<List<File>> pickImages() async {
   List<File> images = [];
   try {
-    var files = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
     );
-    if (files != null && files.files.isNotEmpty) {
-      for (int i = 0; i < files.files.length; i++) {
-        images.add(File(files.files[i].path!));
-      }
+
+    if (result != null && result.files.isNotEmpty) {
+      images.addAll(result.files
+          .map((file) => File(file.path!))
+          .take(5)); // Limit to 5 files
     }
   } catch (e) {
     debugPrint(e.toString());

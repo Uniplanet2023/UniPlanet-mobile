@@ -8,22 +8,25 @@ class TimeAgoFormatter {
     final difference = now.difference(time);
 
     if (difference.inSeconds < 60) {
-      return '${difference.inSeconds} sec ago';
+      return '${difference.inSeconds}s ago';
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} min ago';
+      return '${difference.inMinutes}m ago';
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} hrs ago';
+      return '${difference.inHours}h ago';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays}d ago';
     } else if (difference.inDays < 30) {
       final weeks = difference.inDays ~/ 7;
-      return '$weeks weeks ago';
+      return '${weeks}w ago';
     } else if (difference.inDays < 365) {
       final months = difference.inDays ~/ 30;
+      if (months == 1) {
+        return '$months month ago';
+      }
       return '$months months ago';
     } else {
       final years = difference.inDays ~/ 365;
-      return '$years years ago';
+      return '($years)y ago';
     }
   }
 }

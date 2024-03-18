@@ -84,7 +84,7 @@ class _ItemBoxState extends State<ItemBox> {
                                         style: const TextStyle(
                                           fontSize: 16,
                                         ),
-                                        maxLines: 2,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(
@@ -98,7 +98,7 @@ class _ItemBoxState extends State<ItemBox> {
                                           fontSize: 25,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        maxLines: 2,
+                                        maxLines: 1,
                                       ),
                                       const SizedBox(
                                         height: 25,

@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: 1.0.6
   dio: 5.4.0
   dio_cookie_manager: ^3.1.1
+  dots_indicator: ^3.0.0
   dotted_border: 2.1.0
   dropdown_search: 5.0.6
   equatable: 2.0.5
