@@ -36,17 +36,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   CarouselSlider _buildCarouselSlider() {
     return CarouselSlider(
       items: widget.product.images
-          .map((image) => Builder(
+          .asMap()
+          .entries
+          .map((entry) => Builder(
                 builder: (BuildContext context) {
-                  return CachedNetworkImage(
-                    cacheManager: GlobalVariables.customCacheManager,
-                    imageUrl: image,
-                    fit: BoxFit.fill,
-                    height: 400,
-                    placeholder: (_, __) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (_, __, ___) =>
-                        const Icon(Icons.error, color: Colors.red, size: 80),
+                  int index = entry.key; // Access index for unique tag
+                  String image = entry.value; // Access image URL
+                  return Hero(
+                    tag: "product-picture-${widget.product.id}",
+                    child: CachedNetworkImage(
+                      cacheManager: GlobalVariables.customCacheManager,
+                      imageUrl: image,
+                      fit: BoxFit.fill,
+                      height: 400,
+                      placeholder: (_, __) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (_, __, ___) =>
+                          const Icon(Icons.error, color: Colors.red, size: 80),
+                    ),
                   );
                 },
               ))

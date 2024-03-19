@@ -14,6 +14,7 @@ import 'package:uniplanet_mobile/features/account/screens/liked_products_screen.
 import 'package:uniplanet_mobile/features/account/screens/sold_products_screen.dart';
 import 'package:uniplanet_mobile/features/account/widgets/menu_section.dart';
 import 'package:uniplanet_mobile/features/account/widgets/user_header.dart';
+import 'package:uniplanet_mobile/features/widgets/terms_and_policies.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -142,17 +143,16 @@ class _AccountScreen extends State<AccountScreen> {
               child: Column(
                 children: [
                   MenuSection(
-                    title: "Terms and Policies",
-                    icon: Icons.info_outlined,
-                    // ontap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => const TermsAndConditions(),
-                    //     ),
-                    //   );
-                    // }
-                  ),
+                      title: "Terms and Policies",
+                      icon: Icons.info_outlined,
+                      ontap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TermsAndPolicies(),
+                          ),
+                        );
+                      }),
 
                   const Divider(
                     thickness: 0.1,

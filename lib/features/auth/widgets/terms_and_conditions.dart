@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/features/widgets/terms_and_policies.dart';
 
 class TermsAndConditions extends StatefulWidget {
   const TermsAndConditions({super.key});
@@ -32,32 +33,11 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          scrollable: true,
-                          title: const Text('Terms and Conditions'),
-                          content: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Terms and Conditions Text goes here ...",
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle:
-                                    Theme.of(context).textTheme.labelLarge,
-                              ),
-                              child: const Text('Understood'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TermsAndPolicies(),
+                      ),
                     );
                   }),
           ],

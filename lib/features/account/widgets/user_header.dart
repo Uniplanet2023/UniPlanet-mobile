@@ -60,10 +60,13 @@ class _UserHeaderState extends State<UserHeader> {
                       color: GlobalVariables.primaryColor,
                     ),
                     backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
+                    child: Hero(
+                      tag: 'user-pfp',
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
+                      ),
                     ),
                   ),
                 ),

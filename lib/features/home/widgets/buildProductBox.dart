@@ -49,23 +49,26 @@ class _ItemBoxState extends State<ItemBox> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: CachedNetworkImage(
-                                  cacheManager:
-                                      GlobalVariables.customCacheManager,
-                                  imageUrl: product.images[0],
-                                  key: UniqueKey(),
-                                  fit: BoxFit.cover,
-                                  height: 135,
-                                  width: 135,
-                                  placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    color: Colors.black12,
-                                    child: const Icon(
-                                      Icons.error,
-                                      color: Colors.red,
-                                      size: 80,
+                                child: Hero(
+                                  tag: "product-picture-${product.id}",
+                                  child: CachedNetworkImage(
+                                    cacheManager:
+                                        GlobalVariables.customCacheManager,
+                                    imageUrl: product.images[0],
+                                    key: UniqueKey(),
+                                    fit: BoxFit.cover,
+                                    height: 135,
+                                    width: 135,
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      color: Colors.black12,
+                                      child: const Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                        size: 80,
+                                      ),
                                     ),
                                   ),
                                 ),

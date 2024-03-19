@@ -31,13 +31,16 @@ Widget buildProductItem(
               ),
               child: AspectRatio(
                 aspectRatio: 2 / 1.3,
-                child: CachedNetworkImage(
-                  imageUrl: product.images[0],
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.error, color: Colors.red, size: 80),
+                child: Hero(
+                  tag: "product-picture-${product.id}",
+                  child: CachedNetworkImage(
+                    imageUrl: product.images[0],
+                    fit: BoxFit.fill,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.red, size: 80),
+                  ),
                 ),
               ),
             ),

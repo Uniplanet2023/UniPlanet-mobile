@@ -20,21 +20,24 @@ class SearchedProduct extends StatelessWidget {
         children: [
           Row(
             children: [
-              CachedNetworkImage(
-                cacheManager: GlobalVariables.customCacheManager,
-                imageUrl: product.images[0],
-                key: UniqueKey(),
-                fit: BoxFit.contain,
-                height: 135,
-                width: 135,
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.black12,
-                  child: const Icon(
-                    Icons.error,
-                    color: Colors.red,
-                    size: 80,
+              Hero(
+                tag: "product-picture-${product.id}",
+                child: CachedNetworkImage(
+                  cacheManager: GlobalVariables.customCacheManager,
+                  imageUrl: product.images[0],
+                  key: UniqueKey(),
+                  fit: BoxFit.contain,
+                  height: 135,
+                  width: 135,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.black12,
+                    child: const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                      size: 80,
+                    ),
                   ),
                 ),
               ),

@@ -49,10 +49,13 @@ class UserProfileScreen extends StatelessWidget {
                     SizedBox(
                       height: 20.h,
                     ),
-                    CircleAvatar(
-                      radius: 60.w,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
+                    Hero(
+                      tag: 'user-pfp',
+                      child: CircleAvatar(
+                        radius: 60.w,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
+                      ),
                     ),
                     SizedBox(
                       height: 5.h,
