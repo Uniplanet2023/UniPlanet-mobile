@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:uniplanet_mobile/common/enums/number_formatter.dart';
-import 'package:uniplanet_mobile/common/enums/time_formatter.dart';
+import 'package:uniplanet_mobile/constants/number_formatter.dart';
+import 'package:uniplanet_mobile/constants/time_formatter.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:flutter/material.dart';

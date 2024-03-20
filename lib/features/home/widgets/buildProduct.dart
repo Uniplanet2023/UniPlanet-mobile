@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/common/enums/number_formatter.dart';
+import 'package:uniplanet_mobile/constants/number_formatter.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 

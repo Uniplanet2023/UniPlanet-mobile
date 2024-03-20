@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/common/enums/number_formatter.dart';
-import 'package:uniplanet_mobile/common/enums/time_formatter.dart';
+import 'package:uniplanet_mobile/constants/number_formatter.dart';
+import 'package:uniplanet_mobile/constants/price_formatter.dart';
+import 'package:uniplanet_mobile/constants/time_formatter.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -93,31 +94,69 @@ class _ItemBoxState extends State<ItemBox> {
                                       const SizedBox(
                                         height: 2,
                                       ),
-                                      Text(
-                                        product.price == 0
-                                            ? 'Free'
-                                            : '\$${product.price}',
-                                        style: const TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        maxLines: 1,
-                                      ),
+                                      product.price == 0
+                                          ? Text(
+                                              product.price == 0
+                                                  ? 'Free'
+                                                  : '\$${product.price}',
+                                              style: const TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
+                                            )
+                                          : Row(
+                                              children: [
+                                                RichText(
+                                                  text: TextSpan(children: [
+                                                    TextSpan(
+                                                        text: '\$',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey.shade800,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    TextSpan(
+                                                        text:
+                                                            '${PriceFormatter(product.price).getDigit()}.',
+                                                        style: const TextStyle(
+                                                            fontSize: 25,
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    TextSpan(
+                                                        text: PriceFormatter(
+                                                                product.price)
+                                                            .getDecimal(),
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey.shade800,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold))
+                                                  ]),
+                                                )
+                                              ],
+                                            ),
                                       const SizedBox(
                                         height: 25,
                                       ),
-                                      Row(
+                                      const Row(
                                         children: [
                                           Icon(
                                             Icons.location_on_outlined,
                                             size: 18,
-                                            color: Colors.grey.shade800,
+                                            color:
+                                                GlobalVariables.secondaryColor,
                                           ),
                                           Text(
                                             'Yang Hall',
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                              color: Colors.grey.shade800,
+                                              color: GlobalVariables
+                                                  .secondaryColor,
                                             ),
                                           ),
                                         ],

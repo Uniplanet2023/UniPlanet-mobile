@@ -62,7 +62,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       context.read<ProductBloc>().add(UploadProductEvent(
           productName: productNameController.text,
           description: descriptionController.text,
-          price: status == ON_SALE ? double.parse(priceController.text) : 0,
+          price: status == ON_SALE
+              ? double.parse(
+                  double.parse(priceController.text).toStringAsFixed(2))
+              : 0,
           category: category,
           status: status,
           images: images,
