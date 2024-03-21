@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
@@ -101,10 +103,11 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: BlocListener<MessageBloc, MessageBlocState>(
         listener: (context, state) {
+          var chatMessages = state.chatMessages[widget.myChatRoom.id] ?? [];
           // TODO: implement listener
-          if (state is LoadedMessageState) {
+          if (state is LoadedMessageState || state is ReceivedMessageState) {
             setState(() {
-              messages = state.messages;
+              messages = chatMessages;
             });
           }
         },

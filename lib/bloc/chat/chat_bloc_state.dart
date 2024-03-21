@@ -51,6 +51,13 @@ class SelectChatRoomState extends ChatBlocState {
   List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
+//Update LastMessage
+class UpdateLastMessageState extends ChatBlocState {
+  const UpdateLastMessageState({super.buyingChatRooms, super.sellingChatRooms});
+  @override
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
+}
+
 //Error
 class ErrorChatState extends ChatBlocState {
   final String errMsg;

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
@@ -56,6 +58,9 @@ class SocketService {
         var msg = jsonDecode(newMessageReceived);
         Message receivedMessage = Message.fromMap(msg);
         context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
+        context
+            .read<ChatBloc>()
+            .add(UpdateChatRoomLastMessageEvent(receivedMessage));
       });
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
