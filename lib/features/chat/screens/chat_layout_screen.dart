@@ -19,7 +19,6 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    context.read<ChatBloc>().add(const LoadChatRoomEvent());
   }
 
   @override
@@ -65,7 +64,7 @@ class _ChatListState extends State<ChatList> {
                 BlocBuilder<ChatBloc, ChatBlocState>(
                   builder: (context, state) {
                     return Tab(
-                      text: 'Buying (${state.buyingChatRoom.length})',
+                      text: 'Buying (${state.buyingChatRooms.length})',
                     );
                   },
                 ),
@@ -85,7 +84,7 @@ class _ChatListState extends State<ChatList> {
               BlocBuilder<ChatBloc, ChatBlocState>(
                 builder: (context, state) {
                   return ContactsList(
-                    list: state.buyingChatRoom,
+                    list: state.buyingChatRooms,
                   );
                 },
               ),

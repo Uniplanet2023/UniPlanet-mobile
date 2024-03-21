@@ -3,6 +3,7 @@ import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
@@ -33,16 +34,16 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
       if (chatrooms.isNotEmpty) {
         for (var chatRoom in chatrooms) {
-          if (chatRoom.seller.id == AccountRepository.user!.id) {
+          if (chatRoom.seller.id == AuthRepository.userId) {
             state.sellingChatRooms.add(chatRoom);
           } else {
-            state.buyingChatRoom.add(chatRoom);
+            state.buyingChatRooms.add(chatRoom);
           }
         }
       }
 
       emit(LoadedChatRoomState(
-        buyingChatRoom: state.buyingChatRoom,
+        buyingChatRooms: state.buyingChatRooms,
         sellingChatRooms: state.sellingChatRooms,
       ));
     } catch (e) {
@@ -53,7 +54,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
     emit(CreatingChatRoomState(
-      buyingChatRoom: state.buyingChatRoom,
+      buyingChatRooms: state.buyingChatRooms,
       sellingChatRooms: state.sellingChatRooms,
     ));
     try {
@@ -61,9 +62,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         sellerId: event.sellerId,
         productId: event.productId,
       );
-      state.sellingChatRooms.add(chatRoom);
+      state.buyingChatRooms.add(chatRoom);
       emit(CreatedChatRoomState(
-        buyingChatRoom: state.buyingChatRoom,
+        buyingChatRooms: state.buyingChatRooms,
         sellingChatRooms: state.sellingChatRooms,
       ));
     } catch (e) {

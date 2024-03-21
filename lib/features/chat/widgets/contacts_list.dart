@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
+import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;
@@ -33,6 +36,9 @@ class _ContactsListState extends State<ContactsList> {
         itemCount: widget.list.length,
         itemBuilder: (context, index) {
           User client = widget.list[index].seller;
+          if (widget.list[index].seller.id == AuthRepository.userId) {
+            client = widget.list[index].buyer;
+          }
 
           return Column(
             children: [
@@ -59,11 +65,22 @@ class _ContactsListState extends State<ContactsList> {
                     ),
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 6.0),
-                      child: Text(
-                        widget.list[index].lastMessage == null
-                            ? " "
-                            : widget.list[index].lastMessage!.message,
-                        style: const TextStyle(fontSize: 15),
+                      child: BlocBuilder<TypingBloc, TypingState>(
+                        builder: (context, state) {
+                          if (state is TypingStarted &&
+                              state.chatId == widget.list[index].id) {
+                            return const Text(
+                              "Typing...",
+                              style: TextStyle(fontSize: 15),
+                            );
+                          }
+                          return Text(
+                            widget.list[index].lastMessage == null
+                                ? " "
+                                : widget.list[index].lastMessage!.message,
+                            style: const TextStyle(fontSize: 15),
+                          );
+                        },
                       ),
                     ),
                     leading: Stack(

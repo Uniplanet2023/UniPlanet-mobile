@@ -13,6 +13,7 @@ import 'package:uniplanet_mobile/network/dio_client.dart';
 
 class AuthRepository implements IAuthRepository {
   final DioClient _dioClient;
+  static String? userId;
   AuthRepository(this._dioClient);
   @override
   Future<String> signUpUser({
@@ -56,9 +57,11 @@ class AuthRepository implements IAuthRepository {
             'password': password,
           },
           options: _dioClient.getDioOptions());
-      // Use the function to display error messages
-      String msg = displayErrorMessages(res.toString());
 
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        userId = res.data['userId'];
+      }
       return msg;
     } on DioException catch (e) {
       //TODO: Handle error
@@ -110,8 +113,10 @@ class AuthRepository implements IAuthRepository {
     try {
       var res = await _dioClient.dio
           .post('$authURI/token-login', options: _dioClient.getDioOptions());
+
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
+        userId = res.data['userId'];
         return res.data['access'];
       }
     } on DioException catch (e) {

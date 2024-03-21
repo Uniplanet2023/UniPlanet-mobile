@@ -67,10 +67,9 @@ Future<File?> pickVideoFromGallery(BuildContext context) async {
 
 String formatTimestamp(DateTime timestamp) {
   final now = DateTime.now().toUtc();
-  print('now: $now');
-  print('timestamp: $timestamp');
+
   final difference = now.difference(timestamp);
-  print('difference: $difference');
+
   if (difference.inMinutes < 60) {
     return '${difference.inMinutes} min ago';
   } else if (difference.inHours < 24) {

@@ -40,7 +40,7 @@ class Message {
 
   factory Message.fromRawJson(String str) => Message.fromMap(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+  String toJson() => json.encode(toMap());
 
   factory Message.fromMap(Map<String, dynamic> json) {
     return Message(
@@ -54,7 +54,7 @@ class Message {
           json["readDate"] == null ? null : DateTime.parse(json["readDate"]),
     );
   }
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "sender": sender,
         "message": message,
         "messageType": messageType,

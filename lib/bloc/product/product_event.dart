@@ -19,7 +19,6 @@ class UploadProductEvent extends ProductEvent {
   final String description;
   final double price;
   final String category;
-  final String profileImage;
   final List<File> images;
   const UploadProductEvent({
     required this.productName,
@@ -28,9 +27,8 @@ class UploadProductEvent extends ProductEvent {
     required this.price,
     required this.category,
     required this.images,
-    required this.profileImage,
   });
   @override
   List<Object?> get props =>
-      [productName, status, description, price, category, images, profileImage];
+      [productName, status, description, price, category, images];
 }

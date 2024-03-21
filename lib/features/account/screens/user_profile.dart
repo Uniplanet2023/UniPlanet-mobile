@@ -58,35 +58,35 @@ class UserProfileScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Column(
                         children: [
                           Text(
                             'Listings',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             '0',
-                            style: const TextStyle(fontSize: 25),
+                            style: TextStyle(fontSize: 25),
                           ),
                         ],
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 60,
                       ),
                       Column(
                         children: [
                           Text(
                             'Sold',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             '0',
-                            style: const TextStyle(fontSize: 25),
+                            style: TextStyle(fontSize: 25),
                           ),
                         ],
                       ),

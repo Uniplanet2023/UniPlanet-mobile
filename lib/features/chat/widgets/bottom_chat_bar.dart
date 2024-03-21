@@ -45,6 +45,14 @@ class _BottomChatFieldState extends State<BottomChatField> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _messageController.dispose();
+    // _soundRecorder!.closeRecorder();
+    isRecorderInit = false;
+  }
+
   void openAudio() async {
     // final status = await Permission.microphone.request();
     // if (status != PermissionStatus.granted) {
@@ -106,14 +114,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void hideKeyboard() => focusNode.unfocus();
 
   @override
-  void dispose() {
-    super.dispose();
-    _messageController.dispose();
-    // _soundRecorder!.closeRecorder();
-    isRecorderInit = false;
-  }
-
-  @override
   Widget build(BuildContext context) {
     const isShowMessageReply = true;
     return Padding(
@@ -128,6 +128,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   controller: _messageController,
                   onChanged: (val) {
                     if (val.isNotEmpty) {
+                      SocketService.instance
+                          .sendTypingEvent(widget.chatRoomId, context);
                       setState(() {
                         isShowSendButton = true;
                       });
@@ -136,6 +138,11 @@ class _BottomChatFieldState extends State<BottomChatField> {
                         isShowSendButton = false;
                       });
                     }
+                  },
+                  onEditingComplete: () => sendTextMessage(),
+                  onTapOutside: (_) {
+                    SocketService.instance
+                        .sendStopTypingEvent(widget.chatRoomId, context);
                   },
                   decoration: InputDecoration(
                     filled: true,

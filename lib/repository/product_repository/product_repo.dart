@@ -111,7 +111,6 @@ class ProductRepository {
     required String description,
     required double price,
     required String category,
-    required String profileImage,
   }) async {
     try {
       final response = await _dioClient.dio.post(
@@ -121,8 +120,7 @@ class ProductRepository {
           'status': status,
           'description': description,
           'price': price,
-          'category': category,
-          'profileImage': profileImage,
+          'category': category
         },
         options: _dioClient.getDioOptions(),
       );

@@ -141,7 +141,7 @@ class _AccountScreen extends State<AccountScreen> {
               borderRadius: BorderRadius.circular(20),
               child: Column(
                 children: [
-                  MenuSection(
+                  const MenuSection(
                     title: "Terms and Policies",
                     icon: Icons.info_outlined,
                     // ontap: () {

@@ -24,12 +24,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(ProductUploadingState(productList: state.productList));
     try {
       Product? productData = await _productRepository.uploadProduct(
-          productName: event.productName,
-          category: event.category,
-          status: event.status,
-          description: event.description,
-          price: event.price,
-          profileImage: event.profileImage);
+        productName: event.productName,
+        category: event.category,
+        status: event.status,
+        description: event.description,
+        price: event.price,
+      );
 
       if (productData != null) {
         emit(ProductUploadedState(productList: state.productList));

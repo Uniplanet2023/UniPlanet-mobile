@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/my_message_card.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/sender_message_card.dart';
+import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet_mobile/features/chat/widgets/message_card.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
@@ -58,19 +58,32 @@ class _ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('h:mm a');
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: ListView.builder(
-        itemCount: widget.messages.length + 1,
+        itemCount: widget.messages.length + 2,
         controller: widget.scrollController,
         cacheExtent: 100.0,
         reverse: true,
         itemBuilder: (context, index) {
-          if (index == widget.messages.length) {
+          var itemNumber = index - 1;
+          if (index == 0) {
+            return BlocBuilder<TypingBloc, TypingState>(
+              builder: (context, state) {
+                if (state is TypingStarted &&
+                    state.chatId == widget.chatRoom.id) {
+                  return const MessageBox(
+                    isMyMessage: true,
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            );
+          }
+          if (itemNumber == widget.messages.length) {
             // if (widget.messages.length > 19 && state is! EndMessageState) {
             //   return const Center(
             //     child: CircularProgressIndicator(),
@@ -83,51 +96,29 @@ class _ChatListState extends State<ChatList> {
           if (widget.messages.isEmpty) {
             return const SizedBox();
           }
-          final Message currentMessage = widget.messages[index];
-          String formattedDate =
-              formatter.format(currentMessage.createdAt.toLocal());
-
-          // Check for one-minute gap if not the first message and the same sender
-          bool hidePreviousDate = false;
-          if (index > 0) {
-            final Message previousMessage = widget.messages[index - 1];
-
-            final bool isSameSender =
-                currentMessage.sender == previousMessage.sender;
-
-            if (isSameSender &&
-                previousMessage.createdAt.year ==
-                    currentMessage.createdAt.year &&
-                previousMessage.createdAt.day == currentMessage.createdAt.day &&
-                previousMessage.createdAt.hour ==
-                    currentMessage.createdAt.hour &&
-                currentMessage.createdAt.minute ==
-                    previousMessage.createdAt.minute) {
-              // Flag to hide date for the previous message
-              hidePreviousDate = true;
-            }
+          final Message oldMessage = widget.messages[itemNumber];
+          Message? recentMessage;
+          if (itemNumber > 0) {
+            recentMessage = widget.messages[itemNumber - 1];
           }
+          return MessageCard(
+            oldMessage: oldMessage,
+            recentMessage: recentMessage,
+            isMyMessage: oldMessage.sender == AuthRepository.userId,
+          );
 
-          // Card assignment with conditional date visibility
-          if (currentMessage.sender == AccountRepository.user!.id) {
-            return MyMessageCard(
-              message: currentMessage,
-              date: index == 0 || !hidePreviousDate ? formattedDate : '',
-            );
-          } else {
-            if (currentMessage.readDate == null) {
-              print('triggered');
-              // SocketService.socket!.emit('seenMessageACK', {
-              //   currentMessage.messageId,
-              //   widget.chatRoom.chatRoomId,
-              //   widget.chatRoom.chatRoom.chatRoomId
-              // });
-            }
-            return SenderMessageCard(
-              message: currentMessage,
-              date: index == 0 || !hidePreviousDate ? formattedDate : '',
-            );
-          }
+          // // Card assignment with conditional date visibility
+          // if (oldMessage.sender == AccountRepository.user!.id) {
+          //   return MyMessageCard(
+          //     message: oldMessage,
+          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
+          //   );
+          // } else {
+          //   return SenderMessageCard(
+          //     message: oldMessage,
+          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
+          //   );
+          // }
         },
       ),
     );

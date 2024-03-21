@@ -3,52 +3,52 @@ import 'package:uniplanet_mobile/models/chat_room_test.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 
 abstract class ChatBlocState extends Equatable {
-  final List<ChatRoom> buyingChatRoom;
+  final List<ChatRoom> buyingChatRooms;
   final List<ChatRoom> sellingChatRooms;
 
   const ChatBlocState({
-    this.buyingChatRoom = const [],
+    this.buyingChatRooms = const [],
     this.sellingChatRooms = const [],
   });
 }
 
 class InitChatRoomState extends ChatBlocState {
-  InitChatRoomState() : super(buyingChatRoom: [], sellingChatRooms: []);
+  InitChatRoomState() : super(buyingChatRooms: [], sellingChatRooms: []);
   @override
-  List<Object?> get props => [buyingChatRoom, sellingChatRooms];
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
 //Creat ChatRoom
 class CreatingChatRoomState extends ChatBlocState {
-  const CreatingChatRoomState({super.buyingChatRoom, super.sellingChatRooms});
+  const CreatingChatRoomState({super.buyingChatRooms, super.sellingChatRooms});
   @override
-  List<Object?> get props => [buyingChatRoom, sellingChatRooms];
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
 class CreatedChatRoomState extends ChatBlocState {
-  const CreatedChatRoomState({super.buyingChatRoom, super.sellingChatRooms});
+  const CreatedChatRoomState({super.buyingChatRooms, super.sellingChatRooms});
   @override
-  List<Object?> get props => [buyingChatRoom, sellingChatRooms];
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
 //Load ChatRoom
 class LoadingChatRoomState extends ChatBlocState {
-  const LoadingChatRoomState({super.buyingChatRoom, super.sellingChatRooms});
+  const LoadingChatRoomState({super.buyingChatRooms, super.sellingChatRooms});
   @override
-  List<Object?> get props => [buyingChatRoom, sellingChatRooms];
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
 class LoadedChatRoomState extends ChatBlocState {
-  const LoadedChatRoomState({super.buyingChatRoom, super.sellingChatRooms});
+  const LoadedChatRoomState({super.buyingChatRooms, super.sellingChatRooms});
   @override
-  List<Object?> get props => [buyingChatRoom, sellingChatRooms];
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
 //Select ChatRoom
 class SelectChatRoomState extends ChatBlocState {
-  const SelectChatRoomState({super.buyingChatRoom, super.sellingChatRooms});
+  const SelectChatRoomState({super.buyingChatRooms, super.sellingChatRooms});
   @override
-  List<Object?> get props => [buyingChatRoom, sellingChatRooms];
+  List<Object?> get props => [buyingChatRooms, sellingChatRooms];
 }
 
 //Error

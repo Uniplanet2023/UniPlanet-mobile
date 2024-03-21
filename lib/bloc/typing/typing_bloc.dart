@@ -8,9 +8,9 @@ class TypingBloc extends Bloc<TypingEvent, TypingState> {
   TypingBloc() : super(const TypingInitial()) {
     on<TypingEvent>((event, emit) {
       if (event is TypingStartEvent) {
-        emit(const TypingStarted());
+        emit(TypingStarted(chatId: event.chatId));
       } else if (event is TypingStopEvent) {
-        emit(const TypingStopped());
+        emit(TypingStopped(chatId: event.chatId));
       }
     });
   }

@@ -58,14 +58,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
     if (_addProductFormKey.currentState!.validate()) {
       context.read<ProductBloc>().add(UploadProductEvent(
-          productName: productNameController.text,
-          description: descriptionController.text,
-          price: status == ON_SALE ? double.parse(priceController.text) : 0,
-          category: category,
-          status: status,
-          images: images,
-          profileImage:
-              context.read<AccountBloc>().state.account.user.profileImage));
+            productName: productNameController.text,
+            description: descriptionController.text,
+            price: status == ON_SALE ? double.parse(priceController.text) : 0,
+            category: category,
+            status: status,
+            images: images,
+          ));
     }
   }
 

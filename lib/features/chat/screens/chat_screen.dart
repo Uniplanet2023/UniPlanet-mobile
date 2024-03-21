@@ -8,8 +8,6 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
-import 'package:uniplanet_mobile/network/dio_client.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatRoom myChatRoom;
@@ -24,6 +22,12 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   List<Message> messages = [];
 
+  @override
+  void initState() {
+    context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
+    super.initState();
+  }
+
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(_scrollController.position.minScrollExtent,
@@ -35,14 +39,6 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       messages.insert(0, message);
     });
-  }
-
-  @override
-  void initState() {
-    context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
-    SocketService.instance.onConnectChat(context, widget.myChatRoom.id);
-    SocketService.instance.joinChat(widget.myChatRoom.id);
-    super.initState();
   }
 
   @override

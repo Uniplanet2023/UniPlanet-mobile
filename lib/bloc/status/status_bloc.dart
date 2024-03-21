@@ -9,20 +9,24 @@ part 'status_state.dart';
 class StatusBloc extends Bloc<StatusEvent, StatusState> {
   StatusBloc() : super(StatusInitial()) {
     on<StatusChangeEvent>((event, emit) {
-      emit(StatusChanging(online: state.online));
-      state.online.replaceRange(0, state.online.length, [event.userId]);
-      emit(StatusChanged(online: state.online));
+      if (!state.online.contains(event.userId)) {
+        var updatedOnlineList = List<String>.from(state.online)
+          ..add(event.userId);
+        emit(StatusChanged(online: updatedOnlineList));
+      }
     });
     on<StatusDisconnectEvent>(((event, emit) {
-      emit(StatusChanging(online: state.online));
-      state.online.replaceRange(0, state.online.length, [event.userId]);
-      emit(StatusChanged(online: state.online));
+      if (state.online.contains(event.userId)) {
+        List<String> updatedList = List.from(state.online)
+          ..remove(event.userId);
+        emit(StatusChanged(online: updatedList));
+      }
     }));
   }
   @override
   void onChange(Change<StatusState> change) {
     super.onChange(change);
-    // print(change);
+    print(change);
   }
 
   @override

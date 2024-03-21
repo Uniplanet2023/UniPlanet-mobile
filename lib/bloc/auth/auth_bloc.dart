@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/bloc/auth/auth_state/signin_state.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
 import 'package:uniplanet_mobile/network/api_status/signup.dart';
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -102,6 +103,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const LogOutState());
     String message = await _authRepository.logOut();
     if (message == 'Logged Out Successfully') {
+      SocketService.instance.disconnect();
       emit(const LogOutCompleteState());
     } else {
       emit(const LogOutFailedState());

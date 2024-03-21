@@ -25,6 +25,17 @@ class ChatRoom {
     );
   }
 
+  // This method is used to convert the ChatRoom object to a map
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'seller': seller.toMap(),
+      'buyer': buyer.toMap(),
+      'productId': productId,
+      'lastMessage': lastMessage != null ? lastMessage!.toMap() : null,
+    };
+  }
+
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
       id: map['id'],
@@ -39,4 +50,7 @@ class ChatRoom {
 
   factory ChatRoom.fromJson(String source) =>
       ChatRoom.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  // to Json method is used to convert the ChatRoom object to a json string
+  String toJson() => json.encode(toMap());
 }

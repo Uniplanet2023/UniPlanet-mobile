@@ -9,7 +9,7 @@ import 'package:uniplanet_mobile/repository/account_repository/account_repo_inte
 
 class AccountRepository implements IAccountRepository {
   final DioClient _dioClient;
-  static User? user;
+
   AccountRepository(this._dioClient);
 
   @override
@@ -22,7 +22,6 @@ class AccountRepository implements IAccountRepository {
 
       if (msg == "success") {
         Account result = Account.fromJson(res.data);
-        user = User.fromJson(res.data);
         return result;
       } else {
         throw Exception('Failed to get account info');
