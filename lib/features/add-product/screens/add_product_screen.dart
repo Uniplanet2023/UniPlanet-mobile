@@ -8,7 +8,6 @@ import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/upload_product.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/status/product_status.dart';
-import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -28,6 +27,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController productNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController meetingLocationController =
+      TextEditingController();
 
   String status = ON_SALE; // Initial toggle state for "For Sale"
   String category = 'Mobiles';
@@ -40,6 +41,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     productNameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
+    meetingLocationController.dispose();
   }
 
   List<String> productCategories = [
@@ -58,13 +60,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
     if (_addProductFormKey.currentState!.validate()) {
       context.read<ProductBloc>().add(UploadProductEvent(
-            productName: productNameController.text,
-            description: descriptionController.text,
-            price: status == ON_SALE ? double.parse(priceController.text) : 0,
-            category: category,
-            status: status,
-            images: images,
-          ));
+          productName: productNameController.text,
+          description: descriptionController.text,
+          price: status == ON_SALE
+              ? double.parse(
+                  double.parse(priceController.text).toStringAsFixed(2))
+              : 0,
+          category: category,
+          status: status,
+          images: images));
     }
   }
 
@@ -157,7 +161,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     ),
                                     const SizedBox(height: 15),
                                     Text(
-                                      'Select Product Images',
+                                      'Select up to five Product Images',
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.grey.shade400,
@@ -239,12 +243,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
+                      maxLength: 30,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     CustomTextField(
                       controller: priceController,
                       hintText: 'Price',
@@ -259,13 +264,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       prefixText: status == ON_SALE ? '\$' : '',
                       validatorEnabled: status != FREE_STOCK,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 25),
+                    CustomTextField(
+                      controller: meetingLocationController,
+                      hintText: 'where to meet',
+                      maxLength: 30,
+                    ),
+                    const SizedBox(height: 5),
                     CustomTextField(
                       controller: descriptionController,
                       hintText: 'Description',
                       maxLines: 7,
+                      maxLength: 300,
+                      keyboardType: TextInputType.multiline,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     SizedBox(
                       width: double.infinity,
                       child: DropdownButton(

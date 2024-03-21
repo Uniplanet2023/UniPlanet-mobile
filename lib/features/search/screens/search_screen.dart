@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -34,6 +33,8 @@ class _SearchScreenState extends State<SearchScreen> {
       context
           .read<SearchProductBloc>()
           .add(SearchProductEvent(productName: _searchController.text));
+    } else if (query.isEmpty) {
+      context.read<SearchProductBloc>().add(InitalSearchProductEvent());
     }
   }
 
@@ -117,6 +118,11 @@ class _SearchScreenState extends State<SearchScreen> {
           if (state is SearchingProductState) {
             return const Center(
               child: Loader(),
+            );
+          }
+          if (state is SearchProductInitial) {
+            return const Center(
+              child: Text("Search for Products..."),
             );
           }
           if (state is SearchedProductState) {

@@ -1,11 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
-class UserHeader extends StatelessWidget {
+class UserHeader extends StatefulWidget {
   final User currentUser;
   const UserHeader({super.key, required this.currentUser});
+
+  @override
+  State<UserHeader> createState() => _UserHeaderState();
+}
+
+class _UserHeaderState extends State<UserHeader> {
+  File? image;
+
+  void selectImage(BuildContext context) async {
+    image = await pickImageFromGallery(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +29,7 @@ class UserHeader extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => UserProfileScreen(
-              user: currentUser,
+              user: widget.currentUser,
             ),
           ),
         );
@@ -34,20 +48,26 @@ class UserHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Badge(
-                  alignment: Alignment.bottomRight,
-                  offset: Offset(-6, -6),
-                  label: Icon(
-                    Icons.add_a_photo,
-                    weight: BorderSide.strokeAlignOutside,
-                    size: 18,
-                    color: GlobalVariables.primaryColor,
-                  ),
-                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage:
-                        NetworkImage('https://via.placeholder.com/150'),
+                InkWell(
+                  onTap: () => selectImage(context),
+                  child: const Badge(
+                    alignment: Alignment.bottomRight,
+                    offset: Offset(-6, -6),
+                    label: Icon(
+                      Icons.add_a_photo,
+                      weight: BorderSide.strokeAlignOutside,
+                      size: 18,
+                      color: GlobalVariables.primaryColor,
+                    ),
+                    backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                    child: Hero(
+                      tag: 'user-pfp',
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -64,13 +84,13 @@ class UserHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        currentUser.name,
+                        widget.currentUser.name,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Text(currentUser.email),
+                      Text(widget.currentUser.email),
                       Text(
-                        currentUser.school,
+                        widget.currentUser.school,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ],

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/constants/number_formatter.dart';
+import 'package:uniplanet_mobile/constants/price_formatter.dart';
+import 'package:uniplanet_mobile/constants/time_formatter.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -16,7 +19,6 @@ class ItemBox extends StatefulWidget {
 class _ItemBoxState extends State<ItemBox> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width * 0.58;
     return widget.productList == []
         ? const Loader()
         : SliverList(
@@ -30,83 +32,192 @@ class _ItemBoxState extends State<ItemBox> {
                     AppRoutes.productDetailsPage,
                     arguments: product,
                   ),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            cacheManager: GlobalVariables.customCacheManager,
-                            imageUrl: product.images[0],
-                            key: UniqueKey(),
-                            fit: BoxFit.contain,
-                            height: 135,
-                            width: 135,
-                            placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => Container(
-                              color: Colors.black12,
-                              child: const Icon(
-                                Icons.error,
-                                color: Colors.red,
-                                size: 80,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.0, horizontal: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          12,
+                        ),
+                      ),
+                      // margin: const EdgeInsets.symmetric(
+                      //   horizontal: 10,
+                      // ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Hero(
+                                  tag: "product-picture-${product.id}",
+                                  child: CachedNetworkImage(
+                                    cacheManager:
+                                        GlobalVariables.customCacheManager,
+                                    imageUrl: product.images[0],
+                                    key: UniqueKey(),
+                                    fit: BoxFit.cover,
+                                    height: 135,
+                                    width: 135,
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      color: Colors.black12,
+                                      child: const Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                        size: 80,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "${product.name[0].toUpperCase()}${product.name.substring(1).toLowerCase()}",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      product.price == 0
+                                          ? Text(
+                                              product.price == 0
+                                                  ? 'Free'
+                                                  : '\$${product.price}',
+                                              style: const TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
+                                            )
+                                          : Row(
+                                              children: [
+                                                RichText(
+                                                  text: TextSpan(children: [
+                                                    TextSpan(
+                                                        text: '\$',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey.shade800,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    TextSpan(
+                                                        text:
+                                                            '${PriceFormatter(product.price).getDigit()}.',
+                                                        style: const TextStyle(
+                                                            fontSize: 25,
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    TextSpan(
+                                                        text: PriceFormatter(
+                                                                product.price)
+                                                            .getDecimal(),
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey.shade800,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold))
+                                                  ]),
+                                                )
+                                              ],
+                                            ),
+                                      const SizedBox(
+                                        height: 25,
+                                      ),
+                                      const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 18,
+                                            color:
+                                                GlobalVariables.secondaryColor,
+                                          ),
+                                          Text(
+                                            'Yang Hall',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: GlobalVariables
+                                                  .secondaryColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            TimeAgoFormatter(product.createdAt)
+                                                .format(),
+                                            style: TextStyle(
+                                              color: Colors.grey.shade900,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.favorite_border_outlined,
+                                                size: 18,
+                                              ),
+                                              Text(
+                                                  NumberFormatter(product.likes)
+                                                      .format()),
+                                              const SizedBox(
+                                                width: 4,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons
+                                                        .chat_bubble_outline_rounded,
+                                                    size: 18,
+                                                  ),
+                                                  Text(NumberFormatter(
+                                                          product.likes)
+                                                      .format())
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              width: screenWidth,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Text(
-                                "${product.name[0].toUpperCase()}${product.name.substring(1).toLowerCase()}",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                                maxLines: 2,
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth,
-                              padding: const EdgeInsets.only(left: 10, top: 5),
-                              child: Text(
-                                '\$${product.price}',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth,
-                              padding: const EdgeInsets.only(left: 10),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.location_on),
-                                  Text('Yang Hall'),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth,
-                              padding: const EdgeInsets.only(left: 10, top: 5),
-                              child: const Text(
-                                'On Sell',
-                                style: TextStyle(
-                                  color: Colors.teal,
-                                ),
-                                maxLines: 2,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                          const Divider(
+                            thickness: 0.2,
+                            indent: 8,
+                            endIndent: 8,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

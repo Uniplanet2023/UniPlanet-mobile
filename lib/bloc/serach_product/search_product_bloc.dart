@@ -15,6 +15,8 @@ class SearchProductBloc
     on<SearchProductEvent>((event, emit) async {
       await _searchProduct(event, emit);
     });
+    on(<InitalSearchProductEvent>(event, emit) =>
+        emit(const SearchProductInitial()));
   }
   _searchProduct(
       SearchProductEvent event, Emitter<SearchProductState> emit) async {

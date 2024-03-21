@@ -1,13 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
@@ -21,6 +24,9 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late User currentUser;
+
+  int currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -30,22 +36,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   CarouselSlider _buildCarouselSlider() {
     return CarouselSlider(
       items: widget.product.images
-          .map((image) => Builder(
+          .asMap()
+          .entries
+          .map((entry) => Builder(
                 builder: (BuildContext context) {
-                  return CachedNetworkImage(
-                    cacheManager: GlobalVariables.customCacheManager,
-                    imageUrl: image,
-                    fit: BoxFit.contain,
-                    height: 400,
-                    placeholder: (_, __) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (_, __, ___) =>
-                        const Icon(Icons.error, color: Colors.red, size: 80),
+                  int index = entry.key; // Access index for unique tag
+                  String image = entry.value; // Access image URL
+                  return Hero(
+                    tag: "product-picture-${widget.product.id}",
+                    child: CachedNetworkImage(
+                      cacheManager: GlobalVariables.customCacheManager,
+                      imageUrl: image,
+                      fit: BoxFit.fill,
+                      height: 400,
+                      placeholder: (_, __) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (_, __, ___) =>
+                          const Icon(Icons.error, color: Colors.red, size: 80),
+                    ),
                   );
                 },
               ))
           .toList(),
-      options: CarouselOptions(viewportFraction: 1, height: 400),
+      options: CarouselOptions(
+        viewportFraction: 1,
+        height: 400,
+        onPageChanged: (index, reason) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+      ),
     );
   }
 
@@ -57,13 +78,131 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildCarouselSlider(),
-            const Divider(height: 4, color: Colors.black12),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: _buildPriceText(widget.product.price),
+            Center(
+              child: DotsIndicator(
+                dotsCount: widget.product.images.length,
+                position: currentIndex,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          UserProfileScreen(user: widget.product.seller),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage:
+                          NetworkImage('https://via.placeholder.com/150'),
+                      radius: 20,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      widget.product.seller.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      maxLines: 1,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            const Divider(
+              height: 4,
+              color: Colors.black12,
+              indent: 8,
+              endIndent: 8,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+              child: Text(
+                widget.product.name,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                maxLines: 2,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+              child: RichText(
+                text: TextSpan(
+                    text: "${widget.product.category} . ",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w400,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: DateFormat.yMd()
+                            .add_jm()
+                            .format(widget.product.createdAt),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w400,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ]),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+              child: RichText(
+                text: const TextSpan(
+                    text: 'Where to meet: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'Yang hall',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: GlobalVariables.secondaryColor,
+                          fontWeight: FontWeight.w400,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ]),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+              child: Text(
+                'Description:',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
               child: Text(widget.product.description),
             ),
           ],
@@ -76,12 +215,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _buildPriceText(double price) {
     return RichText(
       text: TextSpan(
-        text: 'Fixed Price: ',
+        text: 'Price: ',
         style: const TextStyle(
-            fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+            fontSize: 16,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            overflow: TextOverflow.ellipsis),
         children: [
           TextSpan(
-            text: '\$$price',
+            text: (price == 0) ? "Free" : '\$$price',
             style: const TextStyle(
                 fontSize: 22, color: Colors.red, fontWeight: FontWeight.w500),
           ),

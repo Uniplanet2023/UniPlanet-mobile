@@ -15,6 +15,16 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late InitData _init;
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.fastOutSlowIn,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     _init.dispose();
+    _controller.dispose();
     super.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
@@ -58,9 +69,12 @@ class _SplashScreenState extends State<SplashScreen>
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/Logo.png',
-              width: 400,
+            ScaleTransition(
+              scale: _animation,
+              child: Image.asset(
+                'assets/images/Logo.png',
+                width: 400,
+              ),
             ),
           ],
         ),

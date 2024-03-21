@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final String prefixText;
   final bool obscureText;
   final bool validatorEnabled;
+  final int? maxLength;
 
   const CustomTextField({
     super.key,
@@ -22,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.prefixText = "",
     this.obscureText = false,
     this.validatorEnabled = true,
+    this.maxLength,
   });
 
   @override
@@ -53,6 +55,7 @@ class CustomTextField extends StatelessWidget {
         return null;
       },
       maxLines: maxLines,
+      maxLength: (maxLength != null) ? maxLength : null,
     );
   }
 }
