@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
@@ -25,12 +26,30 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
       await _getMoreMessage(event, emit);
     });
     on<ReadMessageEvent>((event, emit) {
-      emit(UnReadMessageState(
-          chatMessages: state.chatMessages, page: state.page));
-      // state.chatMessages!.last.readDate = DateTime.now();
+      // First, create a new copy of chatMessages
+      Map<String, List<Message>> updatedChatMessages = {};
 
-      emit(
-          ReadMessageState(chatMessages: state.chatMessages, page: state.page));
+      state.chatMessages.forEach((chatId, messages) {
+        if (chatId == event.chatId) {
+          // Create a new list of messages with updated readDate for relevant messages
+          var updatedMessages = messages.map((message) {
+            if (message.receiver == AuthRepository.userId) {
+              return message.copyWith(
+                  readDate:
+                      event.readDate); // Assuming you have a copyWith method
+            }
+            return message;
+          }).toList();
+          updatedChatMessages[chatId] = updatedMessages;
+        } else {
+          updatedChatMessages[chatId] =
+              List.from(messages); // Add other chats unchanged
+        }
+      });
+
+      // Emit a new state with the updated map of chatMessages
+      emit(ReadMessageState(
+          chatMessages: updatedChatMessages, page: state.page));
     });
   }
   _getMoreMessage(GetMoreMessageEvent event, emit) async {

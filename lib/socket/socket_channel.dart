@@ -62,6 +62,12 @@ class SocketService {
             .read<ChatBloc>()
             .add(UpdateChatRoomLastMessageEvent(receivedMessage));
       });
+
+      socket.on('mark seen message', (data) {
+        DateTime seenTime = DateTime.parse(data['readMessageTime']);
+        String chatId = data['chatId'];
+        context.read<MessageBloc>().add(ReadMessageEvent(chatId, seenTime));
+      });
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
     socket.onConnectError((data) => print('ConnectError $data'));
@@ -79,6 +85,7 @@ class SocketService {
     socket.connect();
   }
 
+  //TODO: message not sent, check instant reading message
   void sendTypingEvent(String chatId, BuildContext context) {
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
@@ -112,8 +119,6 @@ class SocketService {
       createdAt: DateTime.now().toUtc(),
     );
     socket.emit('new message', message);
-    // sendStopTypingEvent(chatId);
-    // messageStoreCallback(message);
     return message;
   }
 
@@ -128,17 +133,9 @@ class SocketService {
   //   // joiningAllChatRoom(state.user!.myChatRoom);
   // }
 
-  // void emptyUnSeenMessageOn() {
-  //   try {
-  //     socket?.off("seenMessageFIN");
-  //     socket!.on("seenMessageFIN", (data) {
-  //       // context.read<MessageBloc>().add(const ReadMessageEvent());
-  //       // context.read<ChatBloc>().add(EmptyUnseenMessageEvent(data));
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  void markSeenMessages(String chatId) {
+    socket.emit('mark seen message', chatId);
+  }
 
   // void receiveMessageOn() {
   //   try {
