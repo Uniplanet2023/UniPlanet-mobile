@@ -14,4 +14,10 @@ class TypingBloc extends Bloc<TypingEvent, TypingState> {
       }
     });
   }
+  @override
+  void onChange(Change<TypingState> change) {
+    // TODO: implement onChange
+    super.onChange(change);
+    print(change);
+  }
 }

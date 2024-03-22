@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
@@ -56,6 +58,15 @@ class SocketService {
         var msg = jsonDecode(newMessageReceived);
         Message receivedMessage = Message.fromMap(msg);
         context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
+        context
+            .read<ChatBloc>()
+            .add(UpdateChatRoomLastMessageEvent(receivedMessage));
+      });
+
+      socket.on('mark seen message', (data) {
+        DateTime seenTime = DateTime.parse(data['readMessageTime']);
+        String chatId = data['chatId'];
+        context.read<MessageBloc>().add(ReadMessageEvent(chatId, seenTime));
       });
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
@@ -74,6 +85,7 @@ class SocketService {
     socket.connect();
   }
 
+  //TODO: message not sent, check instant reading message
   void sendTypingEvent(String chatId, BuildContext context) {
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
@@ -107,8 +119,6 @@ class SocketService {
       createdAt: DateTime.now().toUtc(),
     );
     socket.emit('new message', message);
-    // sendStopTypingEvent(chatId);
-    // messageStoreCallback(message);
     return message;
   }
 
@@ -123,17 +133,9 @@ class SocketService {
   //   // joiningAllChatRoom(state.user!.myChatRoom);
   // }
 
-  // void emptyUnSeenMessageOn() {
-  //   try {
-  //     socket?.off("seenMessageFIN");
-  //     socket!.on("seenMessageFIN", (data) {
-  //       // context.read<MessageBloc>().add(const ReadMessageEvent());
-  //       // context.read<ChatBloc>().add(EmptyUnseenMessageEvent(data));
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  void markSeenMessages(String chatId) {
+    socket.emit('mark seen message', chatId);
+  }
 
   // void receiveMessageOn() {
   //   try {

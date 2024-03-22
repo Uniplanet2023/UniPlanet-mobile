@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/repository/chat_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
@@ -25,29 +26,60 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
       await _getMoreMessage(event, emit);
     });
     on<ReadMessageEvent>((event, emit) {
-      emit(UnReadMessageState(messages: state.messages, page: state.page));
-      // state.messages!.last.readDate = DateTime.now();
+      // First, create a new copy of chatMessages
+      Map<String, List<Message>> updatedChatMessages = {};
 
-      emit(ReadMessageState(messages: state.messages, page: state.page));
+      state.chatMessages.forEach((chatId, messages) {
+        if (chatId == event.chatId) {
+          // Create a new list of messages with updated readDate for relevant messages
+          var updatedMessages = messages.map((message) {
+            if (message.receiver == AuthRepository.userId) {
+              return message.copyWith(
+                  readDate:
+                      event.readDate); // Assuming you have a copyWith method
+            }
+            return message;
+          }).toList();
+          updatedChatMessages[chatId] = updatedMessages;
+        } else {
+          updatedChatMessages[chatId] =
+              List.from(messages); // Add other chats unchanged
+        }
+      });
+
+      // Emit a new state with the updated map of chatMessages
+      emit(ReadMessageState(
+          chatMessages: updatedChatMessages, page: state.page));
     });
   }
   _getMoreMessage(GetMoreMessageEvent event, emit) async {
-    emit(LoadingMessageState(messages: state.messages, page: state.page));
+    emit(LoadingMessageState(
+        chatMessages: state.chatMessages, page: state.page));
     int nextPage = state.page! + 1;
     List<Message> listMessage =
         await _chatRepository.getMessages(chatId: event.chatId, page: nextPage);
     if (listMessage.isEmpty) {
-      emit(EndMessageState(messages: state.messages, page: state.page));
+      emit(EndMessageState(chatMessages: state.chatMessages, page: state.page));
     } else {
-      state.messages.addAll(listMessage);
-      emit(LoadedMessageState(messages: state.messages, page: nextPage));
+      var chatId = listMessage.first.chat;
+      state.chatMessages.addAll({chatId: listMessage});
+      emit(
+          LoadedMessageState(chatMessages: state.chatMessages, page: nextPage));
     }
   }
 
   _receiveMessage(ReceiveMessageEvent event, emit) {
-    emit(LoadingMessageState(messages: state.messages, page: state.page));
-    state.messages.insertAll(0, [event.msg]);
-    emit(LoadedMessageState(messages: state.messages, page: state.page));
+    emit(ReceivingMessageState(
+        chatMessages: state.chatMessages, page: state.page));
+    if (state.chatMessages[event.msg.chat] == null) {
+      state.chatMessages.addAll({
+        event.msg.chat: [event.msg]
+      });
+    } else {
+      state.chatMessages[event.msg.chat]!.insertAll(0, [event.msg]);
+    }
+    emit(ReceivedMessageState(
+        chatMessages: state.chatMessages, page: state.page));
   }
 
   _sendMessage(SendMessageEvent event, emit) async {
@@ -60,12 +92,20 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
 
   _loadMessages(GetMessageEvent event, emit) async {
-    emit(LoadingMessageState(messages: state.messages, page: state.page));
+    emit(InitMessageState());
     try {
-      List<Message> messages =
+      List<Message> listMessage =
           await _chatRepository.getMessages(chatId: event.chatId, page: 0);
 
-      emit(LoadedMessageState(messages: messages, page: 0));
+      if (listMessage.isEmpty) {
+        emit(EndMessageState(
+            chatMessages: state.chatMessages, page: state.page));
+      } else {
+        var chatId = listMessage.first.chat;
+        state.chatMessages.addAll({chatId: listMessage});
+        emit(LoadedMessageState(
+            chatMessages: state.chatMessages, page: state.page));
+      }
     } catch (e) {
       print(e);
     }
@@ -74,7 +114,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   @override
   void onChange(Change<MessageBlocState> change) {
     super.onChange(change);
-    // print(change);
+    print(change);
   }
 
   @override

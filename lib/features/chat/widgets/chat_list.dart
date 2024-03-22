@@ -63,13 +63,15 @@ class _ChatListState extends State<ChatList> {
         FocusScope.of(context).unfocus();
       },
       child: ListView.builder(
-        itemCount: widget.messages.length + 2,
+        itemCount: widget.messages.length +
+            2, // first item is typing indicator and last item is loading indicator
         controller: widget.scrollController,
         cacheExtent: 100.0,
         reverse: true,
         itemBuilder: (context, index) {
           var itemNumber = index - 1;
-          if (index == 0) {
+          // if it is the first item, return a typing indicator
+          if (itemNumber == -1) {
             return BlocBuilder<TypingBloc, TypingState>(
               builder: (context, state) {
                 if (state is TypingStarted &&
@@ -83,19 +85,23 @@ class _ChatListState extends State<ChatList> {
               },
             );
           }
+          // if it is the last item, return a loading indicator or nothing
+          var messageState = context.read<MessageBloc>().state;
           if (itemNumber == widget.messages.length) {
-            // if (widget.messages.length > 19 && state is! EndMessageState) {
-            //   return const Center(
-            //     child: CircularProgressIndicator(),
-            //   );
-            // } else {
-            //   return const SizedBox();
-            // }
-            return const SizedBox();
+            if (widget.messages.length > 19 &&
+                messageState is! EndMessageState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return const SizedBox();
+            }
           }
+          // if there are no messages, return nothing
           if (widget.messages.isEmpty) {
             return const SizedBox();
           }
+          // if there are messages, return a message card
           final Message oldMessage = widget.messages[itemNumber];
           Message? recentMessage;
           if (itemNumber > 0) {
@@ -106,19 +112,6 @@ class _ChatListState extends State<ChatList> {
             recentMessage: recentMessage,
             isMyMessage: oldMessage.sender == AuthRepository.userId,
           );
-
-          // // Card assignment with conditional date visibility
-          // if (oldMessage.sender == AccountRepository.user!.id) {
-          //   return MyMessageCard(
-          //     message: oldMessage,
-          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
-          //   );
-          // } else {
-          //   return SenderMessageCard(
-          //     message: oldMessage,
-          //     date: index == 0 || !hidePreviousDate ? formattedDate : '',
-          //   );
-          // }
         },
       ),
     );
