@@ -16,6 +16,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
+    on<UpdateChatRoomLastMessageEvent>((event, emit) {
+      _updateChatRoomLastMessage(event, emit);
+    });
     // on<EmptyUnseenMessageEvent>(
     //   (event, emit) {
     //     for (var myChat in state.chatRoomList!) {
@@ -26,6 +29,33 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     //     emit(LoadedChatRoomState(chatRoomList: state.chatRoomList));
     //   },
     // );
+  }
+  _updateChatRoomLastMessage(UpdateChatRoomLastMessageEvent event, emit) {
+    bool isUpdated = false;
+
+    // Update for buyingChatRooms
+    List<ChatRoom> updatedBuyingChatRooms =
+        state.buyingChatRooms.map((chatRoom) {
+      if (chatRoom.id == event.lastMessage.chat) {
+        isUpdated = true;
+        return chatRoom.copyWith(lastMessage: event.lastMessage);
+      }
+      return chatRoom;
+    }).toList();
+
+    // If the chatRoom was found and updated in buyingChatRooms, we can skip updating sellingChatRooms
+    List<ChatRoom> updatedSellingChatRooms = isUpdated
+        ? state.sellingChatRooms
+        : state.sellingChatRooms.map((chatRoom) {
+            if (chatRoom.id == event.lastMessage.chat) {
+              return chatRoom.copyWith(lastMessage: event.lastMessage);
+            }
+            return chatRoom;
+          }).toList();
+
+    emit(UpdateLastMessageState(
+        buyingChatRooms: updatedBuyingChatRooms,
+        sellingChatRooms: updatedSellingChatRooms));
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {

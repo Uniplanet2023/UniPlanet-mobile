@@ -46,12 +46,12 @@ class MessageCard extends StatelessWidget {
           ),
           const SizedBox(width: 5),
           oldMessage.readDate == null
-              ? const SizedBox()
-              : const Icon(
+              ? const Icon(
                   Icons.local_fire_department_outlined,
                   size: 20,
                   color: Colors.black54,
-                ),
+                )
+              : const SizedBox(),
         ],
       ),
       // Message Card

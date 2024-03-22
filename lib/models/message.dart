@@ -7,7 +7,7 @@ class Message {
   final String receiver;
   final String chat;
   final DateTime createdAt;
-  final DateTime? readDate;
+  DateTime? readDate;
 
   Message({
     required this.sender,
@@ -61,6 +61,6 @@ class Message {
         "receiver": receiver,
         "chat": chat,
         "createdAt": createdAt.toIso8601String(),
-        "readDate": readDate ?? readDate?.toIso8601String(),
+        "readDate": readDate?.toIso8601String(),
       };
 }

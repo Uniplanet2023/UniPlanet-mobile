@@ -7,7 +7,7 @@ class ChatRoom {
   final String id;
   final User seller;
   final User buyer;
-  final Message? lastMessage;
+  Message? lastMessage;
 
   ChatRoom(
       {required this.id,
@@ -22,6 +22,23 @@ class ChatRoom {
       seller: User.initialUser(),
       buyer: User.initialUser(),
       productId: "",
+    );
+  }
+
+  //copy with method is used to create a new ChatRoom object with the updated values
+  ChatRoom copyWith({
+    String? id,
+    User? seller,
+    User? buyer,
+    String? productId,
+    Message? lastMessage,
+  }) {
+    return ChatRoom(
+      id: id ?? this.id,
+      seller: seller ?? this.seller,
+      buyer: buyer ?? this.buyer,
+      productId: productId ?? this.productId,
+      lastMessage: lastMessage ?? this.lastMessage,
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
@@ -8,6 +10,7 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatRoom myChatRoom;
@@ -25,6 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
+
     super.initState();
   }
 
@@ -101,10 +105,16 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: BlocListener<MessageBloc, MessageBlocState>(
         listener: (context, state) {
+          var chatMessages = state.chatMessages[widget.myChatRoom.id] ?? [];
           // TODO: implement listener
-          if (state is LoadedMessageState) {
+          if (state is LoadedMessageState || state is ReceivedMessageState) {
+            SocketService.instance.markSeenMessages(widget.myChatRoom.id);
             setState(() {
-              messages = state.messages;
+              messages = chatMessages;
+            });
+          } else if (state is ReadMessageState) {
+            setState(() {
+              messages = chatMessages;
             });
           }
         },

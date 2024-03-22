@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet_mobile/models/chat_room_test.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
 abstract class ChatBlocEvent extends Equatable {
@@ -23,6 +24,13 @@ class LoadChatRoomEvent extends ChatBlocEvent {
 class LoadMessageEvent extends ChatBlocEvent {
   @override
   List<Object> get props => [];
+}
+
+class UpdateChatRoomLastMessageEvent extends ChatBlocEvent {
+  final Message lastMessage;
+  const UpdateChatRoomLastMessageEvent(this.lastMessage);
+  @override
+  List<Object> get props => [lastMessage];
 }
 
 class ClientStatusChangeEvent extends ChatBlocEvent {

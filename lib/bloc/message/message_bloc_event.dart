@@ -38,7 +38,9 @@ class ReceiveMessageEvent extends MessageBlocEvent {
 }
 
 class ReadMessageEvent extends MessageBlocEvent {
-  const ReadMessageEvent();
+  final String chatId;
+  final DateTime readDate;
+  const ReadMessageEvent(this.chatId, this.readDate);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [chatId, readDate];
 }
