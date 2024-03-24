@@ -57,14 +57,15 @@ class SocketService {
         var msg = jsonDecode(newMessageReceived);
         Message receivedMessage = Message.fromMap(msg);
         receivedMessage.status = 'sent';
-        if (currentChatLocation == receivedMessage.chat &&
-            receivedMessage.receiver == userId) {
-          readAllMessages(currentChatLocation!);
-        }
+
         context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
         context
             .read<ChatBloc>()
             .add(UpdateChatRoomLastMessageEvent(receivedMessage));
+        if (currentChatLocation == receivedMessage.chat &&
+            receivedMessage.receiver == userId) {
+          readAllMessages(currentChatLocation!);
+        }
       });
       // socket.on('read message', (data) {
       //   String messageId = data['messageId'];
@@ -76,7 +77,14 @@ class SocketService {
       socket.on('read all message', (data) {
         DateTime seenTime = DateTime.parse(data['readMessageTime']);
         String chatId = data['chatId'];
+        // if MessageBloc state is receivedMessage, then readAllmessage triggered
+
         context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
+      });
+      socket.emitWithAck("setup", chatRooms, ack: (data) {
+        if (data[1]) {
+          context.read<StatusBloc>().add(StatusChangeEvent(userId: data[0]));
+        }
       });
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
@@ -85,12 +93,6 @@ class SocketService {
     socket.onReconnect((data) => print('Reconnect $data'));
     socket.onReconnectAttempt((data) => print('ReconnectAttempt $data'));
     socket.onReconnecting((data) => print('Reconnecting $data'));
-
-    socket.emitWithAck("setup", chatRooms, ack: (data) {
-      if (data[1]) {
-        context.read<StatusBloc>().add(StatusChangeEvent(userId: data[0]));
-      }
-    });
 
     socket.connect();
   }

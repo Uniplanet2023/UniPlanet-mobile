@@ -28,36 +28,36 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     on<ReadAllMessages>((event, emit) {
       _readAllMessages(event, emit);
     });
-    on<ReadMessageEvent>((event, emit) {
-      _readMessage(event, emit);
-    });
+    // on<ReadMessageEvent>((event, emit) {
+    //   _readMessage(event, emit);
+    // });
   }
-  _readMessage(ReadMessageEvent event, emit) {
-    // First, create a new copy of chatMessages
-    Map<String, List<Message>> updatedChatMessages = {};
+  // _readMessage(ReadMessageEvent event, emit) {
+  //   // First, create a new copy of chatMessages
+  //   Map<String, List<Message>> updatedChatMessages = {};
 
-    state.chatMessages.forEach((chatId, messages) {
-      if (chatId == event.chatId) {
-        // Create a new list of messages with updated readDate for relevant messages
-        var updatedMessages = messages.map((message) {
-          if (message.readDate == null &&
-              message.receiver == AuthRepository.userId) {
-            return message.copyWith(
-                readDate:
-                    event.readDate); // Assuming you have a copyWith method
-          }
-          return message;
-        }).toList();
-        updatedChatMessages[chatId] = updatedMessages;
-      } else {
-        updatedChatMessages[chatId] =
-            List.from(messages); // Add other chats unchanged
-      }
-    });
+  //   state.chatMessages.forEach((chatId, messages) {
+  //     if (chatId == event.chatId) {
+  //       // Create a new list of messages with updated readDate for relevant messages
+  //       var updatedMessages = messages.map((message) {
+  //         if (message.readDate == null &&
+  //             message.receiver == AuthRepository.userId) {
+  //           return message.copyWith(
+  //               readDate:
+  //                   event.readDate); // Assuming you have a copyWith method
+  //         }
+  //         return message;
+  //       }).toList();
+  //       updatedChatMessages[chatId] = updatedMessages;
+  //     } else {
+  //       updatedChatMessages[chatId] =
+  //           List.from(messages); // Add other chats unchanged
+  //     }
+  //   });
 
-    // Emit a new state with the updated map of chatMessages
-    emit(ReadMessageState(chatMessages: updatedChatMessages, page: state.page));
-  }
+  //   // Emit a new state with the updated map of chatMessages
+  //   emit(ReadMessageState(chatMessages: updatedChatMessages, page: state.page));
+  // }
 
   _readAllMessages(ReadAllMessages event, emit) {
     // First, create a new copy of chatMessages
