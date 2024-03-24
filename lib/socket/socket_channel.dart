@@ -129,7 +129,7 @@ class SocketService {
       chat: chatId,
       status: 'pending',
       receiver: receiver,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
     );
     socket.emit('new message', message);
     sendStopTypingEvent(chatId, context);
