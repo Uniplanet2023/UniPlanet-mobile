@@ -64,8 +64,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   void sendTextMessage() async {
     if (isShowSendButton) {
-      SocketService.instance.sendMessage(
-          _messageController.text, widget.chatRoomId, 'text', widget.sellerId);
+      SocketService.instance.sendMessage(_messageController.text,
+          widget.chatRoomId, 'text', widget.sellerId, context);
       _messageController.clear();
       widget.scrollDownfuction();
     }

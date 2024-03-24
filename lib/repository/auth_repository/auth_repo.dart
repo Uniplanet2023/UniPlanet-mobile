@@ -14,6 +14,8 @@ import 'package:uniplanet_mobile/network/dio_client.dart';
 class AuthRepository implements IAuthRepository {
   final DioClient _dioClient;
   static String? userId;
+  static String? school;
+
   AuthRepository(this._dioClient);
   @override
   Future<String> signUpUser({
@@ -61,6 +63,7 @@ class AuthRepository implements IAuthRepository {
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
         userId = res.data['userId'];
+        school = res.data['school'];
       }
       return msg;
     } on DioException catch (e) {
@@ -117,6 +120,7 @@ class AuthRepository implements IAuthRepository {
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
         userId = res.data['userId'];
+        school = res.data['school'];
         return res.data['access'];
       }
     } on DioException catch (e) {
