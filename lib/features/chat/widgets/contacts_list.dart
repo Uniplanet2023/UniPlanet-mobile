@@ -23,10 +23,6 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
-  _loadList() {
-    context.read<ChatBloc>().add(const LoadChatRoomEvent());
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,7 +64,6 @@ class _ContactsListState extends State<ContactsList> {
                         );
                       }),
                     );
-                    _loadList();
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),

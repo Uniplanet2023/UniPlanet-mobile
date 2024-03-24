@@ -37,10 +37,20 @@ class ReceiveMessageEvent extends MessageBlocEvent {
   List<Object> get props => [msg];
 }
 
-class ReadMessageEvent extends MessageBlocEvent {
+class ReadAllMessages extends MessageBlocEvent {
   final String chatId;
   final DateTime readDate;
-  const ReadMessageEvent(this.chatId, this.readDate);
+  const ReadAllMessages(this.chatId, this.readDate);
+  @override
+  List<Object> get props => [chatId, readDate];
+}
+
+class ReadMessageEvent extends MessageBlocEvent {
+  final String messageId;
+  final String chatId;
+  final DateTime readDate;
+  const ReadMessageEvent(
+      {required this.messageId, required this.chatId, required this.readDate});
   @override
   List<Object> get props => [chatId, readDate];
 }

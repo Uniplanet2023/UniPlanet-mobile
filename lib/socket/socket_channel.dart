@@ -20,7 +20,7 @@ class SocketService {
   static final SocketService _instance = SocketService._internal();
   static SocketService get instance => _instance;
   late final IO.Socket socket;
-
+  static String? currentChatLocation;
   Timer? _typingTimer; // Added to keep track of the typing event timer
 
   SocketService._internal() {
@@ -30,12 +30,11 @@ class SocketService {
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
-            .setReconnectionAttempts(10)
+            .setReconnectionAttempts(100)
             .setReconnectionDelay(1000)
-            .setQuery({"userId": userId})
+            .setQuery({"userId": userId, "school": AuthRepository.school!})
             .build());
   }
-
   void connect(BuildContext context, String chatRooms) {
     socket.onConnect((_) {
       print('Connected');
@@ -57,16 +56,27 @@ class SocketService {
       socket.on('message received', (newMessageReceived) {
         var msg = jsonDecode(newMessageReceived);
         Message receivedMessage = Message.fromMap(msg);
+        receivedMessage.status = 'sent';
+        if (currentChatLocation == receivedMessage.chat &&
+            receivedMessage.receiver == userId) {
+          readAllMessages(currentChatLocation!);
+        }
         context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
         context
             .read<ChatBloc>()
             .add(UpdateChatRoomLastMessageEvent(receivedMessage));
       });
-
-      socket.on('mark seen message', (data) {
+      // socket.on('read message', (data) {
+      //   String messageId = data['messageId'];
+      //   DateTime readDate = DateTime.parse(data['readMessageTime']);
+      //   String chatId = data['chatId'];
+      //   context.read<MessageBloc>().add(ReadMessageEvent(
+      //       messageId: messageId, chatId: chatId, readDate: readDate));
+      // });
+      socket.on('read all message', (data) {
         DateTime seenTime = DateTime.parse(data['readMessageTime']);
         String chatId = data['chatId'];
-        context.read<MessageBloc>().add(ReadMessageEvent(chatId, seenTime));
+        context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
       });
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
@@ -108,17 +118,19 @@ class SocketService {
     socket.emit('join chat', chatId);
   }
 
-  Message sendMessage(
-      String content, String chatId, String messageType, String receiver) {
+  Message sendMessage(String content, String chatId, String messageType,
+      String receiver, BuildContext context) {
     Message message = Message(
       sender: userId,
       message: content,
       messageType: messageType,
       chat: chatId,
+      status: 'pending',
       receiver: receiver,
-      createdAt: DateTime.now().toUtc(),
+      createdAt: DateTime.now(),
     );
     socket.emit('new message', message);
+    sendStopTypingEvent(chatId, context);
     return message;
   }
 
@@ -133,8 +145,8 @@ class SocketService {
   //   // joiningAllChatRoom(state.user!.myChatRoom);
   // }
 
-  void markSeenMessages(String chatId) {
-    socket.emit('mark seen message', chatId);
+  void readAllMessages(String chatId) {
+    socket.emit('read all message', chatId);
   }
 
   // void receiveMessageOn() {

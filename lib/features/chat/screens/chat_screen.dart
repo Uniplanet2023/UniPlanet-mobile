@@ -28,7 +28,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
-
+    SocketService.currentChatLocation = widget.myChatRoom.id;
+    SocketService.instance.readAllMessages(widget.myChatRoom.id);
     super.initState();
   }
 
@@ -48,6 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    SocketService.currentChatLocation = null;
     super.dispose();
   }
 
@@ -108,7 +110,6 @@ class _ChatScreenState extends State<ChatScreen> {
           var chatMessages = state.chatMessages[widget.myChatRoom.id] ?? [];
           // TODO: implement listener
           if (state is LoadedMessageState || state is ReceivedMessageState) {
-            SocketService.instance.markSeenMessages(widget.myChatRoom.id);
             setState(() {
               messages = chatMessages;
             });
