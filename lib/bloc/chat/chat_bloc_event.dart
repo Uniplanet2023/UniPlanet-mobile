@@ -50,9 +50,17 @@ class ClientStatusDisconnectEvent extends ChatBlocEvent {
   List<Object?> get props => [userId];
 }
 
-class EmptyUnseenMessageEvent extends ChatBlocEvent {
-  final String myChatRoomId;
-  const EmptyUnseenMessageEvent(this.myChatRoomId);
+//Unseen Message
+class UpdateUnseenMessageEvent extends ChatBlocEvent {
+  final String chatId;
+  const UpdateUnseenMessageEvent({required this.chatId});
   @override
-  List<Object?> get props => [myChatRoomId];
+  List<Object> get props => [];
+}
+
+class EmptyUnseenMessageEvent extends ChatBlocEvent {
+  final String chatId;
+  const EmptyUnseenMessageEvent({required this.chatId});
+  @override
+  List<Object?> get props => [chatId];
 }

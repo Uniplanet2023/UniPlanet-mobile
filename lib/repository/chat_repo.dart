@@ -67,8 +67,9 @@ class ChatRepository {
       Response res = await _dioClient.dio
           .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
 
-      return List<ChatRoom>.from(
-          res.data.map((data) => ChatRoom.fromMap(data)));
+      List<ChatRoom> chatRoomList =
+          List<ChatRoom>.from(res.data.map((data) => ChatRoom.fromMap(data)));
+      return chatRoomList;
     } on DioException catch (e) {
       _handleDioException(e);
       return [];

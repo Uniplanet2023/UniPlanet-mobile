@@ -22,6 +22,17 @@ class Message {
     required this.status,
     this.readDate,
   });
+  static Message initMessage() {
+    return Message(
+      sender: "",
+      message: "",
+      messageType: "",
+      receiver: "",
+      chat: "",
+      createdAt: DateTime.now(),
+      status: "Error",
+    );
+  }
 
   Message copyWith({
     String? id,
