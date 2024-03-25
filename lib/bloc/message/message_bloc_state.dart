@@ -46,11 +46,11 @@ class EndMessageState extends MessageBlocState {
 class UnReadMessageState extends MessageBlocState {
   const UnReadMessageState({super.page, required super.chatMessages});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [chatMessages, page];
 }
 
 class ReadMessageState extends MessageBlocState {
   const ReadMessageState({super.page, required super.chatMessages});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [chatMessages, page];
 }

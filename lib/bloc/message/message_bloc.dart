@@ -125,7 +125,8 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
 
   _loadMessages(GetMessageEvent event, emit) async {
-    emit(InitMessageState());
+    emit(LoadingMessageState(
+        chatMessages: state.chatMessages, page: state.page));
     try {
       List<Message> listMessage =
           await _chatRepository.getMessages(chatId: event.chatId, page: 0);

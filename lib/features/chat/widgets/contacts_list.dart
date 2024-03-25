@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
@@ -35,23 +38,25 @@ class _ContactsListState extends State<ContactsList> {
             User client = widget.list[index].seller.id == AuthRepository.userId
                 ? widget.list[index].buyer
                 : widget.list[index].seller;
-            String lastMessage = "";
 
-            // Determine if the user is typing for this chat room.
-            bool isTyping = innerContext.select<TypingBloc, bool>((bloc) {
-              if (bloc.state is TypingStarted &&
-                  bloc.state.chatId == widget.list[index].id) {
-                return true;
+            // Determine if the user is typing f    or this chat room.
+            Message last;
+            if (widget.list[index].lastMessage != null) {
+              last = widget.list[index].lastMessage!;
+            }
+            last = innerContext.select<MessageBloc, Message>((bloc) {
+              if (bloc.state is ReadMessageState ||
+                  bloc.state is ReceivedMessageState ||
+                  bloc.state is LoadedMessageState) {
+                if ((bloc.state).chatMessages[widget.list[index].id] != null) {
+                  return bloc.state.chatMessages[widget.list[index].id]!.first;
+                } else {
+                  return Message.initMessage();
+                }
               }
-              return false;
+              return last = widget.list[index].lastMessage!;
             });
 
-            if (isTyping) {
-              lastMessage = "Typing...";
-            } else if (widget.list[index].lastMessage != null &&
-                lastMessage == "") {
-              lastMessage = widget.list[index].lastMessage!.message;
-            }
             return Column(
               children: [
                 InkWell(
@@ -76,11 +81,22 @@ class _ContactsListState extends State<ContactsList> {
                       ),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 6.0),
-                        child: Text(
-                          lastMessage,
-                          style: const TextStyle(
-                            fontSize: 15,
-                          ),
+                        child: BlocBuilder<TypingBloc, TypingState>(
+                          builder: (context, state) {
+                            bool isTyping = state is TypingStarted &&
+                                state.chatId == widget.list[index].id;
+                            return Text(
+                              isTyping ? "Typing..." : last.message,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight:
+                                    last.sender != AuthRepository.userId &&
+                                            last.readDate == null
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                              ),
+                            );
+                          },
                         ),
                       ),
                       leading: Stack(

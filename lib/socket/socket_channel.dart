@@ -62,6 +62,7 @@ class SocketService {
         context
             .read<ChatBloc>()
             .add(UpdateChatRoomLastMessageEvent(receivedMessage));
+        //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
         if (currentChatLocation == receivedMessage.chat &&
             receivedMessage.receiver == userId) {
           readAllMessages(currentChatLocation!);
@@ -77,8 +78,8 @@ class SocketService {
       socket.on('read all message', (data) {
         DateTime seenTime = DateTime.parse(data['readMessageTime']);
         String chatId = data['chatId'];
+        Message msg;
         // if MessageBloc state is receivedMessage, then readAllmessage triggered
-
         context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
       });
       socket.emitWithAck("setup", chatRooms, ack: (data) {
@@ -149,6 +150,10 @@ class SocketService {
 
   void readAllMessages(String chatId) {
     socket.emit('read all message', chatId);
+  }
+
+  void readMessage(Message msg) {
+    socket.emit('read message', msg);
   }
 
   // void receiveMessageOn() {
