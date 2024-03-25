@@ -66,6 +66,10 @@ class SocketService {
         if (currentChatLocation == receivedMessage.chat &&
             receivedMessage.receiver == userId) {
           readAllMessages(currentChatLocation!);
+        } else if (receivedMessage.receiver == userId) {
+          context
+              .read<ChatBloc>()
+              .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
         }
       });
       // socket.on('read message', (data) {
@@ -81,6 +85,9 @@ class SocketService {
         Message msg;
         // if MessageBloc state is receivedMessage, then readAllmessage triggered
         context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
+        if (data['sender'] == userId) {
+          context.read<ChatBloc>().add(EmptyUnseenMessageEvent(chatId: chatId));
+        }
       });
       socket.emitWithAck("setup", chatRooms, ack: (data) {
         if (data[1]) {

@@ -8,13 +8,15 @@ class ChatRoom {
   final User seller;
   final User buyer;
   Message? lastMessage;
-
-  ChatRoom(
-      {required this.id,
-      required this.seller,
-      required this.buyer,
-      required this.productId,
-      this.lastMessage});
+  int unseenMessageCount;
+  ChatRoom({
+    required this.id,
+    required this.seller,
+    required this.buyer,
+    required this.productId,
+    this.lastMessage,
+    this.unseenMessageCount = 0,
+  });
 
   static initChatRoom() {
     return ChatRoom(
@@ -22,6 +24,8 @@ class ChatRoom {
       seller: User.initialUser(),
       buyer: User.initialUser(),
       productId: "",
+      lastMessage: null,
+      unseenMessageCount: 0,
     );
   }
 
@@ -32,6 +36,7 @@ class ChatRoom {
     User? buyer,
     String? productId,
     Message? lastMessage,
+    int? unseenMessageCount,
   }) {
     return ChatRoom(
       id: id ?? this.id,
@@ -39,6 +44,7 @@ class ChatRoom {
       buyer: buyer ?? this.buyer,
       productId: productId ?? this.productId,
       lastMessage: lastMessage ?? this.lastMessage,
+      unseenMessageCount: unseenMessageCount ?? this.unseenMessageCount,
     );
   }
 
@@ -50,18 +56,20 @@ class ChatRoom {
       'buyer': buyer.toMap(),
       'productId': productId,
       'lastMessage': lastMessage != null ? lastMessage!.toMap() : null,
+      'unseenMessageCount': unseenMessageCount,
     };
   }
 
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
-      id: map['id'],
-      seller: User.fromMap(map['seller']),
-      buyer: User.fromMap(map['buyer']),
-      productId: map['productId'],
-      lastMessage: map['lastMessage'] != null
-          ? Message.fromMap(map['lastMessage'])
+      id: map['chat']['id'],
+      seller: User.fromMap(map['chat']['seller']),
+      buyer: User.fromMap(map['chat']['buyer']),
+      productId: map['chat']['productId'],
+      lastMessage: map['chat']['lastMessage'] != null
+          ? Message.fromMap(map['chat']['lastMessage'])
           : null,
+      unseenMessageCount: map['unseenMessageCount'] ?? 0,
     );
   }
 

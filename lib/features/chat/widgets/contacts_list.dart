@@ -50,11 +50,13 @@ class _ContactsListState extends State<ContactsList> {
                   bloc.state is LoadedMessageState) {
                 if ((bloc.state).chatMessages[widget.list[index].id] != null) {
                   return bloc.state.chatMessages[widget.list[index].id]!.first;
-                } else {
-                  return Message.initMessage();
                 }
               }
-              return last = widget.list[index].lastMessage!;
+              if (widget.list[index].lastMessage != null) {
+                return widget.list[index].lastMessage!;
+              } else {
+                return Message.initMessage();
+              }
             });
 
             return Column(
@@ -139,36 +141,36 @@ class _ContactsListState extends State<ContactsList> {
                               ),
                             ),
                           ),
-                          // widget.list[index].unseenMessage.isEmpty
-                          //     ? const SizedBox()
-                          //     : Container(
-                          //         width: 25,
-                          //         height: 25,
-                          //         decoration: BoxDecoration(
-                          //           color: Colors
-                          //               .red, // Background color for the circle
-                          //           borderRadius: BorderRadius.circular(
-                          //               10), // Makes it round
-                          //         ),
-                          //         constraints: const BoxConstraints(
-                          //           minWidth:
-                          //               45, // Minimum width for the red circle
-                          //           minHeight:
-                          //               25, // Minimum height for the red circle
-                          //         ),
-                          //         child: Center(
-                          //           child: Text(
-                          //             widget.list[index].unseenMessage.length
-                          //                 .toString(),
-                          //             style: const TextStyle(
-                          //               color: Colors.white,
-                          //               fontWeight: FontWeight.w900,
-                          //               fontSize:
-                          //                   12, // You can adjust the font size as needed
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
+                          widget.list[index].unseenMessageCount == 0
+                              ? const SizedBox()
+                              : Container(
+                                  width: 25,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    color: Colors
+                                        .red, // Background color for the circle
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Makes it round
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth:
+                                        45, // Minimum width for the red circle
+                                    minHeight:
+                                        25, // Minimum height for the red circle
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      widget.list[index].unseenMessageCount
+                                          .toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize:
+                                            12, // You can adjust the font size as needed
+                                      ),
+                                    ),
+                                  ),
+                                ),
                           const SizedBox()
                         ],
                       ),

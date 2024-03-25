@@ -203,9 +203,9 @@ class _BottomBarState extends State<BottomBar> {
                     label: "sell",
                   ),
                   BottomNavigationBarItem(
-                      icon: BlocBuilder<AccountBloc, AccountState>(
+                      icon: BlocBuilder<ChatBloc, ChatBlocState>(
                         builder: (context, state) {
-                          if (state.account.unreadMessage != 0) {
+                          if (state.totalUnseenMessageCount != 0) {
                             return badges.Badge(
                               badgeContent: Container(
                                 decoration: BoxDecoration(
@@ -217,7 +217,7 @@ class _BottomBarState extends State<BottomBar> {
                                   minHeight: 10,
                                 ),
                                 child: Text(
-                                  state.account.unreadMessage.toString(),
+                                  state.totalUnseenMessageCount.toString(),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,

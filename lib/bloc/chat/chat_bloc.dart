@@ -19,17 +19,68 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<UpdateChatRoomLastMessageEvent>((event, emit) {
       _updateChatRoomLastMessage(event, emit);
     });
-    // on<EmptyUnseenMessageEvent>(
-    //   (event, emit) {
-    //     for (var myChat in state.chatRoomList!) {
-    //       if (myChat.id == event.myChatRoomId) {
-    //         return;
-    //       }
-    //     }
-    //     emit(LoadedChatRoomState(chatRoomList: state.chatRoomList));
-    //   },
-    // );
+    on<EmptyUnseenMessageEvent>((event, emit) {
+      _emptyUnseenMessage(event, emit);
+    });
+    on<UpdateUnseenMessageEvent>(((event, emit) {
+      _updateUnseenMessage(event, emit);
+    }));
   }
+
+  _emptyUnseenMessage(EmptyUnseenMessageEvent event, emit) {
+    bool isfound = false;
+    int unseenMessages = 0;
+    //find chatRoom, buying chatroom or selling chatroom
+    for (var chatRoom in state.buyingChatRooms) {
+      if (chatRoom.id == event.chatId) {
+        isfound = true;
+        unseenMessages = chatRoom.unseenMessageCount;
+        chatRoom.unseenMessageCount = 0;
+        break;
+      }
+    }
+    if (!isfound) {
+      for (var chatRoom in state.sellingChatRooms) {
+        if (chatRoom.id == event.chatId) {
+          unseenMessages = chatRoom.unseenMessageCount;
+          chatRoom.unseenMessageCount = 0;
+          break;
+        }
+      }
+    }
+
+    emit(EmptyUnseenMessageState(
+        buyingChatRooms: state.buyingChatRooms,
+        sellingChatRooms: state.sellingChatRooms,
+        totalUnseenMessageCount:
+            state.totalUnseenMessageCount - unseenMessages));
+  }
+
+  _updateUnseenMessage(UpdateUnseenMessageEvent event, emit) {
+    bool isfound = false;
+    //find chatRoom, buying chatroom or selling chatroom
+    for (var chatRoom in state.buyingChatRooms) {
+      if (chatRoom.id == event.chatId) {
+        isfound = true;
+        chatRoom.unseenMessageCount++;
+        break;
+      }
+    }
+    if (!isfound) {
+      for (var chatRoom in state.sellingChatRooms) {
+        if (chatRoom.id == event.chatId) {
+          chatRoom.unseenMessageCount++;
+          break;
+        }
+      }
+    }
+
+    emit(UpdateUnseenMessageState(
+        buyingChatRooms: state.buyingChatRooms,
+        sellingChatRooms: state.sellingChatRooms,
+        totalUnseenMessageCount: state.totalUnseenMessageCount + 1));
+  }
+
   _updateChatRoomLastMessage(UpdateChatRoomLastMessageEvent event, emit) {
     bool isUpdated = false;
 
@@ -54,6 +105,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
           }).toList();
 
     emit(UpdateLastMessageState(
+        totalUnseenMessageCount: state.totalUnseenMessageCount,
         buyingChatRooms: updatedBuyingChatRooms,
         sellingChatRooms: updatedSellingChatRooms));
   }
@@ -62,12 +114,15 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(InitChatRoomState());
     try {
       List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
+      var totalUnseenMessageCount = 0;
       if (chatrooms.isNotEmpty) {
         for (var chatRoom in chatrooms) {
           if (chatRoom.seller.id == AuthRepository.userId) {
             state.sellingChatRooms.add(chatRoom);
+            totalUnseenMessageCount += chatRoom.unseenMessageCount;
           } else {
             state.buyingChatRooms.add(chatRoom);
+            totalUnseenMessageCount += chatRoom.unseenMessageCount;
           }
         }
       }
@@ -75,6 +130,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       emit(LoadedChatRoomState(
         buyingChatRooms: state.buyingChatRooms,
         sellingChatRooms: state.sellingChatRooms,
+        totalUnseenMessageCount: totalUnseenMessageCount,
       ));
     } catch (e) {
       print(e);
@@ -86,6 +142,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(CreatingChatRoomState(
       buyingChatRooms: state.buyingChatRooms,
       sellingChatRooms: state.sellingChatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
     try {
       ChatRoom chatRoom = await _chatRepository.creatingChatRoom(
@@ -96,6 +153,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       emit(CreatedChatRoomState(
         buyingChatRooms: state.buyingChatRooms,
         sellingChatRooms: state.sellingChatRooms,
+        totalUnseenMessageCount: state.totalUnseenMessageCount,
       ));
     } catch (e) {
       emit(ErrorChatState(e.toString()));
