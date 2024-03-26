@@ -6,6 +6,7 @@ import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/get_product.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/upload_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
 part 'product_event.dart';
 
@@ -29,6 +30,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         status: event.status,
         description: event.description,
         price: event.price,
+        seller: event.seller,
       );
 
       if (productData != null) {
@@ -38,7 +40,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
                 images: event.images, productId: productData.id);
         if (product != null) {
           List<Product> productList = state.productList;
-          productList.add(product);
+          productList.insert(0, product);
           emit(ProductImageUploadedState(productList: productList));
         } else {
           emit(const ErrorProductUploadState("Error uploading product"));

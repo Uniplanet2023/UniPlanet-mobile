@@ -68,7 +68,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
               : 0,
           category: category,
           status: status,
-          images: images));
+          images: images,
+          seller: context.read<AccountBloc>().state.account.user));
     }
   }
 

@@ -10,7 +10,7 @@ final class StatusInitial extends StatusState {
 
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [online];
 }
 
 final class StatusChanging extends StatusState {

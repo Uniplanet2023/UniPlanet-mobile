@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
 import 'package:uniplanet_mobile/network/display_error_messages.dart';
@@ -15,7 +16,9 @@ class ChatRepository {
   ChatRepository(this._dioClient);
 
   Future<ChatRoom> creatingChatRoom(
-      {required String productId, required String sellerId}) async {
+      {required String productId,
+      required User seller,
+      required User buyer}) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
     try {
       Response res = await _dioClient.dio.post(
@@ -23,7 +26,8 @@ class ChatRepository {
         options: _dioClient.getDioOptions(),
         data: {
           'productId': productId,
-          'sellerId': sellerId,
+          'seller': seller,
+          'buyer': buyer,
         },
       );
 

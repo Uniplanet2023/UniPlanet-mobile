@@ -24,8 +24,7 @@ class _ItemBoxState extends State<ItemBox> {
         : SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                final product =
-                    widget.productList[widget.productList.length - 1 - index];
+                final product = widget.productList[index];
                 return InkWell(
                   onTap: () => Navigator.pushNamed(
                     context,

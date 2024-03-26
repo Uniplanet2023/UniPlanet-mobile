@@ -8,11 +8,8 @@ import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
-import 'package:uniplanet_mobile/network/dio_client.dart';
-import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 
 class SocketService {
@@ -72,13 +69,6 @@ class SocketService {
               .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
         }
       });
-      // socket.on('read message', (data) {
-      //   String messageId = data['messageId'];
-      //   DateTime readDate = DateTime.parse(data['readMessageTime']);
-      //   String chatId = data['chatId'];
-      //   context.read<MessageBloc>().add(ReadMessageEvent(
-      //       messageId: messageId, chatId: chatId, readDate: readDate));
-      // });
       socket.on('read all message', (data) {
         DateTime seenTime = DateTime.parse(data['readMessageTime']);
         String chatId = data['chatId'];
