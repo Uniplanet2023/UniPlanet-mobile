@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
 import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
 import 'package:uniplanet_mobile/network/display_error_messages.dart';
@@ -111,6 +112,7 @@ class ProductRepository {
     required String description,
     required double price,
     required String category,
+    required User seller,
   }) async {
     try {
       final response = await _dioClient.dio.post(
@@ -120,7 +122,8 @@ class ProductRepository {
           'status': status,
           'description': description,
           'price': price,
-          'category': category
+          'category': category,
+          'seller': seller,
         },
         options: _dioClient.getDioOptions(),
       );

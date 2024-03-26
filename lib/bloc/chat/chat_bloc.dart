@@ -146,7 +146,8 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     ));
     try {
       ChatRoom chatRoom = await _chatRepository.creatingChatRoom(
-        sellerId: event.sellerId,
+        seller: event.seller,
+        buyer: event.buyer,
         productId: event.productId,
       );
       state.buyingChatRooms.add(chatRoom);

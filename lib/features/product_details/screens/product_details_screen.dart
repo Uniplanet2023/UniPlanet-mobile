@@ -272,8 +272,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         TextButton(
           onPressed: () => {
             context.read<ChatBloc>().add(CreateChatRoomEvent(
-                  widget.product.seller.id,
-                  widget.product.id,
+                  buyer: context.read<AccountBloc>().state.account.user,
+                  seller: widget.product.seller,
+                  productId: widget.product.id,
                 ))
           },
           style: TextButton.styleFrom(
