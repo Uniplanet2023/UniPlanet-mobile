@@ -13,7 +13,6 @@ import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/get_product.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class InitData {
   final BuildContext context;
@@ -21,14 +20,18 @@ class InitData {
   bool _isChatRoomLoaded = false;
   bool _isProductLoaded = false;
   bool _isLikeLoaded = false;
+  Timer? _timer;
   final List<StreamSubscription> _subscriptions = [];
 
   InitData(this.context);
 
   void initBlocListener() {
+    _resetTimer();
+
     final authSubscription = context.read<AuthBloc>().stream.listen((state) {
       if (state is Authorized) {
         _loadInitialData();
+        _resetTimer();
       } else if (state is AuthenticationDeny ||
           state is ValidationFailedState) {
         Navigator.pushNamedAndRemoveUntil(
@@ -43,6 +46,7 @@ class InitData {
         context.read<AccountBloc>().stream.listen((state) {
       if (state is GotAccountInfoState) {
         _isAccountInfoLoaded = true;
+        _resetTimer();
         _navigateIfReady();
       }
     });
@@ -51,6 +55,7 @@ class InitData {
     var chatSubscription = context.read<ChatBloc>().stream.listen((state) {
       if (state is LoadedChatRoomState) {
         _isChatRoomLoaded = true;
+        _resetTimer();
         _navigateIfReady();
       }
     });
@@ -60,6 +65,7 @@ class InitData {
         context.read<ProductBloc>().stream.listen((state) {
       if (state is LoadedProductState) {
         _isProductLoaded = true;
+        _resetTimer();
         _navigateIfReady();
       }
     });
@@ -68,10 +74,19 @@ class InitData {
     var likeSubscription = context.read<LikeBloc>().stream.listen((state) {
       if (state is LikeLoaded) {
         _isLikeLoaded = true;
+        _resetTimer();
         _navigateIfReady();
       }
     });
     _subscriptions.add(likeSubscription); // Add this line
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+    _timer = Timer(const Duration(seconds: 10), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, AppRoutes.authPage, (route) => false);
+    });
   }
 
   void dispose() {
@@ -79,6 +94,7 @@ class InitData {
       subscription.cancel();
     }
     _subscriptions.clear();
+    _timer?.cancel();
   }
 
   void _navigateIfReady() {
@@ -86,6 +102,7 @@ class InitData {
         _isChatRoomLoaded &&
         _isProductLoaded &&
         _isLikeLoaded) {
+      _timer?.cancel();
       Navigator.pushNamedAndRemoveUntil(
           context, AppRoutes.bottomBarPage, (route) => false);
     }

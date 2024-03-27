@@ -12,16 +12,20 @@ class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key, required this.category});
 
   @override
-  _CategoryScreenState createState() => _CategoryScreenState();
+  CategoryScreenState createState() => CategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<CategoryBloc>()
-        .add(LoadCategoryEvent(category: widget.category));
+    if (widget.category == 'Hot Products') {
+      context.read<CategoryBloc>().add(const GetHotProductsEvent());
+    } else {
+      context
+          .read<CategoryBloc>()
+          .add(LoadCategoryEvent(category: widget.category));
+    }
   }
 
   @override

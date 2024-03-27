@@ -155,6 +155,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         buyingChatRooms: state.buyingChatRooms,
         sellingChatRooms: state.sellingChatRooms,
         totalUnseenMessageCount: state.totalUnseenMessageCount,
+        chatRoomCreated: chatRoom,
       ));
     } catch (e) {
       emit(ErrorChatState(e.toString()));

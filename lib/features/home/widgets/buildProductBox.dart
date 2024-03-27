@@ -54,26 +54,33 @@ class _ItemBoxState extends State<ItemBox> {
                                 borderRadius: BorderRadius.circular(12),
                                 child: Hero(
                                   tag: "product-picture-${product.id}",
-                                  child: CachedNetworkImage(
-                                    cacheManager:
-                                        GlobalVariables.customCacheManager,
-                                    imageUrl: product.images[0],
-                                    key: UniqueKey(),
-                                    fit: BoxFit.cover,
-                                    height: 135,
-                                    width: 135,
-                                    placeholder: (context, url) => const Center(
-                                        child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                      color: Colors.black12,
-                                      child: const Icon(
-                                        Icons.error,
-                                        color: Colors.red,
-                                        size: 80,
-                                      ),
-                                    ),
-                                  ),
+                                  child: product.images.isEmpty
+                                      ? const Icon(
+                                          Icons.image_not_supported,
+                                          size: 135,
+                                        )
+                                      : CachedNetworkImage(
+                                          cacheManager: GlobalVariables
+                                              .customCacheManager,
+                                          imageUrl: product.images[0],
+                                          key: UniqueKey(),
+                                          fit: BoxFit.cover,
+                                          height: 135,
+                                          width: 135,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                            color: Colors.black12,
+                                            child: const Icon(
+                                              Icons.error,
+                                              color: Colors.red,
+                                              size: 80,
+                                            ),
+                                          ),
+                                        ),
                                 ),
                               ),
                               Expanded(
@@ -219,46 +226,12 @@ class _ItemBoxState extends State<ItemBox> {
 
                                                   return Row(
                                                     children: [
-                                                      IconButton(
-                                                        icon: isLikeProduct
-                                                            ? const Icon(
-                                                                Icons.favorite,
-                                                                color:
-                                                                    Colors.red)
-                                                            : const Icon(Icons
-                                                                .favorite_border),
-                                                        onPressed: () => {
-                                                          isLikeProduct
-                                                              ? context
-                                                                  .read<
-                                                                      LikeBloc>()
-                                                                  .add(
-                                                                      RemoveLikeEvent(
-                                                                    product:
-                                                                        product,
-                                                                    user: context
-                                                                        .read<
-                                                                            AccountBloc>()
-                                                                        .state
-                                                                        .account
-                                                                        .user,
-                                                                  ))
-                                                              : context
-                                                                  .read<
-                                                                      LikeBloc>()
-                                                                  .add(
-                                                                      AddLikeEvent(
-                                                                    product:
-                                                                        product,
-                                                                    user: context
-                                                                        .read<
-                                                                            AccountBloc>()
-                                                                        .state
-                                                                        .account
-                                                                        .user,
-                                                                  ))
-                                                        },
-                                                      ),
+                                                      isLikeProduct
+                                                          ? const Icon(
+                                                              Icons.favorite,
+                                                              color: Colors.red)
+                                                          : const Icon(Icons
+                                                              .favorite_border),
                                                       Text(NumberFormatter(
                                                               product.likes)
                                                           .format()),
@@ -277,7 +250,7 @@ class _ItemBoxState extends State<ItemBox> {
                                                     size: 18,
                                                   ),
                                                   Text(NumberFormatter(
-                                                          product.likes)
+                                                          product.numberOfChat)
                                                       .format())
                                                 ],
                                               ),

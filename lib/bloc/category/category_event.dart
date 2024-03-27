@@ -13,3 +13,10 @@ class LoadCategoryEvent extends CategoryEvent {
   const LoadCategoryEvent({required String category, int? page})
       : super(category: category, page: page ?? 1);
 }
+
+class GetHotProductsEvent extends CategoryEvent {
+  const GetHotProductsEvent();
+
+  @override
+  List<Object> get props => [];
+}

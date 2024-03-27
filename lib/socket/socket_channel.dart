@@ -114,8 +114,13 @@ class SocketService {
     context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
   }
 
-  void joinChat(chatId) {
-    socket.emit('join chat', chatId);
+  void joinChat(String chatId, String targetUserId, BuildContext context) {
+    socket.emitWithAck(
+        "join chat", {"room": chatId, "targetUser": targetUserId}, ack: (data) {
+      if (data != null && data.length > 1 && data[1] == true) {
+        context.read<StatusBloc>().add(StatusChangeEvent(userId: data[0]));
+      }
+    });
   }
 
   Message sendMessage(String content, String chatId, String messageType,

@@ -9,6 +9,7 @@ class Product {
   final String status;
   final List<String> images;
   int likes;
+  int numberOfChat;
   final String category;
   final double price;
   final DateTime createdAt;
@@ -21,6 +22,7 @@ class Product {
     required this.description,
     required this.images,
     this.likes = 0,
+    this.numberOfChat = 0,
     required this.category,
     required this.price,
     required this.createdAt,
@@ -33,6 +35,7 @@ class Product {
         seller: User.initialUser(),
         description: "",
         likes: 0,
+        numberOfChat: 0,
         images: [""],
         category: "",
         price: 0,
@@ -51,6 +54,7 @@ class Product {
       'category': category,
       'price': price,
       'createdAt': createdAt,
+      'numberOfChat': numberOfChat,
     };
   }
 
@@ -63,6 +67,7 @@ class Product {
       description: map['description'] as String,
       images: List<String>.from(map['images']),
       likes: map['likes'] as int,
+      numberOfChat: map['numberOfChat'] as int,
       price: map['price'].toDouble() as double,
       category: map['category'],
       createdAt: DateTime.parse(map['createdAt'].toString()),

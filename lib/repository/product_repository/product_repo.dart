@@ -236,4 +236,26 @@ class ProductRepository {
     }
     return productList;
   }
+
+  Future<List<Product>> getHotProducts() async {
+    final productList = <Product>[];
+    try {
+      final response = await _dioClient.dio.get(
+        '$productURI/get-hot-products',
+        options: _dioClient.getDioOptions(),
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        var productDataObj = jsonDecode(response.data);
+        for (var productData in productDataObj) {
+          print(productData);
+          productList.add(Product.fromMap(productData));
+        }
+        return productList;
+      }
+    } on DioException catch (e) {
+      print('DioException occurred: ${e.message}');
+    }
+    return productList;
+  }
 }
