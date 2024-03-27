@@ -8,6 +8,7 @@ import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
@@ -254,7 +255,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               _buildPriceText(widget.product.price),
               widget.product.seller.id == currentUser.id
                   ? const SizedBox()
-                  : _buildChatAndFavoriteButtons(state),
+                  : _buildChatAndFavoriteButtons(
+                      state, widget.product, context),
             ],
           );
         },
@@ -262,12 +264,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildChatAndFavoriteButtons(ChatBlocState state) {
+  Widget _buildChatAndFavoriteButtons(
+      ChatBlocState state, Product product, BuildContext context) {
     return Row(
       children: [
-        IconButton(
-          icon: const Icon(Icons.favorite_border),
-          onPressed: () => {},
+        BlocBuilder<LikeBloc, LikeState>(
+          builder: (context, state) {
+            bool isLikeProduct = false;
+            for (var element in state.likeProduct) {
+              if (element.id == widget.product.id) {
+                isLikeProduct = true;
+                break;
+              }
+            }
+            return IconButton(
+              icon: isLikeProduct
+                  ? const Icon(Icons.favorite, color: Colors.red)
+                  : const Icon(Icons.favorite_border),
+              onPressed: () => {
+                isLikeProduct
+                    ? context.read<LikeBloc>().add(RemoveLikeEvent(
+                          product: widget.product,
+                          user: context.read<AccountBloc>().state.account.user,
+                        ))
+                    : context.read<LikeBloc>().add(AddLikeEvent(
+                          product: widget.product,
+                          user: context.read<AccountBloc>().state.account.user,
+                        ))
+              },
+            );
+          },
         ),
         TextButton(
           onPressed: () => {

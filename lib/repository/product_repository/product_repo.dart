@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
+import 'package:uniplanet_mobile/models/like.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_server_address.dart';
@@ -168,5 +169,71 @@ class ProductRepository {
       // Handle errors, e.g., by showing an error message to the user
     }
     return null;
+  }
+
+  Future<bool> likeProduct(
+      {required String productId, required User user}) async {
+    try {
+      final response = await _dioClient.dio.post(
+        '$productURI/like-product',
+        options: _dioClient.getDioOptions(),
+        data: {
+          'productId': productId,
+          'user': user,
+        },
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        return true;
+      } else {
+        throw Exception("Failed to like product");
+      }
+    } on DioException catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
+  Future<bool> unlikeProduct(
+      {required String productId, required User user}) async {
+    try {
+      final response = await _dioClient.dio.post(
+        '$productURI/unlike-product',
+        options: _dioClient.getDioOptions(),
+        data: {
+          'productId': productId,
+          'user': user,
+        },
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        return true;
+      } else {
+        throw Exception("Failed to unlike product");
+      }
+    } on DioException catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
+  Future<List<Product>> getProductLikes() async {
+    final productList = <Product>[];
+    try {
+      final response = await _dioClient.dio.get(
+        '$productURI/get-like-product',
+        options: _dioClient.getDioOptions(),
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        for (int i = 0; i < response.data.length; i++) {
+          productList.add(Product.fromJson(response.data[i]));
+        }
+        return productList;
+      }
+    } on DioException catch (e) {
+      print(e);
+    }
+    return productList;
   }
 }

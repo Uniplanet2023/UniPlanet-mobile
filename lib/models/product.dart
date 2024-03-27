@@ -8,7 +8,7 @@ class Product {
   final String description;
   final String status;
   final List<String> images;
-  final int likes;
+  int likes;
   final String category;
   final double price;
   final DateTime createdAt;
@@ -20,7 +20,7 @@ class Product {
     required this.seller,
     required this.description,
     required this.images,
-    required this.likes,
+    this.likes = 0,
     required this.category,
     required this.price,
     required this.createdAt,

@@ -4,7 +4,7 @@ import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:uniplanet_mobile/repository/chat_repository/chat_repo.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;

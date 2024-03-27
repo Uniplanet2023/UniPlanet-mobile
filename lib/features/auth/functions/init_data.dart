@@ -9,6 +9,7 @@ import 'package:uniplanet_mobile/bloc/auth/auth_state/signup_state.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
+import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_state/get_product.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
@@ -19,6 +20,7 @@ class InitData {
   bool _isAccountInfoLoaded = false;
   bool _isChatRoomLoaded = false;
   bool _isProductLoaded = false;
+  bool _isLikeLoaded = false;
   final List<StreamSubscription> _subscriptions = [];
 
   InitData(this.context);
@@ -62,6 +64,14 @@ class InitData {
       }
     });
     _subscriptions.add(productSubscription); // Add this line
+
+    var likeSubscription = context.read<LikeBloc>().stream.listen((state) {
+      if (state is LikeLoaded) {
+        _isLikeLoaded = true;
+        _navigateIfReady();
+      }
+    });
+    _subscriptions.add(likeSubscription); // Add this line
   }
 
   void dispose() {
@@ -72,7 +82,10 @@ class InitData {
   }
 
   void _navigateIfReady() {
-    if (_isAccountInfoLoaded && _isChatRoomLoaded && _isProductLoaded) {
+    if (_isAccountInfoLoaded &&
+        _isChatRoomLoaded &&
+        _isProductLoaded &&
+        _isLikeLoaded) {
       Navigator.pushNamedAndRemoveUntil(
           context, AppRoutes.bottomBarPage, (route) => false);
     }
@@ -82,5 +95,6 @@ class InitData {
     context.read<ProductBloc>().add(const LoadProductEvent());
     context.read<AccountBloc>().add(const GetAccountInfoEvent());
     context.read<ChatBloc>().add(const LoadChatRoomEvent());
+    context.read<LikeBloc>().add(const LoadLikeEvent());
   }
 }
