@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:uniplanet_mobile/repository/chat_repository/chat_repo.dart';
 import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 part 'message_bloc_event.dart';

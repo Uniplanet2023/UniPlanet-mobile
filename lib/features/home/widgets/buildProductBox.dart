@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
+import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/constants/number_formatter.dart';
 import 'package:uniplanet_mobile/constants/price_formatter.dart';
 import 'package:uniplanet_mobile/constants/time_formatter.dart';
@@ -178,13 +181,91 @@ class _ItemBoxState extends State<ItemBox> {
                                           ),
                                           Row(
                                             children: [
-                                              const Icon(
-                                                Icons.favorite_border_outlined,
-                                                size: 18,
+                                              BlocBuilder<LikeBloc, LikeState>(
+                                                builder: (context, state) {
+                                                  bool isLikeProduct = false;
+
+                                                  if (state
+                                                          is LikeRemoved &&
+                                                      state
+                                                              .removedProduct !=
+                                                          null &&
+                                                      state.removedProduct!
+                                                              .id ==
+                                                          product.id) {
+                                                    product.likes =
+                                                        product.likes - 1;
+                                                    state.removedProduct = null;
+                                                  } else if (state
+                                                          is LikeAdded &&
+                                                      state.addedProduct !=
+                                                          null &&
+                                                      state.addedProduct!.id ==
+                                                          product.id) {
+                                                    product.likes =
+                                                        product.likes + 1;
+                                                    isLikeProduct = true;
+                                                    state.addedProduct = null;
+                                                  } else {
+                                                    for (var element
+                                                        in state.likeProduct) {
+                                                      if (element.id ==
+                                                          product.id) {
+                                                        isLikeProduct = true;
+                                                        break;
+                                                      }
+                                                    }
+                                                  }
+
+                                                  return Row(
+                                                    children: [
+                                                      IconButton(
+                                                        icon: isLikeProduct
+                                                            ? const Icon(
+                                                                Icons.favorite,
+                                                                color:
+                                                                    Colors.red)
+                                                            : const Icon(Icons
+                                                                .favorite_border),
+                                                        onPressed: () => {
+                                                          isLikeProduct
+                                                              ? context
+                                                                  .read<
+                                                                      LikeBloc>()
+                                                                  .add(
+                                                                      RemoveLikeEvent(
+                                                                    product:
+                                                                        product,
+                                                                    user: context
+                                                                        .read<
+                                                                            AccountBloc>()
+                                                                        .state
+                                                                        .account
+                                                                        .user,
+                                                                  ))
+                                                              : context
+                                                                  .read<
+                                                                      LikeBloc>()
+                                                                  .add(
+                                                                      AddLikeEvent(
+                                                                    product:
+                                                                        product,
+                                                                    user: context
+                                                                        .read<
+                                                                            AccountBloc>()
+                                                                        .state
+                                                                        .account
+                                                                        .user,
+                                                                  ))
+                                                        },
+                                                      ),
+                                                      Text(NumberFormatter(
+                                                              product.likes)
+                                                          .format()),
+                                                    ],
+                                                  );
+                                                },
                                               ),
-                                              Text(
-                                                  NumberFormatter(product.likes)
-                                                      .format()),
                                               const SizedBox(
                                                 width: 4,
                                               ),

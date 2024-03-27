@@ -6,6 +6,7 @@ import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/bloc/category/category_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
@@ -18,7 +19,7 @@ import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
 import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/dio_client.dart';
-import 'package:uniplanet_mobile/repository/chat_repo.dart';
+import 'package:uniplanet_mobile/repository/chat_repository/chat_repo.dart';
 import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
 
@@ -61,6 +62,8 @@ void main() async {
           create: (context) => StatusBloc(),
         ),
         BlocProvider(create: (context) => TypingBloc()),
+        BlocProvider(
+            create: (context) => LikeBloc(context.read<ProductRepository>())),
       ], child: const MyApp())));
 }
 
