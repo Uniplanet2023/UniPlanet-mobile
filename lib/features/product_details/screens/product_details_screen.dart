@@ -14,6 +14,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -238,6 +239,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: BlocConsumer<ChatBloc, ChatBlocState>(
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
+            SocketService.instance.joinChat(state.chatRoomCreated.id,
+                state.chatRoomCreated.seller.id, context);
+
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
               "seller": state.buyingChatRooms.last.seller,
               "chatRoom": state.buyingChatRooms.last

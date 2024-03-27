@@ -19,6 +19,14 @@ final class LoadedCategoryState extends CategoryState {
   const LoadedCategoryState({super.categoryProducts});
 }
 
+final class LoadingHotProductState extends CategoryState {
+  const LoadingHotProductState({super.categoryProducts});
+}
+
+final class LoadedHotProductState extends CategoryState {
+  const LoadedHotProductState({super.categoryProducts});
+}
+
 final class ErrorCategoryState extends CategoryState {
   final String errorMessage;
   const ErrorCategoryState(this.errorMessage);

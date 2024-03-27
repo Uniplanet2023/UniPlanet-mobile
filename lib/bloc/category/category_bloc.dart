@@ -12,7 +12,17 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<LoadCategoryEvent>((event, emit) async {
       await _loadCategoryProduct(event, emit);
     });
+    on<GetHotProductsEvent>((event, emit) async {
+      await _getHotProducts(event, emit);
+    });
   }
+
+  _getHotProducts(GetHotProductsEvent event, emit) async {
+    emit(const LoadingCategoryState());
+    List<Product> result = await _productRepository.getHotProducts();
+    emit(LoadedCategoryState(categoryProducts: result));
+  }
+
   _loadCategoryProduct(LoadCategoryEvent event, emit) async {
     emit(const LoadingCategoryState());
     List<Product> result = await _productRepository.fetchProducts(

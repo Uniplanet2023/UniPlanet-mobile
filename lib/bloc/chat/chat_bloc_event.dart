@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/chat_room_test.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 
