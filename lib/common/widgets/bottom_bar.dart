@@ -1,14 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
-import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/common/functions/streamer.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
@@ -16,12 +12,9 @@ import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen
 import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
-import 'package:uniplanet_mobile/features/search/screens/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -37,6 +30,7 @@ class _BottomBarState extends State<BottomBar> {
   ScrollController? _controller;
   bool _isVisible = true;
   String? profileImage;
+  final Streamer _streamer = Streamer();
 
   void navigateToAddProduct() {
     Navigator.pushNamed(context, AppRoutes.addProductPage);
@@ -45,16 +39,16 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-    var chatState = context.read<ChatBloc>().state;
-    List<String> chatRooms = [];
-    for (var chatRoom in chatState.buyingChatRooms) {
-      chatRooms.add(chatRoom.toJson());
-    }
-    for (var chatRoom in chatState.sellingChatRooms) {
-      chatRooms.add(chatRoom.toJson());
-    }
-    String chatRoomJson = jsonEncode(chatRooms);
-    SocketService.instance.connect(context, chatRoomJson);
+    context.read<AccountBloc>().add(const GetAccountInfoEvent());
+    context.read<ChatBloc>().add(const LoadChatRoomEvent());
+    context.read<LikeBloc>().add(const LoadLikeEvent());
+
+    _streamer.addChatListener(context);
+    _streamer.addAccountListener(context);
+    _streamer.addProductListener(context);
+
+    SocketService.instance.connect(context);
+
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==
@@ -74,6 +68,15 @@ class _BottomBarState extends State<BottomBar> {
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _streamer.disposeChatListener();
+    _streamer.disposeChatListener();
+    _streamer.disposeChatListener();
+    _controller!.dispose();
+    super.dispose();
   }
 
   void updatePage(int page) {

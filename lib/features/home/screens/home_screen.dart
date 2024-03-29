@@ -5,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 
-import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
-
 import 'package:uniplanet_mobile/features/home/widgets/buildProductBox.dart';
 
 import 'package:uniplanet_mobile/features/home/widgets/top_categories.dart';

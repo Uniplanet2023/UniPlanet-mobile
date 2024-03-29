@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/widgets/menu_section.dart';
 
 class HelpScreen extends StatelessWidget {

@@ -1,10 +1,18 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
+import 'package:equatable/equatable.dart';
+// Repositories
+import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet_mobile/network/repository/chat_repository/chat_repo.dart';
+// Models
 import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
-import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/repository/chat_repository/chat_repo.dart';
+import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
+// Bloc Events, States
+part 'chat_bloc_event.dart';
+part 'chat_bloc_state.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   final ChatRepository _chatRepository;
@@ -111,25 +119,30 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
-    emit(InitChatRoomState());
+    emit(LoadingChatRoomState(
+        totalUnseenMessageCount: state.totalUnseenMessageCount,
+        buyingChatRooms: state.buyingChatRooms,
+        sellingChatRooms: state.sellingChatRooms));
     try {
       List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
+      List<ChatRoom> updatedBuyingChatRooms = [];
+      List<ChatRoom> updatedSellingChatRooms = [];
       var totalUnseenMessageCount = 0;
       if (chatrooms.isNotEmpty) {
         for (var chatRoom in chatrooms) {
           if (chatRoom.seller.id == AuthRepository.userId) {
-            state.sellingChatRooms.add(chatRoom);
+            updatedSellingChatRooms.add(chatRoom);
             totalUnseenMessageCount += chatRoom.unseenMessageCount;
           } else {
-            state.buyingChatRooms.add(chatRoom);
+            updatedBuyingChatRooms.add(chatRoom);
             totalUnseenMessageCount += chatRoom.unseenMessageCount;
           }
         }
       }
 
       emit(LoadedChatRoomState(
-        buyingChatRooms: state.buyingChatRooms,
-        sellingChatRooms: state.sellingChatRooms,
+        buyingChatRooms: updatedBuyingChatRooms,
+        sellingChatRooms: updatedSellingChatRooms,
         totalUnseenMessageCount: totalUnseenMessageCount,
       ));
     } catch (e) {

@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/product.dart';
+part of '../product_bloc.dart';
 
-abstract class ProductState extends Equatable {
+sealed class ProductState extends Equatable {
   final List<Product> productList;
   const ProductState({this.productList = const <Product>[]});
 

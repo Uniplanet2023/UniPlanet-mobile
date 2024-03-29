@@ -1,14 +1,16 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
-import 'package:uniplanet_mobile/bloc/product/product_state/get_product.dart';
-import 'package:uniplanet_mobile/bloc/product/product_state/upload_product.dart';
+// Models
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
+// Repository
+import 'package:uniplanet_mobile/network/repository/product_repository/product_repo.dart';
+// Parts
 part 'product_event.dart';
+part 'product_state/basic_state.dart';
+part 'product_state/get_product.dart';
+part 'product_state/upload_product.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductRepository _productRepository;

@@ -69,7 +69,6 @@ class _CategoryListItemState extends State<CategoryListItem> {
         key: _backgroundImageKey, fit: BoxFit.cover);
   }
 
-  @override
   void didChnageDependencies() {
     precacheImage(imageFile.image, context);
     super.didChangeDependencies();

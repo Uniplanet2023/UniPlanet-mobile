@@ -1,6 +1,6 @@
 part of 'message_bloc.dart';
 
-abstract class MessageBlocEvent extends Equatable {
+sealed class MessageBlocEvent extends Equatable {
   const MessageBlocEvent();
 
   @override

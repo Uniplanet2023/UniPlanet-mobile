@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/constants/number_formatter.dart';
 import 'package:uniplanet_mobile/constants/price_formatter.dart';

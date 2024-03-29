@@ -1,8 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
+part of 'chat_bloc.dart';
 
-abstract class ChatBlocEvent extends Equatable {
+sealed class ChatBlocEvent extends Equatable {
   const ChatBlocEvent();
 }
 

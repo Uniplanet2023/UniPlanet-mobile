@@ -1,11 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+// Models
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/repository/chat_repository/chat_repo.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
-
+// Repository
+import 'package:uniplanet_mobile/network/repository/chat_repository/chat_repo.dart';
+// Part of the bloc
 part 'message_bloc_event.dart';
 part 'message_bloc_state.dart';
 
@@ -154,6 +153,6 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   @override
   void onTransition(Transition<MessageBlocEvent, MessageBlocState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    print(transition);
   }
 }

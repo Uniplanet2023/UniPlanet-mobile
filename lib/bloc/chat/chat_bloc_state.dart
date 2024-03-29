@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
+part of 'chat_bloc.dart';
 
-abstract class ChatBlocState extends Equatable {
+sealed class ChatBlocState extends Equatable {
   final List<ChatRoom> buyingChatRooms;
   final List<ChatRoom> sellingChatRooms;
   final int totalUnseenMessageCount;
@@ -11,6 +10,9 @@ abstract class ChatBlocState extends Equatable {
     this.sellingChatRooms = const [],
     this.totalUnseenMessageCount = 0,
   });
+  @override
+  List<Object?> get props =>
+      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
 }
 
 class InitChatRoomState extends ChatBlocState {

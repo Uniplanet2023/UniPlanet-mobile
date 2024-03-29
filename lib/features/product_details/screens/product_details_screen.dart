@@ -6,15 +6,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_state.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
+import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -42,7 +41,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           .entries
           .map((entry) => Builder(
                 builder: (BuildContext context) {
-                  int index = entry.key; // Access index for unique tag
                   String image = entry.value; // Access image URL
                   return Hero(
                     tag: "product-picture-${widget.product.id}",
@@ -237,11 +235,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   BottomAppBar _buildBottomAppBar() {
     return BottomAppBar(
       child: BlocConsumer<ChatBloc, ChatBlocState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is CreatedChatRoomState) {
-            SocketService.instance.joinChat(state.chatRoomCreated.id,
-                state.chatRoomCreated.seller.id, context);
-
+            // bool userOnline =
+            //     await SocketService.instance.joinChatAndCheckUserExist(
+            //   chatId: state.chatRoomCreated.id,
+            //   targetUserId: state.chatRoomCreated.seller.id,
+            // );
+            // if (userOnline) {
+            //   // Check if the widget is still mounted before proceeding
+            //   if (!mounted) return;
+            //   context.read<StatusBloc>().add(
+            //       StatusChangeEvent(userId: state.chatRoomCreated.seller.id));
+            // }
+            if (!mounted) return;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
               "seller": state.buyingChatRooms.last.seller,
               "chatRoom": state.buyingChatRooms.last
