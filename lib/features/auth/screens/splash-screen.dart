@@ -1,9 +1,9 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/features/auth/functions/init_data.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,8 +14,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late InitData _init;
-
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
     vsync: this,
@@ -25,18 +23,31 @@ class _SplashScreenState extends State<SplashScreen>
     curve: Curves.fastOutSlowIn,
   );
 
+  triggerNotification() {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'basic_channel',
+        title: 'Simple Notification',
+        body: 'Simple body',
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    _init = InitData(context);
-    _init.initBlocListener();
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, AppRoutes.authPage, (route) => false);
+    });
     context.read<AuthBloc>().add(const TokenValidationEvent());
+    triggerNotification();
   }
 
   @override
   void dispose() {
-    _init.dispose();
     _controller.dispose();
     super.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/search_product/search_product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched-product-list.dart';

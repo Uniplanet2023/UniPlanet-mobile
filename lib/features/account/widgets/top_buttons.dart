@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
-
 import 'package:uniplanet_mobile/features/account/widgets/account_button.dart';
 import 'package:flutter/material.dart';
 

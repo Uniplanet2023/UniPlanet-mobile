@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
 
 part 'status_event.dart';
 part 'status_state.dart';

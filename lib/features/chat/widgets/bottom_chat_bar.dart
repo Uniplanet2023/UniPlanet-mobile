@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/socket/socket_channel.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
@@ -115,7 +114,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   @override
   Widget build(BuildContext context) {
-    const isShowMessageReply = true;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(

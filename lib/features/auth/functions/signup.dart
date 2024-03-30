@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc_event.dart';
-import 'package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart';
 
 void signUpUser(BuildContext context, email, name, school, validPassword,
     password, isChecked) async {

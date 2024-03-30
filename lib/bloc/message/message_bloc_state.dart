@@ -1,6 +1,6 @@
 part of 'message_bloc.dart';
 
-abstract class MessageBlocState extends Equatable {
+sealed class MessageBlocState extends Equatable {
   final Map<String, List<Message>> chatMessages;
   final int? page;
   const MessageBlocState({required this.chatMessages, this.page});

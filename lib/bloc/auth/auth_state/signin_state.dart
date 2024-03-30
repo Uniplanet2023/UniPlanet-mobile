@@ -1,4 +1,4 @@
-import 'package:uniplanet_mobile/bloc/auth/auth_state/basic_state.dart';
+part of '../auth_bloc.dart';
 
 final class SigninState extends AuthState {
   const SigninState();

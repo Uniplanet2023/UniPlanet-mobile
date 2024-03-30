@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1003008222202",
+    "project_id": "pushnotification-uniplanet",
+    "storage_bucket": "pushnotification-uniplanet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003008222202:android:a5a7c8d2c98f34e1517a43",
+        "android_client_info": {
+          "package_name": "com.example.uniplanet_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw2Vy6fUh35DUppMs8jJXgSuRzA5Jz9NE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

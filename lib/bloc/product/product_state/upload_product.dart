@@ -1,4 +1,4 @@
-import 'package:uniplanet_mobile/bloc/product/product_state/basic_state.dart';
+part of '../product_bloc.dart';
 
 final class ProductUploadingState extends ProductState {
   const ProductUploadingState({super.productList});

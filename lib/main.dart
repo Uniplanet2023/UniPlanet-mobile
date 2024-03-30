@@ -1,74 +1,52 @@
-import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/category/category_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
-import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
-import 'package:uniplanet_mobile/bloc/serach_product/search_product_bloc.dart';
-import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
-import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 import 'package:uniplanet_mobile/global.dart';
-import 'package:uniplanet_mobile/repository/account_repository/account_repo.dart';
-import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/network/dio_client.dart';
-import 'package:uniplanet_mobile/repository/chat_repository/chat_repo.dart';
-import 'package:uniplanet_mobile/repository/product_repository/product_repo.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
+import 'package:uniplanet_mobile/statemanager_provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
   await Global.init();
-
-  runApp(MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(
-            create: (context) => AuthRepository(DioClient.instance)),
-        RepositoryProvider(
-            create: (context) => AccountRepository(DioClient.instance)),
-        RepositoryProvider(
-            create: (context) => ProductRepository(
-                DioClient.instance, CloudinaryPublic('dtgmmfv3d', 'l1zymzfi'))),
-        RepositoryProvider(
-            create: (context) => ChatRepository(DioClient.instance)),
-      ],
-      child: MultiBlocProvider(providers: [
-        BlocProvider(
-            create: (context) => AuthBloc(context.read<AuthRepository>())),
-        BlocProvider(
-          create: (context) => ProductBloc(context.read<ProductRepository>()),
-        ),
-        BlocProvider(
-          create: (context) => CategoryBloc(context.read<ProductRepository>()),
-        ),
-        BlocProvider(
-          create: (context) =>
-              SearchProductBloc(context.read<ProductRepository>()),
-        ),
-        BlocProvider(
-            create: (context) =>
-                AccountBloc(context.read<AccountRepository>())),
-        BlocProvider(
-            create: (context) => ChatBloc(context.read<ChatRepository>())),
-        BlocProvider(
-            create: (context) => MessageBloc(context.read<ChatRepository>())),
-        BlocProvider(
-          create: (context) => StatusBloc(),
-        ),
-        BlocProvider(create: (context) => TypingBloc()),
-        BlocProvider(
-            create: (context) => LikeBloc(context.read<ProductRepository>())),
-      ], child: const MyApp())));
+  runApp(const StateManagerProvider());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  splashScreenController() async {
+    await Future.delayed(const Duration(seconds: 3));
+    FlutterNativeSplash.remove();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(const TokenValidationEvent());
+    context.read<ProductBloc>().add(const LoadProductEvent());
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    splashScreenController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +69,17 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: const SplashScreen(),
+        home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+          if (state is Authorized) {
+            return const BottomBar();
+          } else if (state is AuthenticationDeny ||
+              state is ValidationFailedState) {
+            return const AuthScreen();
+          } else if (state is UserNotVerifiedState) {
+            return const SignupScreen();
+          }
+          return const AuthScreen();
+        }),
       ),
     );
   }

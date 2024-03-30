@@ -4,13 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc_event.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/network/api_server_address.dart';
-import 'package:uniplanet_mobile/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
+import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 
 class SocketService {
   late String userId;
@@ -32,7 +31,7 @@ class SocketService {
             .setQuery({"userId": userId, "school": AuthRepository.school!})
             .build());
   }
-  void connect(BuildContext context, String chatRooms) {
+  void connect(BuildContext context) {
     socket.onConnect((_) {
       print('Connected');
       socket.on('online user', (userId) {
@@ -79,11 +78,7 @@ class SocketService {
           context.read<ChatBloc>().add(EmptyUnseenMessageEvent(chatId: chatId));
         }
       });
-      socket.emitWithAck("setup", chatRooms, ack: (data) {
-        if (data[1]) {
-          context.read<StatusBloc>().add(StatusChangeEvent(userId: data[0]));
-        }
-      });
+      socket.emit("setup");
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
     socket.onConnectError((data) => print('ConnectError $data'));
@@ -114,13 +109,23 @@ class SocketService {
     context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
   }
 
-  void joinChat(String chatId, String targetUserId, BuildContext context) {
+  Future<bool> joinChatAndCheckUserExist({
+    required String chatId,
+    required String targetUserId,
+  }) async {
+    final Completer<bool> completer = Completer();
+
     socket.emitWithAck(
         "join chat", {"room": chatId, "targetUser": targetUserId}, ack: (data) {
       if (data != null && data.length > 1 && data[1] == true) {
-        context.read<StatusBloc>().add(StatusChangeEvent(userId: data[0]));
+        completer.complete(true);
+      } else {
+        completer.complete(false);
       }
     });
+
+    return completer
+        .future; // This will return a Future<bool> that completes when the callback is called
   }
 
   Message sendMessage(String content, String chatId, String messageType,
