@@ -130,7 +130,10 @@ class UserProfileScreen extends StatelessWidget {
                   "Listings",
                   "./assets/images/listings.jpeg",
                   "Items currently available for sale by ${user.name}",
-                  const InventoryProductsScreen(),
+                  InventoryProductsScreen(
+                    controller: ScrollController(),
+                    user: user,
+                  ),
                   Icons.inventory_sharp),
               SizedBox(
                 height: 5.h,
@@ -140,7 +143,10 @@ class UserProfileScreen extends StatelessWidget {
                   "Sold",
                   "./assets/images/sold.jpeg",
                   "Previously sold items by ${user.name}",
-                  const SoldProductsScreen(),
+                  SoldProductsScreen(
+                    controller: ScrollController(),
+                    user: user,
+                  ),
                   Icons.history),
             ],
           ),
