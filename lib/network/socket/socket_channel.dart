@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -170,6 +171,17 @@ class SocketService {
     return message;
   }
 
+  // void setSocket(BuildContext context) {
+  //   // var state = context.read<UserBloc>().state;
+
+  //   // receiveMessageOn();
+  //   // createChatRoom(context, state.user!);
+  //   // emptyUnSeenMessageOn();
+  //   // userStatusChange();
+  //   // disconnectStatus();
+  //   // joiningAllChatRoom(state.user!.myChatRoom);
+  // }
+
   void readAllMessages(String chatId) {
     socket.emit('read all message', chatId);
   }
@@ -177,6 +189,34 @@ class SocketService {
   void readMessage(Message msg) {
     socket.emit('read message', msg);
   }
+
+  // void receiveMessageOn() {
+  //   try {
+  //     socket?.off("receiveMessage");
+  //     socket!.on("receiveMessage", (data) {
+  //       //TCP chanell
+  //       Message msg = Message.fromJson(data);
+  //       messageAddStatus.sink.add(true);
+  //       // context.read<MessageBloc>().add(ReceiveMessageEvent(msg));
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  // void userStatusChange() {
+  //   // StatusBloc stateBloc = context.read<StatusBloc>();
+  //   socket?.off("connectStatus");
+  //   // print("this is my User id${UserRepository.user.id}");
+  //   socket!.on("connectStatus", (data) {
+  //     // print(data['userId']);
+  //     data['userId'].forEach((userId) {
+  //       // print(
+  //       //     "${"User : $userId"} join the chatRoom ${data['chatRoomId'].toString()}");
+  //       // stateBloc.add(StatusChangeEvent(userId));
+  //     });
+  //   });
+  // }
 
   void disconnect() {
     if (_typingTimer?.isActive ?? false) {
@@ -191,4 +231,18 @@ class SocketService {
     //   // stateBloc.add(StatusDisconnectEvent(data['userId']));
     // });
   }
+
+  // void createChatRoom(BuildContext context, User user) {
+  //   socket?.off("created_chatRoom");
+  //   socket!.on("created_chatRoom", (data) {
+  //     print("chatRoom data is received(socket.io)");
+  //     ChatRoom chatRoom = ChatRoom.fromMap(data);
+  //   });
+  // }
+
+  // void joiningAllChatRoom(List<MyChatRoom> myChatRooms) {
+  //   for (var myChatRoom in myChatRooms) {
+  //     socket!.emit("joinChatRoom", myChatRoom.chatRoom.chatRoomId);
+  //   }
+  // }
 }

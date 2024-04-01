@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet_mobile/main.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
+import 'package:uniplanet_mobile/main.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_options.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
 
@@ -16,20 +18,6 @@ class Global {
         options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseApi().initNotification();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: false,
-      badge: false,
-      sound: false,
-    );
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   // This is where you receive messages when the app is in the foreground.
-    //   // If you want to prevent showing notifications in the foreground, simply do not display them here.
-
-    //   print("Received a message in the foreground: ${message.messageId}");
-    //   // You can still handle data messages here, if needed.
-    // });
-
     // AwesomeNotifications().initialize(
     //     null,
     //     [

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {

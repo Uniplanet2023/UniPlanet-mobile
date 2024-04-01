@@ -76,6 +76,7 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.disposeChatListener();
     _streamer.disposeChatListener();
     _controller!.dispose();
+    SocketService.instance.disconnect();
     super.dispose();
   }
 
