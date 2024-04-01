@@ -62,5 +62,7 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>FirebaseMessagingAutoInitEnabled</key>
+		<false/>
 	</dict>
 </plist>

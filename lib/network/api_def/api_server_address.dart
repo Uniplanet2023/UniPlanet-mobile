@@ -9,4 +9,3 @@ String productURI = 'https://products.uniplanet-back.autos/api/products';
 String accountURI = 'https://account.uniplanet-back.autos/api/account';
 String chatURI = 'https://chat.uniplanet-back.autos/api/chat';
 String messageURI = 'https://message.uniplanet-back.autos/';
-String likeURI = 'https://like.uniplanet-back.autos/api/like';
