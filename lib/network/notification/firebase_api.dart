@@ -1,30 +1,46 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseApi {
-  final _firebaseMessaging = FirebaseMessaging.instance;
-
+  late String userId;
+  static final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  // ignore: prefer_typing_uninitialized_variables
+  static late final firebaseToken;
   Future<void> initNotification() async {
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
-      announcement: true,
-      badge: true,
-      carPlay: true,
-      criticalAlert: true,
-      provisional: true,
+      announcement: false,
+      badge: false,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
-    final fCMToken = await _firebaseMessaging.getToken();
-    print('FCM Token: $fCMToken');
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    if (settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var fcmToken = prefs.get('fcm_token');
+      if (fcmToken == null) {
+        firebaseToken = await firebaseMessaging.getToken();
+        prefs.setString('fcm_token', firebaseToken);
+      } else {
+        firebaseToken = fcmToken;
+      }
+
+      print('FCM Token: $firebaseToken');
+    } else {
+      print('User declined permission');
+    }
   }
 
   Future<void> subscribeToTopic(String topic) async {
-    await _firebaseMessaging.subscribeToTopic(topic);
+    await firebaseMessaging.subscribeToTopic(topic);
     print('Subscribed to $topic');
   }
 
   Future<void> unsubscribeFromTopic(String topic) async {
-    await _firebaseMessaging.unsubscribeFromTopic(topic);
+    await firebaseMessaging.unsubscribeFromTopic(topic);
     print('Unsubscribed from $topic');
   }
 }

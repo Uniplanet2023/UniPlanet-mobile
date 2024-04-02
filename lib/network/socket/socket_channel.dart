@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -9,12 +10,14 @@ import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 
 class SocketService {
   late String userId;
   static final SocketService _instance = SocketService._internal();
   static SocketService get instance => _instance;
+
   late final IO.Socket socket;
   static String? currentChatLocation;
   Timer? _typingTimer; // Added to keep track of the typing event timer
@@ -35,37 +38,45 @@ class SocketService {
     socket.onConnect((_) {
       print('Connected');
       socket.on('online user', (userId) {
-        context.read<StatusBloc>().add(StatusChangeEvent(userId: userId));
+        if (context.mounted) {
+          context.read<StatusBloc>().add(StatusChangeEvent(userId: userId));
+        }
       });
 
       socket.on('offline user', (userId) {
-        context.read<StatusBloc>().add(StatusDisconnectEvent(userId: userId));
+        if (context.mounted) {
+          context.read<StatusBloc>().add(StatusDisconnectEvent(userId: userId));
+        }
       });
 
       socket.on('typing', (chatId) {
-        context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
+        if (context.mounted) {
+          context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
+        }
       });
       socket.on('stop typing', (chatId) {
-        print('stop typing');
-        context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
+        if (context.mounted) {
+          context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
+        }
       });
       socket.on('message received', (newMessageReceived) {
         var msg = jsonDecode(newMessageReceived);
         Message receivedMessage = Message.fromMap(msg);
         receivedMessage.status = 'sent';
-
-        context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
-        context
-            .read<ChatBloc>()
-            .add(UpdateChatRoomLastMessageEvent(receivedMessage));
-        //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
-        if (currentChatLocation == receivedMessage.chat &&
-            receivedMessage.receiver == userId) {
-          readAllMessages(currentChatLocation!);
-        } else if (receivedMessage.receiver == userId) {
+        if (context.mounted) {
+          context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
           context
               .read<ChatBloc>()
-              .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
+              .add(UpdateChatRoomLastMessageEvent(receivedMessage));
+          //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
+          if (currentChatLocation == receivedMessage.chat &&
+              receivedMessage.receiver == userId) {
+            readAllMessages(currentChatLocation!);
+          } else if (receivedMessage.receiver == userId) {
+            context
+                .read<ChatBloc>()
+                .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
+          }
         }
       });
       socket.on('read all message', (data) {
@@ -73,12 +84,21 @@ class SocketService {
         String chatId = data['chatId'];
         Message msg;
         // if MessageBloc state is receivedMessage, then readAllmessage triggered
-        context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
-        if (data['sender'] == userId) {
-          context.read<ChatBloc>().add(EmptyUnseenMessageEvent(chatId: chatId));
+        if (context.mounted) {
+          context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
+          if (data['sender'] == userId) {
+            context
+                .read<ChatBloc>()
+                .add(EmptyUnseenMessageEvent(chatId: chatId));
+          }
         }
       });
-      socket.emit("setup");
+      print('FirebaseToken: ${FirebaseApi.firebaseToken}');
+      if (FirebaseApi.firebaseToken == null) {
+        print('FirebaseToken is null');
+      } else {
+        socket.emit("setup", FirebaseApi.firebaseToken);
+      }
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
     socket.onConnectError((data) => print('ConnectError $data'));
@@ -96,7 +116,9 @@ class SocketService {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
     }
     socket.emit('typing', chatId);
-    context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
+    if (context.mounted) {
+      context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
+    }
 
     // Set a new timer
     _typingTimer = Timer(const Duration(seconds: 1), () {
@@ -106,7 +128,9 @@ class SocketService {
 
   void sendStopTypingEvent(String chatId, BuildContext context) {
     socket.emit('stop typing', chatId);
-    context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
+    if (context.mounted) {
+      context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
+    }
   }
 
   Future<bool> joinChatAndCheckUserExist({
@@ -139,7 +163,10 @@ class SocketService {
       receiver: receiver,
       createdAt: DateTime.now().toUtc(),
     );
-    socket.emit('new message', message);
+    socket.emitWithAck('new message', message, ack: (data) {
+      print(data);
+      //TODO: make message status to sent
+    });
     sendStopTypingEvent(chatId, context);
     return message;
   }

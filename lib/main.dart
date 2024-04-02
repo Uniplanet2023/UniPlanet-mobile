@@ -1,6 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
@@ -10,8 +12,9 @@ import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
+
 import 'package:uniplanet_mobile/statemanager_provider.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
