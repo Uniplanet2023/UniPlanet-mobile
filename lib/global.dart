@@ -3,35 +3,37 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:uniplanet_mobile/main.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_options.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
-import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 
 class Global {
-  static Future<void> firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
-  }
-
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await DioClient.instance.initCookie();
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseApi().initNotification();
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: false,
+      badge: false,
+      sound: false,
+    );
 
-    AwesomeNotifications().initialize(
-        null,
-        [
-          NotificationChannel(
-              channelKey: 'basic_channel',
-              channelName: 'Basic notifications',
-              channelDescription: 'Notification channel for basic tests',
-              defaultColor: const Color(0xFF9D50DD),
-              ledColor: Colors.white)
-        ],
-        debug: true);
+    // AwesomeNotifications().initialize(
+    //     null,
+    //     [
+    //       NotificationChannel(
+    //           channelKey: 'basic_channel',
+    //           channelName: 'Basic notifications',
+    //           channelDescription: 'Notification channel for basic tests',
+    //           defaultColor: const Color(0xFF9D50DD),
+    //           ledColor: Colors.white)
+    //     ],
+    //     debug: true);
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
