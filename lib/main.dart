@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
@@ -11,6 +12,11 @@ import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
 import 'package:uniplanet_mobile/statemanager_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message:");
+}
 
 void main() async {
   await Global.init();
@@ -35,11 +41,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     context.read<AuthBloc>().add(const TokenValidationEvent());
     context.read<ProductBloc>().add(const LoadProductEvent());
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   if (!isAllowed) {
+    //     AwesomeNotifications().requestPermissionToSendNotifications();
+    //   }
+    // });
     splashScreenController();
   }
 
