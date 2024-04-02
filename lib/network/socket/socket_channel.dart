@@ -93,7 +93,12 @@ class SocketService {
           }
         }
       });
-      socket.emit("setup", FirebaseApi.firebaseToken);
+      print('FirebaseToken: ${FirebaseApi.firebaseToken}');
+      if (FirebaseApi.firebaseToken == null) {
+        print('FirebaseToken is null');
+      } else {
+        socket.emit("setup", FirebaseApi.firebaseToken);
+      }
     });
     socket.onDisconnect((data) => print('Disconnected $data'));
     socket.onConnectError((data) => print('ConnectError $data'));
