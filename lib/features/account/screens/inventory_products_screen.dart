@@ -15,7 +15,7 @@ class InventoryProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Listings'),
+        title: const Text('Listings'),
       ),
       body: CustomScrollView(
         controller: controller,

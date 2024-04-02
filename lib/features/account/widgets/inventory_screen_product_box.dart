@@ -10,6 +10,8 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/network/repository/index.dart';
 
 class InventoryProductBox extends StatefulWidget {
   final List<Product> productList;
@@ -274,62 +276,64 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                               ),
                             ],
                           ),
-                          product.status == 'onSale'
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    customButton(
-                                        const Icon(
-                                          Icons.price_change_outlined,
-                                          color: Colors.black,
-                                        ),
-                                        GlobalVariables.secondaryColor,
-                                        'Edit  Details',
-                                        () => {},
-                                        Colors.black),
-                                    const SizedBox(
-                                      width: 5,
+                          if (product.status == 'onSale' &&
+                              product.seller.id == AuthRepository.userId)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                customButton(
+                                    const Icon(
+                                      Icons.price_change_outlined,
+                                      color: Colors.black,
                                     ),
-                                    Expanded(
-                                      child: customButton(
-                                          const Icon(
-                                            Icons.archive_outlined,
-                                            color: Colors.red,
-                                          ),
-                                          Colors.red,
-                                          'Remove from Market',
-                                          () => removeProductDialog(
-                                              context,
-                                              'Remove the product for the Market?',
-                                              'Remove',
-                                              Icons.archive_outlined,
-                                              () {}),
-                                          Colors.red),
-                                    ),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: customButton(
-                                          const Icon(
-                                            Icons.delete_forever_outlined,
-                                            color: Colors.red,
-                                          ),
-                                          Colors.red,
-                                          'Delete Product',
-                                          () => removeProductDialog(
-                                              context,
-                                              'Delete the product from sale history?',
-                                              'Delete',
-                                              Icons.delete_forever_outlined,
-                                              () {}),
-                                          Colors.red),
-                                    ),
-                                  ],
+                                    GlobalVariables.secondaryColor,
+                                    'Edit  Details',
+                                    () => {},
+                                    Colors.black),
+                                const SizedBox(
+                                  width: 5,
                                 ),
+                                Expanded(
+                                  child: customButton(
+                                      const Icon(
+                                        Icons.archive_outlined,
+                                        color: Colors.red,
+                                      ),
+                                      Colors.red,
+                                      'Remove from Market',
+                                      () => removeProductDialog(
+                                          context,
+                                          'Remove the product for the Market?',
+                                          'Remove',
+                                          Icons.archive_outlined,
+                                          () {}),
+                                      Colors.red),
+                                ),
+                              ],
+                            )
+                          else if (product.status == 'Sold' &&
+                              product.seller.id == AuthRepository.userId)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: customButton(
+                                      const Icon(
+                                        Icons.delete_forever_outlined,
+                                        color: Colors.red,
+                                      ),
+                                      Colors.red,
+                                      'Delete Product',
+                                      () => removeProductDialog(
+                                          context,
+                                          'Delete the product from sale history?',
+                                          'Delete',
+                                          Icons.delete_forever_outlined,
+                                          () {}),
+                                      Colors.red),
+                                ),
+                              ],
+                            ),
                           const Divider(
                             thickness: 0.2,
                             indent: 8,
