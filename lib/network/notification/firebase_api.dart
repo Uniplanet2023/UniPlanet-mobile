@@ -16,7 +16,7 @@ class FirebaseApi {
       provisional: false,
       sound: true,
     );
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    // await FirebaseMessaging.instance.setAutoInitEnabled(true);
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
       SharedPreferences prefs = await SharedPreferences.getInstance();

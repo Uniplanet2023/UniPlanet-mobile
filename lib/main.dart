@@ -16,7 +16,6 @@ import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 
 import 'package:uniplanet_mobile/statemanager_provider.dart';
 
-@pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message:");
 }

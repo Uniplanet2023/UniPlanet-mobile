@@ -14,6 +14,7 @@ import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
@@ -36,6 +37,13 @@ class _BottomBarState extends State<BottomBar> {
     Navigator.pushNamed(context, AppRoutes.addProductPage);
   }
 
+  void notificationLoad(BuildContext context) async {
+    await FirebaseApi().initNotification();
+    if (context.mounted) {
+      SocketService.instance.connect(context);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -46,9 +54,7 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);
-
-    SocketService.instance.connect(context);
-
+    notificationLoad(context);
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==
