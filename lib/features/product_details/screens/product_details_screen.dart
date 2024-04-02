@@ -42,7 +42,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           .entries
           .map((entry) => Builder(
                 builder: (BuildContext context) {
-                  // int index = entry.key; // Access index for unique tag
                   String image = entry.value; // Access image URL
                   return Hero(
                     tag: "product-picture-${widget.product.id}",
