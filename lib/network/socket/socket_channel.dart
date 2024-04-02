@@ -170,17 +170,6 @@ class SocketService {
     return message;
   }
 
-  // void setSocket(BuildContext context) {
-  //   // var state = context.read<UserBloc>().state;
-
-  //   // receiveMessageOn();
-  //   // createChatRoom(context, state.user!);
-  //   // emptyUnSeenMessageOn();
-  //   // userStatusChange();
-  //   // disconnectStatus();
-  //   // joiningAllChatRoom(state.user!.myChatRoom);
-  // }
-
   void readAllMessages(String chatId) {
     socket.emit('read all message', chatId);
   }
