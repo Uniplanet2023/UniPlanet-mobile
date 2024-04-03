@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
@@ -163,7 +165,11 @@ class SocketService {
       receiver: receiver,
       createdAt: DateTime.now().toUtc(),
     );
-    socket.emitWithAck('new message', message, ack: (data) {
+    User sender = context.read<AccountBloc>().state.account.user;
+
+    socket.emitWithAck(
+        'new message', {"messageJson": message, "senderJson": sender},
+        ack: (data) {
       print(data);
       //TODO: make message status to sent
     });

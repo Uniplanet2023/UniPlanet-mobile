@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -10,24 +11,38 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
+import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
-import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
-
+import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 import 'package:uniplanet_mobile/statemanager_provider.dart';
 
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(
+    RemoteMessage sdfmessage) async {
   print("Handling a background message:");
+  var message = jsonDecode(sdfmessage.data['message']);
+  var sender = jsonDecode(sdfmessage.data['sender']);
+  await NotificationService.showNotification(
+    title: sender['name'],
+    body: message['message'],
+    payload: {
+      "navigate": "true",
+      "sender": sdfmessage.data['sender'],
+      "message": sdfmessage.data['message'],
+    },
+  );
 }
 
 void main() async {
   await Global.init();
+
   runApp(const StateManagerProvider());
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -43,11 +58,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     context.read<AuthBloc>().add(const TokenValidationEvent());
     context.read<ProductBloc>().add(const LoadProductEvent());
-    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    //   if (!isAllowed) {
-    //     AwesomeNotifications().requestPermissionToSendNotifications();
-    //   }
-    // });
+
     splashScreenController();
   }
 
@@ -63,6 +74,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: SnackbarGlobal.key,
+        navigatorKey: MyApp.navigatorKey,
         title: 'Uniplanet Marketplace',
         theme: ThemeData(
           colorScheme: const ColorScheme.light(

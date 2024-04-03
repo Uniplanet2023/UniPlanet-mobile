@@ -7,6 +7,7 @@ import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
 import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
+import "package:uniplanet_mobile/features/category/screens/categories.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/category_screen.dart";
@@ -62,6 +63,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AddProductScreen(),
       );
     case AppRoutes.categoryPage:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const CategoriesPage(),
+      );
+    case AppRoutes.category:
       var category = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
@@ -88,12 +94,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       final arguments = routeSettings.arguments as Map<String, dynamic>;
 
       User client = arguments['seller'] as User;
-      ChatRoom myChatRoom = arguments['chatRoom'] as ChatRoom;
+      ChatRoom chatRoom = arguments['chatRoom'] as ChatRoom;
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => ChatScreen(
           client: client,
-          myChatRoom: myChatRoom,
+          chatRoomId: chatRoom.id,
         ),
       );
     case AppRoutes.chatLayoutPage:

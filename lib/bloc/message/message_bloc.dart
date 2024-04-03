@@ -94,7 +94,16 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
       emit(EndMessageState(chatMessages: state.chatMessages, page: state.page));
     } else {
       var chatId = listMessage.first.chat;
-      state.chatMessages.addAll({chatId: listMessage});
+
+      // Check if the chatMessages map already contains the chatId key
+      if (state.chatMessages.containsKey(chatId)) {
+        // If it does, append the listMessage to the existing list for that chatId
+        state.chatMessages[chatId]!.addAll(listMessage);
+      } else {
+        // If it doesn't, add a new entry with the chatId and listMessage
+        state.chatMessages[chatId] = listMessage;
+      }
+
       emit(
           LoadedMessageState(chatMessages: state.chatMessages, page: nextPage));
     }

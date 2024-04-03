@@ -38,7 +38,7 @@ class _BottomBarState extends State<BottomBar> {
   }
 
   void notificationLoad(BuildContext context) async {
-    await FirebaseApi().initNotification();
+    // await FirebaseApi().initNotification();
     if (context.mounted) {
       SocketService.instance.connect(context);
     }

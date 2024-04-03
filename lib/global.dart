@@ -3,44 +3,33 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet_mobile/main.dart';
+import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_options.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
+import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 
 class Global {
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await DioClient.instance.initCookie();
+
+    //Firebase
+    //Firebase initialization
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    // await FirebaseApi().initNotification();
+    //Firebase notification initialization
+    await FirebaseApi().initNotification();
+    //Firebase background message handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: false,
-      badge: false,
-      sound: false,
-    );
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // This is where you receive messages when the app is in the foreground.
-      // If you want to prevent showing notifications in the foreground, simply do not display them here.
 
+    //Firebase foreground message handler
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("Received a message in the foreground: $message");
       print(message.toString());
       // You can still handle data messages here, if needed.
     });
-
-    // AwesomeNotifications().initialize(
-    //     null,
-    //     [
-    //       NotificationChannel(
-    //           channelKey: 'basic_channel',
-    //           channelName: 'Basic notifications',
-    //           channelDescription: 'Notification channel for basic tests',
-    //           defaultColor: const Color(0xFF9D50DD),
-    //           ledColor: Colors.white)
-    //     ],
-    //     debug: true);
-
+    // Awesome Notifications initialization
+    NotificationService.init();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);

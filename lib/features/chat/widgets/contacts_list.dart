@@ -62,7 +62,7 @@ class _ContactsListState extends State<ContactsList> {
                       MaterialPageRoute(builder: (context) {
                         return ChatScreen(
                           client: client,
-                          myChatRoom: widget.list[index],
+                          chatRoomId: widget.list[index].id,
                         );
                       }),
                     );

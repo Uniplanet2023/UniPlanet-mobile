@@ -10,12 +10,12 @@ import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.da
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
-  final ChatRoom chatRoom;
+  final String chatRoomId;
   final List<Message> messages;
   const ChatList(
       {super.key,
       required this.scrollController,
-      required this.chatRoom,
+      required this.chatRoomId,
       required this.messages});
 
   @override
@@ -41,9 +41,7 @@ class _ChatListState extends State<ChatList> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (widget.scrollController.position.pixels >=
           widget.scrollController.position.maxScrollExtent) {
-        context
-            .read<MessageBloc>()
-            .add(GetMoreMessageEvent(widget.chatRoom.id));
+        context.read<MessageBloc>().add(GetMoreMessageEvent(widget.chatRoomId));
       }
     });
   }
@@ -74,7 +72,7 @@ class _ChatListState extends State<ChatList> {
             return BlocBuilder<TypingBloc, TypingState>(
               builder: (context, state) {
                 if (state is TypingStarted &&
-                    state.chatId == widget.chatRoom.id) {
+                    state.chatId == widget.chatRoomId) {
                   return const MessageBox(
                     isMyMessage: true,
                   );
