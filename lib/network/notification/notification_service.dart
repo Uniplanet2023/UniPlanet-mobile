@@ -140,6 +140,7 @@ class NotificationService {
         notificationLayout: notificationLayout,
         category: category,
         bigPicture: bigPicture,
+        largeIcon: 'assets/images/Logo.png',
       ),
       actionButtons: actionButtons,
       schedule: scheduled
