@@ -29,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoomId));
     SocketService.currentChatLocation = widget.chatRoomId;
+    SocketService.isOnline = true;
     SocketService.instance.readAllMessages(widget.chatRoomId);
     super.initState();
   }
@@ -50,6 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _scrollController.dispose();
     SocketService.currentChatLocation = null;
+    SocketService.isOnline = false;
     super.dispose();
   }
 

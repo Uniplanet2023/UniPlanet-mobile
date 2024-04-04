@@ -11,6 +11,7 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;

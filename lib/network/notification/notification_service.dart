@@ -3,12 +3,18 @@ import 'dart:ui';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/features/account/screens/help_screen.dart';
 import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/main.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
+import 'package:uniplanet_mobile/statemanager_provider.dart';
 
 class NotificationService {
   static Future<void> init() async {
@@ -59,17 +65,24 @@ class NotificationService {
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
     debugPrint('Notification displayed: ${receivedNotification.id}');
+  }
+
+  static Future<void> onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    debugPrint('Notification action: ${receivedAction.id}');
     try {
       BuildContext? context = MyApp.navigatorKey.currentContext;
-      if (receivedNotification.payload?['navigate'] == 'true') {
-        if (receivedNotification.payload?['sender'] != null &&
-            receivedNotification.payload?['message'] != null) {
-          var messageJson =
-              jsonDecode(receivedNotification.payload!['message']!);
-          var userJson = jsonDecode(receivedNotification.payload!['sender']!);
-          print(userJson);
+      if (receivedAction.payload?['navigate'] == 'true') {
+        if (receivedAction.payload?['sender'] != null &&
+            receivedAction.payload?['message'] != null) {
+          var messageJson = jsonDecode(receivedAction.payload!['message']!);
+          var userJson = jsonDecode(receivedAction.payload!['sender']!);
           User sender = User.fromMap(userJson);
-          if (context != null) {
+          var pref = await SharedPreferences.getInstance();
+          var userData = pref.getString('userRecord');
+          var userRecord = jsonDecode(userData.toString());
+          if (userRecord != null && context != null && context.mounted) {
+            // SocketService.instance.readAllMessages(messageJson['chat']);
             await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) {
                 return ChatScreen(
@@ -84,11 +97,6 @@ class NotificationService {
     } catch (e) {
       print(e);
     }
-  }
-
-  static Future<void> onActionReceivedMethod(
-      ReceivedAction receivedAction) async {
-    debugPrint('Notification action: ${receivedAction.id}');
   }
 
   static Future<void> onDismissActionReceived(

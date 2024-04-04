@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 // Repositories
@@ -56,6 +57,15 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         }
       }
     }
+    AwesomeNotifications().getGlobalBadgeCounter().then((value) {
+      if (value > 0) {
+        var totalNotification = value - unseenMessages;
+        if (totalNotification < 0) {
+          totalNotification = 0;
+        }
+        AwesomeNotifications().setGlobalBadgeCounter(totalNotification);
+      }
+    });
 
     emit(EmptyUnseenMessageState(
         buyingChatRooms: state.buyingChatRooms,

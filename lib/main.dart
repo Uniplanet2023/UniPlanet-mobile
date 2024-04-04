@@ -15,12 +15,14 @@ import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
 import 'package:uniplanet_mobile/network/notification/notification_service.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 import 'package:uniplanet_mobile/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(
     RemoteMessage sdfmessage) async {
   print("Handling a background message:");
+
   var message = jsonDecode(sdfmessage.data['message']);
   var sender = jsonDecode(sdfmessage.data['sender']);
   await NotificationService.showNotification(
@@ -47,7 +49,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   splashScreenController() async {
     await Future.delayed(const Duration(seconds: 3));
     FlutterNativeSplash.remove();
@@ -56,6 +58,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     context.read<AuthBloc>().add(const TokenValidationEvent());
     context.read<ProductBloc>().add(const LoadProductEvent());
 
@@ -65,6 +68,20 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      SocketService.isOnline = true;
+      if (SocketService.currentChatLocation != null) {
+        SocketService.instance
+            .readAllMessages(SocketService.currentChatLocation!);
+      }
+    } else if (state == AppLifecycleState.paused) {
+      SocketService.isOnline = false;
+    }
   }
 
   @override

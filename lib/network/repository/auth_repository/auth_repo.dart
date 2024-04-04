@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
@@ -50,6 +51,7 @@ class AuthRepository implements IAuthRepository {
     required String password,
   }) async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       Response res = await _dioClient.dio.post('$authURI/signin',
           data: {
             'email': email,
@@ -61,6 +63,8 @@ class AuthRepository implements IAuthRepository {
       if (msg == "success") {
         userId = res.data['userId'];
         school = res.data['school'];
+        prefs.setString(
+            'userRecord', jsonEncode({'userId': userId, 'school': school}));
       }
       return msg;
     } on DioException catch (e) {
@@ -72,11 +76,13 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<String> logOut() async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       Response res = await _dioClient.dio
           .delete('$authURI/signout', options: _dioClient.getDioOptions());
       await _dioClient.clearCookie();
 
       if (res.data['message'] != "Logged Out Successfully") {
+        prefs.remove('userRecord');
         return "Logout Failed";
       } else {
         return res.data['message'];
@@ -111,15 +117,25 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<bool> tokenValidation() async {
     try {
-      var res = await _dioClient.dio
-          .post('$authURI/token-login', options: _dioClient.getDioOptions());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userData = prefs.getString('userRecord');
+      var userRecord = jsonDecode(userData.toString());
 
-      String msg = displayErrorMessages(res.toString());
-      if (msg == "success") {
-        userId = res.data['userId'];
-        school = res.data['school'];
-        return res.data['access'];
+      if (userRecord != null) {
+        userId = userRecord['userId'];
+        school = userRecord['school'];
+        return true;
       }
+      return false;
+      // var res = await _dioClient.dio
+      //     .post('$authURI/token-login', options: _dioClient.getDioOptions());
+
+      // String msg = displayErrorMessages(res.toString());
+      // if (msg == "success") {
+      //   userId = res.data['userId'];
+      //   school = res.data['school'];
+      //   return res.data['access'];
+      // }
     } on DioException catch (e) {
       print(e);
     }

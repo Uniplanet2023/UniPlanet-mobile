@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/network/api_def/api_status/signup.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
@@ -120,6 +122,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   void onTransition(Transition<AuthEvent, AuthState> transition) {
     super.onTransition(transition);
-    print(transition);
+    debugPrint(transition.toString());
   }
 }

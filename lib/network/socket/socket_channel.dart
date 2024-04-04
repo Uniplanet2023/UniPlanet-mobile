@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -21,7 +22,9 @@ class SocketService {
   static SocketService get instance => _instance;
 
   late final IO.Socket socket;
+  static bool isOnline = false;
   static String? currentChatLocation;
+
   Timer? _typingTimer; // Added to keep track of the typing event timer
 
   SocketService._internal() {
@@ -70,8 +73,11 @@ class SocketService {
           context
               .read<ChatBloc>()
               .add(UpdateChatRoomLastMessageEvent(receivedMessage));
+          print(isOnline);
+          bool isOnlien = isOnline;
           //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
-          if (currentChatLocation == receivedMessage.chat &&
+          if (isOnline &&
+              currentChatLocation == receivedMessage.chat &&
               receivedMessage.receiver == userId) {
             readAllMessages(currentChatLocation!);
           } else if (receivedMessage.receiver == userId) {
