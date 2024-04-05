@@ -7,9 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/global.dart';
+import 'package:uniplanet_mobile/models/image_message.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
@@ -18,6 +24,8 @@ import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.da
 
 class SocketService {
   late String userId;
+  static List<Message> messagesToRetry = [];
+  static List<ImageMessage> imageMessagesToRetry = [];
   static final SocketService _instance = SocketService._internal();
   static SocketService get instance => _instance;
 
@@ -41,16 +49,21 @@ class SocketService {
   }
   void connect(BuildContext context) {
     socket.onConnect((_) {
-      print('Connected');
+      if (imageMessagesToRetry.isNotEmpty) {
+        resendUnacknowledgedImageMessages();
+      }
+      if (messagesToRetry.isNotEmpty) {
+        resendUnacknowledgedMessages();
+      }
       socket.on('online user', (userId) {
         if (context.mounted) {
-          context.read<StatusBloc>().add(StatusChangeEvent(userId: userId));
+          context.read<StatusBloc>().add(ConnectedEvent(userId: userId));
         }
       });
 
       socket.on('offline user', (userId) {
         if (context.mounted) {
-          context.read<StatusBloc>().add(StatusDisconnectEvent(userId: userId));
+          context.read<StatusBloc>().add(DisconnectEvent(userId: userId));
         }
       });
 
@@ -67,14 +80,17 @@ class SocketService {
       socket.on('message received', (newMessageReceived) {
         var msg = jsonDecode(newMessageReceived);
         Message receivedMessage = Message.fromMap(msg);
-        receivedMessage.status = 'sent';
+        receivedMessage.status = MessageStatusEnum.received.value;
         if (context.mounted) {
-          context.read<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
+          if (receivedMessage.sender != userId) {
+            context
+                .read<MessageBloc>()
+                .add(ReceiveMessageEvent(receivedMessage));
+          }
+
           context
               .read<ChatBloc>()
               .add(UpdateChatRoomLastMessageEvent(receivedMessage));
-          print(isOnline);
-          bool isOnlien = isOnline;
           //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
           if (isOnline &&
               currentChatLocation == receivedMessage.chat &&
@@ -116,6 +132,99 @@ class SocketService {
     socket.onReconnecting((data) => print('Reconnecting $data'));
 
     socket.connect();
+  }
+
+  void resendUnacknowledgedImageMessages() async {
+    List<Message> imageMessagesToRetried = [];
+    List<ImageMessage> test = imageMessagesToRetry;
+    for (var imageMessage in imageMessagesToRetry) {
+      Message sentMessage = imageMessage.message;
+      try {
+        CloudinaryResponse response = await Global.cloudinary
+            .uploadFile(
+          CloudinaryFile.fromFile(imageMessage.filePath,
+              resourceType: CloudinaryResourceType.Image,
+              folder: imageMessage.message.chat),
+        )
+            .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            throw TimeoutException('Image uploading timed out');
+          },
+        );
+
+        if (response.secureUrl.isEmpty) return;
+
+        sentMessage = await SocketService.instance
+            .sendMessage(
+          id: imageMessage.message.id,
+          message: response.secureUrl,
+          chatId: imageMessage.message.chat,
+          messageType: MessageEnum.image.value,
+          receiver: imageMessage.message.receiver,
+          context: SnackbarGlobal.key.currentContext!,
+        )
+            .timeout(
+          const Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Message sending timed out');
+          },
+        );
+        imageMessagesToRetried.add(sentMessage);
+      } catch (e) {
+        // Handle the error
+        print("can't upload image");
+        imageMessagesToRetried.add(sentMessage);
+      }
+    }
+
+    SnackbarGlobal.key.currentContext!
+        .read<MessageBloc>()
+        .add(RetrySendMessagesEvent(imageMessagesToRetried));
+    imageMessagesToRetry.clear();
+  }
+
+  // Resend messages that were not acknowledged
+  void resendUnacknowledgedMessages() async {
+    // Here, iterate over the messages to retry and call sendMessage for each
+    List<Message> messagesToRetried = [];
+    for (var message in messagesToRetry) {
+      // Modify sendMessage to accept a Message object directly, or extract necessary fields
+      Message msg = message;
+      msg.status = MessageStatusEnum.error.value;
+      try {
+        msg = await retrySendMessage(
+          id: message.id,
+          content: message.message,
+          chatId: message.chat,
+          messageType: message.messageType,
+          receiver: message.receiver,
+          context: SnackbarGlobal.key.currentContext!,
+        ).timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            return Message(
+              id: message.id,
+              sender: message.sender,
+              message: message.message,
+              messageType: message.messageType,
+              chat: message.chat,
+              status: MessageStatusEnum.error.value,
+              receiver: message.receiver,
+              createdAt: message.createdAt,
+            );
+          },
+        );
+        messagesToRetried.add(msg);
+      } catch (e) {
+        messagesToRetried.add(msg);
+      }
+    }
+    SnackbarGlobal.key.currentContext!
+        .read<MessageBloc>()
+        .add(RetrySendMessagesEvent(messagesToRetried));
+    // Clear the list once done
+    messagesToRetry.clear();
   }
 
   //TODO: message not sent, check instant reading message
@@ -160,39 +269,68 @@ class SocketService {
         .future; // This will return a Future<bool> that completes when the callback is called
   }
 
-  Message sendMessage(String content, String chatId, String messageType,
-      String receiver, BuildContext context) {
-    Message message = Message(
+  Future<Message> sendMessage(
+      {required String id,
+      required String message,
+      required String chatId,
+      required String messageType,
+      required String receiver,
+      required BuildContext context}) async {
+    // Create a Completer
+    final Completer<Message> completer = Completer<Message>();
+
+    Message msg = Message(
+      id: id,
       sender: userId,
-      message: content,
+      message: message,
       messageType: messageType,
       chat: chatId,
-      status: 'pending',
+      status: MessageStatusEnum.sending.value,
       receiver: receiver,
       createdAt: DateTime.now().toUtc(),
     );
     User sender = context.read<AccountBloc>().state.account.user;
+    sendStopTypingEvent(chatId, context);
+    socket.emitWithAck(
+        'new message', {"messageJson": msg, "senderJson": sender}, ack: (data) {
+      msg.status = MessageStatusEnum.received.value;
+      return completer.complete(msg);
+    });
 
+    return completer.future;
+  }
+
+  Future<Message> retrySendMessage(
+      {required String id,
+      required String content,
+      required String chatId,
+      required String messageType,
+      required String receiver,
+      required BuildContext context}) async {
+    // Create a Completer
+    final Completer<Message> completer = Completer<Message>();
+
+    Message message = Message(
+      id: id,
+      sender: userId,
+      message: content,
+      messageType: messageType,
+      chat: chatId,
+      status: MessageStatusEnum.sending.value,
+      receiver: receiver,
+      createdAt: DateTime.now().toUtc(),
+    );
+    User sender = context.read<AccountBloc>().state.account.user;
     socket.emitWithAck(
         'new message', {"messageJson": message, "senderJson": sender},
         ack: (data) {
-      print(data);
-      //TODO: make message status to sent
+      message.status = MessageStatusEnum.received.value;
+      return completer.complete(message);
     });
-    sendStopTypingEvent(chatId, context);
-    return message;
+    // Set a timeout for the acknowledgment
+
+    return completer.future;
   }
-
-  // void setSocket(BuildContext context) {
-  //   // var state = context.read<UserBloc>().state;
-
-  //   // receiveMessageOn();
-  //   // createChatRoom(context, state.user!);
-  //   // emptyUnSeenMessageOn();
-  //   // userStatusChange();
-  //   // disconnectStatus();
-  //   // joiningAllChatRoom(state.user!.myChatRoom);
-  // }
 
   void readAllMessages(String chatId) {
     socket.emit('read all message', chatId);
@@ -202,59 +340,15 @@ class SocketService {
     socket.emit('read message', msg);
   }
 
-  // void receiveMessageOn() {
-  //   try {
-  //     socket?.off("receiveMessage");
-  //     socket!.on("receiveMessage", (data) {
-  //       //TCP chanell
-  //       Message msg = Message.fromJson(data);
-  //       messageAddStatus.sink.add(true);
-  //       // context.read<MessageBloc>().add(ReceiveMessageEvent(msg));
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // void userStatusChange() {
-  //   // StatusBloc stateBloc = context.read<StatusBloc>();
-  //   socket?.off("connectStatus");
-  //   // print("this is my User id${UserRepository.user.id}");
-  //   socket!.on("connectStatus", (data) {
-  //     // print(data['userId']);
-  //     data['userId'].forEach((userId) {
-  //       // print(
-  //       //     "${"User : $userId"} join the chatRoom ${data['chatRoomId'].toString()}");
-  //       // stateBloc.add(StatusChangeEvent(userId));
-  //     });
-  //   });
-  // }
-
   void disconnect() {
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Ensure to cancel the timer on disconnect
     }
     socket.disconnect();
-    // StatusBloc stateBloc = context.read<StatusBloc>();
-    // socket.off("disconnect");
-    // socket.on('disconnect', (data) {
-    //   print('disconnnect');
-
-    //   // stateBloc.add(StatusDisconnectEvent(data['userId']));
-    // });
+    if (SnackbarGlobal.key.currentContext != null) {
+      SnackbarGlobal.key.currentContext!
+          .read<StatusBloc>()
+          .add(DisconnectEvent(userId: userId));
+    }
   }
-
-  // void createChatRoom(BuildContext context, User user) {
-  //   socket?.off("created_chatRoom");
-  //   socket!.on("created_chatRoom", (data) {
-  //     print("chatRoom data is received(socket.io)");
-  //     ChatRoom chatRoom = ChatRoom.fromMap(data);
-  //   });
-  // }
-
-  // void joiningAllChatRoom(List<MyChatRoom> myChatRooms) {
-  //   for (var myChatRoom in myChatRooms) {
-  //     socket!.emit("joinChatRoom", myChatRoom.chatRoom.chatRoomId);
-  //   }
-  // }
 }

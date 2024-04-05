@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
@@ -83,17 +84,29 @@ class _ContactsListState extends State<ContactsList> {
                           builder: (context, state) {
                             bool isTyping = state is TypingStarted &&
                                 state.chatId == widget.list[index].id;
-                            return Text(
-                              isTyping ? "Typing..." : last.message,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight:
-                                    last.sender != AuthRepository.userId &&
-                                            last.readDate == null
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                              ),
-                            );
+                            return last.messageType == MessageEnum.image.value
+                                ? Text(
+                                    "Image",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: last.sender !=
+                                                  AuthRepository.userId &&
+                                              last.readDate == null
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  )
+                                : Text(
+                                    isTyping ? "Typing..." : last.message,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: last.sender !=
+                                                  AuthRepository.userId &&
+                                              last.readDate == null
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  );
                           },
                         ),
                       ),

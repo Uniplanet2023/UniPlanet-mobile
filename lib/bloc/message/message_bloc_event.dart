@@ -21,13 +21,55 @@ class GetMoreMessageEvent extends MessageBlocEvent {
   List<Object> get props => [chatId];
 }
 
-class SendMessageEvent extends MessageBlocEvent {
-  final String msg;
-  final String senderId;
-  final String chatRoomId;
-  const SendMessageEvent(this.chatRoomId, this.senderId, this.msg);
+// Send Text Message Event
+class SendingMessageEvent extends MessageBlocEvent {
+  final Message tempMessage;
+  final BuildContext context;
+  const SendingMessageEvent({required this.tempMessage, required this.context});
   @override
-  List<Object> get props => [msg, chatRoomId];
+  List<Object> get props => [tempMessage, context];
+}
+
+// Sent Message Event
+class SentMessageEvent extends MessageBlocEvent {
+  final Message message;
+  const SentMessageEvent(this.message);
+  @override
+  List<Object> get props => [message];
+}
+
+// Send Text Message Event
+class SendTextMessageEvent extends MessageBlocEvent {
+  final String chatId;
+  final String receiverId;
+  final String message;
+  final BuildContext context;
+  const SendTextMessageEvent({
+    required this.chatId,
+    required this.message,
+    required this.receiverId,
+    required this.context,
+  });
+  @override
+  List<Object> get props => [chatId, message, receiverId, context];
+}
+
+// Upload Image Message Event
+class SendingImageMessageEvent extends MessageBlocEvent {
+  final Message tempMessage;
+  final BuildContext context;
+  const SendingImageMessageEvent({
+    required this.tempMessage,
+    required this.context,
+  });
+}
+
+// Retry Sending Message Event
+class RetrySendMessagesEvent extends MessageBlocEvent {
+  final List<Message> messages;
+  const RetrySendMessagesEvent(this.messages);
+  @override
+  List<Object> get props => [messages];
 }
 
 class ReceiveMessageEvent extends MessageBlocEvent {
@@ -53,4 +95,12 @@ class ReadMessageEvent extends MessageBlocEvent {
       {required this.messageId, required this.chatId, required this.readDate});
   @override
   List<Object> get props => [chatId, readDate];
+}
+
+//Error Message
+class ErrorMessageEvent extends MessageBlocEvent {
+  final Message errorMessage;
+  const ErrorMessageEvent(this.errorMessage);
+  @override
+  List<Object> get props => [errorMessage];
 }

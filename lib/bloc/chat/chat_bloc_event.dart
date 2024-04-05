@@ -35,21 +35,12 @@ class UpdateChatRoomLastMessageEvent extends ChatBlocEvent {
   List<Object> get props => [lastMessage];
 }
 
-class ClientStatusChangeEvent extends ChatBlocEvent {
+class UserInfoChangeEvent extends ChatBlocEvent {
   final String userId;
-  const ClientStatusChangeEvent(this.userId);
+  const UserInfoChangeEvent(this.userId);
 
   @override
   List<Object> get props => [userId];
-}
-
-class ClientStatusDisconnectEvent extends ChatBlocEvent {
-  final String userId;
-  const ClientStatusDisconnectEvent(this.userId);
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [userId];
 }
 
 //Unseen Message

@@ -5,11 +5,9 @@ import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
-import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -111,11 +109,13 @@ class _ChatScreenState extends State<ChatScreen> {
         listener: (context, state) {
           var chatMessages = state.chatMessages[widget.chatRoomId] ?? [];
           // TODO: implement listener
-          if (state is LoadedMessageState || state is ReceivedMessageState) {
-            setState(() {
-              messages = chatMessages;
-            });
-          } else if (state is ReadMessageState) {
+          if (state is LoadingMessageState ||
+              state is LoadedMessageState ||
+              state is ReceivedMessageState ||
+              state is ReadMessageState ||
+              state is SentMessageState ||
+              state is SendingMessageState ||
+              state is ErrorMessageState) {
             setState(() {
               messages = chatMessages;
             });
@@ -127,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: ChatList(
               scrollController: _scrollController,
               chatRoomId: widget.chatRoomId,
-              messages: messages,
+              messages: messages.reversed.toList(),
             )),
             BottomChatField(
               chatRoomId: widget.chatRoomId,

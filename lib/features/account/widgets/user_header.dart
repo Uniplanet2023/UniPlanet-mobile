@@ -18,7 +18,7 @@ class _UserHeaderState extends State<UserHeader> {
   File? image;
 
   void selectImage(BuildContext context) async {
-    image = await pickImageFromGallery(context);
+    // image = await pickImages(context);
   }
 
   @override

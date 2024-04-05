@@ -45,6 +45,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static GlobalKey mainContext = GlobalKey();
   @override
   State<MyApp> createState() => _MyAppState();
 }

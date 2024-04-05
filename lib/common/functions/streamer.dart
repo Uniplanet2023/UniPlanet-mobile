@@ -11,20 +11,20 @@ class Streamer {
   void addChatListener(BuildContext context) {
     _chatStreamSubscription =
         context.read<ChatBloc>().stream.listen((state) async {
-      // if (state is CreatedChatRoomState) {
-      //   bool userOnline =
-      //       await SocketService.instance.joinChatAndCheckUserExist(
-      //     chatId: state.chatRoomCreated.id,
-      //     targetUserId: state.chatRoomCreated.seller.id,
-      //   );
-      //   if (userOnline) {
-      //     // Check if the widget is still mounted before proceeding
-      //     if (!context.mounted) return;
-      //     context
-      //         .read<StatusBloc>()
-      //         .add(StatusChangeEvent(userId: state.chatRoomCreated.seller.id));
-      //   }
-      // }
+      if (state is CreatedChatRoomState) {
+        bool userOnline =
+            await SocketService.instance.joinChatAndCheckUserExist(
+          chatId: state.chatRoomCreated.id,
+          targetUserId: state.chatRoomCreated.seller.id,
+        );
+        if (userOnline) {
+          // Check if the widget is still mounted before proceeding
+          if (!context.mounted) return;
+          context
+              .read<StatusBloc>()
+              .add(ConnectedEvent(userId: state.chatRoomCreated.seller.id));
+        }
+      }
       if (state is LoadedChatRoomState) {
         for (var chatRoom in state.buyingChatRooms) {
           bool isTargetUserOnline = await SocketService.instance
@@ -34,7 +34,7 @@ class Streamer {
             if (context.mounted) {
               context
                   .read<StatusBloc>()
-                  .add(StatusChangeEvent(userId: chatRoom.seller.id));
+                  .add(ConnectedEvent(userId: chatRoom.seller.id));
             }
           }
         }
@@ -46,7 +46,7 @@ class Streamer {
             if (context.mounted) {
               context
                   .read<StatusBloc>()
-                  .add(StatusChangeEvent(userId: chatRoom.buyer.id));
+                  .add(ConnectedEvent(userId: chatRoom.buyer.id));
             }
           }
         }
@@ -58,7 +58,7 @@ class Streamer {
   void addAccountListener(BuildContext context) {
     _accountStreamSubscription =
         context.read<AccountBloc>().stream.listen((event) {
-      if (event is ClientStatusChangeEvent) {
+      if (event is UserInfoChangeEvent) {
         context.read<ChatBloc>().add(const LoadChatRoomEvent());
       }
     });

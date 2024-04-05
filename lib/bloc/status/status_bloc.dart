@@ -6,14 +6,14 @@ part 'status_state.dart';
 
 class StatusBloc extends Bloc<StatusEvent, StatusState> {
   StatusBloc() : super(StatusInitial()) {
-    on<StatusChangeEvent>((event, emit) {
+    on<ConnectedEvent>((event, emit) {
       if (!state.online.contains(event.userId)) {
         var updatedOnlineList = List<String>.from(state.online)
           ..add(event.userId);
         emit(StatusChanged(online: updatedOnlineList));
       }
     });
-    on<StatusDisconnectEvent>(((event, emit) {
+    on<DisconnectEvent>(((event, emit) {
       if (state.online.contains(event.userId)) {
         List<String> updatedList = List.from(state.online)
           ..remove(event.userId);

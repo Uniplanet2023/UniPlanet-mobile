@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
+
 class Message {
-  final String? id;
+  final String id;
   final String sender;
-  final String message;
+  String message;
   final String messageType;
   String status;
   final String receiver;
@@ -12,7 +14,7 @@ class Message {
   DateTime? readDate;
 
   Message({
-    this.id,
+    required this.id,
     required this.sender,
     required this.message,
     required this.messageType,
@@ -24,6 +26,7 @@ class Message {
   });
   static Message initMessage() {
     return Message(
+      id: "",
       sender: "",
       message: "",
       messageType: "",
@@ -69,7 +72,7 @@ class Message {
       messageType: json["messageType"],
       receiver: json["receiver"],
       chat: json["chat"],
-      status: json["status"] ?? "pending",
+      status: json["status"] ?? MessageStatusEnum.received.value,
       createdAt: DateTime.parse(json["createdAt"]).toLocal(),
       readDate:
           json["readDate"] == null ? null : DateTime.parse(json["readDate"]),

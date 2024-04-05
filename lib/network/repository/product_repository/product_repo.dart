@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
@@ -11,9 +12,8 @@ import 'package:uniplanet_mobile/network/api_def/display_error_messages.dart';
 
 class ProductRepository {
   final DioClient _dioClient;
-  final CloudinaryPublic _cloudinary;
 
-  ProductRepository(this._dioClient, this._cloudinary);
+  ProductRepository(this._dioClient);
 
   Future<Product?> deleteProduct({required String productId}) async {
     try {
@@ -146,7 +146,7 @@ class ProductRepository {
 
       // Concurrently upload all images and collect their URLs
       final uploadTasks = images.map((image) async {
-        final response = await _cloudinary.uploadFile(
+        final response = await Global.cloudinary.uploadFile(
           CloudinaryFile.fromFile(image.path, folder: 'product-images'),
         );
         imageUrls.add(response.secureUrl); // Collect each image URL

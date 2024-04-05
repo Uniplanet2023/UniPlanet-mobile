@@ -17,8 +17,7 @@ class StateManagerProvider extends StatelessWidget {
           RepositoryProvider(
               create: (context) => AccountRepository(DioClient.instance)),
           RepositoryProvider(
-              create: (context) => ProductRepository(DioClient.instance,
-                  CloudinaryPublic('dtgmmfv3d', 'l1zymzfi'))),
+              create: (context) => ProductRepository(DioClient.instance)),
           RepositoryProvider(
               create: (context) => ChatRepository(DioClient.instance)),
         ],

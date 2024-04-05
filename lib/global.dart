@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/main.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_options.dart';
@@ -11,6 +12,8 @@ import 'package:uniplanet_mobile/network/notification/notification_service.dart'
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class Global {
+  static final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
+
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
 

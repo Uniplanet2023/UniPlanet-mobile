@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/global.dart';
 // Repositories
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/repository/chat_repository/chat_repo.dart';
@@ -31,9 +35,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<EmptyUnseenMessageEvent>((event, emit) {
       _emptyUnseenMessage(event, emit);
     });
-    on<UpdateUnseenMessageEvent>(((event, emit) {
-      _updateUnseenMessage(event, emit);
-    }));
   }
 
   _emptyUnseenMessage(EmptyUnseenMessageEvent event, emit) {

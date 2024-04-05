@@ -52,7 +52,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Add your Firebase iOS config file -->
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
+	<!-- Permission for picking image from gallery or taking image from camera-->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Uniplanet would like to access your photo library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Uniplanet would like to access your camera</string>
 </dict>
 </plist>

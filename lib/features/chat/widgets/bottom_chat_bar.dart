@@ -1,8 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/global.dart';
+import 'package:uniplanet_mobile/models/image_message.dart';
+import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
@@ -21,7 +29,6 @@ class BottomChatField extends StatefulWidget {
 }
 
 class _BottomChatFieldState extends State<BottomChatField> {
-  bool isContainerVisible = false;
   bool isShowSendButton = false;
   final TextEditingController _messageController = TextEditingController();
   // FlutterSoundRecorder? _soundRecorder;
@@ -34,14 +41,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void initState() {
     super.initState();
     // _soundRecorder = FlutterSoundRecorder();
-    focusNode.addListener(() {
-      if (focusNode.hasFocus && isContainerVisible) {
-        // If TextFormField is clicked and container is visible
-        setState(() {
-          isContainerVisible = false; // Hide the container
-        });
-      }
-    });
   }
 
   @override
@@ -63,11 +62,115 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   void sendTextMessage() async {
     if (isShowSendButton) {
-      SocketService.instance.sendMessage(_messageController.text,
-          widget.chatRoomId, 'text', widget.sellerId, context);
+      context.read<MessageBloc>().add(SendTextMessageEvent(
+          chatId: widget.chatRoomId,
+          message: _messageController.text,
+          receiverId: widget.sellerId,
+          context: context));
       _messageController.clear();
       widget.scrollDownfuction();
     }
+  }
+
+  void sendImages(List<XFile> imageList) async {
+    List<Message> messages = [];
+    for (var image in imageList) {
+      // Generate a unique ID for the message
+      String uniqueId = UniqueKey().toString();
+      // Create a temporary message with the image path
+      String imagePath = File(image.path).path;
+      Message tempMessage = Message(
+        id: uniqueId,
+        chat: widget.chatRoomId,
+        message: imagePath,
+        status: MessageStatusEnum.sending.value,
+        messageType: MessageEnum.image.value,
+        sender: AuthRepository.userId!,
+        receiver: widget.sellerId,
+        createdAt: DateTime.now(),
+      );
+      // Add the temporary message to the list of messages
+      messages.add(tempMessage);
+      context
+          .read<MessageBloc>()
+          .add(SendingMessageEvent(tempMessage: tempMessage, context: context));
+    }
+    for (var tempMessage in messages) {
+      try {
+        Message? imageUploadedMessage = await uploadImage(tempMessage);
+        if (imageUploadedMessage == null) {
+          throw Exception('Image uploading failed');
+        }
+        Message sentMessage = await uploadMessage(imageUploadedMessage);
+        SnackbarGlobal.key.currentContext!
+            .read<MessageBloc>()
+            .add(SentMessageEvent(sentMessage));
+      } catch (e) {
+        print(e);
+      }
+    }
+    widget.scrollDownfuction();
+  }
+
+  void sendingMessage(Message tempMessage) {}
+
+  Future<Message?> uploadImage(Message tempMessage) async {
+    CloudinaryResponse? response;
+    try {
+      response = await Global.cloudinary
+          .uploadFile(
+        CloudinaryFile.fromFile(tempMessage.message,
+            resourceType: CloudinaryResourceType.Image,
+            folder: tempMessage.chat),
+      )
+          .timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('Image uploading timed out');
+        },
+      );
+
+      // Check if the context is still mounted before proceeding
+      if (response.secureUrl.isEmpty) throw Exception('Image uploading failed');
+      tempMessage.message = response.secureUrl;
+      return tempMessage;
+    } catch (e) {
+      tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);
+      ImageMessage imageMessage = ImageMessage(
+        filePath: tempMessage.message,
+        message: tempMessage,
+      );
+      SocketService.imageMessagesToRetry.add(imageMessage);
+      // Update the temporary message's status to error
+      SnackbarGlobal.key.currentContext!
+          .read<MessageBloc>()
+          .add(ErrorMessageEvent(tempMessage));
+      return null;
+    }
+  }
+
+  Future<Message> uploadMessage(Message message) async {
+    Message sentMessage = message;
+    try {
+      sentMessage = await SocketService.instance
+          .sendMessage(
+        id: message.id,
+        message: message.message,
+        chatId: message.chat,
+        messageType: MessageEnum.image.value,
+        receiver: message.receiver,
+        context: context,
+      )
+          .timeout(
+        const Duration(seconds: 20),
+        onTimeout: () {
+          throw TimeoutException('Message sending timed out');
+        },
+      );
+    } catch (e) {
+      SocketService.messagesToRetry.add(message);
+    }
+    return sentMessage;
   }
 
   void sendFileMessage(
@@ -81,13 +184,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     //       messageEnum,
     //       widget.isGroupChat,
     //     );
-  }
-
-  void selectImage() async {
-    File? image = await pickImageFromGallery(context);
-    if (image != null) {
-      sendFileMessage(image, MessageEnum.image);
-    }
   }
 
   void selectVideo() async {
@@ -150,24 +246,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isContainerVisible =
-                                    !isContainerVisible; // Toggle container visibility
-                              });
-                              if (isContainerVisible) {
-                                hideKeyboard(); // Hide the keyboard if container is shown
-                              } else {
-                                showKeyboard(); // Show the keyboard if container is hidden
-                              }
+                            icon: const Icon(Icons.camera_alt),
+                            onPressed: () async {
+                              File? image = await openCamera();
+                              sendImages([XFile(image!.path)]);
                             },
-                            icon: Transform.rotate(
-                                angle: isContainerVisible ? 0.785398 : 0,
-                                child: const Icon(
-                                  Icons
-                                      .add, // Change icon based on container visibility
-                                  color: Colors.grey,
-                                )),
+                            padding: const EdgeInsets.all(0),
+                            color: Colors.blue,
                           ),
                         ],
                       ),
@@ -183,6 +268,15 @@ class _BottomChatFieldState extends State<BottomChatField> {
                     contentPadding: const EdgeInsets.all(10),
                   ),
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.photo_library),
+                onPressed: () async {
+                  List<XFile> imageList = await pickImagesFromGallery(context);
+                  sendImages(imageList);
+                },
+                padding: const EdgeInsets.all(0),
+                color: Colors.blue,
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -208,29 +302,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
               ),
             ],
           ),
-          // Conditionally render the new container based on the value of isContainerVisible
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 20),
-            height: isContainerVisible ? 200 : 0,
-            color: Colors.grey[200],
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.photo_library),
-                    onPressed: () => pickImageFromGallery(context),
-                    color: Colors.blue,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.camera_alt),
-                    onPressed: () => openCamera(),
-                    color: Colors.blue,
-                  ),
-                ],
-              ),
-            ),
-          )
         ],
       ),
     );
