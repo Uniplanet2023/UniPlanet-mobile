@@ -68,6 +68,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
           receiverId: widget.sellerId,
           context: context));
       _messageController.clear();
+      isShowSendButton = false;
       widget.scrollDownfuction();
     }
   }
@@ -111,8 +112,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
     widget.scrollDownfuction();
   }
-
-  void sendingMessage(Message tempMessage) {}
 
   Future<Message?> uploadImage(Message tempMessage) async {
     CloudinaryResponse? response;
