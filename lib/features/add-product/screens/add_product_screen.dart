@@ -62,6 +62,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
           'Please add at least one image and fill all fields.');
       return;
     }
+    if (meetingLocationController.text.isEmpty &&
+        selectedLocation == 'Custom Location') {
+      SnackbarGlobal.showSnackBar('Please enter a custom location');
+      return;
+    }
     if (_addProductFormKey.currentState!.validate()) {
       context.read<ProductBloc>().add(UploadProductEvent(
           productName: productNameController.text,
@@ -307,7 +312,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           );
                         }).toList(),
                         onChanged: (String? newValue) {
-                          if (newValue == 'CustomLocation') {
+                          if (newValue == 'Custom Location') {
                             meetingLocationController.clear();
                           } else {
                             meetingLocationController.text = newValue!;

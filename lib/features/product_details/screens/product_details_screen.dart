@@ -169,9 +169,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                     text: 'Where to meet: ',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -179,8 +179,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: 'Yang hall',
-                        style: TextStyle(
+                        text: widget.product.location,
+                        style: const TextStyle(
                           fontSize: 16,
                           color: GlobalVariables.secondaryColor,
                           fontWeight: FontWeight.w400,

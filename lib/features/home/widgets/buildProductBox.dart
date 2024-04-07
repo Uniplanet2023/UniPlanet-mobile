@@ -160,18 +160,18 @@ class _ItemBoxState extends State<ItemBox> {
                                       const SizedBox(
                                         height: 25,
                                       ),
-                                      const Row(
+                                      Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.location_on_outlined,
                                             size: 18,
                                             color:
                                                 GlobalVariables.secondaryColor,
                                           ),
                                           Text(
-                                            'Yang Hall',
+                                            product.location,
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: GlobalVariables
                                                   .secondaryColor,
                                             ),

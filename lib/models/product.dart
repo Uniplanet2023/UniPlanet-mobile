@@ -13,7 +13,7 @@ class Product {
   final String category;
   final double price;
   final DateTime createdAt;
-
+  final String location;
   Product({
     required this.id,
     required this.name,
@@ -26,19 +26,21 @@ class Product {
     required this.category,
     required this.price,
     required this.createdAt,
+    required this.location,
   });
   static initProduct() {
     return Product(
         id: "",
-        name: "test",
-        status: "test",
+        name: "",
+        status: "",
         seller: User.initialUser(),
-        description: "test",
+        description: "",
         likes: 0,
         numberOfChat: 0,
-        images: ["test"],
-        category: "test",
+        images: [""],
+        category: "",
         price: 0,
+        location: "",
         createdAt: DateTime.now());
   }
 
@@ -55,6 +57,7 @@ class Product {
       'price': price,
       'createdAt': createdAt,
       'numberOfChat': numberOfChat,
+      'location': location,
     };
   }
 
@@ -70,6 +73,7 @@ class Product {
       numberOfChat: map['numberOfChat'] as int,
       price: map['price'].toDouble() as double,
       category: map['category'],
+      location: map['location'] ?? "",
       createdAt: DateTime.parse(map['createdAt'].toString()),
     );
   }
