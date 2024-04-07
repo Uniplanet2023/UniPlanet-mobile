@@ -40,10 +40,28 @@ Future<void> firebaseMessagingBackgroundHandler(
 
 void main() async {
   await Global.init();
-  FlutterError.onError = (details) {
-    FlutterError.presentError(details);
-    if (kReleaseMode) exit(1);
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    // bool inDebug = false;
+    // assert(() {
+    //   inDebug = true;
+    //   return true;
+    // }());
+    // if (inDebug) {
+    //   return ErrorWidget(details.exception);
+    // }
+    return const Scaffold(
+      body: Center(
+        child: Text(
+          'An error occurred. Please restart the app.',
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 20,
+          ),
+        ),
+      ),
+    );
   };
+
   runApp(const StateManagerProvider());
 }
 
