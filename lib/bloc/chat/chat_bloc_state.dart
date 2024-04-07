@@ -1,120 +1,81 @@
 part of 'chat_bloc.dart';
 
 sealed class ChatBlocState extends Equatable {
-  final List<ChatRoom> buyingChatRooms;
-  final List<ChatRoom> sellingChatRooms;
+  final List<ChatRoom> chatRooms;
   final int totalUnseenMessageCount;
 
   const ChatBlocState({
-    this.buyingChatRooms = const [],
-    this.sellingChatRooms = const [],
+    this.chatRooms = const [],
     this.totalUnseenMessageCount = 0,
   });
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 class InitChatRoomState extends ChatBlocState {
-  InitChatRoomState()
-      : super(
-            buyingChatRooms: [],
-            sellingChatRooms: [],
-            totalUnseenMessageCount: 0);
+  InitChatRoomState() : super(chatRooms: [], totalUnseenMessageCount: 0);
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 //Creat ChatRoom
 class CreatingChatRoomState extends ChatBlocState {
-  const CreatingChatRoomState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+  const CreatingChatRoomState({super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 class CreatedChatRoomState extends ChatBlocState {
   final ChatRoom chatRoomCreated;
   const CreatedChatRoomState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
+      {super.chatRooms,
       super.totalUnseenMessageCount,
       required this.chatRoomCreated});
   @override
-  List<Object?> get props => [
-        buyingChatRooms,
-        sellingChatRooms,
-        totalUnseenMessageCount,
-        chatRoomCreated
-      ];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 //Load ChatRoom
 class LoadingChatRoomState extends ChatBlocState {
-  const LoadingChatRoomState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+  const LoadingChatRoomState({super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 class LoadedChatRoomState extends ChatBlocState {
-  const LoadedChatRoomState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+  const LoadedChatRoomState({super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 //Select ChatRoom
 class SelectChatRoomState extends ChatBlocState {
-  const SelectChatRoomState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+  const SelectChatRoomState({super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 //Update LastMessage
 class UpdateLastMessageState extends ChatBlocState {
   const UpdateLastMessageState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+      {super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 //Update UnseenMessage
 class UpdateUnseenMessageState extends ChatBlocState {
   const UpdateUnseenMessageState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+      {super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 class EmptyUnseenMessageState extends ChatBlocState {
   const EmptyUnseenMessageState(
-      {super.buyingChatRooms,
-      super.sellingChatRooms,
-      super.totalUnseenMessageCount});
+      {super.chatRooms, super.totalUnseenMessageCount});
   @override
-  List<Object?> get props =>
-      [buyingChatRooms, sellingChatRooms, totalUnseenMessageCount];
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
 //Error

@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/main.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_options.dart';
@@ -29,7 +32,7 @@ class Global {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     //Firebase foreground message handler
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if (SocketService.currentChatLocation == null) {
         AwesomeNotifications().incrementGlobalBadgeCounter();
       }

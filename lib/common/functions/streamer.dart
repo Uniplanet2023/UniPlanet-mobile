@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class Streamer {
@@ -26,27 +27,18 @@ class Streamer {
         }
       }
       if (state is LoadedChatRoomState) {
-        for (var chatRoom in state.buyingChatRooms) {
+        for (var chatRoom in state.chatRooms) {
+          var targetUserId = chatRoom.seller.id == AuthRepository.userId
+              ? chatRoom.buyer.id
+              : chatRoom.seller.id;
           bool isTargetUserOnline = await SocketService.instance
               .joinChatAndCheckUserExist(
-                  chatId: chatRoom.id, targetUserId: chatRoom.seller.id);
+                  chatId: chatRoom.id, targetUserId: targetUserId);
           if (isTargetUserOnline) {
             if (context.mounted) {
               context
                   .read<StatusBloc>()
-                  .add(ConnectedEvent(userId: chatRoom.seller.id));
-            }
-          }
-        }
-        for (var chatRoom in state.sellingChatRooms) {
-          bool isTargetUserOnline = await SocketService.instance
-              .joinChatAndCheckUserExist(
-                  chatId: chatRoom.id, targetUserId: chatRoom.buyer.id);
-          if (isTargetUserOnline) {
-            if (context.mounted) {
-              context
-                  .read<StatusBloc>()
-                  .add(ConnectedEvent(userId: chatRoom.buyer.id));
+                  .add(ConnectedEvent(userId: targetUserId));
             }
           }
         }

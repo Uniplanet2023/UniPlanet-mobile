@@ -37,13 +37,6 @@ class _BottomBarState extends State<BottomBar> {
     Navigator.pushNamed(context, AppRoutes.addProductPage);
   }
 
-  void notificationLoad(BuildContext context) async {
-    // await FirebaseApi().initNotification();
-    if (context.mounted) {
-      SocketService.instance.connect(context);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -54,7 +47,7 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);
-    notificationLoad(context);
+
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==
@@ -82,7 +75,6 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.disposeChatListener();
     _streamer.disposeChatListener();
     _controller!.dispose();
-    SocketService.instance.disconnect();
     super.dispose();
   }
 

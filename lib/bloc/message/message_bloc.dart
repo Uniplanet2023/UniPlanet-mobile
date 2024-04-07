@@ -344,12 +344,12 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   @override
   void onChange(Change<MessageBlocState> change) {
     super.onChange(change);
-    print(change);
+    // print(change);
   }
 
   @override
   void onTransition(Transition<MessageBlocEvent, MessageBlocState> transition) {
     super.onTransition(transition);
-    print(transition);
+    // print(transition);
   }
 }

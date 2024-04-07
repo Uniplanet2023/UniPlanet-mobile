@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/models/get_chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
@@ -66,17 +67,20 @@ class ChatRepository {
     }
   }
 
-  Future<List<ChatRoom>> getChatRooms() async {
+  Future<GetChatRooms?> getChatRooms() async {
     try {
       Response res = await _dioClient.dio
           .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
 
-      List<ChatRoom> chatRoomList =
-          List<ChatRoom>.from(res.data.map((data) => ChatRoom.fromMap(data)));
-      return chatRoomList;
+      List<ChatRoom> chatRoomList = List<ChatRoom>.from(
+          res.data['chatList'].map((data) => ChatRoom.fromMap(data)));
+
+      return GetChatRooms(
+          chatRooms: chatRoomList,
+          totalUnseenMessageCount: res.data["totalUnseenMessage"]);
     } on DioException catch (e) {
       _handleDioException(e);
-      return [];
+      return null;
     }
   }
 

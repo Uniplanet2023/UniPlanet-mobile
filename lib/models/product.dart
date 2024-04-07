@@ -30,14 +30,14 @@ class Product {
   static initProduct() {
     return Product(
         id: "",
-        name: "",
-        status: "",
+        name: "test",
+        status: "test",
         seller: User.initialUser(),
-        description: "",
+        description: "test",
         likes: 0,
         numberOfChat: 0,
-        images: [""],
-        category: "",
+        images: ["test"],
+        category: "test",
         price: 0,
         createdAt: DateTime.now());
   }

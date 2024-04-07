@@ -40,21 +40,9 @@ class _ContactsListState extends State<ContactsList> {
             Message last;
             if (widget.list[index].lastMessage != null) {
               last = widget.list[index].lastMessage!;
+            } else {
+              last = Message.initMessage();
             }
-            last = innerContext.select<MessageBloc, Message>((bloc) {
-              if (bloc.state is ReadMessageState ||
-                  bloc.state is ReceivedMessageState ||
-                  bloc.state is LoadedMessageState) {
-                if ((bloc.state).chatMessages[widget.list[index].id] != null) {
-                  return bloc.state.chatMessages[widget.list[index].id]!.first;
-                }
-              }
-              if (widget.list[index].lastMessage != null) {
-                return widget.list[index].lastMessage!;
-              } else {
-                return Message.initMessage();
-              }
-            });
 
             return Column(
               children: [
@@ -99,13 +87,13 @@ class _ContactsListState extends State<ContactsList> {
                                 : Text(
                                     isTyping ? "Typing..." : last.message,
                                     style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: last.sender !=
-                                                  AuthRepository.userId &&
-                                              last.readDate == null
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
+                                        fontSize: 15,
+                                        fontWeight: last.sender !=
+                                                    AuthRepository.userId &&
+                                                last.readDate == null
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        overflow: TextOverflow.ellipsis),
                                   );
                           },
                         ),

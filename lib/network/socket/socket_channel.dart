@@ -20,6 +20,7 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
+import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 
 class SocketService {
@@ -41,13 +42,14 @@ class SocketService {
         messageURI,
         IO.OptionBuilder()
             .setTransports(['websocket'])
-            .disableAutoConnect()
-            .setReconnectionAttempts(100)
-            .setReconnectionDelay(1000)
+            .enableAutoConnect()
+            .setReconnectionAttempts(1000)
+            .setReconnectionDelay(100)
             .setQuery({"userId": userId, "school": AuthRepository.school!})
             .build());
   }
-  void connect(BuildContext context) {
+  void connect() {
+    BuildContext context = SnackbarGlobal.key.currentContext!;
     socket.onConnect((_) {
       if (imageMessagesToRetry.isNotEmpty) {
         resendUnacknowledgedImageMessages();
@@ -55,6 +57,31 @@ class SocketService {
       if (messagesToRetry.isNotEmpty) {
         resendUnacknowledgedMessages();
       }
+      socket.on('chat room created', (data) async {
+        print('chat room created');
+        var msg = data['message'];
+        var sender = data['sender'];
+
+        bool isUserOnline = await SocketService.instance
+            .joinChatAndCheckUserExist(
+                chatId: msg['chat'], targetUserId: msg['sender']);
+
+        await NotificationService.showNotification(
+          title: sender['name'],
+          body: msg['message'],
+          payload: {
+            "navigate": "true",
+          },
+        );
+        if (isUserOnline) {
+          if (context.mounted) {
+            context
+                .read<StatusBloc>()
+                .add(ConnectedEvent(userId: msg['sender']));
+          }
+        }
+      });
+
       socket.on('online user', (userId) {
         if (context.mounted) {
           context.read<StatusBloc>().add(ConnectedEvent(userId: userId));
@@ -250,6 +277,27 @@ class SocketService {
     }
   }
 
+  Future<bool> chatRoomCreateAndCheckUserExist({
+    required Message message,
+    required User sender,
+  }) async {
+    final Completer<bool> completer = Completer();
+
+    socket.emitWithAck(
+        "chat room created", {"messageJson": message, "senderJson": sender},
+        ack: (data) {
+      bool userExist = data;
+      if (userExist) {
+        completer.complete(true);
+      } else {
+        completer.complete(false);
+      }
+    });
+
+    return completer
+        .future; // This will return a Future<bool> that completes when the callback is called
+  }
+
   Future<bool> joinChatAndCheckUserExist({
     required String chatId,
     required String targetUserId,
@@ -257,8 +305,10 @@ class SocketService {
     final Completer<bool> completer = Completer();
 
     socket.emitWithAck(
-        "join chat", {"room": chatId, "targetUser": targetUserId}, ack: (data) {
-      if (data != null && data.length > 1 && data[1] == true) {
+        "join chat", {"chatRoomId": chatId, "targetUser": targetUserId},
+        ack: (data) {
+      bool userExist = data;
+      if (userExist) {
         completer.complete(true);
       } else {
         completer.complete(false);
@@ -341,6 +391,7 @@ class SocketService {
   }
 
   void disconnect() {
+    print('disconnect');
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Ensure to cancel the timer on disconnect
     }

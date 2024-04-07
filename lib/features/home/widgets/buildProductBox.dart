@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
@@ -92,7 +94,8 @@ class _ItemBoxState extends State<ItemBox> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        "${product.name[0].toUpperCase()}${product.name.substring(1).toLowerCase()}",
+                                        product.name[0].toUpperCase() +
+                                            product.name.substring(1),
                                         style: const TextStyle(
                                           fontSize: 16,
                                         ),

@@ -236,23 +236,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   BottomAppBar _buildBottomAppBar() {
     return BottomAppBar(
       child: BlocConsumer<ChatBloc, ChatBlocState>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is CreatedChatRoomState) {
-            // bool userOnline =
-            //     await SocketService.instance.joinChatAndCheckUserExist(
-            //   chatId: state.chatRoomCreated.id,
-            //   targetUserId: state.chatRoomCreated.seller.id,
-            // );
-            // if (userOnline) {
-            //   // Check if the widget is still mounted before proceeding
-            //   if (!mounted) return;
-            //   context.read<StatusBloc>().add(
-            //       StatusChangeEvent(userId: state.chatRoomCreated.seller.id));
-            // }
-            if (!mounted) return;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
-              "seller": state.buyingChatRooms.last.seller,
-              "chatRoom": state.buyingChatRooms.last
+              "seller": state.chatRooms.last.seller,
+              "chatRoom": state.chatRooms.last
             });
           }
         },
