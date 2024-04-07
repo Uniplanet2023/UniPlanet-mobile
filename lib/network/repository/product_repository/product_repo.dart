@@ -112,6 +112,7 @@ class ProductRepository {
     required String description,
     required double price,
     required String category,
+    required String location,
     required User seller,
   }) async {
     try {
@@ -123,6 +124,7 @@ class ProductRepository {
           'description': description,
           'price': price,
           'category': category,
+          'location': location,
           'seller': seller,
         },
         options: _dioClient.getDioOptions(),
@@ -256,5 +258,17 @@ class ProductRepository {
       print('DioException occurred: ${e.message}');
     }
     return productList;
+  }
+
+  void clickProduct(String productId) async {
+    try {
+      var response = await _dioClient.dio.get(
+        '$productURI/increase-click/$productId',
+        options: _dioClient.getDioOptions(),
+      );
+      print(response.data);
+    } on DioException catch (e) {
+      print('DioException occurred: ${e.message}');
+    }
   }
 }

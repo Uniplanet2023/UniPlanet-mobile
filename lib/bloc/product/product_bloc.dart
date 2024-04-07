@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 // Models
@@ -24,6 +25,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<UploadProductEvent>((event, emit) async {
       await _uploadProduct(event, emit);
     });
+    on<IncreaseClickProductEvent>((event, emit) async {
+      _increaseClickProduct(event, emit);
+    });
+  }
+  _increaseClickProduct(IncreaseClickProductEvent event, emit) async {
+    _productRepository.clickProduct(event.productId);
   }
 
   _uploadProduct(UploadProductEvent event, emit) async {
@@ -37,6 +44,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         description: event.description,
         price: event.price,
         seller: event.seller,
+        location: event.location,
       );
 
       if (productData != null) {

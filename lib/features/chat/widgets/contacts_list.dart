@@ -16,7 +16,8 @@ import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;
-  const ContactsList({super.key, required this.list});
+  final String sort;
+  const ContactsList({super.key, required this.list, required this.sort});
 
   @override
   State<ContactsList> createState() => _ContactsListState();

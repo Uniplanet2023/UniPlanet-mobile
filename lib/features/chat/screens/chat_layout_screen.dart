@@ -47,9 +47,37 @@ class _ChatListState extends State<ChatList> {
                   onPressed: () {},
                 ),
               ],
+              bottom: const TabBar(
+                indicatorColor: GlobalVariables.secondaryColor,
+                indicatorWeight: 4,
+                labelColor: GlobalVariables.secondaryColor,
+                unselectedLabelColor: Colors.grey,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                tabs: [
+                  Tab(
+                    text: 'By User',
+                  ),
+                  Tab(
+                    text: 'By Product',
+                  ),
+                ],
+              ),
             ),
-            body: ContactsList(
-              list: state.chatRooms,
+            body: TabBarView(
+              children: [
+                // Buy Items Tab
+                ContactsList(
+                  list: state.chatRooms,
+                  sort: 'user',
+                ),
+                // Sell Items Tab
+                ContactsList(
+                  list: state.chatRooms,
+                  sort: 'product',
+                ),
+              ],
             ),
           );
         },

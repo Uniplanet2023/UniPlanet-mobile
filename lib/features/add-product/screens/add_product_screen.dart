@@ -27,9 +27,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController meetingLocationController =
       TextEditingController();
-
-  String status = ON_SALE; // Initial toggle state for "For Sale"
+  bool freeStock = false;
   String category = 'Mobiles';
+  String selectedLocation = 'On Campus';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
 
@@ -41,6 +41,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
     priceController.dispose();
     meetingLocationController.dispose();
   }
+
+  List<String> locations = [
+    'On Campus',
+    'Off Campus',
+    'Custom Location',
+  ];
 
   List<String> productCategories = [
     'Mobiles',
@@ -60,13 +66,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       context.read<ProductBloc>().add(UploadProductEvent(
           productName: productNameController.text,
           description: descriptionController.text,
-          price: status == ON_SALE
+          price: !freeStock
               ? double.parse(
                   double.parse(priceController.text).toStringAsFixed(2))
               : 0,
           category: category,
-          status: status,
+          status: 'On Sale',
           images: images,
+          location: meetingLocationController.text,
           seller: context.read<AccountBloc>().state.account.user));
     }
   }
@@ -80,7 +87,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+    // bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     var state = context.watch<ProductBloc>().state;
 
     return BlocListener<ProductBloc, ProductState>(
@@ -187,23 +194,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         onPressed: (int index) {
                           setState(() {
                             if (index == 0) {
-                              status = ON_SALE;
-                            } else {
-                              status = FREE_STOCK;
-                            }
-                            if (status == FREE_STOCK) {
+                              freeStock = false;
                               priceController.clear();
+                            } else {
+                              freeStock = true;
                             }
                           });
                         },
-                        isSelected: [status == ON_SALE, status == FREE_STOCK],
+                        isSelected: [freeStock, !freeStock],
                         children: <Widget>[
                           Container(
                             margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
-                              color: status == ON_SALE
-                                  ? Colors.black
-                                  : Colors.white,
+                              color: !freeStock ? Colors.black : Colors.white,
                               borderRadius: BorderRadius.circular(30),
                               border:
                                   Border.all(width: 1, color: Colors.black45),
@@ -214,16 +217,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               'For Sale',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: status == FREE_STOCK
-                                      ? Colors.black
-                                      : Colors.white),
+                                  color:
+                                      freeStock ? Colors.black : Colors.white),
                             ),
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              color: status == FREE_STOCK
-                                  ? Colors.black
-                                  : Colors.white,
+                              color: freeStock ? Colors.black : Colors.white,
                               borderRadius: BorderRadius.circular(30),
                               border:
                                   Border.all(width: 1, color: Colors.black45),
@@ -234,42 +234,98 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               'Free',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: status == FREE_STOCK
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color:
+                                      freeStock ? Colors.white : Colors.black),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 5),
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
                       maxLength: 30,
                     ),
-                    const SizedBox(height: 5),
-                    CustomTextField(
-                      controller: priceController,
-                      hintText: 'Price',
-                      enabled: status == ON_SALE,
-                      keyboardType: const TextInputType.numberWithOptions(
-                          signed: false,
-                          decimal: true), // Set the keyboard type to number
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,9}')),
-                      ],
-                      prefixText: status == ON_SALE ? '\$' : '',
-                      validatorEnabled: status != FREE_STOCK,
+                    if (!freeStock)
+                      CustomTextField(
+                        controller: priceController,
+                        hintText: 'Price',
+                        enabled: !freeStock,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            signed: false,
+                            decimal: true), // Set the keyboard type to number
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,9}')),
+                        ],
+                        prefixText: !freeStock ? '\$' : '',
+                        validatorEnabled: freeStock,
+                      ),
+                    const SizedBox(height: 15),
+                    Container(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey, width: 1),
+                      ),
+                      child: DropdownButton<String>(
+                        value: category,
+                        underline: const SizedBox(),
+                        dropdownColor: Colors.white,
+                        isExpanded: true,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: productCategories.map((String category) {
+                          return DropdownMenuItem(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            category = newValue!;
+                          });
+                        },
+                      ),
                     ),
-                    const SizedBox(height: 25),
-                    CustomTextField(
-                      controller: meetingLocationController,
-                      hintText: 'where to meet',
-                      maxLength: 30,
+                    const SizedBox(height: 15),
+                    Container(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey, width: 1),
+                      ),
+                      child: DropdownButton<String>(
+                        value: selectedLocation,
+                        underline: const SizedBox(),
+                        dropdownColor: Colors.white,
+                        isExpanded: true,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: locations.map((String location) {
+                          return DropdownMenuItem(
+                            value: location,
+                            child: Text(location),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue == 'CustomLocation') {
+                            meetingLocationController.clear();
+                          } else {
+                            meetingLocationController.text = newValue!;
+                          }
+                          setState(() {
+                            selectedLocation = newValue!;
+                          });
+                        },
+                      ),
                     ),
-                    const SizedBox(height: 5),
+                    if (selectedLocation == 'Custom Location') ...[
+                      CustomTextField(
+                        controller: meetingLocationController,
+                        hintText: 'Enter custom meeting location',
+                        maxLength: 30,
+                      ),
+                    ],
+                    const SizedBox(height: 15),
                     CustomTextField(
                       controller: descriptionController,
                       hintText: 'Description',
@@ -277,28 +333,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       maxLength: 300,
                       keyboardType: TextInputType.multiline,
                     ),
-                    const SizedBox(height: 5),
-                    SizedBox(
-                      width: double.infinity,
-                      child: DropdownButton(
-                        value: category,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: productCategories.map((String item) {
-                          return DropdownMenuItem(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (String? newVal) {
-                          setState(() {
-                            category = newVal!;
-                          });
-                        },
-                      ),
-                    ),
 
                     const SizedBox(
-                      height: 150,
+                      height: 130,
                     ),
                   ],
                 ),
@@ -306,28 +343,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
           ),
         ),
-        bottomSheet: isKeyboardVisible
-            ? const SizedBox.shrink()
-            : Container(
-                margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
-                child: (state is ProductUploadingState)
-                    ? ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 50),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.primary,
-                        ),
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ))
-                    : CustomButton(
-                        text: 'Sell',
-                        onTap: () => sellProduct(context),
-                      ),
-              ),
+        bottomSheet: Container(
+          margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
+          child: (state is ProductUploadingState)
+              ? ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ))
+              : CustomButton(
+                  text: 'Sell',
+                  onTap: () => sellProduct(context),
+                ),
+        ),
       ),
     );
   }
