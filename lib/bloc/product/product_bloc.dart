@@ -18,13 +18,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<LoadProductEvent>((event, emit) async {
       await _loadProduct(event, emit);
     });
+    on<LoadMoreProductEvent>((event, emit) async {
+      await _loadMoreProduct(event, emit);
+    });
     on<UploadProductEvent>((event, emit) async {
       await _uploadProduct(event, emit);
     });
   }
 
   _uploadProduct(UploadProductEvent event, emit) async {
-    emit(ProductUploadingState(productList: state.productList));
+    emit(ProductUploadingState(
+        productList: state.productList, page: state.page));
     try {
       Product? productData = await _productRepository.uploadProduct(
         productName: event.productName,
@@ -36,7 +40,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       );
 
       if (productData != null) {
-        emit(ProductUploadedState(productList: state.productList));
+        emit(ProductUploadedState(
+            productList: state.productList, page: state.page));
         Product? product =
             await _productRepository.uploadImagesAndUpdateProduct(
                 images: event.images, productId: productData.id);
@@ -45,21 +50,33 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           productList.insert(0, product);
           emit(ProductImageUploadedState(productList: productList));
         } else {
-          emit(const ErrorProductUploadState("Error uploading product"));
+          emit(ErrorProductUploadState("Error uploading product",
+              productList: state.productList, page: state.page));
         }
       } else {
-        emit(const ErrorProductUploadState("Error uploading product"));
+        emit(ErrorProductUploadState("Error uploading product",
+            productList: state.productList, page: state.page));
       }
     } on Exception catch (e) {
-      emit(ErrorProductUploadState(e.toString()));
+      emit(ErrorProductUploadState(e.toString(),
+          productList: state.productList, page: state.page));
     }
   }
 
-  _loadProduct(LoadProductEvent event, emit) async {
-    emit(LoadingProductState(productList: state.productList));
+  _loadMoreProduct(LoadMoreProductEvent event, emit) async {
+    emit(LoadingProductState(productList: state.productList, page: state.page));
+    int nextPage = state.page + 1;
     List<Product> result =
-        await _productRepository.fetchProducts(page: event.page);
-    emit(LoadedProductState(productList: result));
+        await _productRepository.fetchProducts(page: nextPage);
+    List<Product> productList = state.productList;
+    productList.addAll(result);
+    emit(LoadedProductState(productList: productList, page: nextPage));
+  }
+
+  _loadProduct(LoadProductEvent event, emit) async {
+    emit(LoadingProductState(productList: state.productList, page: 1));
+    List<Product> result = await _productRepository.fetchProducts();
+    emit(LoadedProductState(productList: result, page: 1));
   }
 
   @override

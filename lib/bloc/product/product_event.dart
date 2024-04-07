@@ -5,12 +5,16 @@ sealed class ProductEvent extends Equatable {
 }
 
 class LoadProductEvent extends ProductEvent {
-  final int? page;
-  const LoadProductEvent({this.page});
-
+  const LoadProductEvent();
   @override
   // TODO: implement props
-  List<Object?> get props => [page];
+  List<Object?> get props => [];
+}
+
+class LoadMoreProductEvent extends ProductEvent {
+  const LoadMoreProductEvent();
+  @override
+  List<Object?> get props => [];
 }
 
 class UploadProductEvent extends ProductEvent {
