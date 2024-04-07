@@ -34,9 +34,6 @@ class CategoriesPage extends StatelessWidget {
                 category: category.description,
               ),
             ),
-          const SizedBox(
-            height: 150,
-          )
         ],
       ),
     );

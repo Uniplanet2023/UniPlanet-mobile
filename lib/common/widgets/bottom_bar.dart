@@ -99,11 +99,22 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      HomeScreen(controller: _controller!),
-      const CategoriesPage(),
+      Padding(
+        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: HomeScreen(controller: _controller!),
+      ),
+      const Padding(
+        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: CategoriesPage(),
+      ),
       const AddProductScreen(),
-      const ChatList(),
-      const AccountScreen(),
+      const Padding(
+          padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+          child: ChatList()),
+      const Padding(
+        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: AccountScreen(),
+      ),
     ];
     return Scaffold(
         body: Stack(

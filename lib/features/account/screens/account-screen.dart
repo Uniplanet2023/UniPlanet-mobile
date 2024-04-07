@@ -39,7 +39,7 @@ class _AccountScreen extends State<AccountScreen> {
         title: const Text('My Account'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 300),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 80),
         child: Column(
           children: [
             UserHeader(
