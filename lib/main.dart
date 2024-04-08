@@ -68,7 +68,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  static GlobalKey mainContext = GlobalKey();
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -92,19 +92,31 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
+    print('dispose  called main.dart');
+    SocketService.instance.disconnect();
     WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      // App is resumed (brought to foreground)
+      SocketService.instance.connect();
       SocketService.isOnline = true;
       if (SocketService.currentChatLocation != null) {
         SocketService.instance
             .readAllMessages(SocketService.currentChatLocation!);
       }
     } else if (state == AppLifecycleState.paused) {
+      // App is paused (sent to background)
       SocketService.isOnline = false;
+    } else if (state == AppLifecycleState.inactive) {
+      // App is inactive (terminated)
+      SocketService.isOnline = false;
+    } else if (state == AppLifecycleState.detached) {
+      // App is detached (app suspended in the background)
+      SocketService.isOnline = false;
+      SocketService.instance.disconnect();
     }
   }
 
