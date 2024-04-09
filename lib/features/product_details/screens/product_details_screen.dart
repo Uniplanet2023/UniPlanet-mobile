@@ -255,7 +255,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               _buildPriceText(widget.product.price),
               widget.product.seller.id == currentUser.id
                   ? SizedBox(
-                      child: widget.product.status == 'onSale'
+                      child: widget.product.status == 'On Sale'
                           ? Row(
                               children: [
                                 IconButton(
@@ -289,7 +289,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       Icons.delete_forever_outlined,
                                       () {}),
                                   icon: const Icon(
-                                    Icons.archive_outlined,
+                                    Icons.delete_forever_outlined,
                                     color: Colors.red,
                                   ),
                                 ),

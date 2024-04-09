@@ -268,7 +268,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                     const SizedBox(height: 15),
                     Container(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      height: 60,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(color: Colors.grey, width: 1),
@@ -294,7 +296,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ),
                     const SizedBox(height: 15),
                     Container(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      height: 60,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(color: Colors.grey, width: 1),
@@ -324,6 +328,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                     ),
                     if (selectedLocation == 'Custom Location') ...[
+                      const SizedBox(height: 15),
                       CustomTextField(
                         controller: meetingLocationController,
                         hintText: 'Enter custom meeting location',

@@ -60,7 +60,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                         )
                                       : Container(
                                           foregroundDecoration: BoxDecoration(
-                                            color: (product.status == 'onSale')
+                                            color: (product.status == 'On Sale')
                                                 ? Colors.transparent
                                                 : Colors.grey,
                                             backgroundBlendMode:
@@ -166,7 +166,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                           Icon(
                                             Icons.location_on_outlined,
                                             size: 18,
-                                            color: product.status == 'onSale'
+                                            color: product.status == 'On Sale'
                                                 ? GlobalVariables.secondaryColor
                                                 : Colors.grey,
                                           ),
@@ -175,7 +175,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color:
-                                                    product.status == 'onSale'
+                                                    product.status == 'On Sale'
                                                         ? GlobalVariables
                                                             .secondaryColor
                                                         : Colors.grey),
@@ -276,7 +276,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                               ),
                             ],
                           ),
-                          if (product.status == 'onSale' &&
+                          if (product.status == 'On Sale' &&
                               product.seller.id == AuthRepository.userId)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
