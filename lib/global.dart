@@ -16,7 +16,7 @@ import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class Global {
   static final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
-
+  static late SocketService socketService;
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -38,7 +38,6 @@ class Global {
       }
 
       print("Received a message in the foreground: $message");
-      print(message.toString());
       // You can still handle data messages here, if needed.
     });
     // Awesome Notifications initialization

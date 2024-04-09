@@ -5,6 +5,7 @@ import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
@@ -27,8 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoomId));
     SocketService.currentChatLocation = widget.chatRoomId;
-    SocketService.isOnline = true;
-    SocketService.instance.readAllMessages(widget.chatRoomId);
+    Global.socketService.readAllMessages(widget.chatRoomId);
     super.initState();
   }
 
@@ -49,7 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _scrollController.dispose();
     SocketService.currentChatLocation = null;
-    SocketService.isOnline = false;
     super.dispose();
   }
 

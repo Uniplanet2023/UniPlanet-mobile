@@ -42,7 +42,7 @@ class DioClient {
     cookieJar.deleteAll();
   }
 
-  Future<void> getSessionToken() async {
+  Future<String?> getSessionToken() async {
     final tempPath = _tempDir.path;
 
     var cookieJar = PersistCookieJar(
@@ -62,6 +62,7 @@ class DioClient {
       }
     }
     _sessionToken = sessionToken;
+    return sessionToken;
   }
 
   String? get session => _sessionToken;

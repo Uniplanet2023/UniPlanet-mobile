@@ -1,18 +1,22 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/api_def/display_error_messages.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo_interface.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class AuthRepository implements IAuthRepository {
   final DioClient _dioClient;
   static String? userId;
   static String? school;
+  static String? email;
 
   AuthRepository(this._dioClient);
   @override
@@ -61,10 +65,10 @@ class AuthRepository implements IAuthRepository {
 
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
+        prefs.setString('userRecord', jsonEncode(res.data));
         userId = res.data['userId'];
         school = res.data['school'];
-        prefs.setString(
-            'userRecord', jsonEncode({'userId': userId, 'school': school}));
+        email = res.data['email'];
       }
       return msg;
     } on DioException catch (e) {
@@ -118,24 +122,27 @@ class AuthRepository implements IAuthRepository {
   Future<bool> tokenValidation() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userData = prefs.getString('userRecord');
+      var userData = prefs.getString('userData');
       var userRecord = jsonDecode(userData.toString());
-
-      if (userRecord != null) {
-        userId = userRecord['userId'];
-        school = userRecord['school'];
+      var token = await DioClient.instance.getSessionToken();
+      if (token == null || userRecord == null) {
+        Response res = await _dioClient.dio
+            .post('$authURI/token-login', options: _dioClient.getDioOptions());
+        if (res.data['id'] != null) {
+          prefs.setString('userData', jsonEncode(res.data));
+          userId = res.data['id'];
+          school = res.data['school'];
+          email = res.data['email'];
+          return true;
+        }
+      } else {
+        var userInfo = jsonDecode(userData!);
+        userId = userInfo['id'];
+        school = userInfo['school'];
+        email = userInfo['email'];
         return true;
       }
       return false;
-      // var res = await _dioClient.dio
-      //     .post('$authURI/token-login', options: _dioClient.getDioOptions());
-
-      // String msg = displayErrorMessages(res.toString());
-      // if (msg == "success") {
-      //   userId = res.data['userId'];
-      //   school = res.data['school'];
-      //   return res.data['access'];
-      // }
     } on DioException catch (e) {
       print(e);
     }
@@ -164,6 +171,28 @@ class AuthRepository implements IAuthRepository {
       SnackbarGlobal.showSnackBar(
         "Something went wrong!",
       );
+    }
+  }
+
+  @override
+  Future<String> updatePassword({
+    required String password,
+    required String newPassword,
+  }) async {
+    var res = await _dioClient.dio.put('$authURI/update-password',
+        data: jsonEncode({'password': password, 'newPassword': newPassword}),
+        options: _dioClient.getDioOptions());
+
+    if (res.data['message'] == "Password updated successfully") {
+      SnackbarGlobal.showSnackBar(
+        "Password updated successfully",
+      );
+      return "Password Updated Successfully";
+    } else {
+      SnackbarGlobal.showSnackBar(
+        "Something went wrong!",
+      );
+      return "Password Update Failed";
     }
   }
 

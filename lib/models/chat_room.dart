@@ -55,19 +55,19 @@ class ChatRoom {
       'seller': seller.toMap(),
       'buyer': buyer.toMap(),
       'productId': productId,
-      'lastMessage': lastMessage != null ? lastMessage!.toMap() : null,
+      'lastMessage': lastMessage?.toMap(),
       'unseenMessageCount': unseenMessageCount,
     };
   }
 
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
-      id: map['chat']['id'],
-      seller: User.fromMap(map['chat']['seller']),
-      buyer: User.fromMap(map['chat']['buyer']),
-      productId: map['chat']['productId'],
-      lastMessage: map['chat']['lastMessage'] != null
-          ? Message.fromMap(map['chat']['lastMessage'])
+      id: map['id'],
+      seller: User.fromMap(map['seller']),
+      buyer: User.fromMap(map['buyer']),
+      productId: map['productId'],
+      lastMessage: map['lastMessage'] != null
+          ? Message.fromMap(map['lastMessage'])
           : null,
       unseenMessageCount: map['unseenMessageCount'] ?? 0,
     );

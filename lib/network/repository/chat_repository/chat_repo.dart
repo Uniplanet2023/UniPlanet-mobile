@@ -32,7 +32,7 @@ class ChatRepository {
         },
       );
 
-      chatRoom = ChatRoom.fromMap(res.data);
+      chatRoom = ChatRoom.fromMap(res.data['chat']);
     } on DioException catch (e) {
       _handleDioException(e);
     }
@@ -73,7 +73,7 @@ class ChatRepository {
           .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
 
       List<ChatRoom> chatRoomList = List<ChatRoom>.from(
-          res.data['chatList'].map((data) => ChatRoom.fromMap(data)));
+          res.data['chatList'].map((data) => ChatRoom.fromMap(data['chat'])));
 
       return GetChatRooms(
           chatRooms: chatRoomList,

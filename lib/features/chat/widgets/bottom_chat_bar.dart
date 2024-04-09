@@ -151,7 +151,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
   Future<Message> uploadMessage(Message message) async {
     Message sentMessage = message;
     try {
-      sentMessage = await SocketService.instance
+      sentMessage = await Global.socketService
           .sendMessage(
         id: message.id,
         message: message.message,
@@ -221,7 +221,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   controller: _messageController,
                   onChanged: (val) {
                     if (val.isNotEmpty) {
-                      SocketService.instance
+                      Global.socketService
                           .sendTypingEvent(widget.chatRoomId, context);
                       setState(() {
                         isShowSendButton = true;
@@ -234,7 +234,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   },
                   onEditingComplete: () => sendTextMessage(),
                   onTapOutside: (_) {
-                    SocketService.instance
+                    Global.socketService
                         .sendStopTypingEvent(widget.chatRoomId, context);
                   },
                   decoration: InputDecoration(

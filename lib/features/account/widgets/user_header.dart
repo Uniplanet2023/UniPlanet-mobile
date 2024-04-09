@@ -64,8 +64,8 @@ class _UserHeaderState extends State<UserHeader> {
                       tag: 'user-pfp',
                       child: CircleAvatar(
                         radius: 40,
-                        backgroundImage:
-                            NetworkImage('https://via.placeholder.com/150'),
+                        backgroundImage: NetworkImage(
+                            'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg'),
                       ),
                     ),
                   ),

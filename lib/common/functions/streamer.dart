@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
@@ -12,26 +13,12 @@ class Streamer {
   void addChatListener(BuildContext context) {
     _chatStreamSubscription =
         context.read<ChatBloc>().stream.listen((state) async {
-      if (state is CreatedChatRoomState) {
-        bool userOnline =
-            await SocketService.instance.joinChatAndCheckUserExist(
-          chatId: state.chatRoomCreated.id,
-          targetUserId: state.chatRoomCreated.seller.id,
-        );
-        if (userOnline) {
-          // Check if the widget is still mounted before proceeding
-          if (!context.mounted) return;
-          context
-              .read<StatusBloc>()
-              .add(ConnectedEvent(userId: state.chatRoomCreated.seller.id));
-        }
-      }
       if (state is LoadedChatRoomState) {
         for (var chatRoom in state.chatRooms) {
           var targetUserId = chatRoom.seller.id == AuthRepository.userId
               ? chatRoom.buyer.id
               : chatRoom.seller.id;
-          bool isTargetUserOnline = await SocketService.instance
+          bool isTargetUserOnline = await Global.socketService
               .joinChatAndCheckUserExist(
                   chatId: chatRoom.id, targetUserId: targetUserId);
           if (isTargetUserOnline) {

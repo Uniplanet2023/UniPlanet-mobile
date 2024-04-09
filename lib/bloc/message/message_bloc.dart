@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
+import 'package:uniplanet_mobile/global.dart';
 // Models
 import 'package:uniplanet_mobile/models/message.dart';
 // Repository
@@ -254,7 +255,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
         pendingMessages: state.pendingMessages));
 
     try {
-      Message sentMessage = await SocketService.instance
+      Message sentMessage = await Global.socketService
           .sendMessage(
         id: uniqueId,
         message: event.message,

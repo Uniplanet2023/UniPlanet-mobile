@@ -41,6 +41,16 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<UpdateUnseenMessageEvent>((event, emit) {
       _updateUnseenMessage(event, emit);
     });
+    on<AddChatRoomEvent>((event, emit) {
+      _addChatRoom(event, emit);
+    });
+  }
+  _addChatRoom(AddChatRoomEvent event, emit) {
+    state.chatRooms.insert(0, event.chatRoom);
+    emit(AddChatRoomState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
   }
 
   _emptyUnseenMessage(EmptyUnseenMessageEvent event, emit) {
@@ -133,22 +143,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         buyer: event.buyer,
         productId: event.productId,
       );
-      Message msg = Message(
-        id: '',
-        chat: chatRoom.id,
-        sender: event.buyer.id,
-        receiver: event.seller.id,
-        message: '${event.buyer.name} has started a conversation',
-        messageType: MessageEnum.text.value,
-        status: MessageStatusEnum.received.value,
-        createdAt: DateTime.now(),
-      );
 
-      bool userOnline =
-          await SocketService.instance.chatRoomCreateAndCheckUserExist(
-        sender: event.buyer,
-        message: msg,
-      );
+      bool userOnline = await Global.socketService
+          .chatRoomCreateAndCheckUserExist(chat: chatRoom);
       if (userOnline) {
         // Check if the widget is still mounted before proceeding
         if (!SnackbarGlobal.key.currentContext!.mounted) return;
