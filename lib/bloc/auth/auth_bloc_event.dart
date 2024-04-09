@@ -71,3 +71,12 @@ class UpdateUserNotificationEvent extends AuthEvent {
   @override
   List<Object> get props => [unSeenMessageNum];
 }
+
+class UpdatePasswordEvent extends AuthEvent {
+  final String password;
+  final String newPassword;
+  const UpdatePasswordEvent(
+      {required this.password, required this.newPassword});
+  @override
+  List<Object> get props => [password, newPassword];
+}

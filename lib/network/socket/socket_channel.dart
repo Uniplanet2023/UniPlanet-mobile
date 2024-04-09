@@ -1,53 +1,44 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
-import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
-import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/global.dart';
+import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/image_message.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/notification_service.dart';
-import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 
 class SocketService {
-  late String userId;
-  static List<Message> messagesToRetry = [];
+  String userId;
   static List<ImageMessage> imageMessagesToRetry = [];
-  static final SocketService _instance = SocketService._internal();
-  static SocketService get instance => _instance;
-
+  static List<Message> messagesToRetry = [];
   late final IO.Socket socket;
-  static bool isOnline = false;
   static String? currentChatLocation;
 
-  Timer? _typingTimer; // Added to keep track of the typing event timer
-
-  SocketService._internal() {
-    userId = AuthRepository.userId!;
+  SocketService(this.userId) {
     socket = IO.io(
         messageURI,
         IO.OptionBuilder()
             .setTransports(['websocket'])
-            .enableAutoConnect()
+            .disableAutoConnect()
             .setReconnectionAttempts(1000)
             .setReconnectionDelay(100)
-            .setQuery({"userId": userId, "school": AuthRepository.school!})
+            .setQuery({"userId": userId})
             .build());
   }
+
+  Timer? _typingTimer; // Added to keep track of the typing event timer
+
+  // SocketService._internal() {
+
+  // }
   void connect() {
     BuildContext context = SnackbarGlobal.key.currentContext!;
     socket.onConnect((_) {
@@ -59,25 +50,26 @@ class SocketService {
       }
       socket.on('chat room created', (data) async {
         print('chat room created');
-        var msg = data['message'];
-        var sender = data['sender'];
-
-        bool isUserOnline = await SocketService.instance
-            .joinChatAndCheckUserExist(
-                chatId: msg['chat'], targetUserId: msg['sender']);
+        var chat = jsonDecode(data);
+        bool isUserOnline = await joinChatAndCheckUserExist(
+            chatId: chat['id'], targetUserId: chat['seller']['id']);
 
         await NotificationService.showNotification(
-          title: sender['name'],
-          body: msg['message'],
+          title: chat['seller']['name'],
+          body: '${chat['seller']['name']} has started a conversation',
           payload: {
             "navigate": "true",
           },
         );
+        ChatRoom chatRoom = ChatRoom.fromMap(chat);
+        if (context.mounted) {
+          context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
+        }
         if (isUserOnline) {
           if (context.mounted) {
             context
                 .read<StatusBloc>()
-                .add(ConnectedEvent(userId: msg['sender']));
+                .add(ConnectedEvent(userId: chat['seller']['id']));
           }
         }
       });
@@ -119,8 +111,7 @@ class SocketService {
               .read<ChatBloc>()
               .add(UpdateChatRoomLastMessageEvent(receivedMessage));
           //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
-          if (isOnline &&
-              currentChatLocation == receivedMessage.chat &&
+          if (currentChatLocation == receivedMessage.chat &&
               receivedMessage.receiver == userId) {
             readAllMessages(currentChatLocation!);
           } else if (receivedMessage.receiver == userId) {
@@ -147,7 +138,7 @@ class SocketService {
       print('FirebaseToken: ${FirebaseApi.firebaseToken}');
       if (FirebaseApi.firebaseToken == null) {
         print('FirebaseToken is null');
-      } else {
+      } else if (context.read<AuthBloc>().state is Authorized) {
         socket.emit("setup", FirebaseApi.firebaseToken);
       }
     });
@@ -182,16 +173,14 @@ class SocketService {
 
         if (response.secureUrl.isEmpty) return;
 
-        sentMessage = await SocketService.instance
-            .sendMessage(
+        sentMessage = await sendMessage(
           id: imageMessage.message.id,
           message: response.secureUrl,
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
           context: SnackbarGlobal.key.currentContext!,
-        )
-            .timeout(
+        ).timeout(
           const Duration(seconds: 20),
           onTimeout: () {
             throw TimeoutException('Message sending timed out');
@@ -277,15 +266,10 @@ class SocketService {
     }
   }
 
-  Future<bool> chatRoomCreateAndCheckUserExist({
-    required Message message,
-    required User sender,
-  }) async {
+  Future<bool> chatRoomCreateAndCheckUserExist({required ChatRoom chat}) async {
     final Completer<bool> completer = Completer();
 
-    socket.emitWithAck(
-        "chat room created", {"messageJson": message, "senderJson": sender},
-        ack: (data) {
+    socket.emitWithAck("chat room created", chat, ack: (data) {
       bool userExist = data;
       if (userExist) {
         completer.complete(true);
@@ -396,6 +380,7 @@ class SocketService {
       _typingTimer?.cancel(); // Ensure to cancel the timer on disconnect
     }
     socket.disconnect();
+
     if (SnackbarGlobal.key.currentContext != null) {
       SnackbarGlobal.key.currentContext!
           .read<StatusBloc>()

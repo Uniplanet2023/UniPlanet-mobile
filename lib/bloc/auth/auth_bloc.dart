@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/network/api_def/api_status/signup.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
@@ -11,6 +14,7 @@ part 'auth_state/basic_state.dart';
 part 'auth_state/logout_state.dart';
 part 'auth_state/signin_state.dart';
 part 'auth_state/signup_state.dart';
+part 'auth_state/update_password_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -38,7 +42,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutEvent>((event, emit) async {
       await _logOutFunction(event, emit);
     });
+    on<UpdatePasswordEvent>((event, emit) async {
+      await _updatePasswordFunction(event, emit);
+    });
   }
+  _updatePasswordFunction(UpdatePasswordEvent event, emit) async {
+    emit(const UpdatePasswordState());
+    String message = await _authRepository.updatePassword(
+        password: event.password, newPassword: event.newPassword);
+    if (message == 'Password Updated Successfully') {
+      emit(const UpdatePasswordCompleteState());
+    } else {
+      emit(const UpdatePasswordFailedState());
+    }
+  }
+
   _otpRequestFunction(RequestOtpEvent event, emit) async {
     emit(const OTPValidationRequestState());
     String hash = await _authRepository.requestOtp(email: event.email);
@@ -52,9 +70,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   _tokenValidationFunction(TokenValidationEvent event, emit) async {
     emit(const TokenValidatingState());
 
-    await _authRepository.tokenValidation()
-        ? emit(const Authorized())
-        : emit(const AuthenticationDeny());
+    bool auth = await _authRepository.tokenValidation();
+    if (auth) {
+      Global.socketService = SocketService(AuthRepository.userId!);
+      Global.socketService.connect();
+      emit(const Authorized());
+    } else {
+      emit(const AuthenticationDeny());
+    }
   }
 
   _otpValidationFunction(OtpValidationEvent event, emit) async {
@@ -91,6 +114,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       String msg = await _authRepository.signInUser(
           email: event.email, password: event.password);
       if (msg == 'success') {
+        Global.socketService.connect();
         emit(const Authorized());
       } else if (msg == USER_NOT_VERIFIED) {
         emit(const UserNotVerifiedState());
@@ -106,7 +130,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const LogOutState());
     String message = await _authRepository.logOut();
     if (message == 'Logged Out Successfully') {
-      SocketService.instance.disconnect();
+      Global.socketService.disconnect();
       emit(const LogOutCompleteState());
     } else {
       emit(const LogOutFailedState());

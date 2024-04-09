@@ -72,8 +72,8 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void dispose() {
     _streamer.disposeChatListener();
-    _streamer.disposeChatListener();
-    _streamer.disposeChatListener();
+    _streamer.disposeAccountListener();
+    _streamer.disposeProductListener();
     _controller!.dispose();
     super.dispose();
   }

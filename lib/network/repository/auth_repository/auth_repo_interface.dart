@@ -26,4 +26,7 @@ abstract class IAuthRepository {
   Future<bool> otpValidation(String email, String hash, String otpCode);
 
   Future<String> logOut();
+
+  Future<String> updatePassword(
+      {required String password, required String newPassword});
 }

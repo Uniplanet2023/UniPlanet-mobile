@@ -17,6 +17,13 @@ class CreateChatRoomEvent extends ChatBlocEvent {
   List<Object> get props => [seller, buyer, productId];
 }
 
+class AddChatRoomEvent extends ChatBlocEvent {
+  final ChatRoom chatRoom;
+  const AddChatRoomEvent(this.chatRoom);
+  @override
+  List<Object> get props => [chatRoom];
+}
+
 class LoadChatRoomEvent extends ChatBlocEvent {
   const LoadChatRoomEvent();
   @override

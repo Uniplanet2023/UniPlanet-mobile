@@ -13,29 +13,29 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
-import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
-import 'package:uniplanet_mobile/network/notification/notification_service.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
+import 'package:uniplanet_mobile/network/notification/notification_handler/index.dart';
 import 'package:uniplanet_mobile/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(
-    RemoteMessage sdfmessage) async {
-  print("Handling a background message:");
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint("Handling a background message:");
 
-  var message = jsonDecode(sdfmessage.data['message']);
-  var sender = jsonDecode(sdfmessage.data['sender']);
-  await NotificationService.showNotification(
-    title: sender['name'],
-    body: message['message'],
-    payload: {
-      "navigate": "true",
-      "sender": sdfmessage.data['sender'],
-      "message": sdfmessage.data['message'],
-    },
-  );
+  if (message.data.containsKey('type')) {
+    final String type = message.data['type'];
+    switch (type) {
+      case 'new message':
+        newMessageHandler(message);
+        break;
+      case 'creating chat':
+        creatingChatHandler(message);
+        debugPrint('notification');
+        break;
+      default:
+        debugPrint('Unable to handle message');
+    }
+  }
 }
 
 void main() async {
@@ -85,7 +85,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     context.read<AuthBloc>().add(const TokenValidationEvent());
     context.read<ProductBloc>().add(const LoadProductEvent());
-
     splashScreenController();
   }
 
@@ -93,30 +92,28 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     print('dispose  called main.dart');
-    SocketService.instance.disconnect();
+    Global.socketService.disconnect();
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  // This is the callback that is called when the system puts the app in the background
+  // Resume : inactivity -> resume
+  // Pause : inactivity -> pause
+  // Detached : inactivity -> detached
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      // App is resumed (brought to foreground)
-      SocketService.instance.connect();
-      SocketService.isOnline = true;
-      if (SocketService.currentChatLocation != null) {
-        SocketService.instance
-            .readAllMessages(SocketService.currentChatLocation!);
-      }
+      print('resumed');
     } else if (state == AppLifecycleState.paused) {
+      print('paused');
       // App is paused (sent to background)
-      SocketService.isOnline = false;
     } else if (state == AppLifecycleState.inactive) {
+      print('inactive');
       // App is inactive (terminated)
-      SocketService.isOnline = false;
     } else if (state == AppLifecycleState.detached) {
+      print('detached');
       // App is detached (app suspended in the background)
-      SocketService.isOnline = false;
-      SocketService.instance.disconnect();
+      Global.socketService.disconnect();
     }
   }
 
@@ -144,7 +141,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         onGenerateRoute: (settings) => generateRoute(settings),
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           if (state is Authorized) {
-            SocketService.instance.connect();
             return const BottomBar();
           } else if (state is AuthenticationDeny ||
               state is ValidationFailedState) {

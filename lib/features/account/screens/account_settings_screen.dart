@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniplanet_mobile/features/account/screens/change_password_screen.dart';
 import 'package:uniplanet_mobile/features/account/widgets/menu_section.dart';
+
+import '../../../bloc/auth/auth_bloc.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -31,7 +35,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   );
 
   void updateName(String newName) {}
-  void updatePassword(String newPassword) {}
+  void updatePassword(String currentPassword, String newPassword) {
+    context.read<AuthBloc>().add(UpdatePasswordEvent(
+        password: currentPassword, newPassword: newPassword));
+  }
 
   @override
   void dispose() {
@@ -106,62 +113,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                     icon: Icons.password_outlined,
                     // screen: PaymentScreen(),
                     ontap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Change Password'),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Enter a new password:'),
-                                const SizedBox(height: 10),
-                                CustomTextField(
-                                  controller: _updatePasswordController,
-                                  hintText: 'Password',
-                                  obscureText: true,
-                                ),
-                                const SizedBox(height: 10),
-                                FlutterPwValidator(
-                                    controller: _updatePasswordController,
-                                    minLength: 8,
-                                    uppercaseCharCount: 1,
-                                    lowercaseCharCount: 2,
-                                    numericCharCount: 1,
-                                    specialCharCount: 1,
-                                    width: 350,
-                                    height: 150,
-                                    defaultColor: Colors.black,
-                                    onSuccess: () {
-                                      setState(() {
-                                        validPassword = true;
-                                      });
-                                    },
-                                    onFail: () {
-                                      setState(() {
-                                        validPassword = false;
-                                      });
-                                    }),
-                              ],
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle:
-                                      Theme.of(context).textTheme.labelLarge,
-                                ),
-                                child: const Text('Save'),
-                                onPressed: () {
-                                  updatePassword(
-                                      _updatePasswordController.text);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const ChangePasswordPage()),
                       );
                     },
                   ),
