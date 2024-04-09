@@ -65,8 +65,8 @@ class AuthRepository implements IAuthRepository {
 
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
-        prefs.setString('userRecord', jsonEncode(res.data));
-        userId = res.data['userId'];
+        prefs.setString('userData', jsonEncode(res.data));
+        userId = res.data['id'];
         school = res.data['school'];
         email = res.data['email'];
       }
@@ -86,7 +86,7 @@ class AuthRepository implements IAuthRepository {
       await _dioClient.clearCookie();
 
       if (res.data['message'] != "Logged Out Successfully") {
-        prefs.remove('userRecord');
+        prefs.remove('userData');
         return "Logout Failed";
       } else {
         return res.data['message'];
@@ -179,14 +179,15 @@ class AuthRepository implements IAuthRepository {
     required String password,
     required String newPassword,
   }) async {
-    var res = await _dioClient.dio.put('$authURI/update-password',
-        data: jsonEncode({'password': password, 'newPassword': newPassword}),
+    var res = await _dioClient.dio.put('$authURI/password_update',
+        data: {'password': password, 'newPassword': newPassword},
         options: _dioClient.getDioOptions());
 
     if (res.data['message'] == "Password updated successfully") {
       SnackbarGlobal.showSnackBar(
         "Password updated successfully",
       );
+      await logOut();
       return "Password Updated Successfully";
     } else {
       SnackbarGlobal.showSnackBar(

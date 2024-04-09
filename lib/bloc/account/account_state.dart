@@ -27,3 +27,19 @@ final class FailedToGetAccountInfoState extends AccountState {
   @override
   List<Object> get props => [message];
 }
+
+final class UpdatingNameState extends AccountState {
+  const UpdatingNameState({required super.account});
+}
+
+final class UpdatedNameState extends AccountState {
+  const UpdatedNameState({required super.account});
+}
+
+final class FailedToUpdateNameState extends AccountState {
+  final String message;
+  const FailedToUpdateNameState(
+      {required this.message, required super.account});
+  @override
+  List<Object> get props => [message];
+}

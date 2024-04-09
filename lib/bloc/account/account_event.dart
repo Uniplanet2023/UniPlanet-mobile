@@ -14,3 +14,10 @@ final class AccountInitialEvent extends AccountEvent {
 final class GetAccountInfoEvent extends AccountEvent {
   const GetAccountInfoEvent();
 }
+
+final class UpdateNameEvent extends AccountEvent {
+  final String name;
+  const UpdateNameEvent({required this.name});
+  @override
+  List<Object> get props => [name];
+}

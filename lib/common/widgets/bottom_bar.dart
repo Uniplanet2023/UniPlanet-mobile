@@ -14,8 +14,6 @@ import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -99,10 +97,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      Padding(
-        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
-        child: HomeScreen(controller: _controller!),
-      ),
+      HomeScreen(controller: _controller!),
       const Padding(
         padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
         child: CategoriesPage(),

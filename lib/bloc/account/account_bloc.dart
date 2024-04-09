@@ -13,7 +13,21 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     on<GetAccountInfoEvent>((event, emit) async {
       await _getAccountInfo(event, emit);
     });
+    on<UpdateNameEvent>((event, emit) async {
+      await _updateName(event, emit);
+    });
   }
+  _updateName(UpdateNameEvent event, Emitter<AccountState> emit) async {
+    emit(UpdatingNameState(account: state.account));
+    Account? account = await _accountRepository.updateName(name: event.name);
+    if (account != null) {
+      emit(UpdatedNameState(account: account));
+    } else {
+      emit(FailedToUpdateNameState(
+          message: 'Fail to update name', account: state.account));
+    }
+  }
+
   _getAccountInfo(GetAccountInfoEvent event, Emitter<AccountState> emit) async {
     emit(GettingAccountInfoState(account: state.account));
     try {

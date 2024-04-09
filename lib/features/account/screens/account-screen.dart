@@ -22,16 +22,15 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreen extends State<AccountScreen> {
-  late final User currentUser;
-
   @override
   void initState() {
     super.initState();
-    currentUser = context.read<AccountBloc>().state.account.user;
   }
 
   @override
   Widget build(BuildContext context) {
+    late final User currentUser;
+    currentUser = context.watch<AccountBloc>().state.account.user;
     return Scaffold(
       backgroundColor: GlobalVariables.greyBackgroundCOlor,
       appBar: AppBar(
