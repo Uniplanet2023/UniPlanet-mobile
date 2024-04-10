@@ -49,4 +49,26 @@ class AccountRepository implements IAccountRepository {
       return null;
     }
   }
+
+  Future<Account?> updateProfileImage({required String profileImage}) async {
+    try {
+      Response res = await _dioClient.dio.put('$accountURI/update-profile',
+          data: {'profileImage': profileImage},
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        SnackbarGlobal.showSnackBar(
+          "Profile image updated successfully",
+        );
+        Account result = Account.fromJson(res.data);
+        return result;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 }

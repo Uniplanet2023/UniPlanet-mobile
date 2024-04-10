@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet_mobile/models/account.dart';
@@ -16,7 +18,23 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     on<UpdateNameEvent>((event, emit) async {
       await _updateName(event, emit);
     });
+    on<UpdateProfileImageEvent>((event, emit) async {
+      await _updateProfileImage(event, emit);
+    });
   }
+  _updateProfileImage(
+      UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
+    emit(UpdatingNameState(account: state.account));
+    Account? account = await _accountRepository.updateProfileImage(
+        profileImage: event.image.path);
+    if (account != null) {
+      emit(UpdatedNameState(account: account));
+    } else {
+      emit(FailedToUpdateNameState(
+          message: 'Fail to update profile image', account: state.account));
+    }
+  }
+
   _updateName(UpdateNameEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingNameState(account: state.account));
     Account? account = await _accountRepository.updateName(name: event.name);

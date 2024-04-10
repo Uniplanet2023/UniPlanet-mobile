@@ -21,3 +21,11 @@ final class UpdateNameEvent extends AccountEvent {
   @override
   List<Object> get props => [name];
 }
+
+// update profile image
+final class UpdateProfileImageEvent extends AccountEvent {
+  final File image;
+  const UpdateProfileImageEvent({required this.image});
+  @override
+  List<Object> get props => [image];
+}
