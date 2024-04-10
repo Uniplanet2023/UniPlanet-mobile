@@ -262,7 +262,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   const SizedBox(height: 15),
                   CustomTextField(
-                    controller: meetingLocationController,
+                    controller: meetingLocationController
+                      ..text = widget.selectedLocation!,
                     hintText: 'Enter custom meeting location',
                     maxLength: 30,
                   ),
