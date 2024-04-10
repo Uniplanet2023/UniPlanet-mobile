@@ -8,6 +8,7 @@ import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.dart';
+import 'package:uniplanet_mobile/features/edit-product/edit_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
@@ -282,14 +283,27 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 customButton(
-                                    const Icon(
-                                      Icons.price_change_outlined,
-                                      color: Colors.black,
+                                  const Icon(
+                                    Icons.price_change_outlined,
+                                    color: Colors.black,
+                                  ),
+                                  GlobalVariables.secondaryColor,
+                                  'Edit  Details',
+                                  () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditProductScreen(
+                                        productImages: product.images,
+                                        productName: product.name,
+                                        productCategory: product.category,
+                                        productPrice: product.price,
+                                        productDescription: product.description,
+                                        productId: product.id,
+                                      ),
                                     ),
-                                    GlobalVariables.secondaryColor,
-                                    'Edit  Details',
-                                    () => {},
-                                    Colors.black),
+                                  ),
+                                  Colors.black,
+                                ),
                                 const SizedBox(
                                   width: 5,
                                 ),

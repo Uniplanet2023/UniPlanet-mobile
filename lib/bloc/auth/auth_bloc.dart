@@ -114,6 +114,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       String msg = await _authRepository.signInUser(
           email: event.email, password: event.password);
       if (msg == 'success') {
+        Global.socketService = SocketService(AuthRepository.userId!);
         Global.socketService.connect();
         emit(const Authorized());
       } else if (msg == USER_NOT_VERIFIED) {
