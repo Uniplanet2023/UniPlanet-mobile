@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
@@ -48,25 +49,13 @@ class _UserHeaderState extends State<UserHeader> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  onTap: () => selectImage(context),
-                  child: const Badge(
-                    alignment: Alignment.bottomRight,
-                    offset: Offset(-6, -6),
-                    label: Icon(
-                      Icons.add_a_photo,
-                      weight: BorderSide.strokeAlignOutside,
-                      size: 18,
-                      color: GlobalVariables.primaryColor,
-                    ),
-                    backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                    child: Hero(
-                      tag: 'user-pfp',
-                      child: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(
-                            'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg'),
-                      ),
+                Hero(
+                  tag: 'user-pfp',
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: CachedNetworkImageProvider(
+                      widget.currentUser.profileImage ??
+                          'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
                     ),
                   ),
                 ),
