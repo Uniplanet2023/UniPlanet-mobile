@@ -76,74 +76,84 @@ class _UserHeaderState extends State<UserHeader> {
     return Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: GlobalVariables.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserProfileScreen(
+              user: widget.currentUser,
+            ),
+          ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: selectImage,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Hero(
-                      tag: 'user-pfp',
-                      child: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: image != null
-                            ? FileImage(image!) as ImageProvider
-                            : CachedNetworkImageProvider(
-                                widget.currentUser.profileImage ??
-                                    'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-                              ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: GlobalVariables.backgroundColor,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: selectImage,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Hero(
+                        tag: 'user-pfp',
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundImage: image != null
+                              ? FileImage(image!) as ImageProvider
+                              : CachedNetworkImageProvider(
+                                  widget.currentUser.profileImage ??
+                                      'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
+                                ),
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      right: 0, // Adjust the position based on your UI needs
-                      bottom: 0, // Adjust the position based on your UI needs
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors
-                            .grey[700], // Choose the color that fits your app
-                        size: 24, // Adjust the size based on your UI needs
+                      Positioned(
+                        right: 0, // Adjust the position based on your UI needs
+                        bottom: 0, // Adjust the position based on your UI needs
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors
+                              .grey[700], // Choose the color that fits your app
+                          size: 24, // Adjust the size based on your UI needs
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              const VerticalDivider(
-                width: 20,
-                thickness: 1,
-                indent: 5,
-                endIndent: 0,
-                color: Colors.grey,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.currentUser.name,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Text(widget.currentUser.email),
-                    Text(
-                      widget.currentUser.school,
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
+                const SizedBox(width: 8),
+                const VerticalDivider(
+                  width: 20,
+                  thickness: 1,
+                  indent: 5,
+                  endIndent: 0,
+                  color: Colors.grey,
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.currentUser.name,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Text(widget.currentUser.email),
+                      Text(
+                        widget.currentUser.school,
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
