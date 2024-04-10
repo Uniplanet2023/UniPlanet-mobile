@@ -67,12 +67,15 @@ class ChatRepository {
     }
   }
 
-  Future<GetChatRooms?> getChatRooms() async {
+  Future<GetChatRooms> getChatRooms() async {
+    List<ChatRoom> chatRoomList = [];
     try {
       Response res = await _dioClient.dio
           .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
-
-      List<ChatRoom> chatRoomList = List<ChatRoom>.from(
+      if (res.data.length == 0) {
+        return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
+      }
+      chatRoomList = List<ChatRoom>.from(
           res.data['chatList'].map((data) => ChatRoom.fromMap(data['chat'])));
 
       return GetChatRooms(
@@ -80,7 +83,7 @@ class ChatRepository {
           totalUnseenMessageCount: res.data["totalUnseenMessage"]);
     } on DioException catch (e) {
       _handleDioException(e);
-      return null;
+      return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
     }
   }
 
