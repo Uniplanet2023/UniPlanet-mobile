@@ -34,7 +34,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     },
   );
 
-  void updateName(String newName) {}
+  void updateName(String newName) {
+    context.read<AccountBloc>().add(UpdateNameEvent(name: newName));
+  }
+
   void updatePassword(String currentPassword, String newPassword) {
     context.read<AuthBloc>().add(UpdatePasswordEvent(
         password: currentPassword, newPassword: newPassword));

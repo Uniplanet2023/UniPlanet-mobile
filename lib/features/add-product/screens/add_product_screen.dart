@@ -28,7 +28,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       TextEditingController();
   bool freeStock = false;
   String category = 'Mobiles';
-  String selectedLocation = 'On Campus';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
 
@@ -61,14 +60,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           'Please add at least one image and fill all fields.');
       return;
     }
-    if (selectedLocation == 'Custom Location' &&
-        meetingLocationController.text.isEmpty) {
-      SnackbarGlobal.showSnackBar('Please enter a custom location');
-      return;
-    }
-    selectedLocation == 'Custom Location'
-        ? selectedLocation = meetingLocationController.text
-        : selectedLocation = selectedLocation;
+
     if (_addProductFormKey.currentState!.validate()) {
       context.read<ProductBloc>().add(UploadProductEvent(
           productName: productNameController.text,
@@ -80,7 +72,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           category: category,
           status: 'On Sale',
           images: images,
-          location: selectedLocation,
+          location: meetingLocationController.text,
           seller: context.read<AccountBloc>().state.account.user));
     }
   }
@@ -297,46 +289,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                     ),
                     const SizedBox(height: 15),
-                    Container(
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey, width: 1),
-                      ),
-                      child: DropdownButton<String>(
-                        value: selectedLocation,
-                        underline: const SizedBox(),
-                        dropdownColor: Colors.white,
-                        isExpanded: true,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: locations.map((String location) {
-                          return DropdownMenuItem(
-                            value: location,
-                            child: Text(location),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue == 'Custom Location') {
-                            meetingLocationController.clear();
-                          } else {
-                            meetingLocationController.text = newValue!;
-                          }
-                          setState(() {
-                            selectedLocation = newValue!;
-                          });
-                        },
-                      ),
+                    CustomTextField(
+                      controller: meetingLocationController,
+                      hintText: 'Enter custom meeting location',
+                      maxLength: 30,
                     ),
-                    if (selectedLocation == 'Custom Location') ...[
-                      const SizedBox(height: 15),
-                      CustomTextField(
-                        controller: meetingLocationController,
-                        hintText: 'Enter custom meeting location',
-                        maxLength: 30,
-                      ),
-                    ],
                     const SizedBox(height: 15),
                     CustomTextField(
                       controller: descriptionController,

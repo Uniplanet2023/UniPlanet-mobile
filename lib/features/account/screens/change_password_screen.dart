@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 
@@ -20,10 +22,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final TextEditingController _currentPasswordController =
       TextEditingController();
   bool validPassword = false;
+  bool passwordsMatch = false;
 
   @override
   void initState() {
     super.initState();
+    _updatePasswordConfirmController.addListener(_validatePasswordsMatch);
+  }
+
+  void _validatePasswordsMatch() {
+    if (_updatePasswordController.text ==
+        _updatePasswordConfirmController.text) {
+      if (!passwordsMatch) {
+        setState(() {
+          passwordsMatch = true;
+        });
+      }
+    } else {
+      if (passwordsMatch) {
+        setState(() {
+          passwordsMatch = false;
+        });
+      }
+    }
   }
 
   @override
@@ -67,13 +88,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               controller: _updatePasswordController,
               hintText: 'Password',
               obscureText: true,
+              borderColor: passwordsMatch
+                  ? Colors.green
+                  : null, // Apply green border if passwords match
             ),
             const SizedBox(height: 10),
             const Text('Confirm new password:'),
             CustomTextField(
               controller: _updatePasswordConfirmController,
-              hintText: 'Password',
+              hintText: 'Confirm New Password',
               obscureText: true,
+              borderColor: passwordsMatch
+                  ? Colors.green
+                  : null, // Apply green border if passwords match
             ),
             const SizedBox(height: 10),
             FlutterPwValidator(
@@ -96,17 +123,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     validPassword = false;
                   });
                 }),
-            ElevatedButton(
-              child: const Text('Save'),
-              onPressed: () {
-                if (validPassword) {
-                  updatePassword();
-                  Navigator.of(context).pop();
-                } else {
-                  // Show some error message
-                }
+            SizedBox(
+              height: 30.h,
+            ),
+            CustomButton(
+              text: 'Save',
+              onTap: () => {
+                if (validPassword && passwordsMatch)
+                  {updatePassword(), Navigator.of(context).pop()}
               },
-            )
+            ),
           ],
         ),
       ),
