@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet_mobile/common/enums/chat_enum.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
@@ -24,45 +27,116 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
+  _onDismissed(int index, ChatActions action) {
+    switch (action) {
+      case ChatActions.archive:
+        // Archive chat room
+        break;
+      // ignore: constant_pattern_never_matches_value_type
+      case ChatActions.delete:
+        // Delete chat room
+        context
+            .read<ChatBloc>()
+            .add(DeleteChatRoomEvent(chatId: widget.list[index].id));
+        setState(() {
+          widget.list.removeAt(index);
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.list.length,
-        itemBuilder: (context, index) {
-          return Builder(builder: (BuildContext innerContext) {
-            User client = widget.list[index].seller.id == AuthRepository.userId
-                ? widget.list[index].buyer
-                : widget.list[index].seller;
+      child: SlidableAutoCloseBehavior(
+        closeWhenOpened: true,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.list.length,
+          itemBuilder: (context, index) {
+            return Builder(builder: (BuildContext innerContext) {
+              User client =
+                  widget.list[index].seller.id == AuthRepository.userId
+                      ? widget.list[index].buyer
+                      : widget.list[index].seller;
 
-            // Determine if the user is typing f    or this chat room.
-            Message last;
-            if (widget.list[index].lastMessage != null) {
-              last = widget.list[index].lastMessage!;
-            } else {
-              last = Message.initMessage();
-            }
+              // Determine if the user is typing f    or this chat room.
+              Message last;
+              if (widget.list[index].lastMessage != null) {
+                last = widget.list[index].lastMessage!;
+              } else {
+                last = Message.initMessage();
+              }
 
-            return Column(
-              children: [
-                InkWell(
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) {
-                        return ChatScreen(
-                          client: client,
-                          chatRoomId: widget.list[index].id,
-                        );
-                      }),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: ListTile(
+              return Slidable(
+                key: Key(widget.list[index].id),
+                startActionPane: ActionPane(
+                  motion: const StretchMotion(),
+                  dismissible: DismissiblePane(
+                    onDismissed: () {
+                      _onDismissed(index, ChatActions.archive);
+                    },
+                  ),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDismissed(index, ChatActions.archive);
+                        // Delete chat room
+                        // context.read<MessageBloc>().add(DeleteChatRoomEvent(
+                        //     chatRoomId: widget.list[index].id));
+                      },
+                      icon: Icons.share,
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                      label: 'Share',
+                    ),
+                  ],
+                ),
+                endActionPane: ActionPane(
+                  motion: const BehindMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDismissed(index, ChatActions.delete);
+                      },
+                      icon: Icons.delete,
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      label: 'Delete',
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        final slidable = Slidable.of(innerContext);
+                        if (slidable == null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return ChatScreen(
+                                client: client,
+                                chatRoomId: widget.list[index].id,
+                              );
+                            }),
+                          );
+                        } else {
+                          final isClosed = slidable.actionPaneType.value ==
+                              ActionPaneType.none;
+                          if (isClosed) {
+                            slidable.openStartActionPane();
+                          } else {
+                            slidable.close();
+                          }
+                        }
+                      },
                       title: Text(
-                        client.name,
+                        widget.sort == 'product'
+                            ? widget.list[index].productName
+                            : client.name,
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -173,14 +247,14 @@ class _ContactsListState extends State<ContactsList> {
                         ],
                       ),
                     ),
-                  ),
+                    const Divider(
+                        color: GlobalVariables.backgroundColor, indent: 85),
+                  ],
                 ),
-                const Divider(
-                    color: GlobalVariables.backgroundColor, indent: 85),
-              ],
-            );
-          });
-        },
+              );
+            });
+          },
+        ),
       ),
     );
   }

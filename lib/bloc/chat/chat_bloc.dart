@@ -44,7 +44,33 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<AddChatRoomEvent>((event, emit) {
       _addChatRoom(event, emit);
     });
+    on<DeleteChatRoomEvent>((event, emit) async {
+      await _deleteChatRoom(event, emit);
+    });
   }
+  _deleteChatRoom(DeleteChatRoomEvent event, emit) async {
+    try {
+      emit(DeletingChatRoomState(
+        chatRooms: state.chatRooms,
+        totalUnseenMessageCount: state.totalUnseenMessageCount,
+      ));
+      String msg = await _chatRepository.deleteChatRoom(chatId: event.chatId);
+      if (msg == 'success') {
+        state.chatRooms.removeWhere((element) => element.id == event.chatId);
+        emit(DeletedChatRoomState(
+          chatRooms: state.chatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount,
+        ));
+      } else {
+        SnackbarGlobal.showSnackBar('Failed to delete chat room');
+        emit(const ErrorChatState('Failed to delete chat room'));
+      }
+    } catch (e) {
+      emit(ErrorChatState(e.toString()));
+      throw Exception('delete chat room API error');
+    }
+  }
+
   _addChatRoom(AddChatRoomEvent event, emit) {
     state.chatRooms.insert(0, event.chatRoom);
     emit(AddChatRoomState(
@@ -117,10 +143,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     ));
     try {
       GetChatRooms? getChatRooms = await _chatRepository.getChatRooms();
-      if (getChatRooms == null) {
-        emit(const ErrorChatState('Error loading chat rooms'));
-        return;
-      }
 
       emit(LoadedChatRoomState(
         chatRooms: getChatRooms.chatRooms,
@@ -142,6 +164,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         seller: event.seller,
         buyer: event.buyer,
         productId: event.productId,
+        productName: event.productName,
       );
 
       bool userOnline = await Global.socketService

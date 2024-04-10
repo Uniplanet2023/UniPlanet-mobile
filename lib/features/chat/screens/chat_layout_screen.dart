@@ -24,9 +24,6 @@ class _ChatListState extends State<ChatList> {
       length: 2,
       child: BlocBuilder<ChatBloc, ChatBlocState>(
         builder: (context, state) {
-          if (state is AddChatRoomState) {
-            print('AddChatRoomState');
-          }
           return Scaffold(
             appBar: AppBar(
               elevation: 0,

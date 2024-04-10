@@ -342,6 +342,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   buyer: context.read<AccountBloc>().state.account.user,
                   seller: widget.product.seller,
                   productId: widget.product.id,
+                  productName: widget.product.name,
                 ))
           },
           style: TextButton.styleFrom(

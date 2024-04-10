@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/models/user_model.dart';
 
 class ChatRoom {
   final String productId;
+  final String productName;
   final String id;
   final User seller;
   final User buyer;
@@ -14,6 +15,7 @@ class ChatRoom {
     required this.seller,
     required this.buyer,
     required this.productId,
+    required this.productName,
     this.lastMessage,
     this.unseenMessageCount = 0,
   });
@@ -24,6 +26,7 @@ class ChatRoom {
       seller: User.initialUser(),
       buyer: User.initialUser(),
       productId: "",
+      productName: "",
       lastMessage: null,
       unseenMessageCount: 0,
     );
@@ -35,6 +38,7 @@ class ChatRoom {
     User? seller,
     User? buyer,
     String? productId,
+    String? productName,
     Message? lastMessage,
     int? unseenMessageCount,
   }) {
@@ -43,6 +47,7 @@ class ChatRoom {
       seller: seller ?? this.seller,
       buyer: buyer ?? this.buyer,
       productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
       lastMessage: lastMessage ?? this.lastMessage,
       unseenMessageCount: unseenMessageCount ?? this.unseenMessageCount,
     );
@@ -66,6 +71,7 @@ class ChatRoom {
       seller: User.fromMap(map['seller']),
       buyer: User.fromMap(map['buyer']),
       productId: map['productId'],
+      productName: map['productName'] ?? "",
       lastMessage: map['lastMessage'] != null
           ? Message.fromMap(map['lastMessage'])
           : null,

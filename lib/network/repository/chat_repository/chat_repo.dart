@@ -18,6 +18,7 @@ class ChatRepository {
 
   Future<ChatRoom> creatingChatRoom(
       {required String productId,
+      required String productName,
       required User seller,
       required User buyer}) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
@@ -27,6 +28,7 @@ class ChatRepository {
         options: _dioClient.getDioOptions(),
         data: {
           'productId': productId,
+          'productName': productName,
           'seller': seller,
           'buyer': buyer,
         },
@@ -84,6 +86,24 @@ class ChatRepository {
     } on DioException catch (e) {
       _handleDioException(e);
       return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
+    }
+  }
+
+  Future<String> deleteChatRoom({required String chatId}) async {
+    try {
+      Response res = await _dioClient.dio.delete(
+        '$chatURI/delete-chat/$chatId',
+        options: _dioClient.getDioOptions(),
+      );
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        return "success";
+      } else {
+        return "failed";
+      }
+    } on DioException catch (e) {
+      _handleDioException(e);
+      return "failed";
     }
   }
 

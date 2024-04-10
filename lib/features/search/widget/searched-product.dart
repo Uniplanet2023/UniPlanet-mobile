@@ -70,9 +70,9 @@ class SearchedProduct extends StatelessWidget {
                         ),
                         maxLines: 1,
                       ),
-                      const Text(
-                        'Location goes here',
-                        style: TextStyle(
+                      Text(
+                        product.location,
+                        style: const TextStyle(
                             overflow: TextOverflow.ellipsis,
                             color: GlobalVariables.secondaryColor),
                         maxLines: 1,
