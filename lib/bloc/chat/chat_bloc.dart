@@ -1,7 +1,15 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
+import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/global.dart';
+import 'package:uniplanet_mobile/models/get_chat_room.dart';
 // Repositories
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/repository/chat_repository/chat_repo.dart';
@@ -30,62 +38,83 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<EmptyUnseenMessageEvent>((event, emit) {
       _emptyUnseenMessage(event, emit);
     });
-    on<UpdateUnseenMessageEvent>(((event, emit) {
+    on<UpdateUnseenMessageEvent>((event, emit) {
       _updateUnseenMessage(event, emit);
-    }));
+    });
+    on<AddChatRoomEvent>((event, emit) {
+      _addChatRoom(event, emit);
+    });
+    on<DeleteChatRoomEvent>((event, emit) async {
+      await _deleteChatRoom(event, emit);
+    });
+  }
+  _deleteChatRoom(DeleteChatRoomEvent event, emit) async {
+    try {
+      emit(DeletingChatRoomState(
+        chatRooms: state.chatRooms,
+        totalUnseenMessageCount: state.totalUnseenMessageCount,
+      ));
+      String msg = await _chatRepository.deleteChatRoom(chatId: event.chatId);
+      if (msg == 'success') {
+        state.chatRooms.removeWhere((element) => element.id == event.chatId);
+        emit(DeletedChatRoomState(
+          chatRooms: state.chatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount,
+        ));
+      } else {
+        SnackbarGlobal.showSnackBar('Failed to delete chat room');
+        emit(const ErrorChatState('Failed to delete chat room'));
+      }
+    } catch (e) {
+      emit(ErrorChatState(e.toString()));
+      throw Exception('delete chat room API error');
+    }
+  }
+
+  _addChatRoom(AddChatRoomEvent event, emit) {
+    state.chatRooms.insert(0, event.chatRoom);
+    emit(AddChatRoomState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
   }
 
   _emptyUnseenMessage(EmptyUnseenMessageEvent event, emit) {
-    bool isfound = false;
     int unseenMessages = 0;
     //find chatRoom, buying chatroom or selling chatroom
-    for (var chatRoom in state.buyingChatRooms) {
+    for (var chatRoom in state.chatRooms) {
       if (chatRoom.id == event.chatId) {
-        isfound = true;
         unseenMessages = chatRoom.unseenMessageCount;
         chatRoom.unseenMessageCount = 0;
         break;
       }
     }
-    if (!isfound) {
-      for (var chatRoom in state.sellingChatRooms) {
-        if (chatRoom.id == event.chatId) {
-          unseenMessages = chatRoom.unseenMessageCount;
-          chatRoom.unseenMessageCount = 0;
-          break;
+    AwesomeNotifications().getGlobalBadgeCounter().then((value) {
+      if (value > 0) {
+        var totalNotification = value - unseenMessages;
+        if (totalNotification < 0) {
+          totalNotification = 0;
         }
+        AwesomeNotifications().setGlobalBadgeCounter(totalNotification);
       }
-    }
+    });
 
     emit(EmptyUnseenMessageState(
-        buyingChatRooms: state.buyingChatRooms,
-        sellingChatRooms: state.sellingChatRooms,
+        chatRooms: state.chatRooms,
         totalUnseenMessageCount:
             state.totalUnseenMessageCount - unseenMessages));
   }
 
   _updateUnseenMessage(UpdateUnseenMessageEvent event, emit) {
-    bool isfound = false;
-    //find chatRoom, buying chatroom or selling chatroom
-    for (var chatRoom in state.buyingChatRooms) {
+    for (var chatRoom in state.chatRooms) {
       if (chatRoom.id == event.chatId) {
-        isfound = true;
         chatRoom.unseenMessageCount++;
         break;
       }
     }
-    if (!isfound) {
-      for (var chatRoom in state.sellingChatRooms) {
-        if (chatRoom.id == event.chatId) {
-          chatRoom.unseenMessageCount++;
-          break;
-        }
-      }
-    }
 
     emit(UpdateUnseenMessageState(
-        buyingChatRooms: state.buyingChatRooms,
-        sellingChatRooms: state.sellingChatRooms,
+        chatRooms: state.chatRooms,
         totalUnseenMessageCount: state.totalUnseenMessageCount + 1));
   }
 
@@ -93,8 +122,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     bool isUpdated = false;
 
     // Update for buyingChatRooms
-    List<ChatRoom> updatedBuyingChatRooms =
-        state.buyingChatRooms.map((chatRoom) {
+    List<ChatRoom> updatedChatRooms = state.chatRooms.map((chatRoom) {
       if (chatRoom.id == event.lastMessage.chat) {
         isUpdated = true;
         return chatRoom.copyWith(lastMessage: event.lastMessage);
@@ -102,48 +130,23 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       return chatRoom;
     }).toList();
 
-    // If the chatRoom was found and updated in buyingChatRooms, we can skip updating sellingChatRooms
-    List<ChatRoom> updatedSellingChatRooms = isUpdated
-        ? state.sellingChatRooms
-        : state.sellingChatRooms.map((chatRoom) {
-            if (chatRoom.id == event.lastMessage.chat) {
-              return chatRoom.copyWith(lastMessage: event.lastMessage);
-            }
-            return chatRoom;
-          }).toList();
-
     emit(UpdateLastMessageState(
-        totalUnseenMessageCount: state.totalUnseenMessageCount,
-        buyingChatRooms: updatedBuyingChatRooms,
-        sellingChatRooms: updatedSellingChatRooms));
+      chatRooms: updatedChatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
   }
 
   _loadChatRooms(LoadChatRoomEvent event, emit) async {
     emit(LoadingChatRoomState(
-        totalUnseenMessageCount: state.totalUnseenMessageCount,
-        buyingChatRooms: state.buyingChatRooms,
-        sellingChatRooms: state.sellingChatRooms));
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
     try {
-      List<ChatRoom> chatrooms = await _chatRepository.getChatRooms();
-      List<ChatRoom> updatedBuyingChatRooms = [];
-      List<ChatRoom> updatedSellingChatRooms = [];
-      var totalUnseenMessageCount = 0;
-      if (chatrooms.isNotEmpty) {
-        for (var chatRoom in chatrooms) {
-          if (chatRoom.seller.id == AuthRepository.userId) {
-            updatedSellingChatRooms.add(chatRoom);
-            totalUnseenMessageCount += chatRoom.unseenMessageCount;
-          } else {
-            updatedBuyingChatRooms.add(chatRoom);
-            totalUnseenMessageCount += chatRoom.unseenMessageCount;
-          }
-        }
-      }
+      GetChatRooms? getChatRooms = await _chatRepository.getChatRooms();
 
       emit(LoadedChatRoomState(
-        buyingChatRooms: updatedBuyingChatRooms,
-        sellingChatRooms: updatedSellingChatRooms,
-        totalUnseenMessageCount: totalUnseenMessageCount,
+        chatRooms: getChatRooms.chatRooms,
+        totalUnseenMessageCount: getChatRooms.totalUnseenMessageCount,
       ));
     } catch (e) {
       print(e);
@@ -153,8 +156,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
     emit(CreatingChatRoomState(
-      buyingChatRooms: state.buyingChatRooms,
-      sellingChatRooms: state.sellingChatRooms,
+      chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
     try {
@@ -162,11 +164,21 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         seller: event.seller,
         buyer: event.buyer,
         productId: event.productId,
+        productName: event.productName,
       );
-      state.buyingChatRooms.add(chatRoom);
+
+      bool userOnline = await Global.socketService
+          .chatRoomCreateAndCheckUserExist(chat: chatRoom);
+      if (userOnline) {
+        // Check if the widget is still mounted before proceeding
+        if (!SnackbarGlobal.key.currentContext!.mounted) return;
+        SnackbarGlobal.key.currentContext!
+            .read<StatusBloc>()
+            .add(ConnectedEvent(userId: chatRoom.seller.id));
+      }
+      state.chatRooms.add(chatRoom);
       emit(CreatedChatRoomState(
-        buyingChatRooms: state.buyingChatRooms,
-        sellingChatRooms: state.sellingChatRooms,
+        chatRooms: state.chatRooms,
         totalUnseenMessageCount: state.totalUnseenMessageCount,
         chatRoomCreated: chatRoom,
       ));
@@ -179,7 +191,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   @override
   void onChange(Change<ChatBlocState> change) {
     super.onChange(change);
-    print(change);
+    // print(change);
   }
 
   @override

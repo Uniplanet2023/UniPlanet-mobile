@@ -22,16 +22,15 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreen extends State<AccountScreen> {
-  late final User currentUser;
-
   @override
   void initState() {
     super.initState();
-    currentUser = context.read<AccountBloc>().state.account.user;
   }
 
   @override
   Widget build(BuildContext context) {
+    late final User currentUser;
+    currentUser = context.watch<AccountBloc>().state.account.user;
     return Scaffold(
       backgroundColor: GlobalVariables.greyBackgroundCOlor,
       appBar: AppBar(
@@ -39,7 +38,7 @@ class _AccountScreen extends State<AccountScreen> {
         title: const Text('My Account'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 300),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 80),
         child: Column(
           children: [
             UserHeader(
@@ -79,8 +78,10 @@ class _AccountScreen extends State<AccountScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>  SoldProductsScreen(controller: ScrollController(),
-                            user: currentUser,),
+                          builder: (context) => SoldProductsScreen(
+                            controller: ScrollController(),
+                            user: currentUser,
+                          ),
                         ),
                       );
                     },
@@ -96,7 +97,8 @@ class _AccountScreen extends State<AccountScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LikedProductsScreen(),
+                          builder: (context) => LikedProductsScreen(
+                              controller: ScrollController()),
                         ),
                       );
                     },

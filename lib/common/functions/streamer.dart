@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/global.dart';
+import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class Streamer {
@@ -11,42 +13,19 @@ class Streamer {
   void addChatListener(BuildContext context) {
     _chatStreamSubscription =
         context.read<ChatBloc>().stream.listen((state) async {
-      // if (state is CreatedChatRoomState) {
-      //   bool userOnline =
-      //       await SocketService.instance.joinChatAndCheckUserExist(
-      //     chatId: state.chatRoomCreated.id,
-      //     targetUserId: state.chatRoomCreated.seller.id,
-      //   );
-      //   if (userOnline) {
-      //     // Check if the widget is still mounted before proceeding
-      //     if (!context.mounted) return;
-      //     context
-      //         .read<StatusBloc>()
-      //         .add(StatusChangeEvent(userId: state.chatRoomCreated.seller.id));
-      //   }
-      // }
       if (state is LoadedChatRoomState) {
-        for (var chatRoom in state.buyingChatRooms) {
-          bool isTargetUserOnline = await SocketService.instance
+        for (var chatRoom in state.chatRooms) {
+          var targetUserId = chatRoom.seller.id == AuthRepository.userId
+              ? chatRoom.buyer.id
+              : chatRoom.seller.id;
+          bool isTargetUserOnline = await Global.socketService
               .joinChatAndCheckUserExist(
-                  chatId: chatRoom.id, targetUserId: chatRoom.seller.id);
+                  chatId: chatRoom.id, targetUserId: targetUserId);
           if (isTargetUserOnline) {
             if (context.mounted) {
               context
                   .read<StatusBloc>()
-                  .add(StatusChangeEvent(userId: chatRoom.seller.id));
-            }
-          }
-        }
-        for (var chatRoom in state.sellingChatRooms) {
-          bool isTargetUserOnline = await SocketService.instance
-              .joinChatAndCheckUserExist(
-                  chatId: chatRoom.id, targetUserId: chatRoom.buyer.id);
-          if (isTargetUserOnline) {
-            if (context.mounted) {
-              context
-                  .read<StatusBloc>()
-                  .add(StatusChangeEvent(userId: chatRoom.buyer.id));
+                  .add(ConnectedEvent(userId: targetUserId));
             }
           }
         }
@@ -58,7 +37,7 @@ class Streamer {
   void addAccountListener(BuildContext context) {
     _accountStreamSubscription =
         context.read<AccountBloc>().stream.listen((event) {
-      if (event is ClientStatusChangeEvent) {
+      if (event is UserInfoChangeEvent) {
         context.read<ChatBloc>().add(const LoadChatRoomEvent());
       }
     });

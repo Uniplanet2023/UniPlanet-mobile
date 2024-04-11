@@ -35,19 +35,14 @@ Future<List<File>> pickImages() async {
   return images;
 }
 
-Future<File?> pickImageFromGallery(BuildContext context) async {
-  File? image;
+Future<List<XFile>> pickImagesFromGallery(BuildContext context) async {
+  List<XFile> pickedImages = [];
   try {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedImage != null) {
-      image = File(pickedImage.path);
-    }
+    pickedImages = await ImagePicker().pickMultiImage();
   } catch (e) {
-    SnackbarGlobal.showSnackBar(e.toString());
+    debugPrint('Error picking images: $e');
   }
-  return image;
+  return pickedImages;
 }
 
 Future<File?> pickVideoFromGallery(BuildContext context) async {
@@ -84,10 +79,13 @@ String formatTimestamp(DateTime timestamp) {
 }
 
 // Method to open the camera
-Future<void> openCamera() async {
+Future<File?> openCamera() async {
   final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  final File? imageFile;
   if (pickedFile != null) {
-    final File imageFile = File(pickedFile.path);
+    imageFile = File(pickedFile.path);
     // Handle the captured image file (e.g., send it or display it)
+    return imageFile;
   }
+  return null;
 }

@@ -169,9 +169,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                     text: 'Where to meet: ',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -179,8 +179,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: 'Yang hall',
-                        style: TextStyle(
+                        text: widget.product.location,
+                        style: const TextStyle(
                           fontSize: 16,
                           color: GlobalVariables.secondaryColor,
                           fontWeight: FontWeight.w400,
@@ -236,23 +236,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   BottomAppBar _buildBottomAppBar() {
     return BottomAppBar(
       child: BlocConsumer<ChatBloc, ChatBlocState>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is CreatedChatRoomState) {
-            // bool userOnline =
-            //     await SocketService.instance.joinChatAndCheckUserExist(
-            //   chatId: state.chatRoomCreated.id,
-            //   targetUserId: state.chatRoomCreated.seller.id,
-            // );
-            // if (userOnline) {
-            //   // Check if the widget is still mounted before proceeding
-            //   if (!mounted) return;
-            //   context.read<StatusBloc>().add(
-            //       StatusChangeEvent(userId: state.chatRoomCreated.seller.id));
-            // }
-            if (!mounted) return;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
-              "seller": state.buyingChatRooms.last.seller,
-              "chatRoom": state.buyingChatRooms.last
+              "seller": state.chatRooms.last.seller,
+              "chatRoom": state.chatRooms.last
             });
           }
         },
@@ -354,6 +342,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   buyer: context.read<AccountBloc>().state.account.user,
                   seller: widget.product.seller,
                   productId: widget.product.id,
+                  productName: widget.product.name,
                 ))
           },
           style: TextButton.styleFrom(

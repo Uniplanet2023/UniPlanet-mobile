@@ -22,24 +22,30 @@ class SearchedProduct extends StatelessWidget {
             children: [
               Hero(
                 tag: "product-picture-${product.id}",
-                child: CachedNetworkImage(
-                  cacheManager: GlobalVariables.customCacheManager,
-                  imageUrl: product.images[0],
-                  key: UniqueKey(),
-                  fit: BoxFit.contain,
-                  height: 135,
-                  width: 135,
-                  placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.black12,
-                    child: const Icon(
-                      Icons.error,
-                      color: Colors.red,
-                      size: 80,
-                    ),
-                  ),
-                ),
+                child: product.images.isEmpty
+                    ? const SizedBox(
+                        height: 135,
+                        width: 135,
+                        child: Icon(Icons.image_not_supported, size: 100),
+                      )
+                    : CachedNetworkImage(
+                        cacheManager: GlobalVariables.customCacheManager,
+                        imageUrl: product.images[0],
+                        key: UniqueKey(),
+                        fit: BoxFit.contain,
+                        height: 135,
+                        width: 135,
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.black12,
+                          child: const Icon(
+                            Icons.error,
+                            color: Colors.red,
+                            size: 80,
+                          ),
+                        ),
+                      ),
               ),
               Expanded(
                 child: Padding(
@@ -64,9 +70,9 @@ class SearchedProduct extends StatelessWidget {
                         ),
                         maxLines: 1,
                       ),
-                      const Text(
-                        'Location goes here',
-                        style: TextStyle(
+                      Text(
+                        product.location,
+                        style: const TextStyle(
                             overflow: TextOverflow.ellipsis,
                             color: GlobalVariables.secondaryColor),
                         maxLines: 1,

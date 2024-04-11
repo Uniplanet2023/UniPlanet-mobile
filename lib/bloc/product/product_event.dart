@@ -5,12 +5,16 @@ sealed class ProductEvent extends Equatable {
 }
 
 class LoadProductEvent extends ProductEvent {
-  final int? page;
-  const LoadProductEvent({this.page});
-
+  const LoadProductEvent();
   @override
   // TODO: implement props
-  List<Object?> get props => [page];
+  List<Object?> get props => [];
+}
+
+class LoadMoreProductEvent extends ProductEvent {
+  const LoadMoreProductEvent();
+  @override
+  List<Object?> get props => [];
 }
 
 class UploadProductEvent extends ProductEvent {
@@ -19,6 +23,7 @@ class UploadProductEvent extends ProductEvent {
   final String description;
   final double price;
   final String category;
+  final String location;
   final List<File> images;
   final User seller;
   const UploadProductEvent({
@@ -29,8 +34,43 @@ class UploadProductEvent extends ProductEvent {
     required this.category,
     required this.images,
     required this.seller,
+    required this.location,
   });
   @override
-  List<Object?> get props =>
-      [productName, status, description, price, category, images];
+  List<Object?> get props => [
+        productName,
+        status,
+        description,
+        price,
+        category,
+        images,
+        seller,
+        location
+      ];
+}
+
+class UpdateProductEvent extends ProductEvent {
+  final Product product;
+
+  const UpdateProductEvent({
+    required this.product,
+  });
+  @override
+  List<Object?> get props => [
+        product,
+      ];
+}
+
+class IncreaseClickProductEvent extends ProductEvent {
+  final String productId;
+  const IncreaseClickProductEvent(this.productId);
+  @override
+  List<Object?> get props => [productId];
+}
+
+class DeleteProductEvent extends ProductEvent {
+  final String productId;
+  const DeleteProductEvent({required this.productId});
+  @override
+  List<Object?> get props => [productId];
 }

@@ -1,6 +1,9 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/constants/number_formatter.dart';
 import 'package:uniplanet_mobile/constants/price_formatter.dart';
 import 'package:uniplanet_mobile/constants/time_formatter.dart';
@@ -28,11 +31,16 @@ class _ItemBoxState extends State<ItemBox> {
               (BuildContext context, int index) {
                 final product = widget.productList[index];
                 return InkWell(
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.productDetailsPage,
-                    arguments: product,
-                  ),
+                  onTap: () => {
+                    context
+                        .read<ProductBloc>()
+                        .add(IncreaseClickProductEvent(product.id)),
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.productDetailsPage,
+                      arguments: product,
+                    )
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 0.0, horizontal: 8.0),
@@ -92,7 +100,8 @@ class _ItemBoxState extends State<ItemBox> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        "${product.name[0].toUpperCase()}${product.name.substring(1).toLowerCase()}",
+                                        product.name[0].toUpperCase() +
+                                            product.name.substring(1),
                                         style: const TextStyle(
                                           fontSize: 16,
                                         ),
@@ -151,21 +160,21 @@ class _ItemBoxState extends State<ItemBox> {
                                       const SizedBox(
                                         height: 25,
                                       ),
-                                      const Row(
+                                      Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.location_on_outlined,
                                             size: 18,
                                             color:
                                                 GlobalVariables.secondaryColor,
                                           ),
                                           Text(
-                                            'Yang Hall',
+                                            product.location,
+                                            maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: GlobalVariables
-                                                  .secondaryColor,
-                                            ),
+                                            style: const TextStyle(
+                                                color: GlobalVariables
+                                                    .secondaryColor),
                                           ),
                                         ],
                                       ),

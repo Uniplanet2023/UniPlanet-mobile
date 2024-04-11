@@ -7,7 +7,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Uniplanet Mobile</string>
+		<string>UniMarket</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>uniplanet_mobile</string>
+		<string>uniplanet_market</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
@@ -24,18 +24,10 @@
 		<string>????</string>
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>FirebaseMessagingAutoInitEnabled</key>
+		<false/>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
-		<key>NSCameraUsageDescription</key>
-		<string>We need camera image for chatting</string>
-		<key>NSLocationAlwaysUsageDescription</key>
-		<string>This app needs access to location when in the background.</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>This app needs access to location when open.</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>The application does not use this feature</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>We want image for product!</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>
@@ -60,9 +52,15 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
-		<key>UIStatusBarHidden</key>
-		<false/>
+		<!-- Add your Firebase iOS config file -->
 		<key>FirebaseMessagingAutoInitEnabled</key>
+		<false/>
+		<!-- Permission for picking image from gallery or taking image from camera-->
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Uniplanet would like to access your photo library</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Uniplanet would like to access your camera</string>
+		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
 </plist>

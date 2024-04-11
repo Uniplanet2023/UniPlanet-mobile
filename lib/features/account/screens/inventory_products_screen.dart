@@ -14,7 +14,7 @@ class InventoryProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Listings'),
+        title: const Text('Listings'),
       ),
       body: CustomScrollView(
         controller: controller,
@@ -23,7 +23,9 @@ class InventoryProductsScreen extends StatelessWidget {
             builder: (context, state) {
               return InventoryProductBox(
                 productList: state.productList
-                    .where((product) => (product.seller.id == user.id))
+                    .where((product) =>
+                        (product.seller.id == user.id) &&
+                        (product.status == 'On Sale'))
                     .toList(),
               );
             },

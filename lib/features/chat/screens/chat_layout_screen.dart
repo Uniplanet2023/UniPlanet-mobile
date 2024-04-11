@@ -47,20 +47,20 @@ class _ChatListState extends State<ChatList> {
                   onPressed: () {},
                 ),
               ],
-              bottom: TabBar(
+              bottom: const TabBar(
                 indicatorColor: GlobalVariables.secondaryColor,
                 indicatorWeight: 4,
                 labelColor: GlobalVariables.secondaryColor,
                 unselectedLabelColor: Colors.grey,
-                labelStyle: const TextStyle(
+                labelStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
                 tabs: [
                   Tab(
-                    text: 'Buying (${state.buyingChatRooms.length})',
+                    text: 'By User',
                   ),
                   Tab(
-                    text: 'Selling (${state.sellingChatRooms.length})',
+                    text: 'By Product',
                   ),
                 ],
               ),
@@ -69,11 +69,13 @@ class _ChatListState extends State<ChatList> {
               children: [
                 // Buy Items Tab
                 ContactsList(
-                  list: state.buyingChatRooms,
+                  list: state.chatRooms,
+                  sort: 'user',
                 ),
                 // Sell Items Tab
                 ContactsList(
-                  list: state.sellingChatRooms,
+                  list: state.chatRooms,
+                  sort: 'product',
                 ),
               ],
             ),

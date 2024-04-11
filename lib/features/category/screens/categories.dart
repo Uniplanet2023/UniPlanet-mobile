@@ -8,7 +8,7 @@ class CategoriesPage extends StatelessWidget {
   });
 
   void navigateToCategoryPage(BuildContext context, String category) {
-    Navigator.pushNamed(context, AppRoutes.categoryPage, arguments: category);
+    Navigator.pushNamed(context, AppRoutes.category, arguments: category);
   }
 
   @override
@@ -34,9 +34,6 @@ class CategoriesPage extends StatelessWidget {
                 category: category.description,
               ),
             ),
-          const SizedBox(
-            height: 150,
-          )
         ],
       ),
     );

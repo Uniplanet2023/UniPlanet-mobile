@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
@@ -11,11 +12,10 @@ import 'package:uniplanet_mobile/network/api_def/display_error_messages.dart';
 
 class ProductRepository {
   final DioClient _dioClient;
-  final CloudinaryPublic _cloudinary;
 
-  ProductRepository(this._dioClient, this._cloudinary);
+  ProductRepository(this._dioClient);
 
-  Future<Product?> deleteProduct({required String productId}) async {
+  Future<String> deleteProduct({required String productId}) async {
     try {
       final response = await _dioClient.dio.delete(
         '$productURI/delete-product/$productId',
@@ -23,12 +23,12 @@ class ProductRepository {
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
-        return Product.fromMap(response.data);
+        return "success";
       }
     } on DioException catch (e) {
       print(e);
     }
-    return null;
+    return 'failed';
   }
 
   Future<List<Product>> searchProduct(int? page, String productName) async {
@@ -82,6 +82,7 @@ class ProductRepository {
     String? description,
     double? price,
     String? category,
+    String? location,
     List<String>? images,
   }) async {
     try {
@@ -94,6 +95,7 @@ class ProductRepository {
           'images': images,
           'price': price,
           'category': category,
+          'location': location,
         },
         options: _dioClient.getDioOptions(),
       );
@@ -112,6 +114,7 @@ class ProductRepository {
     required String description,
     required double price,
     required String category,
+    required String location,
     required User seller,
   }) async {
     try {
@@ -123,6 +126,7 @@ class ProductRepository {
           'description': description,
           'price': price,
           'category': category,
+          'location': location,
           'seller': seller,
         },
         options: _dioClient.getDioOptions(),
@@ -146,7 +150,7 @@ class ProductRepository {
 
       // Concurrently upload all images and collect their URLs
       final uploadTasks = images.map((image) async {
-        final response = await _cloudinary.uploadFile(
+        final response = await Global.cloudinary.uploadFile(
           CloudinaryFile.fromFile(image.path, folder: 'product-images'),
         );
         imageUrls.add(response.secureUrl); // Collect each image URL
@@ -256,5 +260,17 @@ class ProductRepository {
       print('DioException occurred: ${e.message}');
     }
     return productList;
+  }
+
+  void clickProduct(String productId) async {
+    try {
+      var response = await _dioClient.dio.get(
+        '$productURI/increase-click/$productId',
+        options: _dioClient.getDioOptions(),
+      );
+      print(response.data);
+    } on DioException catch (e) {
+      print('DioException occurred: ${e.message}');
+    }
   }
 }

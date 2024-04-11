@@ -5,15 +5,15 @@ abstract class StatusEvent extends Equatable {
   const StatusEvent({required this.userId});
 }
 
-class StatusChangeEvent extends StatusEvent {
-  const StatusChangeEvent({required super.userId});
+class ConnectedEvent extends StatusEvent {
+  const ConnectedEvent({required super.userId});
 
   @override
   List<Object> get props => [userId];
 }
 
-class StatusDisconnectEvent extends StatusEvent {
-  const StatusDisconnectEvent({required super.userId});
+class DisconnectEvent extends StatusEvent {
+  const DisconnectEvent({required super.userId});
 
   @override
   List<Object?> get props => [userId];

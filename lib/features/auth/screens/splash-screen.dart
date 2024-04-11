@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,17 +22,6 @@ class _SplashScreenState extends State<SplashScreen>
     curve: Curves.fastOutSlowIn,
   );
 
-  triggerNotification() {
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 10,
-        channelKey: 'basic_channel',
-        title: 'Simple Notification',
-        body: 'Simple body',
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -43,7 +31,6 @@ class _SplashScreenState extends State<SplashScreen>
           context, AppRoutes.authPage, (route) => false);
     });
     context.read<AuthBloc>().add(const TokenValidationEvent());
-    triggerNotification();
   }
 
   @override

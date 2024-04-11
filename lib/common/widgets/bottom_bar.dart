@@ -14,8 +14,6 @@ import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -37,13 +35,6 @@ class _BottomBarState extends State<BottomBar> {
     Navigator.pushNamed(context, AppRoutes.addProductPage);
   }
 
-  void notificationLoad(BuildContext context) async {
-    await FirebaseApi().initNotification();
-    if (context.mounted) {
-      SocketService.instance.connect(context);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -54,7 +45,7 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);
-    notificationLoad(context);
+
     _controller = ScrollController();
     _controller!.addListener(() {
       if (_controller!.position.userScrollDirection ==
@@ -79,10 +70,9 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void dispose() {
     _streamer.disposeChatListener();
-    _streamer.disposeChatListener();
-    _streamer.disposeChatListener();
+    _streamer.disposeAccountListener();
+    _streamer.disposeProductListener();
     _controller!.dispose();
-    SocketService.instance.disconnect();
     super.dispose();
   }
 
@@ -108,10 +98,18 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
-      const CategoriesPage(),
+      const Padding(
+        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: CategoriesPage(),
+      ),
       const AddProductScreen(),
-      const ChatList(),
-      const AccountScreen(),
+      const Padding(
+          padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+          child: ChatList()),
+      const Padding(
+        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: AccountScreen(),
+      ),
     ];
     return Scaffold(
         body: Stack(
@@ -178,8 +176,8 @@ class _BottomBarState extends State<BottomBar> {
                       color: Colors.white,
                       height: 42,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child:
-                          const Icon(Icons.mic, color: Colors.black, size: 25),
+                      // child:
+                      //     const Icon(Icons.mic, color: Colors.black, size: 25),
                     ),
                   ],
                 ),

@@ -3,17 +3,17 @@ import 'package:uniplanet_mobile/models/user_model.dart';
 
 class Product {
   final String id;
-  final String name;
+  String name;
   final User seller;
   final String description;
-  final String status;
+  String status;
   final List<String> images;
   int likes;
   int numberOfChat;
-  final String category;
-  final double price;
+  String category;
+  double price;
   final DateTime createdAt;
-
+  String location;
   Product({
     required this.id,
     required this.name,
@@ -26,6 +26,7 @@ class Product {
     required this.category,
     required this.price,
     required this.createdAt,
+    required this.location,
   });
   static initProduct() {
     return Product(
@@ -39,6 +40,7 @@ class Product {
         images: [""],
         category: "",
         price: 0,
+        location: "",
         createdAt: DateTime.now());
   }
 
@@ -55,6 +57,7 @@ class Product {
       'price': price,
       'createdAt': createdAt,
       'numberOfChat': numberOfChat,
+      'location': location,
     };
   }
 
@@ -70,6 +73,7 @@ class Product {
       numberOfChat: map['numberOfChat'] as int,
       price: map['price'].toDouble() as double,
       category: map['category'],
+      location: map['location'] ?? "",
       createdAt: DateTime.parse(map['createdAt'].toString()),
     );
   }

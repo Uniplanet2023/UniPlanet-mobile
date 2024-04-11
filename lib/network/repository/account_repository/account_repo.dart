@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/models/account.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
@@ -25,6 +26,49 @@ class AccountRepository implements IAccountRepository {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<Account?> updateName({required String name}) async {
+    try {
+      Response res = await _dioClient.dio.put('$accountURI/update-name',
+          data: {'name': name}, options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        SnackbarGlobal.showSnackBar(
+          "Name updated successfully",
+        );
+        Account result = Account.fromJson(res.data);
+        return result;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Account?> updateProfileImage({required String profileImage}) async {
+    try {
+      Response res = await _dioClient.dio.put('$accountURI/update-profile',
+          data: {'profileImage': profileImage},
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        SnackbarGlobal.showSnackBar(
+          "Profile image updated successfully",
+        );
+        Account result = Account.fromJson(res.data);
+        return result;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 }

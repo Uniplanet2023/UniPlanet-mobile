@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet_mobile/common/enums/chat_enum.dart';
+import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
@@ -11,67 +15,128 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;
-  const ContactsList({super.key, required this.list});
+  final String sort;
+  const ContactsList({super.key, required this.list, required this.sort});
 
   @override
   State<ContactsList> createState() => _ContactsListState();
 }
 
 class _ContactsListState extends State<ContactsList> {
+  _onDismissed(int index, ChatActions action) {
+    switch (action) {
+      case ChatActions.archive:
+        // Archive chat room
+        break;
+      // ignore: constant_pattern_never_matches_value_type
+      case ChatActions.delete:
+        // Delete chat room
+        context
+            .read<ChatBloc>()
+            .add(DeleteChatRoomEvent(chatId: widget.list[index].id));
+        setState(() {
+          widget.list.removeAt(index);
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.list.length,
-        itemBuilder: (context, index) {
-          return Builder(builder: (BuildContext innerContext) {
-            User client = widget.list[index].seller.id == AuthRepository.userId
-                ? widget.list[index].buyer
-                : widget.list[index].seller;
+      child: SlidableAutoCloseBehavior(
+        closeWhenOpened: true,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.list.length,
+          itemBuilder: (context, index) {
+            return Builder(builder: (BuildContext innerContext) {
+              User client =
+                  widget.list[index].seller.id == AuthRepository.userId
+                      ? widget.list[index].buyer
+                      : widget.list[index].seller;
 
-            // Determine if the user is typing f    or this chat room.
-            Message last;
-            if (widget.list[index].lastMessage != null) {
-              last = widget.list[index].lastMessage!;
-            }
-            last = innerContext.select<MessageBloc, Message>((bloc) {
-              if (bloc.state is ReadMessageState ||
-                  bloc.state is ReceivedMessageState ||
-                  bloc.state is LoadedMessageState) {
-                if ((bloc.state).chatMessages[widget.list[index].id] != null) {
-                  return bloc.state.chatMessages[widget.list[index].id]!.first;
-                }
-              }
+              // Determine if the user is typing f    or this chat room.
+              Message last;
               if (widget.list[index].lastMessage != null) {
-                return widget.list[index].lastMessage!;
+                last = widget.list[index].lastMessage!;
               } else {
-                return Message.initMessage();
+                last = Message.initMessage();
               }
-            });
 
-            return Column(
-              children: [
-                InkWell(
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) {
-                        return ChatScreen(
-                          client: client,
-                          myChatRoom: widget.list[index],
-                        );
-                      }),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: ListTile(
+              return Slidable(
+                key: Key(widget.list[index].id),
+                startActionPane: ActionPane(
+                  motion: const StretchMotion(),
+                  dismissible: DismissiblePane(
+                    onDismissed: () {
+                      _onDismissed(index, ChatActions.archive);
+                    },
+                  ),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDismissed(index, ChatActions.archive);
+                        // Delete chat room
+                        // context.read<MessageBloc>().add(DeleteChatRoomEvent(
+                        //     chatRoomId: widget.list[index].id));
+                      },
+                      icon: Icons.share,
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                      label: 'Share',
+                    ),
+                  ],
+                ),
+                endActionPane: ActionPane(
+                  motion: const BehindMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDismissed(index, ChatActions.delete);
+                      },
+                      icon: Icons.delete,
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      label: 'Delete',
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        final slidable = Slidable.of(innerContext);
+                        if (slidable == null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return ChatScreen(
+                                client: client,
+                                chatRoomId: widget.list[index].id,
+                              );
+                            }),
+                          );
+                        } else {
+                          final isClosed = slidable.actionPaneType.value ==
+                              ActionPaneType.none;
+                          if (isClosed) {
+                            slidable.openStartActionPane();
+                          } else {
+                            slidable.close();
+                          }
+                        }
+                      },
                       title: Text(
-                        client.name,
+                        widget.sort == 'product'
+                            ? widget.list[index].productName
+                            : client.name,
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -82,17 +147,29 @@ class _ContactsListState extends State<ContactsList> {
                           builder: (context, state) {
                             bool isTyping = state is TypingStarted &&
                                 state.chatId == widget.list[index].id;
-                            return Text(
-                              isTyping ? "Typing..." : last.message,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight:
-                                    last.sender != AuthRepository.userId &&
-                                            last.readDate == null
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                              ),
-                            );
+                            return last.messageType == MessageEnum.image.value
+                                ? Text(
+                                    "Image",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: last.sender !=
+                                                  AuthRepository.userId &&
+                                              last.readDate == null
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  )
+                                : Text(
+                                    isTyping ? "Typing..." : last.message,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: last.sender !=
+                                                    AuthRepository.userId &&
+                                                last.readDate == null
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        overflow: TextOverflow.ellipsis),
+                                  );
                           },
                         ),
                       ),
@@ -100,7 +177,7 @@ class _ContactsListState extends State<ContactsList> {
                         children: [
                           CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
-                              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
+                              "https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg",
                               cacheManager: GlobalVariables.customCacheManager,
                             ),
                             radius: 30,
@@ -170,14 +247,14 @@ class _ContactsListState extends State<ContactsList> {
                         ],
                       ),
                     ),
-                  ),
+                    const Divider(
+                        color: GlobalVariables.backgroundColor, indent: 85),
+                  ],
                 ),
-                const Divider(
-                    color: GlobalVariables.backgroundColor, indent: 85),
-              ],
-            );
-          });
-        },
+              );
+            });
+          },
+        ),
       ),
     );
   }

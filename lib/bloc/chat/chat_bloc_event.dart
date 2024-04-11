@@ -8,13 +8,22 @@ class CreateChatRoomEvent extends ChatBlocEvent {
   final User seller;
   final User buyer;
   final String productId;
+  final String productName;
   const CreateChatRoomEvent({
     required this.seller,
     required this.buyer,
     required this.productId,
+    required this.productName,
   });
   @override
   List<Object> get props => [seller, buyer, productId];
+}
+
+class AddChatRoomEvent extends ChatBlocEvent {
+  final ChatRoom chatRoom;
+  const AddChatRoomEvent(this.chatRoom);
+  @override
+  List<Object> get props => [chatRoom];
 }
 
 class LoadChatRoomEvent extends ChatBlocEvent {
@@ -35,21 +44,12 @@ class UpdateChatRoomLastMessageEvent extends ChatBlocEvent {
   List<Object> get props => [lastMessage];
 }
 
-class ClientStatusChangeEvent extends ChatBlocEvent {
+class UserInfoChangeEvent extends ChatBlocEvent {
   final String userId;
-  const ClientStatusChangeEvent(this.userId);
+  const UserInfoChangeEvent(this.userId);
 
   @override
   List<Object> get props => [userId];
-}
-
-class ClientStatusDisconnectEvent extends ChatBlocEvent {
-  final String userId;
-  const ClientStatusDisconnectEvent(this.userId);
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [userId];
 }
 
 //Unseen Message
@@ -63,6 +63,14 @@ class UpdateUnseenMessageEvent extends ChatBlocEvent {
 class EmptyUnseenMessageEvent extends ChatBlocEvent {
   final String chatId;
   const EmptyUnseenMessageEvent({required this.chatId});
+  @override
+  List<Object?> get props => [chatId];
+}
+
+// delete chat room
+class DeleteChatRoomEvent extends ChatBlocEvent {
+  final String chatId;
+  const DeleteChatRoomEvent({required this.chatId});
   @override
   List<Object?> get props => [chatId];
 }

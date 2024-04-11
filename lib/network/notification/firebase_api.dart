@@ -7,6 +7,7 @@ class FirebaseApi {
   // ignore: prefer_typing_uninitialized_variables
   static late final firebaseToken;
   Future<void> initNotification() async {
+
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -29,9 +30,9 @@ class FirebaseApi {
       }
 
       print('FCM Token: $firebaseToken');
-    } else {
-      print('User declined permission');
-    }
+    // } else {
+    //   print('User declined permission');
+    // }
   }
 
   Future<void> subscribeToTopic(String topic) async {

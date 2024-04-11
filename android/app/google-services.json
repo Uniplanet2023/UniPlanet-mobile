@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1003008222202:android:e5f9a0cd65d6731d517a43",
+        "android_client_info": {
+          "package_name": "com.example.uniplanet_market"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw2Vy6fUh35DUppMs8jJXgSuRzA5Jz9NE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1003008222202:android:a5a7c8d2c98f34e1517a43",
         "android_client_info": {
           "package_name": "com.example.uniplanet_mobile"

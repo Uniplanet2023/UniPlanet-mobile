@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final bool validatorEnabled;
   final int? maxLength;
+  final Color? borderColor; // Added borderColor parameter
 
   const CustomTextField({
     super.key,
@@ -24,6 +25,7 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.validatorEnabled = true,
     this.maxLength,
+    this.borderColor, // Initialize borderColor
   });
 
   @override
@@ -37,13 +39,20 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
           prefixText: prefixText,
           hintText: hintText,
-          border: const OutlineInputBorder(
+          border: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.black38,
+            color: borderColor ?? Colors.black38, // Use borderColor if provided
           )),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-            color: Colors.black38,
+            color: borderColor ?? Colors.black38, // Use borderColor if provided
+          )),
+          // Add a focused border to highlight the field when it is active
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+            color: borderColor ??
+                Colors.blue, // Use borderColor if provided, default to blue
+            width: 2.0, // You can adjust the width
           ))),
       validator: (val) {
         if (!validatorEnabled) {
@@ -55,7 +64,7 @@ class CustomTextField extends StatelessWidget {
         return null;
       },
       maxLines: maxLines,
-      maxLength: (maxLength != null) ? maxLength : null,
+      maxLength: maxLength,
     );
   }
 }

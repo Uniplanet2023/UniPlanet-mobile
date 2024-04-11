@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/models/get_chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
@@ -17,6 +18,7 @@ class ChatRepository {
 
   Future<ChatRoom> creatingChatRoom(
       {required String productId,
+      required String productName,
       required User seller,
       required User buyer}) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
@@ -26,12 +28,13 @@ class ChatRepository {
         options: _dioClient.getDioOptions(),
         data: {
           'productId': productId,
+          'productName': productName,
           'seller': seller,
           'buyer': buyer,
         },
       );
 
-      chatRoom = ChatRoom.fromMap(res.data);
+      chatRoom = ChatRoom.fromMap(res.data['chat']);
     } on DioException catch (e) {
       _handleDioException(e);
     }
@@ -66,17 +69,41 @@ class ChatRepository {
     }
   }
 
-  Future<List<ChatRoom>> getChatRooms() async {
+  Future<GetChatRooms> getChatRooms() async {
+    List<ChatRoom> chatRoomList = [];
     try {
       Response res = await _dioClient.dio
           .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
+      if (res.data.length == 0) {
+        return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
+      }
+      chatRoomList = List<ChatRoom>.from(
+          res.data['chatList'].map((data) => ChatRoom.fromMap(data['chat'])));
 
-      List<ChatRoom> chatRoomList =
-          List<ChatRoom>.from(res.data.map((data) => ChatRoom.fromMap(data)));
-      return chatRoomList;
+      return GetChatRooms(
+          chatRooms: chatRoomList,
+          totalUnseenMessageCount: res.data["totalUnseenMessage"]);
     } on DioException catch (e) {
       _handleDioException(e);
-      return [];
+      return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
+    }
+  }
+
+  Future<String> deleteChatRoom({required String chatId}) async {
+    try {
+      Response res = await _dioClient.dio.delete(
+        '$chatURI/delete-chat/$chatId',
+        options: _dioClient.getDioOptions(),
+      );
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        return "success";
+      } else {
+        return "failed";
+      }
+    } on DioException catch (e) {
+      _handleDioException(e);
+      return "failed";
     }
   }
 

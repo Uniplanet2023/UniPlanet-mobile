@@ -1,21 +1,20 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/chat_list.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
+import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
-import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
-  final ChatRoom myChatRoom;
+  final String chatRoomId;
   final User client;
-  const ChatScreen({super.key, required this.client, required this.myChatRoom});
+  const ChatScreen({super.key, required this.client, required this.chatRoomId});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -27,9 +26,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    context.read<MessageBloc>().add(GetMessageEvent(widget.myChatRoom.id));
-    SocketService.currentChatLocation = widget.myChatRoom.id;
-    SocketService.instance.readAllMessages(widget.myChatRoom.id);
+    context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoomId));
+    SocketService.currentChatLocation = widget.chatRoomId;
+    Global.socketService.readAllMessages(widget.chatRoomId);
     super.initState();
   }
 
@@ -107,13 +106,15 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: BlocListener<MessageBloc, MessageBlocState>(
         listener: (context, state) {
-          var chatMessages = state.chatMessages[widget.myChatRoom.id] ?? [];
+          var chatMessages = state.chatMessages[widget.chatRoomId] ?? [];
           // TODO: implement listener
-          if (state is LoadedMessageState || state is ReceivedMessageState) {
-            setState(() {
-              messages = chatMessages;
-            });
-          } else if (state is ReadMessageState) {
+          if (state is LoadingMessageState ||
+              state is LoadedMessageState ||
+              state is ReceivedMessageState ||
+              state is ReadMessageState ||
+              state is SentMessageState ||
+              state is SendingMessageState ||
+              state is ErrorMessageState) {
             setState(() {
               messages = chatMessages;
             });
@@ -124,11 +125,11 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
                 child: ChatList(
               scrollController: _scrollController,
-              chatRoom: widget.myChatRoom,
-              messages: messages,
+              chatRoomId: widget.chatRoomId,
+              messages: messages.reversed.toList(),
             )),
             BottomChatField(
-              chatRoomId: widget.myChatRoom.id,
+              chatRoomId: widget.chatRoomId,
               scrollDownfuction: _scrollToBottom,
               sellerId: widget.client.id,
             ),
