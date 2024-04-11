@@ -29,7 +29,6 @@ class InventoryProductBox extends StatefulWidget {
 class _InventoryProductBoxState extends State<InventoryProductBox> {
   @override
   Widget build(BuildContext context) {
-    bool confirm;
     return widget.productList == []
         ? const Loader()
         : SlidableAutoCloseBehavior(
@@ -100,17 +99,8 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                         ),
                         SlidableAction(
                           onPressed: (_) async => {
-                            confirm = await removeProductDialog(
-                                    context,
-                                    'Delete the product from sale history?',
-                                    'Delete',
-                                    Icons.delete_forever_outlined,
-                                    () {}) ??
-                                false,
-                            if (confirm && context.mounted)
-                              context.read<ProductBloc>().add(
-                                  DeleteProductEvent(
-                                      productId: widget.productList[index].id)),
+                            context.read<ProductBloc>().add(DeleteProductEvent(
+                                productId: widget.productList[index].id)),
                           },
                           icon: Icons.delete,
                           label: 'Remove',
