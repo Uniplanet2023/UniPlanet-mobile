@@ -7,29 +7,28 @@ class FirebaseApi {
   // ignore: prefer_typing_uninitialized_variables
   static late final firebaseToken;
   Future<void> initNotification() async {
-
-    NotificationSettings settings = await firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: false,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    // NotificationSettings settings = await firebaseMessaging.requestPermission(
+    //   alert: true,
+    //   announcement: false,
+    //   badge: false,
+    //   carPlay: false,
+    //   criticalAlert: false,
+    //   provisional: false,
+    //   sound: true,
+    // );
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
-    if (settings.authorizationStatus == AuthorizationStatus.authorized ||
-        settings.authorizationStatus == AuthorizationStatus.provisional) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var fcmToken = prefs.get('fcm_token');
-      if (fcmToken == null) {
-        firebaseToken = await firebaseMessaging.getToken();
-        prefs.setString('fcm_token', firebaseToken);
-      } else {
-        firebaseToken = fcmToken;
-      }
+    // if (settings.authorizationStatus == AuthorizationStatus.authorized ||
+    //     settings.authorizationStatus == AuthorizationStatus.provisional) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var fcmToken = prefs.get('fcm_token');
+    if (fcmToken == null) {
+      firebaseToken = await firebaseMessaging.getToken();
+      prefs.setString('fcm_token', firebaseToken);
+    } else {
+      firebaseToken = fcmToken;
+    }
 
-      print('FCM Token: $firebaseToken');
+    print('FCM Token: $firebaseToken');
     // } else {
     //   print('User declined permission');
     // }
