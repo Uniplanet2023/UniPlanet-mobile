@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -10,6 +11,7 @@ import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.dart';
+import 'package:uniplanet_mobile/features/edit-product/edit_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
@@ -100,16 +102,80 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                           ),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Hero(
-                                      tag: "product-picture-${product.id}",
-                                      child: product.images.isEmpty
-                                          ? const Icon(
-                                              Icons.image_not_supported,
-                                              size: 135,
+
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Hero(
+                                  tag: "product-picture-${product.id}",
+                                  child: product.images.isEmpty
+                                      ? const Icon(
+                                          Icons.image_not_supported,
+                                          size: 135,
+                                        )
+                                      : Container(
+                                          foregroundDecoration: BoxDecoration(
+                                            color: (product.status == 'On Sale')
+                                                ? Colors.transparent
+                                                : Colors.grey,
+                                            backgroundBlendMode:
+                                                BlendMode.saturation,
+                                          ),
+                                          child: CachedNetworkImage(
+                                            cacheManager: GlobalVariables
+                                                .customCacheManager,
+                                            imageUrl: product.images[0],
+                                            key: UniqueKey(),
+                                            fit: BoxFit.cover,
+                                            height: 135,
+                                            width: 135,
+                                            placeholder: (context, url) =>
+                                                const Center(
+                                                    child:
+                                                        CircularProgressIndicator()),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Container(
+                                              color: Colors.black12,
+                                              child: const Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                                size: 80,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "${product.name[0].toUpperCase()}${product.name.substring(1).toLowerCase()}",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      product.price == 0
+                                          ? Text(
+                                              product.price == 0
+                                                  ? 'Free'
+                                                  : '\$${product.price}',
+                                              style: const TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
                                             )
                                           : Container(
                                               foregroundDecoration:
@@ -145,13 +211,38 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                                 ),
                                               ),
                                             ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                      child: Column(
+
+                                      const SizedBox(
+                                        height: 25,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            size: 18,
+                                            color: product.status == 'On Sale'
+                                                ? GlobalVariables.secondaryColor
+                                                : Colors.grey,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              product.location,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  color: product.status ==
+                                                          'On Sale'
+                                                      ? GlobalVariables
+                                                          .secondaryColor
+                                                      : Colors.grey),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         crossAxisAlignment:
@@ -355,7 +446,85 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                               ),
                             ],
                           ),
-                        ),
+
+                          if (product.status == 'On Sale' &&
+                              product.seller.id == AuthRepository.userId)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                customButton(
+                                  const Icon(
+                                    Icons.price_change_outlined,
+                                    color: Colors.black,
+                                  ),
+                                  GlobalVariables.secondaryColor,
+                                  'Edit  Details',
+                                  () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditProductScreen(
+                                        productImages: product.images,
+                                        productName: product.name,
+                                        productCategory: product.category,
+                                        productPrice: product.price,
+                                        productDescription: product.description,
+                                        selectedLocation: product.location,
+                                        productId: product.id,
+                                      ),
+                                    ),
+                                  ),
+                                  Colors.black,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Expanded(
+                                  child: customButton(
+                                      const Icon(
+                                        Icons.archive_outlined,
+                                        color: Colors.red,
+                                      ),
+                                      Colors.red,
+                                      'Remove from Market',
+                                      () => removeProductDialog(
+                                          context,
+                                          'Remove the product for the Market?',
+                                          'Remove',
+                                          Icons.archive_outlined,
+                                          () {}),
+                                      Colors.red),
+                                ),
+                              ],
+                            )
+                          else if (product.status == 'Sold' &&
+                              product.seller.id == AuthRepository.userId)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: customButton(
+                                      const Icon(
+                                        Icons.delete_forever_outlined,
+                                        color: Colors.red,
+                                      ),
+                                      Colors.red,
+                                      'Delete Product',
+                                      () => removeProductDialog(
+                                          context,
+                                          'Delete the product from sale history?',
+                                          'Delete',
+                                          Icons.delete_forever_outlined,
+                                          () {}),
+                                      Colors.red),
+                                ),
+                              ],
+                            ),
+                          const Divider(
+                            thickness: 0.2,
+                            indent: 8,
+                            endIndent: 8,
+                          ),
+                        ],
                       ),
                     ),
                   );

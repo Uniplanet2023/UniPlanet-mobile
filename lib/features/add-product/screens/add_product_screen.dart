@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/common/status/product_status.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -263,7 +262,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                     const SizedBox(height: 15),
                     Container(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      height: 60,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(color: Colors.grey, width: 1),

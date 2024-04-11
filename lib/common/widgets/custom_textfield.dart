@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -51,7 +52,8 @@ class CustomTextField extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
             color: borderColor ??
-                Colors.blue, // Use borderColor if provided, default to blue
+                GlobalVariables
+                    .secondaryColor, // Use borderColor if provided, default to blue
             width: 2.0, // You can adjust the width
           ))),
       validator: (val) {

@@ -1,5 +1,6 @@
 import 'dart:isolate';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
@@ -168,13 +169,16 @@ class _ItemBoxState extends State<ItemBox> {
                                             color:
                                                 GlobalVariables.secondaryColor,
                                           ),
-                                          Text(
-                                            product.location,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
+                                          Expanded(
+                                            child: Text(
+                                              product.location,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: const TextStyle(
                                                 color: GlobalVariables
-                                                    .secondaryColor),
+                                                    .secondaryColor,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
