@@ -27,7 +27,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late User currentUser;
-
+  bool isLikeProduct = false;
   int currentIndex = 0;
 
   @override
@@ -328,27 +328,53 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       children: [
         BlocBuilder<LikeBloc, LikeState>(
           builder: (context, state) {
-            bool isLikeProduct = false;
-            for (var element in state.likeProduct) {
-              if (element.id == widget.product.id) {
-                isLikeProduct = true;
-                break;
+            if (state is LikeLoaded) {
+              for (var element in state.likeProduct) {
+                if (element.id == widget.product.id) {
+                  isLikeProduct = true;
+                  break;
+                }
               }
+            } else if (state is LikeRemoved) {
+              isLikeProduct = false;
+            } else if (state is LikeAdded) {
+              isLikeProduct = true;
             }
+
             return IconButton(
               icon: isLikeProduct
                   ? const Icon(Icons.favorite, color: Colors.red)
                   : const Icon(Icons.favorite_border),
               onPressed: () => {
-                isLikeProduct
-                    ? context.read<LikeBloc>().add(RemoveLikeEvent(
-                          product: widget.product,
-                          user: context.read<AccountBloc>().state.account.user,
-                        ))
-                    : context.read<LikeBloc>().add(AddLikeEvent(
-                          product: widget.product,
-                          user: context.read<AccountBloc>().state.account.user,
-                        ))
+                if (state is LikeLoading ||
+                    state is LikeRemoving ||
+                    state is LikeAdding)
+                  {}
+                else
+                  {
+                    if (isLikeProduct)
+                      {
+                        context.read<LikeBloc>().add(RemoveLikeEvent(
+                              product: widget.product,
+                              user: context
+                                  .read<AccountBloc>()
+                                  .state
+                                  .account
+                                  .user,
+                            )),
+                      }
+                    else
+                      {
+                        context.read<LikeBloc>().add(AddLikeEvent(
+                              product: widget.product,
+                              user: context
+                                  .read<AccountBloc>()
+                                  .state
+                                  .account
+                                  .user,
+                            ))
+                      }
+                  }
               },
             );
           },
