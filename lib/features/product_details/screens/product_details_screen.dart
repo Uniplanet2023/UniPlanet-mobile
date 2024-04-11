@@ -12,6 +12,7 @@ import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
 import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.dart';
+import 'package:uniplanet_mobile/features/edit-product/edit_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
@@ -259,7 +260,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ? Row(
                               children: [
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditProductScreen(
+                                        productImages: widget.product.images,
+                                        productName: widget.product.name,
+                                        productCategory:
+                                            widget.product.category,
+                                        productPrice: widget.product.price,
+                                        productDescription:
+                                            widget.product.description,
+                                        selectedLocation:
+                                            widget.product.location,
+                                        productId: widget.product.id,
+                                      ),
+                                    ),
+                                  ),
                                   icon: const Icon(
                                     Icons.price_change_outlined,
                                     color: GlobalVariables.secondaryColor,

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
@@ -171,15 +172,18 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                                 ? GlobalVariables.secondaryColor
                                                 : Colors.grey,
                                           ),
-                                          Text(
-                                            'Yang Hall',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color:
-                                                    product.status == 'On Sale'
-                                                        ? GlobalVariables
-                                                            .secondaryColor
-                                                        : Colors.grey),
+                                          Expanded(
+                                            child: Text(
+                                              product.location,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  color: product.status ==
+                                                          'On Sale'
+                                                      ? GlobalVariables
+                                                          .secondaryColor
+                                                      : Colors.grey),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -298,6 +302,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                         productCategory: product.category,
                                         productPrice: product.price,
                                         productDescription: product.description,
+                                        selectedLocation: product.location,
                                         productId: product.id,
                                       ),
                                     ),
