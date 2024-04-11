@@ -1,3 +1,5 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
@@ -35,13 +37,21 @@ class AuthScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    WidgetAnimator(
-                      atRestEffect: WidgetRestingEffects.bounce(),
-                      child: Image.asset(
-                        'assets/images/Logo.png',
-                        width: 300,
-                      ),
+                    const SizedBox(height: 100),
+                    AnimatedTextKit(
+                      repeatForever: false,
+                      totalRepeatCount: 1,
+                      animatedTexts: [
+                        ColorizeAnimatedText('UniKet',
+                            colors: [
+                              Colors.purple.shade100,
+                              Colors.blue,
+                              Colors.yellow,
+                              Colors.red,
+                            ],
+                            textStyle: GoogleFonts.lobster(
+                                fontSize: 100, fontWeight: FontWeight.w800)),
+                      ],
                     ),
                     const Text(
                       'Selling Smarter,',
