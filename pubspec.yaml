@@ -63,6 +63,7 @@ dependencies:
   awesome_notifications: any # <~ this version is managed by awesome_notifications_core package
   flutter_spinkit: ^5.2.1
   flutter_slidable: ^3.1.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/features/home/widgets/buildProductBox.dart';
 import 'package:uniplanet_mobile/features/home/widgets/top_categories.dart';
@@ -68,26 +70,28 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CustomScrollView(
           controller: widget.controller,
           slivers: <Widget>[
-            const SliverAppBar(
+            SliverAppBar(
               pinned: false,
               snap: true,
               floating: true,
               expandedHeight: 35.0,
-              flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                title: TopCategories(),
-                background: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 114, 226, 221),
-                        Color.fromARGB(255, 162, 236, 233),
-                      ],
-                      stops: [0.5, 1.0],
+              backgroundColor: Colors.white,
+              leading: Container(
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 5),
+                    Text(
+                      "UniKet",
+                      style: GoogleFonts.lobster(
+                        fontSize: 25.sp,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
+              leadingWidth: 100,
             ),
             SliverToBoxAdapter(
               child: SizedBox(
