@@ -49,9 +49,28 @@ class UploadProductEvent extends ProductEvent {
       ];
 }
 
+class UpdateProductEvent extends ProductEvent {
+  final Product product;
+
+  const UpdateProductEvent({
+    required this.product,
+  });
+  @override
+  List<Object?> get props => [
+        product,
+      ];
+}
+
 class IncreaseClickProductEvent extends ProductEvent {
   final String productId;
   const IncreaseClickProductEvent(this.productId);
+  @override
+  List<Object?> get props => [productId];
+}
+
+class DeleteProductEvent extends ProductEvent {
+  final String productId;
+  const DeleteProductEvent({required this.productId});
   @override
   List<Object?> get props => [productId];
 }

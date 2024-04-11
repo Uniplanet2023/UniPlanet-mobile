@@ -4,7 +4,7 @@ package="com.example.uniplanet_mobile"
     <application
         android:label="uniplanet_mobile"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/_launcher_icon"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         >

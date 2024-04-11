@@ -23,7 +23,9 @@ class InventoryProductsScreen extends StatelessWidget {
             builder: (context, state) {
               return InventoryProductBox(
                 productList: state.productList
-                    .where((product) => (product.seller.id == user.id))
+                    .where((product) =>
+                        (product.seller.id == user.id) &&
+                        (product.status == 'On Sale'))
                     .toList(),
               );
             },

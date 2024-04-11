@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 // Models
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
@@ -12,6 +13,8 @@ part 'product_event.dart';
 part 'product_state/basic_state.dart';
 part 'product_state/get_product.dart';
 part 'product_state/upload_product.dart';
+part 'product_state/update_product.dart';
+part 'product_state/delete_product.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductRepository _productRepository;
@@ -28,7 +31,57 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<IncreaseClickProductEvent>((event, emit) async {
       _increaseClickProduct(event, emit);
     });
+    on<UpdateProductEvent>((event, emit) async {
+      await _updateProduct(event, emit);
+    });
+    on<DeleteProductEvent>((event, emit) async {
+      await _deleteProduct(event, emit);
+    });
   }
+  _deleteProduct(DeleteProductEvent event, emit) async {
+    emit(
+        ProductDeletingState(productList: state.productList, page: state.page));
+    String msg =
+        await _productRepository.deleteProduct(productId: event.productId);
+    if (msg == 'success') {
+      List<Product> productList = state.productList;
+      productList.removeWhere((element) => element.id == event.productId);
+      emit(ProductDeletedState(productList: productList, page: state.page));
+    } else {
+      emit(ErrorProductUploadState("Error deleting product",
+          productList: state.productList, page: state.page));
+    }
+  }
+
+  _updateProduct(UpdateProductEvent event, emit) async {
+    emit(
+        ProductUpdatingState(productList: state.productList, page: state.page));
+    Product? updatedProduct = await _productRepository.updateProduct(
+      productId: event.product.id,
+      productName: event.product.name,
+      category: event.product.category,
+      status: event.product.status,
+      description: event.product.description,
+      price: event.product.price,
+      location: event.product.location,
+    );
+    if (updatedProduct == null) {
+      emit(ErrorProductUploadState("Error updating product",
+          productList: state.productList, page: state.page));
+    } else {
+      List<Product> productList = state.productList;
+      int index =
+          productList.indexWhere((element) => element.id == updatedProduct.id);
+      if (index != -1) {
+        productList[index] = updatedProduct;
+        emit(ProductUpdatedState(productList: productList, page: state.page));
+      } else {
+        emit(ErrorProductUploadState("Error updating product",
+            productList: state.productList, page: state.page));
+      }
+    }
+  }
+
   _increaseClickProduct(IncreaseClickProductEvent event, emit) async {
     _productRepository.clickProduct(event.productId);
   }

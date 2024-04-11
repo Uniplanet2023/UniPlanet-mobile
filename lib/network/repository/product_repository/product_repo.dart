@@ -15,7 +15,7 @@ class ProductRepository {
 
   ProductRepository(this._dioClient);
 
-  Future<Product?> deleteProduct({required String productId}) async {
+  Future<String> deleteProduct({required String productId}) async {
     try {
       final response = await _dioClient.dio.delete(
         '$productURI/delete-product/$productId',
@@ -23,12 +23,12 @@ class ProductRepository {
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
-        return Product.fromMap(response.data);
+        return "success";
       }
     } on DioException catch (e) {
       print(e);
     }
-    return null;
+    return 'failed';
   }
 
   Future<List<Product>> searchProduct(int? page, String productName) async {
@@ -82,6 +82,7 @@ class ProductRepository {
     String? description,
     double? price,
     String? category,
+    String? location,
     List<String>? images,
   }) async {
     try {
@@ -94,6 +95,7 @@ class ProductRepository {
           'images': images,
           'price': price,
           'category': category,
+          'location': location,
         },
         options: _dioClient.getDioOptions(),
       );

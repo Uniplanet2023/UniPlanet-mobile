@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/constants/number_formatter.dart';
 import 'package:uniplanet_mobile/constants/price_formatter.dart';
 import 'package:uniplanet_mobile/constants/time_formatter.dart';
@@ -38,15 +39,28 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                     startActionPane: ActionPane(
                       motion: const ScrollMotion(),
                       dismissible: DismissiblePane(
-                        onDismissed: () => {},
+                        onDismissed: () => {
+                          widget.productList[index].status == 'Sold'
+                              ? widget.productList[index].status = 'On Sale'
+                              : widget.productList[index].status = 'Sold',
+                          context.read<ProductBloc>().add(UpdateProductEvent(
+                              product: widget.productList[index])),
+                        },
                       ),
                       children: [
-                        SlidableAction(
-                          onPressed: (_) => {},
-                          icon: Icons.done,
-                          label: 'Mark as Sold',
-                          backgroundColor: Colors.green,
-                        ),
+                        widget.productList[index].status == 'Sold'
+                            ? SlidableAction(
+                                onPressed: (_) => {},
+                                icon: Icons.replay_outlined,
+                                label: 'Mark as On Sale',
+                                backgroundColor: Colors.blue,
+                              )
+                            : SlidableAction(
+                                onPressed: (_) => {},
+                                icon: Icons.done,
+                                label: 'Mark as Sold',
+                                backgroundColor: Colors.green,
+                              )
                       ],
                     ),
                     endActionPane: ActionPane(
@@ -59,7 +73,10 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                           backgroundColor: GlobalVariables.secondaryColor,
                         ),
                         SlidableAction(
-                          onPressed: (_) => {},
+                          onPressed: (_) => {
+                            context.read<ProductBloc>().add(DeleteProductEvent(
+                                productId: widget.productList[index].id)),
+                          },
                           icon: Icons.delete,
                           label: 'Remove from Market',
                           backgroundColor: Colors.red,
@@ -331,65 +348,6 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                   ),
                                 ],
                               ),
-                              if (product.status == 'onSale' &&
-                                  product.seller.id == AuthRepository.userId)
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    customButton(
-                                        const Icon(
-                                          Icons.price_change_outlined,
-                                          color: Colors.black,
-                                        ),
-                                        GlobalVariables.secondaryColor,
-                                        'Edit  Details',
-                                        () => {},
-                                        Colors.black),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
-                                      child: customButton(
-                                          const Icon(
-                                            Icons.archive_outlined,
-                                            color: Colors.red,
-                                          ),
-                                          Colors.red,
-                                          'Remove from Market',
-                                          () => removeProductDialog(
-                                              context,
-                                              'Remove the product for the Market?',
-                                              'Remove',
-                                              Icons.archive_outlined,
-                                              () {}),
-                                          Colors.red),
-                                    ),
-                                  ],
-                                )
-                              else if (product.status == 'Sold' &&
-                                  product.seller.id == AuthRepository.userId)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: customButton(
-                                          const Icon(
-                                            Icons.delete_forever_outlined,
-                                            color: Colors.red,
-                                          ),
-                                          Colors.red,
-                                          'Delete Product',
-                                          () => removeProductDialog(
-                                              context,
-                                              'Delete the product from sale history?',
-                                              'Delete',
-                                              Icons.delete_forever_outlined,
-                                              () {}),
-                                          Colors.red),
-                                    ),
-                                  ],
-                                ),
                               const Divider(
                                 thickness: 0.2,
                                 indent: 8,

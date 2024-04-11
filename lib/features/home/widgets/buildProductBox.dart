@@ -170,11 +170,11 @@ class _ItemBoxState extends State<ItemBox> {
                                           ),
                                           Text(
                                             product.location,
+                                            maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
-                                              color: GlobalVariables
-                                                  .secondaryColor,
-                                            ),
+                                                color: GlobalVariables
+                                                    .secondaryColor),
                                           ),
                                         ],
                                       ),

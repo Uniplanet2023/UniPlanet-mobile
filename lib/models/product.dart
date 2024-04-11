@@ -3,17 +3,17 @@ import 'package:uniplanet_mobile/models/user_model.dart';
 
 class Product {
   final String id;
-  final String name;
+  String name;
   final User seller;
   final String description;
-  final String status;
+  String status;
   final List<String> images;
   int likes;
   int numberOfChat;
-  final String category;
-  final double price;
+  String category;
+  double price;
   final DateTime createdAt;
-  final String location;
+  String location;
   Product({
     required this.id,
     required this.name,
