@@ -38,20 +38,10 @@ class AuthScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 100),
-                    AnimatedTextKit(
-                      repeatForever: false,
-                      totalRepeatCount: 1,
-                      animatedTexts: [
-                        ColorizeAnimatedText('UniKet',
-                            colors: [
-                              Colors.purple.shade100,
-                              Colors.blue,
-                              Colors.yellow,
-                              Colors.red,
-                            ],
-                            textStyle: GoogleFonts.lobster(
-                                fontSize: 100, fontWeight: FontWeight.w800)),
-                      ],
+                    const Image(
+                      image: AssetImage('assets/images/Logo_nbg.png'),
+                      width: 200,
+                      height: 200,
                     ),
                     const Text(
                       'Selling Smarter,',

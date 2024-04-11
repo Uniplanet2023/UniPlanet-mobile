@@ -71,8 +71,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 flutter_native_splash:
-  color: "#ffffff"
-  image: 'assets/images/Logo.png'
+  color: "#C8F2FF"
+  image: 'assets/images/Logo_nbg.png'
   android: true
   ios: true
   web: false
@@ -81,14 +81,9 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/images/Logo.png"
   min_sdk_android: 21
-web:
-  generate: true
-  image_path: "assets/images/Logo.png"
-  background_color: "#hexcode"
-  theme_color: "#hexcode"
 windows:
   generate: true
-  image_path: "assets/images/Logo.png"
+  image_path: "assets/images/Logo_nbg.png'"
   icon_size: 48 # min:48, max:256, default: 48
 macos:
   generate: true

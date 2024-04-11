@@ -81,17 +81,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     const SizedBox(width: 5),
+                    const Image(
+                        image: AssetImage('assets/images/Logo_nbg.png'),
+                        width: 30,
+                        height: 30),
                     Text(
-                      "UniKet",
-                      style: GoogleFonts.lobster(
-                        fontSize: 25.sp,
+                      'UniKet',
+                      style: GoogleFonts.roboto(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
                   ],
                 ),
               ),
-              leadingWidth: 100,
+              leadingWidth: 200,
             ),
             SliverToBoxAdapter(
               child: SizedBox(

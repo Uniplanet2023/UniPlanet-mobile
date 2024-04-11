@@ -91,9 +91,10 @@ class _SigninScreenState extends State<SigninScreen> {
                       children: [
                         const SizedBox(height: 50),
                         Image.asset(
-                          'assets/images/Logo.png',
-                          width: 200,
+                          'assets/images/Logo_nbg.png',
+                          width: 100,
                         ),
+                        const SizedBox(height: 30),
                         const Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
                           child: Text(
