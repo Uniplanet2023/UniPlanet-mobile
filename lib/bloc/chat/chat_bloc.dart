@@ -119,12 +119,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _updateChatRoomLastMessage(UpdateChatRoomLastMessageEvent event, emit) {
-    bool isUpdated = false;
-
     // Update for buyingChatRooms
     List<ChatRoom> updatedChatRooms = state.chatRooms.map((chatRoom) {
       if (chatRoom.id == event.lastMessage.chat) {
-        isUpdated = true;
         return chatRoom.copyWith(lastMessage: event.lastMessage);
       }
       return chatRoom;
