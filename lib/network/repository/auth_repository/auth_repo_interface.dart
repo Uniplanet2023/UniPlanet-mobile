@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 abstract class IAuthRepository {
   Future<String?> signUpUser({
     required String email,

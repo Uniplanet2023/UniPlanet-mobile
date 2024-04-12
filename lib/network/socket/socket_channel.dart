@@ -124,7 +124,7 @@ class SocketService {
       socket.on('read all message', (data) {
         DateTime seenTime = DateTime.parse(data['readMessageTime']);
         String chatId = data['chatId'];
-        Message msg;
+        // Message msg;
         // if MessageBloc state is receivedMessage, then readAllmessage triggered
         if (context.mounted) {
           context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
@@ -154,7 +154,7 @@ class SocketService {
 
   void resendUnacknowledgedImageMessages() async {
     List<Message> imageMessagesToRetried = [];
-    List<ImageMessage> test = imageMessagesToRetry;
+    // List<ImageMessage> test = imageMessagesToRetry;
     for (var imageMessage in imageMessagesToRetry) {
       Message sentMessage = imageMessage.message;
       try {

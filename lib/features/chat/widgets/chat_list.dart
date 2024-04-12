@@ -5,7 +5,6 @@ import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/message_card.dart';
 import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 
 class ChatList extends StatefulWidget {

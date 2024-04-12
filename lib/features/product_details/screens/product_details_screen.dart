@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
-import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
@@ -15,7 +14,6 @@ import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.
 import 'package:uniplanet_mobile/features/edit-product/edit_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;

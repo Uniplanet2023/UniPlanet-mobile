@@ -1,20 +1,10 @@
 import 'dart:convert';
-import 'dart:ui';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/features/account/screens/help_screen.dart';
-import 'package:uniplanet_mobile/features/category/screens/categories.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/main.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
-import 'package:uniplanet_mobile/statemanager_provider.dart';
 
 class NotificationService {
   static bool isNotificationAllowed = false;

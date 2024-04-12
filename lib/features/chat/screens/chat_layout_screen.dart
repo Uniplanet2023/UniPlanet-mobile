@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
-import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});

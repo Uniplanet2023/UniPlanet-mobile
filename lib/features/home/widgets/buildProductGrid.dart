@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/features/home/widgets/buildProduct.dart';
+import 'package:uniplanet_mobile/features/search/widget/searched-product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 
 Widget buildProductGrid(
@@ -20,14 +21,18 @@ Widget buildProductGrid(
         Expanded(
           child: GridView.builder(
             itemCount: productList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1,
-              mainAxisSpacing: 5,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: category == "Hot Products" ? 1 : 2,
+              childAspectRatio: category == "Hot Products" ? 3 : 1,
+              mainAxisSpacing: category == "Hot Products" ? 0 : 5,
             ),
             itemBuilder: (context, index) {
               final product = productList[index];
-              return buildProductItem(product: product, context: context);
+              return category == "Hot Products"
+                  ? SearchedProduct(
+                      product: product,
+                    )
+                  : buildProductItem(product: product, context: context);
             },
           ),
         ),

@@ -1,15 +1,10 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/change_password_screen.dart';
 import 'package:uniplanet_mobile/features/account/widgets/menu_section.dart';
 import 'package:uniplanet_mobile/network/notification/notification_service.dart';
-
-import '../../../bloc/auth/auth_bloc.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});

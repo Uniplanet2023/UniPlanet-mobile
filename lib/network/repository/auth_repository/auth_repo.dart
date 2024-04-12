@@ -1,16 +1,12 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/constants/error_handling.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/api_def/display_error_messages.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo_interface.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class AuthRepository implements IAuthRepository {
   final DioClient _dioClient;
@@ -45,7 +41,7 @@ class AuthRepository implements IAuthRepository {
         return 'Failed';
       }
     } on DioException catch (e) {
-      return "Dio Error";
+      return "Dio Error - $e";
     }
   }
 
@@ -114,7 +110,7 @@ class AuthRepository implements IAuthRepository {
         return 'Failed';
       }
     } on DioException catch (e) {
-      return "Dio Error";
+      return "Dio Error - $e";
     }
   }
 
