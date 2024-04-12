@@ -10,6 +10,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
 import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
 import 'package:uniplanet_mobile/features/category/screens/categories.dart';
+import 'package:uniplanet_mobile/features/category/screens/category_screen.dart';
 import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
@@ -98,9 +99,9 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
-      const Padding(
-        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
-        child: CategoriesPage(),
+      Padding(
+        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: CategoryPage(),
       ),
       const AddProductScreen(),
       const Padding(
