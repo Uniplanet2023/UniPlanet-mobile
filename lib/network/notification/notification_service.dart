@@ -17,43 +17,51 @@ import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 import 'package:uniplanet_mobile/statemanager_provider.dart';
 
 class NotificationService {
-  static Future<void> init() async {
-    AwesomeNotifications().initialize(
-        // set the icon to null if you want to use the default app icon
-        null,
-        [
-          NotificationChannel(
-            channelGroupKey: 'basic_channel_group',
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: const Color(0xFF9D50DD),
-            ledColor: Colors.white,
-            importance: NotificationImportance.Max,
-            channelShowBadge: true,
-            onlyAlertOnce: true,
-            playSound: true,
-          ),
-        ],
-        // Channel groups are only visual and are not required
-        channelGroups: [
-          NotificationChannelGroup(
+  static bool isNotificationAllowed = false;
+  static Future<bool> init() async {
+    try {
+      AwesomeNotifications().initialize(
+          // set the icon to null if you want to use the default app icon
+          null,
+          [
+            NotificationChannel(
               channelGroupKey: 'basic_channel_group',
-              channelGroupName: 'Basic group')
-        ],
-        debug: true);
-    await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+              channelKey: 'basic_channel',
+              channelName: 'Basic notifications',
+              channelDescription: 'Notification channel for basic tests',
+              defaultColor: const Color(0xFF9D50DD),
+              ledColor: Colors.white,
+              importance: NotificationImportance.Max,
+              channelShowBadge: true,
+              onlyAlertOnce: true,
+              playSound: true,
+            ),
+          ],
+          // Channel groups are only visual and are not required
+          channelGroups: [
+            NotificationChannelGroup(
+                channelGroupKey: 'basic_channel_group',
+                channelGroupName: 'Basic group')
+          ],
+          debug: true);
+      await AwesomeNotifications().setListeners(
+        onActionReceivedMethod: onActionReceivedMethod,
+        onNotificationCreatedMethod: onNotificationCreatedMethod,
+        onNotificationDisplayedMethod: onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod: onDismissActionReceived,
+      );
+      bool isAllow = await AwesomeNotifications().isNotificationAllowed();
 
-    await AwesomeNotifications().setListeners(
-      onActionReceivedMethod: onActionReceivedMethod,
-      onNotificationCreatedMethod: onNotificationCreatedMethod,
-      onNotificationDisplayedMethod: onNotificationDisplayedMethod,
-      onDismissActionReceivedMethod: onDismissActionReceived,
-    );
+      if (!isAllow) {
+        bool isNotificationAllow =
+            await AwesomeNotifications().requestPermissionToSendNotifications();
+        NotificationService.isNotificationAllowed = isNotificationAllow;
+        return isNotificationAllow;
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // Use this method to detect when a new notification or a schedule is created
@@ -129,6 +137,7 @@ class NotificationService {
       scheduled == false || interval != null,
       'Interval must be provided when scheduling a notification',
     );
+    if (NotificationService.isNotificationAllowed == false) return;
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: -1,

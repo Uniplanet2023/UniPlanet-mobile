@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/account.dart';
+import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 import 'package:uniplanet_mobile/network/repository/account_repository/account_repo.dart';
 
 part 'account_event.dart';
@@ -23,7 +26,28 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     on<UpdateProfileImageEvent>((event, emit) async {
       await _updateProfileImage(event, emit);
     });
+    on<UpdateNotificationEvent>((event, emit) async {
+      await _updateNotification(event, emit);
+    });
   }
+  _updateNotification(
+      UpdateNotificationEvent event, Emitter<AccountState> emit) async {
+    emit(UpdatingNotificationState(account: state.account));
+    try {
+      await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+        if (isAllowed) {
+          AwesomeNotifications().requestPermissionToSendNotifications();
+          emit(EnableNotificationState(account: state.account));
+        } else {
+          emit(DisableNotificationState(account: state.account));
+        }
+      });
+    } catch (e) {
+      emit(FailedToUpdateNotificationState(
+          message: e.toString(), account: state.account));
+    }
+  }
+
   _updateProfileImage(
       UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));

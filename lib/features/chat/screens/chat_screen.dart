@@ -9,6 +9,7 @@ import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
+import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {

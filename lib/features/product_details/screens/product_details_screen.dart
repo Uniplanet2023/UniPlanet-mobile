@@ -34,6 +34,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     super.initState();
     currentUser = context.read<AccountBloc>().state.account.user;
+    context.read<LikeBloc>().state.likeProduct.forEach((element) {
+      if (element.id == widget.product.id) {
+        isLikeProduct = true;
+        return;
+      }
+    });
   }
 
   CarouselSlider _buildCarouselSlider() {
@@ -328,14 +334,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       children: [
         BlocBuilder<LikeBloc, LikeState>(
           builder: (context, state) {
-            if (state is LikeLoaded) {
-              for (var element in state.likeProduct) {
-                if (element.id == widget.product.id) {
-                  isLikeProduct = true;
-                  break;
-                }
-              }
-            } else if (state is LikeRemoved) {
+            if (state is LikeRemoved) {
               isLikeProduct = false;
             } else if (state is LikeAdded) {
               isLikeProduct = true;

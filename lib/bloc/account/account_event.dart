@@ -29,3 +29,10 @@ final class UpdateProfileImageEvent extends AccountEvent {
   @override
   List<Object> get props => [image];
 }
+
+final class UpdateNotificationEvent extends AccountEvent {
+  final bool notification;
+  const UpdateNotificationEvent({required this.notification});
+  @override
+  List<Object> get props => [notification];
+}

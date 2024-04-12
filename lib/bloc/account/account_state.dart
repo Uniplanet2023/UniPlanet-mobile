@@ -2,6 +2,7 @@ part of 'account_bloc.dart';
 
 sealed class AccountState extends Equatable {
   final Account account;
+
   const AccountState({required this.account});
 
   @override
@@ -55,6 +56,26 @@ final class UpdatedProfileImageState extends AccountState {
 final class FailedToUpdateProfileImageState extends AccountState {
   final String message;
   const FailedToUpdateProfileImageState(
+      {required this.message, required super.account});
+  @override
+  List<Object> get props => [message];
+}
+
+final class UpdatingNotificationState extends AccountState {
+  const UpdatingNotificationState({required super.account});
+}
+
+final class EnableNotificationState extends AccountState {
+  const EnableNotificationState({required super.account});
+}
+
+final class DisableNotificationState extends AccountState {
+  const DisableNotificationState({required super.account});
+}
+
+final class FailedToUpdateNotificationState extends AccountState {
+  final String message;
+  const FailedToUpdateNotificationState(
       {required this.message, required super.account});
   @override
   List<Object> get props => [message];
