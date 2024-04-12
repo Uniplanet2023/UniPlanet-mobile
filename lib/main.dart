@@ -4,6 +4,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
+import 'package:uniplanet_mobile/common/widgets/error_screen.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
@@ -44,17 +45,7 @@ void main() async {
     // if (inDebug) {
     //   return ErrorWidget(details.exception);
     // }
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'An error occurred. Please restart the app.',
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 20,
-          ),
-        ),
-      ),
-    );
+    return const ErrorScreen();
   };
 
   runApp(const StateManagerProvider());

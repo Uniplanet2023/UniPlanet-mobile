@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
@@ -104,10 +105,11 @@ class _SignupScreenState extends State<SignupScreen> {
                     key: _signUpFormKey,
                     child: Column(
                       children: [
-                        const SizedBox(height: 50),
-                        Image.asset(
-                          'assets/images/Logo.png',
-                          width: 200,
+                        const SizedBox(height: 20),
+                        Lottie.asset('assets/animations/signup.json',
+                            width: 300),
+                        const SizedBox(
+                          height: 10,
                         ),
                         const Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
