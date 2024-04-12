@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
@@ -90,10 +88,8 @@ class _SigninScreenState extends State<SigninScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 50),
-                        Image.asset(
-                          'assets/images/Logo_nbg.png',
-                          width: 100,
-                        ),
+                        Lottie.asset('assets/animations/signin.json',
+                            width: 300),
                         const SizedBox(height: 30),
                         const Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
