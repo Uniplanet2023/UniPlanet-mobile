@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet_mobile/bloc/category/category_bloc.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -75,7 +77,12 @@ class _CategoryPageState extends State<CategoryPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(width: 8.w),
-                  Icon(Icons.arrow_forward_ios, size: 15.sp)
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.category,
+                            arguments: 'Hot Products');
+                      },
+                      icon: Icon(Icons.arrow_forward_ios, size: 15.sp))
                 ],
               ),
             ),
@@ -187,8 +194,9 @@ Widget buildProductContent(Product product) => Container(
             child: ClipRRect(
               borderRadius:
                   BorderRadius.circular(8.w), // Rounded corners for the image
-              child: Image.network(
-                product.images[0], // Replace with your product image path
+              child: CachedNetworkImage(
+                imageUrl:
+                    product.images[0], // Replace with your product image path
                 fit: BoxFit.cover,
               ),
             ),
