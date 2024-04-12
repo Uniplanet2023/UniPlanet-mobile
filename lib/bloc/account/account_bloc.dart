@@ -1,13 +1,9 @@
 import 'dart:io';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/account.dart';
-import 'package:uniplanet_mobile/network/notification/notification_service.dart';
 import 'package:uniplanet_mobile/network/repository/account_repository/account_repo.dart';
 
 part 'account_event.dart';

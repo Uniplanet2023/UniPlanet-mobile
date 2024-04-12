@@ -1,21 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
-import 'package:uniplanet_mobile/constants/number_formatter.dart';
-import 'package:uniplanet_mobile/constants/price_formatter.dart';
-import 'package:uniplanet_mobile/constants/time_formatter.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/widgets/list_item.dart';
-import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.dart';
 import 'package:uniplanet_mobile/features/edit-product/edit_product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/repository/index.dart';
 
 class InventoryProductBox extends StatefulWidget {

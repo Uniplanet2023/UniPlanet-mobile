@@ -104,7 +104,9 @@ class ProductRepository {
         final product = Product.fromMap(response.data);
         return product;
       }
-    } on DioException catch (e) {}
+    } on DioException catch (e) {
+      print("Dio Error - $e");
+    }
     return null;
   }
 

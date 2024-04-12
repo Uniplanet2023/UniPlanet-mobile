@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/bloc/message/message_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet_mobile/common/enums/chat_enum.dart';
@@ -15,7 +14,6 @@ import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;

@@ -24,25 +24,28 @@ class SearchedProduct extends StatelessWidget {
                 tag: "product-picture-${product.id}",
                 child: product.images.isEmpty
                     ? const SizedBox(
-                        height: 135,
-                        width: 135,
+                        height: 105,
+                        width: 105,
                         child: Icon(Icons.image_not_supported, size: 100),
                       )
-                    : CachedNetworkImage(
-                        cacheManager: GlobalVariables.customCacheManager,
-                        imageUrl: product.images[0],
-                        key: UniqueKey(),
-                        fit: BoxFit.contain,
-                        height: 135,
-                        width: 135,
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) => Container(
-                          color: Colors.black12,
-                          child: const Icon(
-                            Icons.error,
-                            color: Colors.red,
-                            size: 80,
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
+                        child: CachedNetworkImage(
+                          cacheManager: GlobalVariables.customCacheManager,
+                          imageUrl: product.images[0],
+                          key: UniqueKey(),
+                          fit: BoxFit.cover,
+                          height: 105,
+                          width: 105,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.black12,
+                            child: const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                              size: 80,
+                            ),
                           ),
                         ),
                       ),
@@ -69,6 +72,9 @@ class SearchedProduct extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 1,
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       Text(
                         product.location,

@@ -1,23 +1,15 @@
-import 'dart:io';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/enums/message_enum.dart';
-import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/models/get_chat_room.dart';
 // Repositories
-import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet_mobile/network/repository/chat_repository/chat_repo.dart';
 // Models
 import 'package:uniplanet_mobile/models/chat_room.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 // Bloc Events, States
 part 'chat_bloc_event.dart';
 part 'chat_bloc_state.dart';
@@ -119,12 +111,10 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _updateChatRoomLastMessage(UpdateChatRoomLastMessageEvent event, emit) {
-    bool isUpdated = false;
 
     // Update for buyingChatRooms
     List<ChatRoom> updatedChatRooms = state.chatRooms.map((chatRoom) {
       if (chatRoom.id == event.lastMessage.chat) {
-        isUpdated = true;
         return chatRoom.copyWith(lastMessage: event.lastMessage);
       }
       return chatRoom;
