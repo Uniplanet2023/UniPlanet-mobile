@@ -387,25 +387,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       keyboardType: TextInputType.multiline,
                     ),
 
-                    const SizedBox(
-                      height: 130,
+                    Container(
+                      child: isUploading
+                          ? const Center(child: CircularProgressIndicator())
+                          : CustomButton(
+                              text: 'Edit',
+                              onTap: () {
+                                editProduct();
+                              },
+                            ),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-        ),
-        bottomSheet: Container(
-          margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
-          child: isUploading
-              ? const Center(child: CircularProgressIndicator())
-              : CustomButton(
-                  text: 'Edit',
-                  onTap: () {
-                    editProduct();
-                  },
-                ),
         ),
       ),
     );

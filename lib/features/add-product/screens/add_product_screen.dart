@@ -326,11 +326,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       keyboardType: TextInputType.multiline,
                     ),
 
-                    const SizedBox(
-                      height: 130,
-                    ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
                       child: (state is ProductUploadingState)
                           ? ElevatedButton(
                               onPressed: () {},
