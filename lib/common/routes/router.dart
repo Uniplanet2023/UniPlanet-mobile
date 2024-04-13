@@ -10,7 +10,6 @@ import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
 import "package:uniplanet_mobile/features/category/screens/categories.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
-import "package:uniplanet_mobile/features/home/screens/category_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
@@ -48,9 +47,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const SigninScreen(),
       );
     case AppRoutes.homePage:
+      var category = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => HomeScreen(controller: ScrollController()),
+        builder: (_) =>
+            HomeScreen(controller: ScrollController(), category: category),
       );
     case AppRoutes.bottomBarPage:
       return MaterialPageRoute(
@@ -66,14 +67,6 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const CategoriesPage(),
-      );
-    case AppRoutes.category:
-      var category = routeSettings.arguments as String;
-      return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => CategoryScreen(
-          category: category,
-        ),
       );
     case AppRoutes.searchScreenPage:
       // var searchQuery = routeSettings.arguments as String?;

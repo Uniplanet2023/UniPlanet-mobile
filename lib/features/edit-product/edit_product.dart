@@ -5,27 +5,18 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 
 class EditProductScreen extends StatefulWidget {
-  final String? productId;
-  final String? productName;
-  final double? productPrice;
-  final List<String>? productImages;
-  final String? productCategory;
-  final String? selectedLocation;
-  final String? productDescription;
+  final Product product;
   const EditProductScreen({
-    this.productId,
-    this.productName,
-    this.productPrice,
-    this.productImages,
-    this.productCategory,
-    this.selectedLocation,
-    this.productDescription,
+    required this.product,
     super.key,
   });
 
@@ -35,20 +26,44 @@ class EditProductScreen extends StatefulWidget {
 
 class _EditProductScreenState extends State<EditProductScreen> {
   late final TextEditingController productNameController =
-      TextEditingController(text: widget.productName);
+      TextEditingController(text: widget.product.name);
   late final TextEditingController descriptionController =
-      TextEditingController(text: widget.productDescription);
+      TextEditingController(text: widget.product.description);
   late final TextEditingController priceController =
-      TextEditingController(text: widget.productPrice.toString());
+      TextEditingController(text: widget.product.price.toString());
   late final TextEditingController meetingLocationController =
-      TextEditingController(text: widget.selectedLocation);
-  late bool freeStock = widget.productPrice == 0 ? true : false;
-  late String category = widget.productCategory!;
-  int currentIndex = 0;
-  // String selectedLocation = 'On Campus';
+      TextEditingController(text: widget.product.location);
+
+  final int maxImages = 10; // Set the maximum number of images allowed
+
+  bool showCategoryToggles = false; // New variable to control visibility
+  bool isUploading = false;
+  bool freeStock = false;
+  String category = 'Electronics & Appliances';
+  String selectedCategory = 'Electronics & Appliances';
   List<File> images = [];
-  late List<String>? orignalImages = widget.productImages;
+
+  late List<String> originalImages = [];
   final _editProductFormKey = GlobalKey<FormState>();
+  int selectedIndex = 0; // Index of the selected category
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = widget.product.category;
+    freeStock = widget.product.price == 0;
+    originalImages = widget.product.images;
+    // Add listener to productNameController
+    productNameController.addListener(() {
+      final bool shouldShowToggles = productNameController.text.isNotEmpty;
+      // Update showCategoryToggles only if the value changes
+      if (showCategoryToggles != shouldShowToggles) {
+        setState(() {
+          showCategoryToggles = shouldShowToggles;
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -59,315 +74,334 @@ class _EditProductScreenState extends State<EditProductScreen> {
     meetingLocationController.dispose();
   }
 
-  List<String> productCategories = [
-    'Mobiles',
-    'Essentials',
-    'Appliances',
-    'Books',
-    'Fashion'
-  ];
-
-  CarouselSlider _buildCarouselSlider() {
-    return CarouselSlider(
-      items: widget.productImages!
-          .asMap()
-          .entries
-          .map((entry) => Builder(
-                builder: (BuildContext context) {
-                  String image = entry.value; // Access image URL
-                  return CachedNetworkImage(
-                    cacheManager: GlobalVariables.customCacheManager,
-                    imageUrl: image,
-                    fit: BoxFit.fill,
-                    height: 400,
-                    placeholder: (_, __) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (_, __, ___) =>
-                        const Icon(Icons.error, color: Colors.red, size: 80),
-                  );
-                },
-              ))
-          .toList(),
-      options: CarouselOptions(
-        viewportFraction: 1,
-        height: 400,
-        onPageChanged: (index, reason) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-      ),
+  Widget imageContainer({File? image, String? originalImage}) {
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          width: 70,
+          height: 70,
+          margin: const EdgeInsets.only(right: 8, bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: image == null
+                ? CachedNetworkImage(
+                    imageUrl: originalImage!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error))
+                : Image.file(image, fit: BoxFit.cover),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.cancel, color: Colors.red),
+          onPressed: () {
+            setState(() => image == null
+                ? originalImages.remove(originalImage)
+                : images.remove(image));
+          },
+        ),
+      ],
     );
   }
 
   void selectImages() async {
-    var res = await pickImages();
-    setState(() {
-      images = res;
-    });
+    // Your logic to pick more images and add to the list, make sure it does not exceed maxImages
+    var res = await pickImages(); // Implement pickImages to return List<File>
+
+    if ((images.length + res.length) <= maxImages) {
+      setState(() {
+        images.addAll(res); // Add new selected images to the existing list
+      });
+    } else {
+      // Show some error message if maxImages limit is reached
+      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
+    }
+  }
+
+  void editProduct() {
+    if (images.isEmpty && originalImages.isEmpty) {
+      SnackbarGlobal.showSnackBar(
+          'Please add at least one image and fill all fields.');
+      return;
+    }
+
+    if (_editProductFormKey.currentState!.validate()) {
+      Product newProduct = Product(
+        id: widget.product.id,
+        name: productNameController.text,
+        description: descriptionController.text,
+        price: !freeStock
+            ? double.parse(
+                double.parse(priceController.text).toStringAsFixed(2))
+            : 0,
+        category: selectedCategory,
+        status: 'On Sale',
+        images: originalImages,
+        location: meetingLocationController.text,
+        seller: widget.product.seller,
+        createdAt: widget.product.createdAt,
+        likes: widget.product.likes,
+        numberOfChat: widget.product.numberOfChat,
+      );
+      context.read<ProductBloc>().add(UpdateProductEvent(
+            product: newProduct,
+            images: images,
+          ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              color: GlobalVariables.secondaryColor,
-            ),
-          ),
-          title: const Text(
-            'Edit Product',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
-          child: Form(
-            key: _editProductFormKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  orignalImages!.isNotEmpty
-                      ? Column(
-                          children: [
-                            _buildCarouselSlider(),
-                            Center(
-                              child: DotsIndicator(
-                                dotsCount: widget.productImages!.length,
-                                position: currentIndex,
-                              ),
-                            ),
-                          ],
-                        )
-                      : images.isEmpty
-                          ? GestureDetector(
-                              onTap: selectImages,
-                              child: DottedBorder(
-                                borderType: BorderType.RRect,
-                                radius: const Radius.circular(10),
-                                dashPattern: const [10, 4],
-                                strokeCap: StrokeCap.round,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.folder_open,
-                                        size: 40,
-                                      ),
-                                      const SizedBox(height: 15),
-                                      Text(
-                                        'Select up to five Product Images',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          : CarouselSlider(
-                              items: images.map(
-                                (i) {
-                                  return Builder(
-                                    builder: (BuildContext context) =>
-                                        Image.file(
-                                      i,
-                                      fit: BoxFit.cover,
-                                      height: 200,
-                                    ),
-                                  );
-                                },
-                              ).toList(),
-                              options: CarouselOptions(
-                                viewportFraction: 1,
-                                height: 400,
-                              ),
-                            ),
+    var state = context.watch<ProductBloc>().state;
 
-                  const SizedBox(height: 30),
-                  // Toggle Buttons
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: ToggleButtons(
-                            borderColor: Colors.transparent,
-                            fillColor: Colors.transparent,
-                            selectedColor: Colors.white,
-                            color: Colors.white,
-                            borderWidth: 0,
-                            selectedBorderColor: Colors.transparent,
-                            borderRadius: BorderRadius.circular(30),
-                            onPressed: (int index) {
-                              setState(() {
-                                if (index == 0) {
-                                  freeStock = false;
-                                  priceController.clear();
-                                } else {
-                                  freeStock = true;
-                                }
-                              });
-                            },
-                            isSelected: [freeStock, !freeStock],
-                            children: <Widget>[
-                              Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                decoration: BoxDecoration(
-                                  color:
-                                      !freeStock ? Colors.black : Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(
-                                      width: 1, color: Colors.black45),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 5),
-                                child: Text(
-                                  'For Sale',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: freeStock
-                                          ? Colors.black
-                                          : Colors.white),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color:
-                                      freeStock ? Colors.black : Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(
-                                      width: 1, color: Colors.black45),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 5),
-                                child: Text(
-                                  'Free',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: freeStock
-                                          ? Colors.white
-                                          : Colors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              orignalImages = [];
-                              images = [];
-                            });
-                          },
-                          child: const Icon(Icons.switch_camera_outlined),
-                        )
-                      ],
-                    ),
-                  ),
-                  CustomTextField(
-                    controller: productNameController,
-                    hintText: 'Product Name',
-                    maxLength: 30,
-                  ),
-                  if (!freeStock)
-                    CustomTextField(
-                      controller: priceController,
-                      hintText: 'Price',
-                      enabled: !freeStock,
-                      keyboardType: const TextInputType.numberWithOptions(
-                          signed: false,
-                          decimal: true), // Set the keyboard type to number
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,9}')),
-                      ],
-                      prefixText: !freeStock ? '\$' : '',
-                      validatorEnabled: freeStock,
-                    ),
-                  const SizedBox(height: 15),
-                  Container(
-                    height: 60,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey, width: 1),
-                    ),
-                    child: DropdownButton<String>(
-                      value: category,
-                      underline: const SizedBox(),
-                      dropdownColor: Colors.white,
-                      isExpanded: true,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: productCategories.map((String category) {
-                        return DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          category = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextField(
-                    controller: meetingLocationController,
-                    hintText: 'Enter custom meeting location',
-                    maxLength: 30,
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextField(
-                    controller: descriptionController,
-                    hintText: 'Description',
-                    maxLines: 7,
-                    maxLength: 300,
-                    keyboardType: TextInputType.multiline,
-                  ),
-
-                  const SizedBox(
-                    height: 130,
-                  ),
-                ],
+    return BlocListener<ProductBloc, ProductState>(
+      listener: (context, state) {
+        if (state is ProductUpdatedState) {
+          Navigator.pop(context);
+          SnackbarGlobal.showSnackBar('Successfully updated');
+        } else if (state is ProductUpdatingState) {
+          isUploading = true;
+          setState(() {});
+        } else if (state is ProductUpdateFailedState) {
+          Navigator.pop(context);
+          SnackbarGlobal.showSnackBar('Failed to update product');
+        }
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                color: GlobalVariables.secondaryColor,
+              ),
+            ),
+            title: const Text(
+              'Edit Product',
+              style: TextStyle(
+                color: Colors.black,
               ),
             ),
           ),
         ),
-      ),
-      bottomSheet: Container(
-        margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
-        child: CustomButton(
-          text: 'Edit',
+        body: GestureDetector(
           onTap: () {
-            print(productNameController.text);
-            print(descriptionController.text);
-            print(priceController.text);
-            print(meetingLocationController.text);
+            FocusScope.of(context).unfocus();
           },
+          child: SingleChildScrollView(
+            child: Form(
+              key: _editProductFormKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        children: [
+                          // Camera icon container to add new images
+                          InkWell(
+                            onTap: selectImages,
+                            child: Container(
+                              width: 70,
+                              height: 70,
+                              margin:
+                                  const EdgeInsets.only(right: 8, bottom: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.camera_alt,
+                                      color: Colors.grey[600]),
+                                  Text(
+                                      '${images.length + originalImages.length}/10',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Displaying existing images
+                          for (String image in originalImages)
+                            imageContainer(originalImage: image),
+                          for (File image in images)
+                            imageContainer(image: image),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+                    // Toggle Buttons
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: ToggleButtons(
+                              borderColor: Colors.transparent,
+                              fillColor: Colors.transparent,
+                              selectedColor: Colors.white,
+                              color: Colors.white,
+                              borderWidth: 0,
+                              selectedBorderColor: Colors.transparent,
+                              borderRadius: BorderRadius.circular(30),
+                              onPressed: (int index) {
+                                setState(() {
+                                  if (index == 0) {
+                                    freeStock = false;
+                                    priceController.clear();
+                                  } else {
+                                    freeStock = true;
+                                  }
+                                });
+                              },
+                              isSelected: [freeStock, !freeStock],
+                              children: <Widget>[
+                                Container(
+                                  margin: const EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                    color: !freeStock
+                                        ? Colors.black
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                        width: 1, color: Colors.black45),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 5),
+                                  child: Text(
+                                    'For Sale',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: freeStock
+                                            ? Colors.black
+                                            : Colors.white),
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        freeStock ? Colors.black : Colors.white,
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                        width: 1, color: Colors.black45),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 5),
+                                  child: Text(
+                                    'Free',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: freeStock
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                originalImages = [];
+                                images = [];
+                              });
+                            },
+                            child: const Icon(Icons.switch_camera_outlined),
+                          )
+                        ],
+                      ),
+                    ),
+                    CustomTextField(
+                      controller: productNameController,
+                      hintText: 'Product Name',
+                      maxLength: 30,
+                    ),
+                    if (showCategoryToggles)
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: GlobalVariables.categories
+                              .map((category) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    child: ChoiceChip(
+                                      label: Text(category['name']),
+                                      selected:
+                                          selectedCategory == category['name'],
+                                      onSelected: (selected) {
+                                        if (selected) {
+                                          setState(() => selectedCategory =
+                                              category['name']);
+                                        }
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                    if (!freeStock)
+                      CustomTextField(
+                        controller: priceController,
+                        hintText: 'Price',
+                        enabled: !freeStock,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            signed: false,
+                            decimal: true), // Set the keyboard type to number
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,9}')),
+                        ],
+                        prefixText: !freeStock ? '\$' : '',
+                        validatorEnabled: freeStock,
+                      ),
+
+                    const SizedBox(height: 15),
+                    CustomTextField(
+                      controller: meetingLocationController,
+                      hintText: 'Enter custom meeting location',
+                      maxLength: 30,
+                    ),
+                    const SizedBox(height: 15),
+                    CustomTextField(
+                      controller: descriptionController,
+                      hintText: 'Description',
+                      maxLines: 7,
+                      maxLength: 300,
+                      keyboardType: TextInputType.multiline,
+                    ),
+
+                    Container(
+                      child: isUploading
+                          ? const Center(child: CircularProgressIndicator())
+                          : CustomButton(
+                              text: 'Edit',
+                              onTap: () {
+                                editProduct();
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

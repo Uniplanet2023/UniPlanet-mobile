@@ -1,6 +1,7 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/chat/widgets/bottom_chat_bar.dart';
@@ -90,18 +91,47 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         centerTitle: false,
         actions: [
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.video_call),
+          // ),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.call),
+          // ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.video_call),
+            onPressed: () {
+              context
+                  .read<ChatBloc>()
+                  .add(DeleteChatRoomEvent(chatId: widget.chatRoomId));
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.exit_to_app),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.call),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-          ),
+          // PopupMenuButton<String>(
+          //   onSelected: (value) {
+          //     // Handle the action when a menu item is selected
+          //     switch (value) {
+          //       case 'Option1':
+          //         // Handle Option1 action
+          //         break;
+          //       case 'Option2':
+          //         // Handle Option2 action
+          //         break;
+          //       // Add other cases for each menu option
+          //     }
+          //   },
+          //   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          //     const PopupMenuItem<String>(
+          //       value: 'Option1',
+          //       child: Text('Option 1'),
+          //     ),
+          //     const PopupMenuItem<String>(
+          //       value: 'Option2',
+          //       child: Text('Option 2'),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
       body: BlocListener<MessageBloc, MessageBlocState>(

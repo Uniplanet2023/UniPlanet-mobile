@@ -211,6 +211,7 @@ class _ItemBoxState extends State<ItemBox> {
                                                           product.id) {
                                                     product.likes =
                                                         product.likes - 1;
+                                                    isLikeProduct = false;
                                                     state.removedProduct = null;
                                                   } else if (state
                                                           is LikeAdded &&

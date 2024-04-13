@@ -16,7 +16,6 @@ class LoadCategoryEvent extends CategoryEvent {
 
 class GetHotProductsEvent extends CategoryEvent {
   const GetHotProductsEvent();
-
   @override
   List<Object> get props => [];
 }

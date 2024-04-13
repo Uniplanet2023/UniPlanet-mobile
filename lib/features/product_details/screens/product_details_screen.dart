@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
@@ -268,17 +269,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => EditProductScreen(
-                                        productImages: widget.product.images,
-                                        productName: widget.product.name,
-                                        productCategory:
-                                            widget.product.category,
-                                        productPrice: widget.product.price,
-                                        productDescription:
-                                            widget.product.description,
-                                        selectedLocation:
-                                            widget.product.location,
-                                        productId: widget.product.id,
-                                      ),
+                                          product: widget.product),
                                     ),
                                   ),
                                   icon: const Icon(
@@ -289,10 +280,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 IconButton(
                                   onPressed: () => removeProductDialog(
                                       context,
-                                      'Remove the product for the Market?',
-                                      'Remove',
-                                      Icons.archive_outlined,
-                                      () {}),
+                                      'Confirm Deletion',
+                                      'Are you sure you want to delete this product?',
+                                      Icons.delete_forever_outlined, () {
+                                    context.read<ProductBloc>().add(
+                                        DeleteProductEvent(
+                                            productId: widget.product.id));
+                                    Navigator.pop(context);
+                                  }),
                                   icon: const Icon(
                                     Icons.archive_outlined,
                                     color: Colors.red,
@@ -305,10 +300,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 IconButton(
                                   onPressed: () => removeProductDialog(
                                       context,
-                                      'Delete the product from sale history?',
-                                      'Delete',
-                                      Icons.delete_forever_outlined,
-                                      () {}),
+                                      'Confirm Deletion',
+                                      'Are you sure you want to delete this product?',
+                                      Icons.delete_forever_outlined, () {
+                                    context.read<ProductBloc>().add(
+                                        DeleteProductEvent(
+                                            productId: widget.product.id));
+                                    Navigator.pop(context);
+                                  }),
                                   icon: const Icon(
                                     Icons.delete_forever_outlined,
                                     color: Colors.red,

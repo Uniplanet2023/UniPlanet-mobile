@@ -51,9 +51,10 @@ class UploadProductEvent extends ProductEvent {
 
 class UpdateProductEvent extends ProductEvent {
   final Product product;
-
+  final List<File>? images;
   const UpdateProductEvent({
     required this.product,
+    this.images,
   });
   @override
   List<Object?> get props => [

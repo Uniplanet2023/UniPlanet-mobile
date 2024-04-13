@@ -2,29 +2,35 @@ part of 'category_bloc.dart';
 
 sealed class CategoryState extends Equatable {
   final List<Product> categoryProducts;
-  const CategoryState({this.categoryProducts = const <Product>[]});
+  final List<Product> hotProducts;
+  const CategoryState(
+      {this.categoryProducts = const <Product>[],
+      this.hotProducts = const <Product>[]});
   @override
-  List<Object> get props => [categoryProducts];
+  List<Object> get props => [categoryProducts, hotProducts];
 }
 
 final class CategoryInitial extends CategoryState {
-  const CategoryInitial() : super(categoryProducts: const <Product>[]);
+  const CategoryInitial()
+      : super(
+            categoryProducts: const <Product>[],
+            hotProducts: const <Product>[]);
 }
 
 final class LoadingCategoryState extends CategoryState {
-  const LoadingCategoryState({super.categoryProducts});
+  const LoadingCategoryState({super.categoryProducts, super.hotProducts});
 }
 
 final class LoadedCategoryState extends CategoryState {
-  const LoadedCategoryState({super.categoryProducts});
+  const LoadedCategoryState({super.categoryProducts, super.hotProducts});
 }
 
 final class LoadingHotProductState extends CategoryState {
-  const LoadingHotProductState({super.categoryProducts});
+  const LoadingHotProductState({super.categoryProducts, super.hotProducts});
 }
 
 final class LoadedHotProductState extends CategoryState {
-  const LoadedHotProductState({super.categoryProducts});
+  const LoadedHotProductState({super.categoryProducts, super.hotProducts});
 }
 
 final class ErrorCategoryState extends CategoryState {

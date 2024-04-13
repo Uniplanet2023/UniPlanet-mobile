@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({
@@ -20,18 +21,18 @@ class CategoriesPage extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          for (final category in categories)
+          for (final category in GlobalVariables.categories)
             InkWell(
               onTap: () {
                 navigateToCategoryPage(
                   context,
-                  category.name,
+                  category['name'],
                 );
               },
               child: CategoryListItem(
-                imageUrl: category.imageUrl,
-                name: category.name,
-                category: category.description,
+                imageUrl: category['image'],
+                name: category['name'],
+                category: '',
               ),
             ),
         ],
@@ -333,35 +334,3 @@ class Category {
 }
 
 const urlPrefix = 'assets/images';
-const categories = [
-  Category(
-    name: 'Hot Products',
-    description: '',
-    imageUrl: '$urlPrefix/hotdeal.avif',
-  ),
-  Category(
-    name: 'Mobiles',
-    description: '',
-    imageUrl: '$urlPrefix/mobile_c.jpeg',
-  ),
-  Category(
-    name: 'Essentials',
-    description: '',
-    imageUrl: '$urlPrefix/essentials_c.jpeg',
-  ),
-  Category(
-    name: 'Appliances',
-    description: '',
-    imageUrl: '$urlPrefix/appliance_c.jpeg',
-  ),
-  Category(
-    name: 'Books',
-    description: '',
-    imageUrl: '$urlPrefix/books_c.jpeg',
-  ),
-  Category(
-    name: 'Fashion',
-    description: '',
-    imageUrl: '$urlPrefix/fashion_c.jpeg',
-  ),
-];

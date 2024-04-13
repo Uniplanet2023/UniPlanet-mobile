@@ -37,14 +37,14 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   await Global.init();
   ErrorWidget.builder = (FlutterErrorDetails details) {
-    // bool inDebug = false;
-    // assert(() {
-    //   inDebug = true;
-    //   return true;
-    // }());
-    // if (inDebug) {
-    //   return ErrorWidget(details.exception);
-    // }
+    bool inDebug = false;
+    assert(() {
+      inDebug = true;
+      return true;
+    }());
+    if (inDebug) {
+      return ErrorWidget(details.exception);
+    }
     return const ErrorScreen();
   };
 

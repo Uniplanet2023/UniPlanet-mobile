@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -52,9 +53,10 @@ class UserProfileScreen extends StatelessWidget {
                     Hero(
                       tag: 'user-pfp',
                       child: CircleAvatar(
-                        radius: 60.w,
-                        backgroundImage: const NetworkImage(
-                            'https://via.placeholder.com/150'),
+                        radius: 60
+                            .w, // Assuming you have defined 'w' somewhere as a width factor
+                        backgroundImage:
+                            CachedNetworkImageProvider(user.profileImage!),
                       ),
                     ),
                     SizedBox(
@@ -79,39 +81,39 @@ class UserProfileScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Column(
+                        const Column(
                           children: [
-                            Text(
-                              'Listings',
-                              style: TextStyle(
-                                  fontSize: 0.05.sw,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                fontSize: 0.055.sw,
-                              ),
-                            ),
+                            // Text(
+                            //   'Listings',
+                            //   style: TextStyle(
+                            //       fontSize: 0.05.sw,
+                            //       fontWeight: FontWeight.bold),
+                            // ),
+                            // Text(
+                            //   '0',
+                            //   style: TextStyle(
+                            //     fontSize: 0.055.sw,
+                            //   ),
+                            // ),
                           ],
                         ),
                         SizedBox(
                           width: 60.w,
                         ),
-                        Column(
+                        const Column(
                           children: [
-                            Text(
-                              'Sold',
-                              style: TextStyle(
-                                  fontSize: 0.05.sw,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                fontSize: 0.055.sw,
-                              ),
-                            ),
+                            // Text(
+                            //   'Sold',
+                            //   style: TextStyle(
+                            //       fontSize: 0.05.sw,
+                            //       fontWeight: FontWeight.bold),
+                            // ),
+                            // Text(
+                            //   '0',
+                            //   style: TextStyle(
+                            //     fontSize: 0.055.sw,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ],

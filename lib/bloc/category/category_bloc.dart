@@ -18,16 +18,20 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _getHotProducts(GetHotProductsEvent event, emit) async {
-    emit(const LoadingCategoryState());
+    emit(LoadingCategoryState(
+        categoryProducts: state.categoryProducts,
+        hotProducts: state.hotProducts));
     List<Product> result = await _productRepository.getHotProducts();
-    emit(LoadedCategoryState(categoryProducts: result));
+    emit(LoadedCategoryState(
+        categoryProducts: state.categoryProducts, hotProducts: result));
   }
 
   _loadCategoryProduct(LoadCategoryEvent event, emit) async {
-    emit(const LoadingCategoryState());
+    emit(LoadingCategoryState(hotProducts: state.hotProducts));
     List<Product> result = await _productRepository.fetchProducts(
         page: event.page, category: event.category);
-    emit(LoadedCategoryState(categoryProducts: result));
+    emit(LoadedCategoryState(
+        categoryProducts: result, hotProducts: state.hotProducts));
   }
 
   @override

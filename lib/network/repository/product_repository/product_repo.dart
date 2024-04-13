@@ -75,27 +75,18 @@ class ProductRepository {
     return productList;
   }
 
-  Future<Product?> updateProduct({
-    required String productId,
-    String? productName,
-    String? status,
-    String? description,
-    double? price,
-    String? category,
-    String? location,
-    List<String>? images,
-  }) async {
+  Future<Product?> updateProduct({required Product product}) async {
     try {
       final response = await _dioClient.dio.put(
-        '$productURI/update-product/$productId',
+        '$productURI/update-product/${product.id}',
         data: {
-          'productName': productName,
-          'status': status,
-          'description': description,
-          'images': images,
-          'price': price,
-          'category': category,
-          'location': location,
+          'productName': product.name,
+          'status': product.status,
+          'description': product.description,
+          'price': product.price,
+          'category': product.category,
+          'location': product.location,
+          'images': product.images,
         },
         options: _dioClient.getDioOptions(),
       );
@@ -144,31 +135,33 @@ class ProductRepository {
   }
 
   Future<Product?> uploadImagesAndUpdateProduct({
-    required List<File> images,
-    required String productId,
+    required List<File>? images,
+    required Product product,
   }) async {
     try {
+      final List<Future<Null>> uploadTasks;
       final imageUrls = <String>[];
+      if (images != null) {
+        // Concurrently upload all images and collect their URLs
+        uploadTasks = images.map((image) async {
+          final response = await Global.cloudinary.uploadFile(
+            CloudinaryFile.fromFile(image.path, folder: 'product-images'),
+          );
+          imageUrls.add(response.secureUrl); // Collect each image URL
+        }).toList();
 
-      // Concurrently upload all images and collect their URLs
-      final uploadTasks = images.map((image) async {
-        final response = await Global.cloudinary.uploadFile(
-          CloudinaryFile.fromFile(image.path, folder: 'product-images'),
-        );
-        imageUrls.add(response.secureUrl); // Collect each image URL
-      }).toList();
-
-      // Wait for all uploads to complete
-      await Future.wait(uploadTasks);
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+        product.images.addAll(imageUrls);
+      }
 
       // After all uploads, update the product with the collected image URLs
-      final product = await updateProduct(
-        productId: productId,
-        images: imageUrls,
+      final newProduct = await updateProduct(
+        product: product,
       );
 
       // Check if the product update was successful
-      return product;
+      return newProduct;
     } catch (e) {
       print("An error occurred: $e");
       // Handle errors, e.g., by showing an error message to the user

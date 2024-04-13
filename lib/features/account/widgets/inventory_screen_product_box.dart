@@ -61,11 +61,6 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                     ),
                     endActionPane: ActionPane(
                       motion: const ScrollMotion(),
-                      dismissible: DismissiblePane(onDismissed: () {
-                        widget.productList.removeAt(index);
-                        context.read<ProductBloc>().add(DeleteProductEvent(
-                            productId: widget.productList[index].id));
-                      }),
                       children: [
                         SlidableAction(
                           onPressed: (_) => {
@@ -73,14 +68,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditProductScreen(
-                                  productImages: product.images,
-                                  productName: product.name,
-                                  productCategory: product.category,
-                                  productPrice: product.price,
-                                  productDescription: product.description,
-                                  selectedLocation: product.location,
-                                  productId: product.id,
-                                ),
+                                    product: widget.productList[index]),
                               ),
                             )
                           },
@@ -90,6 +78,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                         ),
                         SlidableAction(
                           onPressed: (_) async => {
+                            widget.productList.removeAt(index),
                             context.read<ProductBloc>().add(DeleteProductEvent(
                                 productId: widget.productList[index].id)),
                           },
