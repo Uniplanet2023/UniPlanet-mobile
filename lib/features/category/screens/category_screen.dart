@@ -78,11 +78,12 @@ class _CategoryPageState extends State<CategoryPage> {
                   ),
                   SizedBox(width: 8.w),
                   IconButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.category,
-                            arguments: 'Hot Products');
-                      },
-                      icon: Icon(Icons.arrow_forward_ios, size: 15.sp))
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.category,
+                          arguments: 'Hot Products');
+                    },
+                    icon: Icon(Icons.arrow_forward_ios, size: 15.sp),
+                  ),
                 ],
               ),
             ),
@@ -94,7 +95,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   );
                 } else if (state is LoadedCategoryState) {
                   return Container(
-                    height: 150.h,
+                    height: 160.h,
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -171,6 +172,9 @@ class _CategoryPageState extends State<CategoryPage> {
                     .toList(),
               ),
             ),
+            SizedBox(
+              height: 50.h,
+            ),
           ],
         ),
       ),
@@ -218,7 +222,7 @@ Widget buildProductContent(Product product) => Container(
             padding: EdgeInsets.only(
                 bottom: 4.h), // Use ScreenUtil for responsive padding
             child: Text(
-              '\$${product.price.toStringAsFixed(2)}', // Format the price to two decimal places
+              ' \$${product.price.toStringAsFixed(2)}', // Format the price to two decimal places
               style: TextStyle(
                 fontSize: 10.sp,
                 fontWeight: FontWeight.bold,
