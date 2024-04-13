@@ -66,7 +66,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   SizedBox(width: 8.w),
                   IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.category,
+                        Navigator.pushNamed(context, AppRoutes.homePage,
                             arguments: 'Hot Products');
                       },
                       icon: Icon(Icons.arrow_forward_ios, size: 15.sp))
@@ -85,10 +85,9 @@ class _CategoryPageState extends State<CategoryPage> {
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.categoryProducts.length,
+                      itemCount: state.hotProducts.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return buildProductContent(
-                            state.categoryProducts[index]);
+                        return buildProductContent(state.hotProducts[index]);
                       },
                     ),
                   );
@@ -119,7 +118,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () => Navigator.pushNamed(
-                        context, AppRoutes.category,
+                        context, AppRoutes.homePage,
                         arguments: GlobalVariables.categories[index]['name']),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
