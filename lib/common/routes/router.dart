@@ -10,7 +10,7 @@ import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
 import "package:uniplanet_mobile/features/category/screens/categories.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
-import "package:uniplanet_mobile/features/home/screens/category_screen.dart";
+import "package:uniplanet_mobile/features/category/screens/category_screen.dart";
 import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
 import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
 import "package:uniplanet_mobile/features/search/screens/search_screen.dart";

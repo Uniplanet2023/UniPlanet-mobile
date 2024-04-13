@@ -1,49 +1,35 @@
 import 'package:flutter/material.dart';
 
-Future<bool?> removeProductDialog(
+Future<void> removeProductDialog(
   BuildContext context,
+  String title,
   String description,
-  String option,
   IconData icon,
-  Function()? onpressed,
+  Function onConfirmed,
 ) {
-  return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Icon(
-            icon,
-            size: 50,
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // User must tap button!
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Icon(icon, size: 40, color: Colors.red),
+        content: Text(description),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // Dismiss the dialog
+            },
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(description),
-              const SizedBox(height: 10),
-            ],
+          TextButton(
+            child: const Text('Remove', style: TextStyle(color: Colors.red)),
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // Dismiss the dialog
+              onConfirmed(); // Call the function passed in
+            },
           ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: Text(
-                  option,
-                  style: const TextStyle(color: Colors.red),
-                ),
-                onPressed: onpressed),
-          ],
-        );
-      });
+        ],
+      );
+    },
+  );
 }

@@ -10,32 +10,34 @@ Widget buildProductGrid(
   return SafeArea(
     child: Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          alignment: Alignment.topLeft,
-          child: Text(
-            'Keep shopping for $category',
-            style: const TextStyle(fontSize: 20),
-          ),
-        ),
-        Expanded(
-          child: GridView.builder(
-            itemCount: productList.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: category == "Hot Products" ? 1 : 2,
-              childAspectRatio: category == "Hot Products" ? 3 : 1,
-              mainAxisSpacing: category == "Hot Products" ? 0 : 5,
-            ),
-            itemBuilder: (context, index) {
-              final product = productList[index];
-              return category == "Hot Products"
-                  ? SearchedProduct(
-                      product: product,
-                    )
-                  : buildProductItem(product: product, context: context);
-            },
-          ),
-        ),
+        productList.isEmpty
+            ? Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Keep shopping for $category',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              )
+            : Expanded(
+                child: GridView.builder(
+                  itemCount: productList.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: category == "Hot Products" ? 1 : 2,
+                    childAspectRatio: category == "Hot Products" ? 3 : 1,
+                    mainAxisSpacing: category == "Hot Products" ? 0 : 5,
+                  ),
+                  itemBuilder: (context, index) {
+                    final product = productList[index];
+                    return category == "Hot Products"
+                        ? SearchedProduct(
+                            product: product,
+                          )
+                        : buildProductItem(product: product, context: context);
+                  },
+                ),
+              ),
       ],
     ),
   );
