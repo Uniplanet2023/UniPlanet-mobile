@@ -55,15 +55,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   _updateProduct(UpdateProductEvent event, emit) async {
     emit(
         ProductUpdatingState(productList: state.productList, page: state.page));
-    Product? updatedProduct = await _productRepository.updateProduct(
-      productId: event.product.id,
-      productName: event.product.name,
-      category: event.product.category,
-      status: event.product.status,
-      description: event.product.description,
-      price: event.product.price,
-      location: event.product.location,
-    );
+    Product? updatedProduct =
+        await _productRepository.uploadImagesAndUpdateProduct(
+            images: event.images, product: event.product);
     if (updatedProduct == null) {
       emit(ErrorProductUploadState("Error updating product",
           productList: state.productList, page: state.page));
@@ -75,7 +69,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         productList[index] = updatedProduct;
         emit(ProductUpdatedState(productList: productList, page: state.page));
       } else {
-        emit(ErrorProductUploadState("Error updating product",
+        emit(ProductUpdateFailedState("Error updating product",
             productList: state.productList, page: state.page));
       }
     }
@@ -104,7 +98,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             productList: state.productList, page: state.page));
         Product? product =
             await _productRepository.uploadImagesAndUpdateProduct(
-                images: event.images, productId: productData.id);
+                images: event.images, product: productData);
         if (product != null) {
           List<Product> productList = state.productList;
           productList.insert(0, product);

@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniplanet_mobile/bloc/category/category_bloc.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
+import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/product.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -20,19 +20,6 @@ class _CategoryPageState extends State<CategoryPage> {
     super.initState();
     context.read<CategoryBloc>().add(const GetHotProductsEvent());
   }
-
-  final List<Map<String, dynamic>> categories = [
-    {'name': 'Electronics & Appliances', 'image': 'assets/images/macbook.jpg'},
-    {'name': 'Furniture', 'image': 'assets/images/chair.jpg'},
-    {'name': 'Home & Garden', 'image': 'assets/images/fry pan.png'},
-    {'name': 'Game & Hobbies', 'image': 'assets/images/game.jpg'},
-    {'name': "Books & Music", 'image': 'assets/images/books.jpg'},
-    {'name': "Men's Fashion", 'image': 'assets/images/clothes.jpg'},
-    {'name': 'Health & Beauty', 'image': 'assets/images/toner.jpg'},
-    {'name': 'Sports & Outdoors', 'image': 'assets/images/gloves.jpg'},
-    {'name': 'Vehicles & Parts', 'image': 'assets/images/car.jpg'},
-    {'name': 'Other', 'image': 'assets/images/box.jpg'},
-  ];
 
   final List<String> interests = [
     'tickets',
@@ -128,7 +115,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: categories.length,
+                itemCount: GlobalVariables.categories.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
@@ -138,12 +125,13 @@ class _CategoryPageState extends State<CategoryPage> {
                           color: Colors.grey[200],
                           width: 55.w,
                           height: 55.h,
-                          child: Image.asset(categories[index]['image'],
+                          child: Image.asset(
+                              GlobalVariables.categories[index]['image'],
                               fit: BoxFit.cover),
                         ),
                       ),
                       Text(
-                        categories[index]['name'],
+                        GlobalVariables.categories[index]['name'],
                         style: const TextStyle(fontSize: 12),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.visible,

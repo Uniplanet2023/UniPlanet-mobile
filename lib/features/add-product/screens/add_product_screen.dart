@@ -26,10 +26,32 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController meetingLocationController =
       TextEditingController();
+
+  final int maxImages = 10; // Set the maximum number of images allowed
+
+  bool showCategoryToggles = false; // New variable to control visibility
+
   bool freeStock = false;
-  String category = 'Mobiles';
+  String category = 'Electronics & Appliances';
+  String selectedCategory = 'Electronics & Appliances'; // Initial category
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
+
+  int selectedIndex = 0; // Index of the selected category
+  @override
+  void initState() {
+    super.initState();
+    // Add listener to productNameController
+    productNameController.addListener(() {
+      final bool shouldShowToggles = productNameController.text.isNotEmpty;
+      // Update showCategoryToggles only if the value changes
+      if (showCategoryToggles != shouldShowToggles) {
+        setState(() {
+          showCategoryToggles = shouldShowToggles;
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -39,20 +61,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     priceController.dispose();
     meetingLocationController.dispose();
   }
-
-  List<String> locations = [
-    'On Campus',
-    'Off Campus',
-    'Custom Location',
-  ];
-
-  List<String> productCategories = [
-    'Mobiles',
-    'Essentials',
-    'Appliances',
-    'Books',
-    'Fashion'
-  ];
 
   void sellProduct(BuildContext context) {
     if (images.isEmpty) {
@@ -78,10 +86,45 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void selectImages() async {
-    var res = await pickImages();
-    setState(() {
-      images = res;
-    });
+    // Your logic to pick more images and add to the list, make sure it does not exceed maxImages
+    var res = await pickImages(); // Implement pickImages to return List<File>
+
+    if ((images.length + res.length) <= maxImages) {
+      setState(() {
+        images.addAll(res); // Add new selected images to the existing list
+      });
+    } else {
+      // Show some error message if maxImages limit is reached
+      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
+    }
+  }
+
+  Widget imageContainer(File image) {
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          width: 70,
+          height: 70,
+          margin: const EdgeInsets.only(right: 8, bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(image, fit: BoxFit.cover),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.cancel, color: Colors.red),
+          onPressed: () {
+            setState(() => images.remove(image));
+          },
+        ),
+      ],
+    );
   }
 
   @override
@@ -107,7 +150,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
             ),
             title: const Text(
-              'Add Product',
+              'New listing',
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -126,57 +169,41 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    images.isNotEmpty
-                        ? CarouselSlider(
-                            items: images.map(
-                              (i) {
-                                return Builder(
-                                  builder: (BuildContext context) => Image.file(
-                                    i,
-                                    fit: BoxFit.cover,
-                                    height: 200,
-                                  ),
-                                );
-                              },
-                            ).toList(),
-                            options: CarouselOptions(
-                              viewportFraction: 1,
-                              height: 200,
-                            ),
-                          )
-                        : GestureDetector(
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        children: [
+                          // Camera icon container to add new images
+                          InkWell(
                             onTap: selectImages,
-                            child: DottedBorder(
-                              borderType: BorderType.RRect,
-                              radius: const Radius.circular(10),
-                              dashPattern: const [10, 4],
-                              strokeCap: StrokeCap.round,
-                              child: Container(
-                                width: double.infinity,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.folder_open,
-                                      size: 40,
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Text(
-                                      'Select up to five Product Images',
+                            child: Container(
+                              width: 70,
+                              height: 70,
+                              margin:
+                                  const EdgeInsets.only(right: 8, bottom: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.camera_alt,
+                                      color: Colors.grey[600]),
+                                  Text('${images.length}/10',
                                       style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.grey.shade400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                          color: Colors.grey[600],
+                                          fontSize: 12)),
+                                ],
                               ),
                             ),
                           ),
+                          // Displaying existing images
+                          for (File image in images) imageContainer(image),
+                        ],
+                      ),
+                    ),
 
                     const SizedBox(height: 30),
                     // Toggle Buttons
@@ -245,6 +272,29 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       hintText: 'Product Name',
                       maxLength: 30,
                     ),
+                    if (showCategoryToggles)
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: GlobalVariables.categories
+                              .map((category) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    child: ChoiceChip(
+                                      label: Text(category['name']),
+                                      selected:
+                                          selectedCategory == category['name'],
+                                      onSelected: (selected) {
+                                        if (selected) {
+                                          setState(() => selectedCategory =
+                                              category['name']);
+                                        }
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
                     if (!freeStock)
                       CustomTextField(
                         controller: priceController,
@@ -260,34 +310,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         prefixText: !freeStock ? '\$' : '',
                         validatorEnabled: freeStock,
                       ),
-                    const SizedBox(height: 15),
-                    Container(
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey, width: 1),
-                      ),
-                      child: DropdownButton<String>(
-                        value: category,
-                        underline: const SizedBox(),
-                        dropdownColor: Colors.white,
-                        isExpanded: true,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: productCategories.map((String category) {
-                          return DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            category = newValue!;
-                          });
-                        },
-                      ),
-                    ),
+
                     const SizedBox(height: 15),
                     CustomTextField(
                       controller: meetingLocationController,
@@ -306,29 +329,31 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     const SizedBox(
                       height: 130,
                     ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
+                      child: (state is ProductUploadingState)
+                          ? ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, 50),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ))
+                          : CustomButton(
+                              text: 'Sell',
+                              onTap: () => sellProduct(context),
+                            ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-        ),
-        bottomSheet: Container(
-          margin: const EdgeInsets.fromLTRB(12, 15, 12, 40),
-          child: (state is ProductUploadingState)
-              ? ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ))
-              : CustomButton(
-                  text: 'Sell',
-                  onTap: () => sellProduct(context),
-                ),
         ),
       ),
     );

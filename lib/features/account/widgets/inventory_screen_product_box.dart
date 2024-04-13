@@ -73,14 +73,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditProductScreen(
-                                  productImages: product.images,
-                                  productName: product.name,
-                                  productCategory: product.category,
-                                  productPrice: product.price,
-                                  productDescription: product.description,
-                                  selectedLocation: product.location,
-                                  productId: product.id,
-                                ),
+                                    product: widget.productList[index]),
                               ),
                             )
                           },

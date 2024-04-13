@@ -31,27 +31,16 @@ class GlobalVariables {
     'https://images-na.ssl-images-amazon.com/images/G/31/Symbol/2020/00NEW/1242_450Banners/PL31_copy._CB432483346_.jpg',
     'https://images-na.ssl-images-amazon.com/images/G/31/img21/shoes/September/SSW/pc-header._CB641971330_.jpg',
   ];
-
-  static const List<Map<String, String>> categoryImages = [
-    {
-      'title': 'Mobiles',
-      'image': 'assets/images/mobiles.jpeg',
-    },
-    {
-      'title': 'Essentials',
-      'image': 'assets/images/essentials.jpeg',
-    },
-    {
-      'title': 'Appliances',
-      'image': 'assets/images/appliances.jpeg',
-    },
-    {
-      'title': 'Books',
-      'image': 'assets/images/books.jpeg',
-    },
-    {
-      'title': 'Fashion',
-      'image': 'assets/images/fashion.jpeg',
-    },
+  static const List<Map<String, dynamic>> categories = [
+    {'name': 'Electronics & Appliances', 'image': 'assets/images/macbook.jpg'},
+    {'name': 'Furniture', 'image': 'assets/images/chair.jpg'},
+    {'name': 'Home & Garden', 'image': 'assets/images/fry pan.png'},
+    {'name': 'Game & Hobbies', 'image': 'assets/images/game.jpg'},
+    {'name': "Books & Music", 'image': 'assets/images/books.jpg'},
+    {'name': "Men's Fashion", 'image': 'assets/images/clothes.jpg'},
+    {'name': 'Health & Beauty', 'image': 'assets/images/toner.jpg'},
+    {'name': 'Sports & Outdoors', 'image': 'assets/images/gloves.jpg'},
+    {'name': 'Vehicles & Parts', 'image': 'assets/images/car.jpg'},
+    {'name': 'Other', 'image': 'assets/images/box.jpg'},
   ];
 }

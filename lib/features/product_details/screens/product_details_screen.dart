@@ -268,17 +268,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => EditProductScreen(
-                                        productImages: widget.product.images,
-                                        productName: widget.product.name,
-                                        productCategory:
-                                            widget.product.category,
-                                        productPrice: widget.product.price,
-                                        productDescription:
-                                            widget.product.description,
-                                        selectedLocation:
-                                            widget.product.location,
-                                        productId: widget.product.id,
-                                      ),
+                                          product: widget.product),
                                     ),
                                   ),
                                   icon: const Icon(

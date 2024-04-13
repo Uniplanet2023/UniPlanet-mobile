@@ -40,6 +40,8 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
           prefixText: prefixText,
           hintText: hintText,
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
           border: OutlineInputBorder(
               borderSide: BorderSide(
             color: borderColor ?? Colors.black38, // Use borderColor if provided
