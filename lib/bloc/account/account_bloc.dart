@@ -26,6 +26,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       await _updateNotification(event, emit);
     });
   }
+
   _updateNotification(
       UpdateNotificationEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingNotificationState(account: state.account));
