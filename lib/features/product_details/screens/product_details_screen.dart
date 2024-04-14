@@ -9,6 +9,7 @@ import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/like/like_bloc.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
+import 'package:uniplanet_mobile/common/widgets/full_image_gallery.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/account/screens/user_profile.dart';
 import 'package:uniplanet_mobile/features/account/widgets/remove_product_dialog.dart';
@@ -43,36 +44,51 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   CarouselSlider _buildCarouselSlider() {
     return CarouselSlider(
-      items: widget.product.images
-          .asMap()
-          .entries
-          .map((entry) => Builder(
-                builder: (BuildContext context) {
-                  String image = entry.value; // Access image URL
-                  return Hero(
-                    tag: "product-picture-${widget.product.id}",
-                    child: CachedNetworkImage(
-                      cacheManager: GlobalVariables.customCacheManager,
-                      imageUrl: image,
-                      fit: BoxFit.fill,
-                      height: 400,
-                      placeholder: (_, __) =>
-                          const Center(child: CircularProgressIndicator()),
-                      errorWidget: (_, __, ___) =>
-                          const Icon(Icons.error, color: Colors.red, size: 80),
-                    ),
-                  );
-                },
-              ))
-          .toList(),
+      items: widget.product.images.asMap().entries.map(
+        (entry) {
+          String image = entry.value; // Access image URL
+          return GestureDetector(
+            onTap: () => _openGallery(context, entry.key),
+            child: Hero(
+              tag: "product-picture-${widget.product.id}-${entry.key}",
+              child: CachedNetworkImage(
+                cacheManager: GlobalVariables.customCacheManager,
+                imageUrl: image,
+                fit: BoxFit.cover,
+                height: 400,
+                placeholder: (_, __) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (_, __, ___) =>
+                    const Icon(Icons.error, color: Colors.red, size: 80),
+              ),
+            ),
+          );
+        },
+      ).toList(),
       options: CarouselOptions(
         viewportFraction: 1,
         height: 400,
+        enableInfiniteScroll: false, // Set this to false
         onPageChanged: (index, reason) {
           setState(() {
             currentIndex = index;
           });
         },
+      ),
+    );
+  }
+
+  void _openGallery(BuildContext context, int initialIndex) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => GalleryPhotoViewWrapper(
+          galleryItems: widget.product.images,
+          backgroundDecoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          initialIndex: initialIndex,
+          scrollDirection: Axis.horizontal,
+        ),
       ),
     );
   }
@@ -105,9 +121,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 },
                 child: Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
+                          NetworkImage(widget.product.seller.profileImage!),
                       radius: 20,
                     ),
                     const SizedBox(

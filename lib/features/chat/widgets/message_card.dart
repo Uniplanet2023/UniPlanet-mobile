@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:uniplanet_mobile/common/enums/message_enum.dart';
 import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
+import 'package:uniplanet_mobile/common/widgets/full_image.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/message.dart';
 
@@ -123,52 +126,86 @@ class MessageBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTyping = oldMessage == null;
+
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width - 110,
-        maxHeight: 300, // Keep if you want to limit height of image messages
+        maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
+        maxHeight: isTyping ? 40.h : 250.h,
       ),
       child: Card(
         elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        color: isMyMessage ? GlobalVariables.primaryColor : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: getColorForCard(),
         margin: EdgeInsets.fromLTRB(
             isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: getContentWidget(context),
+          padding: getPaddingForContent(),
+          child: getContentWidget(context, isTyping),
         ),
       ),
     );
   }
 
-  Widget getContentWidget(BuildContext context) {
-    if (oldMessage == null) {
-      return const Text('Typing ...', style: TextStyle(fontSize: 16));
+  Color getColorForCard() {
+    if (oldMessage?.messageType == MessageEnum.image.value) {
+      return Colors.transparent;
+    } else {
+      return isMyMessage ? GlobalVariables.primaryColor : Colors.white;
+    }
+  }
+
+  EdgeInsets getPaddingForContent() {
+    return oldMessage?.messageType == MessageEnum.image.value
+        ? const EdgeInsets.all(0)
+        : const EdgeInsets.all(8.0);
+  }
+
+  Widget getContentWidget(BuildContext context, bool isTyping) {
+    if (isTyping) {
+      return const SpinKitThreeBounce(
+        color: Colors.grey,
+        size: 20,
+      );
     } else if (oldMessage!.messageType == MessageEnum.text.value) {
       return Text(oldMessage!.message, style: const TextStyle(fontSize: 16));
     } else if (oldMessage!.messageType == MessageEnum.image.value) {
-      return oldMessage!.status == MessageStatusEnum.received.value
-          ? CachedNetworkImage(
-              imageUrl: oldMessage!.message,
-              placeholder: (context, url) =>
-                  const SpinKitFadingCircle(color: Colors.grey),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-              fit: BoxFit.cover,
-            )
-          : ImageWithLoadingIndicator(
-              imagePath: oldMessage!.message,
-              status: oldMessage!.status,
-            );
+      return handleImageMessage(context);
     } else {
       return Text(oldMessage!.message, style: const TextStyle(fontSize: 16));
     }
+  }
+
+  Widget handleImageMessage(BuildContext context) {
+    return oldMessage!.status == MessageStatusEnum.received.value
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) =>
+                      FullScreenImageView(imagePath: oldMessage!.message),
+                ));
+              },
+              child: CachedNetworkImage(
+                imageUrl: oldMessage!.message,
+                placeholder: (context, url) => const SizedBox.shrink(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : ImageWithLoadingIndicator(
+            imagePath: oldMessage!.message,
+            status: oldMessage!.status,
+          );
   }
 }
 
 class ImageWithLoadingIndicator extends StatelessWidget {
   final String imagePath;
   final String status;
+
   const ImageWithLoadingIndicator({
     super.key,
     required this.imagePath,
@@ -180,7 +217,11 @@ class ImageWithLoadingIndicator extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Image.file(File(imagePath), fit: BoxFit.cover), // Your image
+        ClipRRect(
+          borderRadius:
+              BorderRadius.circular(12), // Rounded corners for the image
+          child: Image.file(File(imagePath), fit: BoxFit.cover), // Your image
+        ),
         if (status == MessageStatusEnum.sending.value)
           const SpinKitFadingCircle(color: Colors.blue, size: 50.0),
         if (status == MessageStatusEnum.error.value)
@@ -188,7 +229,7 @@ class ImageWithLoadingIndicator extends StatelessWidget {
             Icons.error_sharp,
             size: 100,
             color: Colors.black54,
-          ), // Error icon (optional
+          ),
       ],
     );
   }

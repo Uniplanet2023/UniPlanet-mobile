@@ -69,12 +69,12 @@ class _ChatListState extends State<ChatList> {
             ),
             body: TabBarView(
               children: [
-                // Buy Items Tab
+                // User Tab
                 ContactsList(
                   list: state.chatRooms,
                   sort: 'user',
                 ),
-                // Sell Items Tab
+                // Product Tab
                 ContactsList(
                   list: state.chatRooms,
                   sort: 'product',

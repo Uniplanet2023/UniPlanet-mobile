@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet_mobile/bloc/status/status_bloc.dart';
 import 'package:uniplanet_mobile/bloc/typing/typing_bloc.dart';
@@ -145,29 +146,36 @@ class _ContactsListState extends State<ContactsList> {
                           builder: (context, state) {
                             bool isTyping = state is TypingStarted &&
                                 state.chatId == widget.list[index].id;
-                            return last.messageType == MessageEnum.image.value
-                                ? Text(
-                                    "Image",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: last.sender !=
-                                                  AuthRepository.userId &&
-                                              last.readDate == null
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                                  )
-                                : Text(
-                                    isTyping ? "Typing..." : last.message,
-                                    style: TextStyle(
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                if (isTyping)
+                                  const SpinKitThreeBounce(
+                                    color: Colors
+                                        .grey, // Adjust the color to fit your app theme
+                                    size:
+                                        20.0, // Adjust the size based on your UI
+                                  ),
+                                if (!isTyping)
+                                  Expanded(
+                                    child: Text(
+                                      last.messageType ==
+                                              MessageEnum.image.value
+                                          ? "Image"
+                                          : last.message,
+                                      style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: last.sender !=
                                                     AuthRepository.userId &&
                                                 last.readDate == null
                                             ? FontWeight.bold
                                             : FontWeight.normal,
-                                        overflow: TextOverflow.ellipsis),
-                                  );
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
                           },
                         ),
                       ),

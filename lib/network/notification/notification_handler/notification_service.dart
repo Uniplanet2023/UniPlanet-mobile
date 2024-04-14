@@ -47,6 +47,8 @@ class NotificationService {
             await AwesomeNotifications().requestPermissionToSendNotifications();
         NotificationService.isNotificationAllowed = isNotificationAllow;
         return isNotificationAllow;
+      } else {
+        NotificationService.isNotificationAllowed = isAllow;
       }
       return true;
     } catch (e) {

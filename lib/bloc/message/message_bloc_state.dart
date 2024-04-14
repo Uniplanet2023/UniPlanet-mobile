@@ -9,7 +9,7 @@ sealed class MessageBlocState extends Equatable {
 }
 
 class InitMessageState extends MessageBlocState {
-  InitMessageState() : super(chatMessages: {}, pendingMessages: {}, page: 0);
+  InitMessageState() : super(chatMessages: {}, pendingMessages: {}, page: 1);
   @override
   List<Object?> get props => [chatMessages, page];
 }

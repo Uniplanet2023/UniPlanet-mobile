@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
 import 'package:uniplanet_mobile/common/widgets/error_screen.dart';
@@ -116,6 +117,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           colorScheme: const ColorScheme.light(
             primary: GlobalVariables.secondaryColor,
           ),
+          fontFamily: GoogleFonts.roboto().fontFamily,
           appBarTheme: const AppBarTheme(
             elevation: 0,
             iconTheme: IconThemeData(
