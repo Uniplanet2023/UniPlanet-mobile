@@ -71,4 +71,59 @@ class AccountRepository implements IAccountRepository {
       return null;
     }
   }
+
+  Future<List<String>?> getSearchHistory({required page}) async {
+    try {
+      Response res = await _dioClient.dio.get(
+          '$accountURI/search-history/$page',
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        List<String> result = List<String>.from(res.data['data']);
+        return result;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<bool> removeSearchHistory({required String query}) async {
+    try {
+      Response res = await _dioClient.dio.delete(
+          '$accountURI/delete-search-history/$query',
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> clearSearchHistory() async {
+    try {
+      Response res = await _dioClient.dio.delete(
+          '$accountURI/delete-all-search-history',
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

@@ -91,14 +91,6 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         centerTitle: false,
         actions: [
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.video_call),
-          // ),
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.call),
-          // ),
           IconButton(
             onPressed: () {
               context
@@ -108,30 +100,6 @@ class _ChatScreenState extends State<ChatScreen> {
             },
             icon: const Icon(Icons.exit_to_app),
           ),
-          // PopupMenuButton<String>(
-          //   onSelected: (value) {
-          //     // Handle the action when a menu item is selected
-          //     switch (value) {
-          //       case 'Option1':
-          //         // Handle Option1 action
-          //         break;
-          //       case 'Option2':
-          //         // Handle Option2 action
-          //         break;
-          //       // Add other cases for each menu option
-          //     }
-          //   },
-          //   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          //     const PopupMenuItem<String>(
-          //       value: 'Option1',
-          //       child: Text('Option 1'),
-          //     ),
-          //     const PopupMenuItem<String>(
-          //       value: 'Option2',
-          //       child: Text('Option 2'),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
       body: BlocListener<MessageBloc, MessageBlocState>(

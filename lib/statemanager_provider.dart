@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/bloc/search_history/search_history_bloc.dart';
 import 'package:uniplanet_mobile/main.dart';
 import 'network/repository/index.dart';
 
@@ -48,6 +49,9 @@ class StateManagerProvider extends StatelessWidget {
           BlocProvider(create: (context) => TypingBloc()),
           BlocProvider(
               create: (context) => LikeBloc(context.read<ProductRepository>())),
+          BlocProvider(
+              create: (context) =>
+                  SearchHistoryBloc(context.read<AccountRepository>())),
         ], child: const MyApp()));
   }
 }

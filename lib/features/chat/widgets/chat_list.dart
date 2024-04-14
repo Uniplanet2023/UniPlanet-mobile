@@ -33,14 +33,20 @@ class _ChatListState extends State<ChatList> {
 
   // Define the scroll listener method
   void _scrollListener() {
-    // If there's an existing timer, cancel it
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    // Check if the scroll position is at the end of the scroll extent
-    // Set up a new timer that waits for 50ms (or your desired debounce duration) before firing
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
+    }
     _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (!widget.scrollController.hasClients) return;
+
       if (widget.scrollController.position.pixels >=
           widget.scrollController.position.maxScrollExtent) {
-        context.read<MessageBloc>().add(GetMoreMessageEvent(widget.chatRoomId));
+        // Ensure this is called only when there are items in the list
+        if (widget.messages.isNotEmpty) {
+          context
+              .read<MessageBloc>()
+              .add(GetMoreMessageEvent(widget.chatRoomId));
+        }
       }
     });
   }
@@ -72,8 +78,11 @@ class _ChatListState extends State<ChatList> {
               builder: (context, state) {
                 if (state is TypingStarted &&
                     state.chatId == widget.chatRoomId) {
-                  return const MessageBox(
-                    isMyMessage: true,
+                  return const Align(
+                    alignment: Alignment.centerRight,
+                    child: MessageBox(
+                      isMyMessage: true,
+                    ),
                   );
                 } else {
                   return const SizedBox();
@@ -82,20 +91,17 @@ class _ChatListState extends State<ChatList> {
             );
           }
           // if it is the last item, return a loading indicator or nothing
-          var messageState = context.read<MessageBloc>().state;
+
           if (itemNumber == widget.messages.length) {
-            if (widget.messages.length > 19 &&
-                messageState is! EndMessageState) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return const SizedBox();
-            }
-          }
-          // if there are no messages, return nothing
-          if (widget.messages.isEmpty) {
-            return const SizedBox();
+            return BlocBuilder<MessageBloc, MessageBlocState>(
+              builder: (context, state) {
+                return state is EndMessageState
+                    ? const SizedBox()
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      );
+              },
+            );
           }
           // if there are messages, return a message card
           final Message oldMessage = widget.messages[itemNumber];

@@ -13,7 +13,7 @@ import 'package:uniplanet_mobile/models/message.dart';
 import 'package:uniplanet_mobile/models/user_model.dart';
 import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
-import 'package:uniplanet_mobile/network/notification/notification_service.dart';
+import 'package:uniplanet_mobile/network/notification/notification_handler/notification_service.dart';
 
 class SocketService {
   String userId;

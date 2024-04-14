@@ -313,10 +313,10 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     emit(LoadingMessageState(
         chatMessages: state.chatMessages,
         pendingMessages: state.pendingMessages,
-        page: state.page));
+        page: 1));
     try {
       List<Message> listMessage = await _chatRepository
-          .getMessages(chatId: event.chatId, page: 0)
+          .getMessages(chatId: event.chatId, page: 1)
           .timeout(
         const Duration(seconds: 10),
         onTimeout: () {
@@ -345,7 +345,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   @override
   void onChange(Change<MessageBlocState> change) {
     super.onChange(change);
-    // print(change);
+    print(change);
   }
 
   @override

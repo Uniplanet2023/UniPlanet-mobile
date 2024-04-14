@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/bloc/search_history/search_history_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/models/product.dart';
@@ -19,6 +20,7 @@ class _CategoryPageState extends State<CategoryPage> {
   void initState() {
     super.initState();
     context.read<CategoryBloc>().add(const GetHotProductsEvent());
+    context.read<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
   }
 
   final List<String> interests = [
@@ -152,20 +154,56 @@ class _CategoryPageState extends State<CategoryPage> {
             // Interests section here
             // Interests section here
             Padding(
-              padding: const EdgeInsets.all(8),
-              child: Wrap(
-                spacing:
-                    8.w, // Space between individual chips on the same line.
-                children: interests
-                    .map((interest) => Chip(
-                          label: Text(interest),
-                        ))
-                    .toList(),
+              padding: const EdgeInsets.only(left: 8),
+              child: BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
+                builder: (context, state) {
+                  return Wrap(
+                    spacing: 10
+                        .w, // Space between individual chips on the same line.
+                    runSpacing: 10.h, // Space between lines of chips.
+                    children: state.searchHistory
+                        .take(5)
+                        .map((text) => GestureDetector(
+                              onTap: () {
+                                context
+                                    .read<SearchProductBloc>()
+                                    .add(SearchProductEvent(productName: text));
+                                Navigator.pushNamed(
+                                    context, AppRoutes.searchScreenPage);
+                              },
+                              child: Chip(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: const BorderSide(
+                                      color: Colors.black45, width: 1),
+                                ),
+                                labelPadding: EdgeInsets.symmetric(
+                                    horizontal: 0.w, vertical: 0.h),
+                                label: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.search,
+                                      size: 15.sp,
+                                      color: Colors.black54,
+                                    ),
+                                    Text(
+                                      text,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 15.sp,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                  );
+                },
               ),
             ),
-            const SizedBox(
-              height: 50,
-            ),
+            SizedBox(height: 60.h),
           ],
         ),
       ),

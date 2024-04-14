@@ -219,6 +219,9 @@ class _BottomChatFieldState extends State<BottomChatField> {
                 child: TextFormField(
                   focusNode: focusNode,
                   controller: _messageController,
+                  keyboardType:
+                      TextInputType.multiline, // Enable multiline input
+                  maxLines: null, // No limit on the number of lines
                   onChanged: (val) {
                     if (val.isNotEmpty) {
                       Global.socketService

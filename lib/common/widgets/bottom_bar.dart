@@ -95,9 +95,9 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       HomeScreen(controller: _controller!),
-      const Padding(
-        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
-        child: CategoryPage(),
+      Container(
+        margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: const CategoryPage(),
       ),
       const AddProductScreen(),
       const Padding(
