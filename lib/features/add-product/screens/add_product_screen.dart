@@ -75,7 +75,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ? double.parse(
                   double.parse(priceController.text).toStringAsFixed(2))
               : 0,
-          category: category,
+          category: selectedCategory,
           status: 'On Sale',
           images: images,
           location: meetingLocationController.text,

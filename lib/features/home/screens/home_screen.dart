@@ -84,7 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
             setState(() => _showLoadingIndicator = true);
-            context.read<ProductBloc>().add(const LoadProductEvent());
+            if (widget.category == 'Hot Products') {
+              context.read<HotProductBloc>().add(const LoadHotProductsEvent());
+            } else if (widget.category != null) {
+              context
+                  .read<CategoryBloc>()
+                  .add(LoadCategoryEvent(category: widget.category!));
+            } else {
+              context.read<ProductBloc>().add(const LoadProductEvent());
+            }
+
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) {
                 setState(() => _showLoadingIndicator = false);

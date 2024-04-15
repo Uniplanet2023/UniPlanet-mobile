@@ -41,8 +41,8 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
   }
 
   _loadHotProducts(LoadHotProductsEvent event, emit) async {
-    emit(LoadingHotProductState(
-      hotProducts: state.hotProducts,
+    emit(const LoadingHotProductState(
+      hotProducts: [],
       hotProductPage: 1,
     ));
     List<Product> result = [];

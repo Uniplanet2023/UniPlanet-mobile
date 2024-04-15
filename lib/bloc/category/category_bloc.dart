@@ -46,8 +46,8 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _loadCategoryProduct(LoadCategoryEvent event, emit) async {
-    emit(LoadingCategoryState(
-      categoryProducts: state.categoryProducts,
+    emit(const LoadingCategoryState(
+      categoryProducts: [],
       categoryPage: 1,
     ));
     List<Product> result = [];
