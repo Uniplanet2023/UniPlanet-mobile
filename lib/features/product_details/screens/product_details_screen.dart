@@ -44,35 +44,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   CarouselSlider _buildCarouselSlider() {
     return CarouselSlider(
-      items: widget.product.images.asMap().entries.map(
-        (entry) {
-          String image = entry.value; // Access image URL
-          return GestureDetector(
-            onTap: () => _openGallery(context, entry.key),
-            child: Hero(
-              tag: "product-picture-${widget.product.id}-${entry.key}",
-              child: CachedNetworkImage(
-                cacheManager: GlobalVariables.customCacheManager,
-                imageUrl: image,
-                fit: BoxFit.cover,
-                height: 400,
-                placeholder: (_, __) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (_, __, ___) =>
-                    const Icon(Icons.error, color: Colors.red, size: 80),
-              ),
-            ),
-          );
-        },
-      ).toList(),
+      items: widget.product.images
+          .asMap()
+          .entries
+          .map((entry) => Builder(
+                builder: (BuildContext context) {
+                  String image = entry.value; // Access image URL
+                  return GestureDetector(
+                    onTap: () => _openGallery(context, entry.key),
+                    child: Hero(
+                      tag: "product-picture-${widget.product.id}-${entry.key}",
+                      child: CachedNetworkImage(
+                        cacheManager: GlobalVariables.customCacheManager,
+                        imageUrl: image,
+                        fit: BoxFit.cover,
+                        height: 400,
+                        placeholder: (_, __) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (_, __, ___) => const Icon(Icons.error,
+                            color: Colors.red, size: 80),
+                      ),
+                    ),
+                  );
+                },
+              ))
+          .toList(),
       options: CarouselOptions(
         viewportFraction: 1,
         height: 400,
-        enableInfiniteScroll: false, // Set this to false
         onPageChanged: (index, reason) {
-          setState(() {
-            currentIndex = index;
-          });
+          if (index < widget.product.images.length) {
+            setState(() {
+              currentIndex = index;
+            });
+          }
         },
       ),
     );

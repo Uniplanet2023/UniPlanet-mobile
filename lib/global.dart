@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/main.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_api.dart';
 import 'package:uniplanet_mobile/network/notification/firebase_options.dart';
 import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
+import 'package:uniplanet_mobile/network/notification/notification_handler/notification_service.dart';
 import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
 
 class Global {
@@ -25,7 +26,7 @@ class Global {
     await FirebaseApi().initNotification();
     //Firebase background message handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
+    await NotificationService.init();
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: false,

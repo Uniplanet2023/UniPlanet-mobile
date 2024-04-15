@@ -80,3 +80,10 @@ class UpdatePasswordEvent extends AuthEvent {
   @override
   List<Object> get props => [password, newPassword];
 }
+
+final class ResetPasswordEvent extends AuthEvent {
+  final String email;
+  const ResetPasswordEvent({required this.email});
+  @override
+  List<Object> get props => [email];
+}

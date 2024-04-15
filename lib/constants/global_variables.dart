@@ -37,7 +37,7 @@ class GlobalVariables {
     {'name': 'Home & Garden', 'image': 'assets/images/fry pan.png'},
     {'name': 'Game & Hobbies', 'image': 'assets/images/game.jpg'},
     {'name': "Books & Music", 'image': 'assets/images/books.jpg'},
-    {'name': "Men's Fashion", 'image': 'assets/images/clothes.jpg'},
+    {'name': "Fashion", 'image': 'assets/images/clothes.jpg'},
     {'name': 'Health & Beauty', 'image': 'assets/images/toner.jpg'},
     {'name': 'Sports & Outdoors', 'image': 'assets/images/gloves.jpg'},
     {'name': 'Vehicles & Parts', 'image': 'assets/images/car.jpg'},

@@ -146,27 +146,34 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<void> forgottenPassword({
+  Future<bool> resetPassword({
     required String email,
   }) async {
-    var res = await _dioClient.dio.put('$authURI/forgotten-password',
-        data: jsonEncode({'email': email}),
-        options: _dioClient.getDioOptions());
+    try {
+      var res = await _dioClient.dio.put('$authURI/forgotten-password',
+          data: jsonEncode({'email': email}),
+          options: _dioClient.getDioOptions());
 
-    if (res.data['message'] ==
-        "User with the given email address doesn't exists!") {
-      SnackbarGlobal.showSnackBar(
-        "Email address not found!",
-      );
-    }
-    if (res.data['message'] == "Password updated successfully") {
-      SnackbarGlobal.showSnackBar(
-        "Password reset successful, Use the temporary password sent to your email to log in ",
-      );
-    } else {
-      SnackbarGlobal.showSnackBar(
-        "Something went wrong!",
-      );
+      if (res.data['message'] ==
+          "User with the given email address doesn't exists!") {
+        SnackbarGlobal.showSnackBar(
+          "Email address not found!",
+        );
+        return false;
+      }
+      if (res.data['message'] == "Password updated successfully") {
+        SnackbarGlobal.showSnackBar(
+          "Password reset successful, Use the temporary password sent to your email to log in ",
+        );
+        return true;
+      } else {
+        SnackbarGlobal.showSnackBar(
+          "Something went wrong!",
+        );
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 

@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/functions/forgotten-password.dart';
+import 'package:uniplanet_mobile/features/auth/screens/forgotten_password_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
 
@@ -154,38 +155,11 @@ class _SigninScreenState extends State<SigninScreen> {
                                 const Text('Forgot your password? '),
                                 TextButton(
                                   onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          scrollable: true,
-                                          title: const Text('Reset Password'),
-                                          content: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CustomTextField(
-                                                controller:
-                                                    _resetPasswordController,
-                                                hintText:
-                                                    'Enter your email (.edu only)'),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              style: TextButton.styleFrom(
-                                                textStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .labelLarge,
-                                              ),
-                                              child: const Text('Reset'),
-                                              onPressed: () {
-                                                resetPassword(
-                                                    _resetPasswordController
-                                                        .text);
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ResetPasswordPage()),
                                     );
                                   },
                                   child: const Text(

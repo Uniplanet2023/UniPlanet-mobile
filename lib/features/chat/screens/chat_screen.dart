@@ -93,13 +93,39 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              context
-                  .read<ChatBloc>()
-                  .add(DeleteChatRoomEvent(chatId: widget.chatRoomId));
-              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm Deletion'),
+                    content: const Text(
+                        'Are you sure you want to delete this chat room?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pop(); // Dismiss the dialog but not the screen
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Proceed with deletion after confirmation
+                          context.read<ChatBloc>().add(
+                              DeleteChatRoomEvent(chatId: widget.chatRoomId));
+                          Navigator.of(context).pop(); // Dismiss the dialog
+                          Navigator.of(context)
+                              .pop(); // Navigate back from current screen
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             icon: const Icon(Icons.exit_to_app),
-          ),
+          )
         ],
       ),
       body: BlocListener<MessageBloc, MessageBlocState>(
