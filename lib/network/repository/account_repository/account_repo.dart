@@ -126,4 +126,22 @@ class AccountRepository implements IAccountRepository {
       return false;
     }
   }
+
+  Future<bool> updateNotification({required bool isAllow}) async {
+    try {
+      Response res = await _dioClient.dio.put('$accountURI/update-notification',
+          queryParameters: {'isAllow': isAllow},
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

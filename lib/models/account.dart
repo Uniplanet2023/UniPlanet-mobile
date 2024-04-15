@@ -4,6 +4,7 @@ import 'package:uniplanet_mobile/models/user_model.dart';
 
 class Account {
   final User user;
+  bool isNotificationAllowed;
   final List<String> searchHistory;
   final List<String> recentViewHistory;
 
@@ -11,6 +12,7 @@ class Account {
     required this.user,
     required this.searchHistory,
     required this.recentViewHistory,
+    this.isNotificationAllowed = false,
   });
 
   static initialAccount() {
@@ -26,12 +28,14 @@ class Account {
       'user': user.toMap(),
       'searchHistory': searchHistory,
       'recentViewHistory': recentViewHistory,
+      'isNotificationAllowed': isNotificationAllowed,
     };
   }
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
       user: User.fromMap(map),
+      isNotificationAllowed: map['isNotificationAllowed'] as bool,
       searchHistory: List<String>.from(
           map['searchHistory'].map((item) => item.toString())),
       recentViewHistory: List<String>.from(

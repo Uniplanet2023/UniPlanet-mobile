@@ -65,12 +65,8 @@ final class UpdatingNotificationState extends AccountState {
   const UpdatingNotificationState({required super.account});
 }
 
-final class EnableNotificationState extends AccountState {
-  const EnableNotificationState({required super.account});
-}
-
-final class DisableNotificationState extends AccountState {
-  const DisableNotificationState({required super.account});
+final class UpdatedNotificationState extends AccountState {
+  const UpdatedNotificationState({required super.account});
 }
 
 final class FailedToUpdateNotificationState extends AccountState {

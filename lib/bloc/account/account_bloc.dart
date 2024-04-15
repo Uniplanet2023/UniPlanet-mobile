@@ -31,14 +31,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       UpdateNotificationEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingNotificationState(account: state.account));
     try {
-      await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-        if (isAllowed) {
-          AwesomeNotifications().requestPermissionToSendNotifications();
-          emit(EnableNotificationState(account: state.account));
-        } else {
-          emit(DisableNotificationState(account: state.account));
-        }
-      });
+      bool isAllowed = await _accountRepository.updateNotification(
+          isAllow: event.notification);
+      state.account.isNotificationAllowed = isAllowed;
+      emit(UpdatedNotificationState(account: state.account));
     } catch (e) {
       emit(FailedToUpdateNotificationState(
           message: e.toString(), account: state.account));
