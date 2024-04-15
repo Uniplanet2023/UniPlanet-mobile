@@ -120,11 +120,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   _loadMoreProduct(LoadMoreProductEvent event, emit) async {
     emit(LoadingProductState(productList: state.productList, page: state.page));
     int nextPage = state.page + 1;
-    List<Product> result =
-        await _productRepository.fetchProducts(page: nextPage);
+    List<Product> result = [];
+    try {
+      result = await _productRepository.fetchProducts(page: nextPage);
+    } catch (e) {
+      emit(ErrorProductLoadState(e.toString(),
+          productList: state.productList, page: state.page));
+    }
+
     List<Product> productList = state.productList;
-    productList.addAll(result);
-    emit(LoadedProductState(productList: productList, page: nextPage));
+    if (result.isEmpty) {
+      emit(EndedProductState(productList: productList, page: nextPage - 1));
+    } else {
+      productList.addAll(result);
+      emit(LoadedProductState(productList: productList, page: nextPage));
+    }
   }
 
   _loadProduct(LoadProductEvent event, emit) async {

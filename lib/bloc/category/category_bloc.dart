@@ -12,26 +12,63 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<LoadCategoryEvent>((event, emit) async {
       await _loadCategoryProduct(event, emit);
     });
-    on<GetHotProductsEvent>((event, emit) async {
-      await _getHotProducts(event, emit);
+    on<LoadMoreCategoryEvent>((event, emit) async {
+      await _loadMoreCategoryProduct(event, emit);
     });
   }
 
-  _getHotProducts(GetHotProductsEvent event, emit) async {
+  _loadMoreCategoryProduct(LoadMoreCategoryEvent event, emit) async {
     emit(LoadingCategoryState(
+      categoryProducts: state.categoryProducts,
+      categoryPage: state.categoryPage,
+    ));
+    List<Product> result = [];
+    int nextPage = state.categoryPage + 1;
+    try {
+      result = await _productRepository.fetchProducts(
+          page: nextPage, category: event.category);
+    } catch (e) {
+      emit(ErrorCategoryState(e.toString()));
+    }
+    if (result.isEmpty) {
+      emit(EndCategoryState(
         categoryProducts: state.categoryProducts,
-        hotProducts: state.hotProducts));
-    List<Product> result = await _productRepository.getHotProducts();
-    emit(LoadedCategoryState(
-        categoryProducts: state.categoryProducts, hotProducts: result));
+        categoryPage: state.categoryPage,
+      ));
+      return;
+    } else {
+      state.categoryProducts.addAll(result);
+      emit(LoadedCategoryState(
+        categoryProducts: state.categoryProducts,
+        categoryPage: nextPage,
+      ));
+    }
   }
 
   _loadCategoryProduct(LoadCategoryEvent event, emit) async {
-    emit(LoadingCategoryState(hotProducts: state.hotProducts));
-    List<Product> result = await _productRepository.fetchProducts(
-        page: event.page, category: event.category);
-    emit(LoadedCategoryState(
-        categoryProducts: result, hotProducts: state.hotProducts));
+    emit(LoadingCategoryState(
+      categoryProducts: state.categoryProducts,
+      categoryPage: 1,
+    ));
+    List<Product> result = [];
+    try {
+      result = await _productRepository.fetchProducts(
+          page: state.categoryPage, category: event.category);
+    } catch (e) {
+      emit(ErrorCategoryState(e.toString()));
+    }
+    if (result.isEmpty) {
+      emit(EndCategoryState(
+        categoryProducts: state.categoryProducts,
+        categoryPage: state.categoryPage,
+      ));
+      return;
+    } else {
+      emit(LoadedCategoryState(
+        categoryProducts: result,
+        categoryPage: 1,
+      ));
+    }
   }
 
   @override

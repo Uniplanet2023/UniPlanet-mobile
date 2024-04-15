@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet_mobile/bloc/category/category_bloc.dart';
+import 'package:uniplanet_mobile/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/home/widgets/buildProductBox.dart';
@@ -30,9 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     widget.controller.addListener(_scrollListener); // Listen to scroll events
-    if (widget.category == 'Hot Products') {
-      context.read<CategoryBloc>().add(const GetHotProductsEvent());
-    } else if (widget.category != null) {
+    if (widget.category != null && widget.category != 'Hot Products') {
       context
           .read<CategoryBloc>()
           .add(LoadCategoryEvent(category: widget.category!));
@@ -52,7 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
       // User has reached the end, fetch more products
       setState(() => _isFetchingMoreProducts = true);
       // Simulate fetching more products with a delay
-      context.read<ProductBloc>().add(const LoadMoreProductEvent());
+      if (widget.category == 'Hot Products') {
+        context.read<HotProductBloc>().add(const LoadMoreHotProductsEvent());
+      } else if (widget.category != null) {
+        context
+            .read<CategoryBloc>()
+            .add(LoadMoreCategoryEvent(category: widget.category!));
+      } else {
+        context.read<ProductBloc>().add(const LoadMoreProductEvent());
+      }
+
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
           setState(() => _isFetchingMoreProducts = false);
@@ -149,22 +158,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             widget.category != null
-                ? BlocBuilder<CategoryBloc, CategoryState>(
-                    builder: (context, state) {
-                      if (state is LoadedCategoryState) {
-                        List<Product> productList;
-                        widget.category == 'Hot Products'
-                            ? productList = state.hotProducts
-                            : productList = state.categoryProducts;
-                        return ItemBox(productList: productList);
-                        // return buildProductGrid(
-                        //     productList: productList,
-                        //     context: context,
-                        //     category: widget.category);
-                      }
-                      return const ItemBox(productList: []);
-                    },
-                  )
+                ? widget.category == 'Hot Products'
+                    ? BlocBuilder<HotProductBloc, HotProductState>(
+                        builder: (context, state) {
+                        if (state is LoadingHotProductState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is LoadedHotProductState) {
+                          List<Product> productList = state.hotProducts;
+                          return ItemBox(productList: productList);
+                        } else {
+                          return const ItemBox(productList: []);
+                        }
+                      })
+                    : BlocBuilder<CategoryBloc, CategoryState>(
+                        builder: (context, state) {
+                          if (state is LoadedCategoryState) {
+                            List<Product> productList = state.categoryProducts;
+                            return ItemBox(productList: productList);
+                          }
+                          return const ItemBox(productList: []);
+                        },
+                      )
                 : BlocBuilder<ProductBloc, ProductState>(
                     builder: (context, state) {
                       // Directly return ItemBox for any state other than LoadingProductState

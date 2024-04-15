@@ -306,7 +306,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               RegExp(r'^\d+\.?\d{0,9}')),
                         ],
                         prefixText: !freeStock ? '\$' : '',
-                        validatorEnabled: freeStock,
+                        validatorEnabled: !freeStock,
                       ),
 
                     const SizedBox(height: 15),

@@ -235,12 +235,13 @@ class ProductRepository {
     return productList;
   }
 
-  Future<List<Product>> getHotProducts() async {
+  Future<List<Product>> getHotProducts({required int nextPage}) async {
     final productList = <Product>[];
     try {
       final response = await _dioClient.dio.get(
         '$productURI/get-hot-products',
         options: _dioClient.getDioOptions(),
+        queryParameters: {'page': nextPage},
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {

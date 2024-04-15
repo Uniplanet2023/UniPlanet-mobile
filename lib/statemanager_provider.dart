@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/bloc/search_history/search_history_bloc.dart';
 import 'package:uniplanet_mobile/main.dart';
@@ -32,6 +33,9 @@ class StateManagerProvider extends StatelessWidget {
             create: (context) =>
                 CategoryBloc(context.read<ProductRepository>()),
           ),
+          BlocProvider(
+              create: (context) =>
+                  HotProductBloc(context.read<ProductRepository>())),
           BlocProvider(
             create: (context) =>
                 SearchProductBloc(context.read<ProductRepository>()),

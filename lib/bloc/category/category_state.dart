@@ -2,35 +2,51 @@ part of 'category_bloc.dart';
 
 sealed class CategoryState extends Equatable {
   final List<Product> categoryProducts;
-  final List<Product> hotProducts;
-  const CategoryState(
-      {this.categoryProducts = const <Product>[],
-      this.hotProducts = const <Product>[]});
+  final int categoryPage;
+
+  const CategoryState({
+    this.categoryProducts = const <Product>[],
+    this.categoryPage = 1,
+  });
   @override
-  List<Object> get props => [categoryProducts, hotProducts];
+  List<Object> get props => [categoryProducts, categoryPage];
 }
 
 final class CategoryInitial extends CategoryState {
   const CategoryInitial()
       : super(
-            categoryProducts: const <Product>[],
-            hotProducts: const <Product>[]);
+          categoryProducts: const <Product>[],
+          categoryPage: 1,
+        );
+  @override
+  List<Object> get props => [categoryProducts, categoryPage];
 }
 
 final class LoadingCategoryState extends CategoryState {
-  const LoadingCategoryState({super.categoryProducts, super.hotProducts});
+  const LoadingCategoryState({
+    super.categoryProducts,
+    super.categoryPage,
+  });
+  @override
+  List<Object> get props => [categoryProducts, categoryPage];
 }
 
 final class LoadedCategoryState extends CategoryState {
-  const LoadedCategoryState({super.categoryProducts, super.hotProducts});
+  const LoadedCategoryState({
+    super.categoryProducts,
+    super.categoryPage,
+  });
+  @override
+  List<Object> get props => [categoryProducts, categoryPage];
 }
 
-final class LoadingHotProductState extends CategoryState {
-  const LoadingHotProductState({super.categoryProducts, super.hotProducts});
-}
-
-final class LoadedHotProductState extends CategoryState {
-  const LoadedHotProductState({super.categoryProducts, super.hotProducts});
+final class EndCategoryState extends CategoryState {
+  const EndCategoryState({
+    super.categoryProducts,
+    super.categoryPage,
+  });
+  @override
+  List<Object> get props => [categoryProducts, categoryPage];
 }
 
 final class ErrorCategoryState extends CategoryState {

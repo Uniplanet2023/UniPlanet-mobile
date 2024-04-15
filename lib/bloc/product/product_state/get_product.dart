@@ -8,6 +8,10 @@ final class LoadedProductState extends ProductState {
   const LoadedProductState({super.productList, super.page});
 }
 
+final class EndedProductState extends ProductState {
+  const EndedProductState({super.productList, super.page});
+}
+
 final class ErrorProductLoadState extends ProductState {
   final String errorMessage;
   const ErrorProductLoadState(this.errorMessage,

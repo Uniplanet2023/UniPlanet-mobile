@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uniplanet_mobile/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/bloc/search_history/search_history_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
@@ -20,7 +21,7 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<CategoryBloc>().add(const GetHotProductsEvent());
+    context.read<HotProductBloc>().add(const LoadHotProductsEvent());
     context.read<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
   }
 
@@ -76,13 +77,13 @@ class _CategoryPageState extends State<CategoryPage> {
                 ],
               ),
             ),
-            BlocBuilder<CategoryBloc, CategoryState>(
+            BlocBuilder<HotProductBloc, HotProductState>(
               builder: (context, state) {
-                if (state is LoadingCategoryState) {
+                if (state is LoadingHotProductState) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is LoadedCategoryState) {
+                } else if (state is LoadedHotProductState) {
                   return Container(
                     height: 160.h,
                     padding: EdgeInsets.symmetric(horizontal: 8.w),

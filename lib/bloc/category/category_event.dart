@@ -2,20 +2,22 @@ part of 'category_bloc.dart';
 
 sealed class CategoryEvent extends Equatable {
   final String? category;
-  final int page;
-  const CategoryEvent({this.category = '', this.page = 1});
+  const CategoryEvent({this.category = ''});
 
   @override
-  List<Object> get props => [category ?? '', page];
+  List<Object> get props => [category ?? ''];
 }
 
 class LoadCategoryEvent extends CategoryEvent {
-  const LoadCategoryEvent({required String category, int? page})
-      : super(category: category, page: page ?? 1);
+  const LoadCategoryEvent({required String category})
+      : super(category: category);
+  @override
+  List<Object> get props => [category ?? ''];
 }
 
-class GetHotProductsEvent extends CategoryEvent {
-  const GetHotProductsEvent();
+class LoadMoreCategoryEvent extends CategoryEvent {
+  const LoadMoreCategoryEvent({required String category})
+      : super(category: category);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [category ?? ''];
 }
