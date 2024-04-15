@@ -90,7 +90,9 @@ class _CategoryPageState extends State<CategoryPage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: state.hotProducts.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return buildProductContent(state.hotProducts[index]);
+                        return buildProductContent(
+                            context: context,
+                            product: state.hotProducts[index]);
                       },
                     ),
                   );
@@ -214,53 +216,66 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 }
 
-Widget buildProductContent(Product product) => Container(
-      width: 140.w, // Set a fixed width for each card
-      padding:
-          EdgeInsets.symmetric(horizontal: 4.w), // Add some horizontal padding
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align text to the start
+Widget buildProductContent(
+        {required BuildContext context, required Product product}) =>
+    GestureDetector(
+      onTap: () {
+        context.read<ProductBloc>().add(IncreaseClickProductEvent(product.id));
+        Navigator.pushNamed(
+          context,
+          AppRoutes.productDetailsPage,
+          arguments: product,
+        );
+      },
+      child: Container(
+        width: 140.w, // Set a fixed width for each card
+        padding: EdgeInsets.symmetric(
+            horizontal: 4.w), // Add some horizontal padding
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Align text to the start
 
-        children: [
-          // Fixed size container for the image
-          Container(
-            height: 100.h, // Fixed height for the image
-            width: double.infinity, // Take the full width of the container
-            padding: EdgeInsets.all(8.w),
-            child: ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(8.w), // Rounded corners for the image
-              child: CachedNetworkImage(
-                imageUrl:
-                    product.images[0], // Replace with your product image path
-                fit: BoxFit.cover,
+          children: [
+            // Fixed size container for the image
+            Container(
+              height: 100.h, // Fixed height for the image
+              width: double.infinity, // Take the full width of the container
+              padding: EdgeInsets.all(8.w),
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(8.w), // Rounded corners for the image
+                child: CachedNetworkImage(
+                  imageUrl:
+                      product.images[0], // Replace with your product image path
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          // Product name
-          Padding(
-            padding: EdgeInsets.all(4.w),
-            child: Text(
-              product.name, // Replace with your product name
-              style: TextStyle(
-                fontSize: 12.sp, // Use ScreenUtil for responsive font size
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ),
-          // Product price
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: 4.h), // Use ScreenUtil for responsive padding
-            child: Text(
-              ' \$${product.price.toStringAsFixed(2)}', // Format the price to two decimal places
-              style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.bold,
+            // Product name
+            Padding(
+              padding: EdgeInsets.all(4.w),
+              child: Text(
+                product.name, // Replace with your product name
+                style: TextStyle(
+                  fontSize: 12.sp, // Use ScreenUtil for responsive font size
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
-          ),
-        ],
+            // Product price
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: 4.h), // Use ScreenUtil for responsive padding
+              child: Text(
+                ' \$${product.price.toStringAsFixed(2)}', // Format the price to two decimal places
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );

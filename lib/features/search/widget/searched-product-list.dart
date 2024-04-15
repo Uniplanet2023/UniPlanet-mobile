@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched-product.dart';
 import 'package:uniplanet_mobile/models/product.dart';
@@ -20,17 +22,8 @@ class _SearchedProductListState extends State<SearchedProductList> {
     return ListView.builder(
       itemCount: widget.products.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              AppRoutes.productDetailsPage,
-              arguments: widget.products[index],
-            );
-          },
-          child: SearchedProduct(
-            product: widget.products[index],
-          ),
+        return SearchedProduct(
+          product: widget.products[index],
         );
       },
     );
