@@ -114,7 +114,7 @@ class MessageCard extends StatelessWidget {
   }
 }
 
-class MessageBox extends StatefulWidget {
+class MessageBox extends StatelessWidget {
   const MessageBox({
     super.key,
     required this.isMyMessage,
@@ -125,37 +125,18 @@ class MessageBox extends StatefulWidget {
   final Message? oldMessage;
 
   @override
-  State<MessageBox> createState() => _MessageBoxState();
-}
-
-class _MessageBoxState extends State<MessageBox> {
-  final GlobalKey _key = GlobalKey();
-  bool _isOverflowing = false;
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkOverflow());
-    super.initState();
-  }
-
-  void _checkOverflow() {
-    if (_key.currentContext != null) {
-      final RenderBox? box =
-          _key.currentContext!.findRenderObject() as RenderBox?;
-      if (box != null && box.size.height > 220.h) {
-        setState(() {
-          _isOverflowing = true; // Now you know it's overflowing
-        });
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    bool isTyping = widget.oldMessage == null;
+    bool isTyping = oldMessage == null;
+    bool isOverflowing = false;
+    int newlineCount = 0;
+    if (oldMessage != null) {
+      newlineCount = '\n'.allMatches(oldMessage!.message).length;
 
+      oldMessage!.message.length > 100
+          ? isOverflowing = true
+          : isOverflowing = newlineCount > 9;
+    }
     return ConstrainedBox(
-      key: _key,
       constraints: BoxConstraints(
         maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
         maxHeight: isTyping ? 40.h : 250.h,
@@ -165,77 +146,100 @@ class _MessageBoxState extends State<MessageBox> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         color: getColorForCard(),
         margin: EdgeInsets.fromLTRB(
-            widget.isMyMessage ? 5 : 15, 5, widget.isMyMessage ? 15 : 5, 5),
+            isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
         child: Padding(
           padding: getPaddingForContent(),
-          child: getContentWidget(context, isTyping),
+          child: getContentWidget(context, isTyping, isOverflowing),
         ),
       ),
     );
   }
 
   Color getColorForCard() {
-    if (widget.oldMessage?.messageType == MessageEnum.image.value) {
+    if (oldMessage?.messageType == MessageEnum.image.value) {
       return Colors.transparent;
     } else {
-      return widget.isMyMessage ? GlobalVariables.primaryColor : Colors.white;
+      return isMyMessage ? GlobalVariables.primaryColor : Colors.white;
     }
   }
 
   EdgeInsets getPaddingForContent() {
-    return widget.oldMessage?.messageType == MessageEnum.image.value
+    return oldMessage?.messageType == MessageEnum.image.value
         ? const EdgeInsets.all(0)
         : const EdgeInsets.all(8.0);
   }
 
-  Widget getContentWidget(BuildContext context, bool isTyping) {
+  Widget getContentWidget(
+      BuildContext context, bool isTyping, bool isOverflowing) {
     if (isTyping) {
       return const SpinKitThreeBounce(
         color: Colors.grey,
         size: 20,
       );
-    } else if (widget.oldMessage!.messageType == MessageEnum.text.value) {
-      return getTextMessage(context);
-    } else if (widget.oldMessage!.messageType == MessageEnum.image.value) {
+    } else if (oldMessage!.messageType == MessageEnum.text.value) {
+      return isOverflowing
+          ? getOverflowTextMessage(context)
+          : getTextMessage(context);
+    } else if (oldMessage!.messageType == MessageEnum.image.value) {
       return handleImageMessage(context);
     } else {
-      return Text(widget.oldMessage!.message,
-          style: const TextStyle(fontSize: 16));
+      return Text(oldMessage!.message, style: const TextStyle(fontSize: 16));
     }
   }
 
   Widget getTextMessage(BuildContext context) {
-    var textMessage = widget.oldMessage!.message;
+    var textMessage = oldMessage!.message;
+
+    return Text(textMessage,
+        style: const TextStyle(fontSize: 16),
+        maxLines: 10,
+        overflow: TextOverflow.ellipsis,
+        softWrap: true);
+  }
+
+  Widget getOverflowTextMessage(BuildContext context) {
+    var textMessage = oldMessage!.message;
 
     return GestureDetector(
       onTap: () {
-        _isOverflowing ? _handleTap(context) : null;
+        _handleTap(context);
       },
-      child: Text(textMessage, style: const TextStyle(fontSize: 16)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(textMessage,
+              style: const TextStyle(fontSize: 16),
+              maxLines: 9,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true),
+          const Text('View All', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
     );
   }
 
   void _handleTap(BuildContext context) {
-    if (widget.oldMessage != null) {
+    if (oldMessage != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => MessageDetailScreen(message: widget.oldMessage!),
+        builder: (_) => MessageDetailScreen(message: oldMessage!),
       ));
     }
   }
 
   Widget handleImageMessage(BuildContext context) {
-    return widget.oldMessage!.status == MessageStatusEnum.received.value
+    return oldMessage!.status == MessageStatusEnum.received.value
         ? ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => FullScreenImageView(
-                      imagePath: widget.oldMessage!.message),
+                  builder: (_) =>
+                      FullScreenImageView(imagePath: oldMessage!.message),
                 ));
               },
               child: CachedNetworkImage(
-                imageUrl: widget.oldMessage!.message,
+                imageUrl: oldMessage!.message,
                 placeholder: (context, url) => const SizedBox.shrink(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 fit: BoxFit.cover,
@@ -243,8 +247,8 @@ class _MessageBoxState extends State<MessageBox> {
             ),
           )
         : ImageWithLoadingIndicator(
-            imagePath: widget.oldMessage!.message,
-            status: widget.oldMessage!.status,
+            imagePath: oldMessage!.message,
+            status: oldMessage!.status,
           );
   }
 }
