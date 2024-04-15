@@ -9,6 +9,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/auth/screens/forgotten_password_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
+import 'package:uniplanet_mobile/network/notification/notification_handler/notification_service.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -112,14 +113,21 @@ class _SigninScreenState extends State<SigninScreen> {
                           obscureText: true,
                         ),
                         const SizedBox(height: 10),
-                        CustomButton(
-                          text: 'Sign In',
-                          onTap: () {
-                            if (_signInFormKey.currentState!.validate()) {
-                              context.read<AuthBloc>().add(SignInEvent(
-                                  _emailController.text,
-                                  _passwordController.text));
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            if (state is SigninState) {
+                              return const CircularProgressIndicator();
                             }
+                            return CustomButton(
+                              text: 'Sign In',
+                              onTap: () {
+                                if (_signInFormKey.currentState!.validate()) {
+                                  context.read<AuthBloc>().add(SignInEvent(
+                                      _emailController.text,
+                                      _passwordController.text));
+                                }
+                              },
+                            );
                           },
                         ),
                         const SizedBox(height: 10),

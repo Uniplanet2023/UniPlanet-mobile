@@ -22,16 +22,18 @@ String displayErrorMessages(String responseBody) {
         // Check for field-specific errors under 'fields'
         if (error.containsKey('fields') && error['fields'] is Map) {
           final fields = error['fields'] as Map;
+          SnackbarGlobal.showSnackBar(
+              "Field ${fields.entries.first.key} error: ${fields.entries.first.value}");
 
           // Iterate through each field to access its error list
-          fields.forEach((field, fieldErrors) {
-            if (fieldErrors is List) {
-              // Print each field-specific error message
-              for (var fieldError in fieldErrors) {
-                SnackbarGlobal.showSnackBar("Field $field error: $fieldError");
-              }
-            }
-          });
+          // fields.forEach((field, fieldErrors) {
+          //   if (fieldErrors is List) {
+          //     // Print each field-specific error message
+          //     for (var fieldError in fieldErrors) {
+          //       SnackbarGlobal.showSnackBar("Field $field error: $fieldError");
+          //     }
+          //   }
+          // });
         }
       }
     }

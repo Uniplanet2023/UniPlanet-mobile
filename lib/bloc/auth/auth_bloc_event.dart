@@ -87,3 +87,9 @@ final class ResetPasswordEvent extends AuthEvent {
   @override
   List<Object> get props => [email];
 }
+
+final class DeleteUserEvent extends AuthEvent {
+  const DeleteUserEvent();
+  @override
+  List<Object> get props => [];
+}

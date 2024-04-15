@@ -8,7 +8,7 @@ import 'package:uniplanet_mobile/models/user_model.dart';
 
 class NotificationService {
   static bool isNotificationAllowed = false;
-  static Future<bool> init() async {
+  static Future<void> init() async {
     try {
       AwesomeNotifications().initialize(
           // set the icon to null if you want to use the default app icon
@@ -40,19 +40,41 @@ class NotificationService {
         onNotificationDisplayedMethod: onNotificationDisplayedMethod,
         onDismissActionReceivedMethod: onDismissActionReceived,
       );
-      bool isAllow = await AwesomeNotifications().isNotificationAllowed();
 
-      if (!isAllow) {
-        bool isNotificationAllow =
-            await AwesomeNotifications().requestPermissionToSendNotifications();
+      var pref = await SharedPreferences.getInstance();
+
+      bool? isNotificationAllow = pref.getBool('isNotificationAllowed');
+
+      // User already set
+      if (isNotificationAllow != null) {
         NotificationService.isNotificationAllowed = isNotificationAllow;
-        return isNotificationAllow;
+        return;
       } else {
-        NotificationService.isNotificationAllowed = isAllow;
+        notificationAllowRequest(pref);
       }
-      return true;
     } catch (e) {
-      return false;
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<bool> notificationAllowRequest(SharedPreferences pref) async {
+    // Check if the user has already allowed notifications
+    bool isAllow = await AwesomeNotifications().isNotificationAllowed();
+    // If not, request permission
+    if (!isAllow) {
+      bool isNotificationAllow =
+          await AwesomeNotifications().requestPermissionToSendNotifications();
+
+      NotificationService.isNotificationAllowed = isNotificationAllow;
+      pref.setBool(
+          'isNotificationAllowed', NotificationService.isNotificationAllowed);
+      return isNotificationAllow;
+    } else {
+      // If the user has already allowed notifications
+      NotificationService.isNotificationAllowed = isAllow;
+      pref.setBool(
+          'isNotificationAllowed', NotificationService.isNotificationAllowed);
+      return isAllow;
     }
   }
 

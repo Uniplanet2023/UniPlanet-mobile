@@ -13,6 +13,7 @@ part 'auth_state/signin_state.dart';
 part 'auth_state/signup_state.dart';
 part 'auth_state/update_password_state.dart';
 part 'auth_state/reset_password_state.dart';
+part 'auth_state/delete_user_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -46,6 +47,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ResetPasswordEvent>((event, emit) async {
       await _resetPasswordFunction(event, emit);
     });
+    on<DeleteUserEvent>((event, emit) async {
+      await _deleteUserFunction(event, emit);
+    });
+  }
+
+  _deleteUserFunction(DeleteUserEvent event, emit) async {
+    emit(const DeleteUserState());
+    bool isSuccess = await _authRepository.deleteUser();
+    if (isSuccess) {
+      emit(const DeleteUserCompleteState());
+    } else {
+      emit(const DeleteUserFailedState());
+    }
   }
 
   _resetPasswordFunction(ResetPasswordEvent event, emit) async {

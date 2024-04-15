@@ -49,9 +49,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/Logo.png',
-                  width: 200.w,
+                  'assets/images/Logo_nbg.png',
+                  width: 100.w,
                 ),
+                SizedBox(height: 30.h),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(

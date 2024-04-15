@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
@@ -41,9 +42,18 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   void updateNotification(bool value) async {
-    NotificationService.isNotificationAllowed = value;
-    notify = value;
-    setState(() {});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (value) {
+      bool isAllow = await NotificationService.notificationAllowRequest(prefs);
+      NotificationService.isNotificationAllowed = isAllow;
+      notify = value;
+      setState(() {});
+    } else {
+      prefs.setBool('isNotificationAllowed', value);
+      NotificationService.isNotificationAllowed = value;
+      notify = value;
+      setState(() {});
+    }
   }
 
   @override

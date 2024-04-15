@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet_mobile/bloc/index.dart';
 import 'package:uniplanet_mobile/features/account/widgets/menu_section.dart';
 import 'package:uniplanet_mobile/constants/text_size_formats.dart';
 
@@ -115,7 +117,10 @@ class HelpScreen extends StatelessWidget {
                                   style: TextStyle(color: Colors.red),
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const DeleteUserEvent());
+                                  // Navigator.of(context).pop();
                                 },
                               ),
                             ],

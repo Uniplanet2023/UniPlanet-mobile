@@ -171,7 +171,8 @@ class _AccountScreen extends State<AccountScreen> {
                         builder: (BuildContext context) {
                           return BlocListener<AuthBloc, AuthState>(
                             listener: (context, state) {
-                              if (state is LogOutCompleteState) {
+                              if (state is LogOutCompleteState ||
+                                  state is DeleteUserCompleteState) {
                                 Navigator.pushNamedAndRemoveUntil(context,
                                     AppRoutes.authPage, (route) => false);
                               }

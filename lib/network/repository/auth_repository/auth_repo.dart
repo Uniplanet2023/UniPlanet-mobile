@@ -225,4 +225,26 @@ class AuthRepository implements IAuthRepository {
     }
     return false;
   }
+
+  Future<bool> deleteUser() async {
+    try {
+      var res = await _dioClient.dio
+          .delete('$authURI/delete-user', options: _dioClient.getDioOptions());
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        return true;
+      } else {
+        return false;
+      }
+    } on DioException catch (e) {
+      httpErrorHandle(
+        response: e.response!,
+        onSuccess: () async {
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // await prefs.setString('x-auth-token', res.data['token']);
+        },
+      );
+    }
+    return false;
+  }
 }
