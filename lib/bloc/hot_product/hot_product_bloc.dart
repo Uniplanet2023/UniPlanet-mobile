@@ -36,7 +36,8 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
       return;
     }
     state.hotProducts.addAll(result);
-    emit((hotProducts: state.hotProducts, hotProductPage: nextPage));
+    emit(LoadedHotProductState(
+        hotProducts: state.hotProducts, hotProductPage: nextPage));
   }
 
   _loadHotProducts(LoadHotProductsEvent event, emit) async {

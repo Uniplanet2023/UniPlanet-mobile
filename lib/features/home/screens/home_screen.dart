@@ -53,13 +53,19 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() => _isFetchingMoreProducts = true);
       // Simulate fetching more products with a delay
       if (widget.category == 'Hot Products') {
-        context.read<HotProductBloc>().add(const LoadMoreHotProductsEvent());
+        if (context.read<HotProductBloc>().state is LoadedHotProductState) {
+          context.read<HotProductBloc>().add(const LoadMoreHotProductsEvent());
+        }
       } else if (widget.category != null) {
-        context
-            .read<CategoryBloc>()
-            .add(LoadMoreCategoryEvent(category: widget.category!));
+        if (context.read<CategoryBloc>().state is LoadedCategoryState) {
+          context
+              .read<CategoryBloc>()
+              .add(LoadMoreCategoryEvent(category: widget.category!));
+        }
       } else {
-        context.read<ProductBloc>().add(const LoadMoreProductEvent());
+        if (context.read<ProductBloc>().state is LoadedProductState) {
+          context.read<ProductBloc>().add(const LoadMoreProductEvent());
+        }
       }
 
       Future.delayed(const Duration(seconds: 1), () {
@@ -161,24 +167,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? widget.category == 'Hot Products'
                     ? BlocBuilder<HotProductBloc, HotProductState>(
                         builder: (context, state) {
-                        if (state is LoadingHotProductState) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (state is LoadedHotProductState) {
-                          List<Product> productList = state.hotProducts;
-                          return ItemBox(productList: productList);
-                        } else {
-                          return const ItemBox(productList: []);
-                        }
+                        List<Product> productList = state.hotProducts;
+                        return ItemBox(productList: productList);
                       })
                     : BlocBuilder<CategoryBloc, CategoryState>(
                         builder: (context, state) {
-                          if (state is LoadedCategoryState) {
-                            List<Product> productList = state.categoryProducts;
-                            return ItemBox(productList: productList);
-                          }
-                          return const ItemBox(productList: []);
+                          List<Product> productList = state.categoryProducts;
+                          return ItemBox(productList: productList);
                         },
                       )
                 : BlocBuilder<ProductBloc, ProductState>(
