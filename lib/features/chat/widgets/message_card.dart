@@ -113,7 +113,7 @@ class MessageCard extends StatelessWidget {
   }
 }
 
-class MessageBox extends StatelessWidget {
+class MessageBox extends StatefulWidget {
   const MessageBox({
     super.key,
     required this.isMyMessage,
@@ -124,10 +124,37 @@ class MessageBox extends StatelessWidget {
   final Message? oldMessage;
 
   @override
+  State<MessageBox> createState() => _MessageBoxState();
+}
+
+class _MessageBoxState extends State<MessageBox> {
+  final GlobalKey _key = GlobalKey();
+  bool _isOverflowing = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkOverflow());
+    super.initState();
+  }
+
+  void _checkOverflow() {
+    if (_key.currentContext != null) {
+      final RenderBox? box =
+          _key.currentContext!.findRenderObject() as RenderBox?;
+      if (box != null && box.size.height > 220.h) {
+        setState(() {
+          _isOverflowing = true; // Now you know it's overflowing
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isTyping = oldMessage == null;
+    bool isTyping = widget.oldMessage == null;
 
     return ConstrainedBox(
+      key: _key,
       constraints: BoxConstraints(
         maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
         maxHeight: isTyping ? 40.h : 250.h,
@@ -137,7 +164,7 @@ class MessageBox extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         color: getColorForCard(),
         margin: EdgeInsets.fromLTRB(
-            isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
+            widget.isMyMessage ? 5 : 15, 5, widget.isMyMessage ? 15 : 5, 5),
         child: Padding(
           padding: getPaddingForContent(),
           child: getContentWidget(context, isTyping),
@@ -147,15 +174,15 @@ class MessageBox extends StatelessWidget {
   }
 
   Color getColorForCard() {
-    if (oldMessage?.messageType == MessageEnum.image.value) {
+    if (widget.oldMessage?.messageType == MessageEnum.image.value) {
       return Colors.transparent;
     } else {
-      return isMyMessage ? GlobalVariables.primaryColor : Colors.white;
+      return widget.isMyMessage ? GlobalVariables.primaryColor : Colors.white;
     }
   }
 
   EdgeInsets getPaddingForContent() {
-    return oldMessage?.messageType == MessageEnum.image.value
+    return widget.oldMessage?.messageType == MessageEnum.image.value
         ? const EdgeInsets.all(0)
         : const EdgeInsets.all(8.0);
   }
@@ -166,28 +193,48 @@ class MessageBox extends StatelessWidget {
         color: Colors.grey,
         size: 20,
       );
-    } else if (oldMessage!.messageType == MessageEnum.text.value) {
-      return Text(oldMessage!.message, style: const TextStyle(fontSize: 16));
-    } else if (oldMessage!.messageType == MessageEnum.image.value) {
+    } else if (widget.oldMessage!.messageType == MessageEnum.text.value) {
+      return getTextMessage(context);
+    } else if (widget.oldMessage!.messageType == MessageEnum.image.value) {
       return handleImageMessage(context);
     } else {
-      return Text(oldMessage!.message, style: const TextStyle(fontSize: 16));
+      return Text(widget.oldMessage!.message,
+          style: const TextStyle(fontSize: 16));
+    }
+  }
+
+  Widget getTextMessage(BuildContext context) {
+    var textMessage = widget.oldMessage!.message;
+
+    return GestureDetector(
+      onTap: () {
+        _isOverflowing ? _handleTap(context) : null;
+      },
+      child: Text(textMessage, style: const TextStyle(fontSize: 16)),
+    );
+  }
+
+  void _handleTap(BuildContext context) {
+    if (widget.oldMessage != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => MessageDetailScreen(message: widget.oldMessage!),
+      ));
     }
   }
 
   Widget handleImageMessage(BuildContext context) {
-    return oldMessage!.status == MessageStatusEnum.received.value
+    return widget.oldMessage!.status == MessageStatusEnum.received.value
         ? ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) =>
-                      FullScreenImageView(imagePath: oldMessage!.message),
+                  builder: (_) => FullScreenImageView(
+                      imagePath: widget.oldMessage!.message),
                 ));
               },
               child: CachedNetworkImage(
-                imageUrl: oldMessage!.message,
+                imageUrl: widget.oldMessage!.message,
                 placeholder: (context, url) => const SizedBox.shrink(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 fit: BoxFit.cover,
@@ -195,8 +242,8 @@ class MessageBox extends StatelessWidget {
             ),
           )
         : ImageWithLoadingIndicator(
-            imagePath: oldMessage!.message,
-            status: oldMessage!.status,
+            imagePath: widget.oldMessage!.message,
+            status: widget.oldMessage!.status,
           );
   }
 }
@@ -230,6 +277,34 @@ class ImageWithLoadingIndicator extends StatelessWidget {
             color: Colors.black54,
           ),
       ],
+    );
+  }
+}
+
+class MessageDetailScreen extends StatelessWidget {
+  final Message message;
+
+  const MessageDetailScreen({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Full Message"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            width: double.infinity,
+            child: Text(
+              message.message,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
