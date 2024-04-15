@@ -6,7 +6,6 @@ import 'package:uniplanet_mobile/bloc/search_product/search_product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/features/search/screens/search_result_screen.dart';
 import 'package:uniplanet_mobile/features/search/widget/searched-product-list.dart';
 
 class SearchScreen extends StatefulWidget {

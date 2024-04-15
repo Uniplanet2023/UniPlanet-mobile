@@ -6,7 +6,6 @@ import 'package:uniplanet_mobile/common/routes/names.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
 import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/auth/functions/forgotten-password.dart';
 import 'package:uniplanet_mobile/features/auth/screens/forgotten_password_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
 import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
