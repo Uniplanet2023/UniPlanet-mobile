@@ -31,6 +31,7 @@ class BottomChatField extends StatefulWidget {
 class _BottomChatFieldState extends State<BottomChatField> {
   bool isShowSendButton = false;
   final TextEditingController _messageController = TextEditingController();
+
   // FlutterSoundRecorder? _soundRecorder;
   bool isRecorderInit = false;
   bool isShowEmojiContainer = false;
@@ -46,6 +47,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
   @override
   void dispose() {
     super.dispose();
+    _messageController.removeListener(_handleTextChange);
     _messageController.dispose();
     // _soundRecorder!.closeRecorder();
     isRecorderInit = false;
@@ -207,6 +209,27 @@ class _BottomChatFieldState extends State<BottomChatField> {
   void showKeyboard() => focusNode.requestFocus();
   void hideKeyboard() => focusNode.unfocus();
 
+  void _handleTextChange() {
+    // Update the send button visibility
+    setState(() {
+      isShowSendButton = _messageController.text.isNotEmpty;
+    });
+
+    // Prevent text from expanding beyond 4 lines
+    int newlineCount = '\n'.allMatches(_messageController.text).length;
+    if (newlineCount >= 4) {
+      // Truncate text to stop at the fourth line
+      List<String> lines = _messageController.text.split('\n');
+      if (lines.length > 4) {
+        String truncatedText = lines.sublist(0, 4).join('\n');
+        _messageController.text = truncatedText; // Set truncated text
+        _messageController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _messageController.text.length),
+        ); // Set cursor at the end of the text
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -221,7 +244,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   controller: _messageController,
                   keyboardType:
                       TextInputType.multiline, // Enable multiline input
-                  maxLines: null, // No limit on the number of lines
+                  minLines: 1,
+                  maxLines: 4, // No limit on the number of lines
                   onChanged: (val) {
                     if (val.isNotEmpty) {
                       Global.socketService

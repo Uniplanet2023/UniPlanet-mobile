@@ -170,8 +170,10 @@ class _ContactsListState extends State<ContactsList> {
                                                 last.readDate == null
                                             ? FontWeight.bold
                                             : FontWeight.normal,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines:
+                                          1, // Ensure only one line is shown
                                     ),
                                   ),
                               ],
