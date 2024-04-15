@@ -12,6 +12,7 @@ part 'auth_state/logout_state.dart';
 part 'auth_state/signin_state.dart';
 part 'auth_state/signup_state.dart';
 part 'auth_state/update_password_state.dart';
+part 'auth_state/reset_password_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -42,13 +43,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<UpdatePasswordEvent>((event, emit) async {
       await _updatePasswordFunction(event, emit);
     });
+    on<ResetPasswordEvent>((event, emit) async {
+      await _resetPasswordFunction(event, emit);
+    });
   }
+
+  _resetPasswordFunction(ResetPasswordEvent event, emit) async {
+    emit(const ResetPasswordState());
+    bool isSuccess = await _authRepository.resetPassword(email: event.email);
+    if (isSuccess) {
+      emit(const ResetPasswordCompleteState());
+    } else {
+      emit(const ResetPasswordFailedState());
+    }
+  }
+
   _updatePasswordFunction(UpdatePasswordEvent event, emit) async {
     emit(const UpdatePasswordState());
     String message = await _authRepository.updatePassword(
         password: event.password, newPassword: event.newPassword);
     if (message == 'Password Updated Successfully') {
-      emit(const UpdatePasswordCompleteState());
+      emit(const LogOutCompleteState());
     } else {
       emit(const UpdatePasswordFailedState());
     }

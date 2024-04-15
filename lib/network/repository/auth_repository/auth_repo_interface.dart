@@ -17,7 +17,7 @@ abstract class IAuthRepository {
     required String email,
   });
 
-  Future<void> forgottenPassword({
+  Future<bool> resetPassword({
     required String email,
   });
 

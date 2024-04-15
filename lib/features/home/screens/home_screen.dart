@@ -7,6 +7,7 @@ import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
 import 'package:uniplanet_mobile/common/widgets/loader.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/features/home/widgets/buildProductBox.dart';
+import 'package:uniplanet_mobile/models/product.dart';
 
 class HomeScreen extends StatefulWidget {
   final ScrollController controller;
@@ -152,7 +153,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? BlocBuilder<CategoryBloc, CategoryState>(
                     builder: (context, state) {
                       if (state is LoadedCategoryState) {
-                        final productList = state.categoryProducts;
+                        List<Product> productList;
+                        widget.category == 'Hot Products'
+                            ? productList = state.hotProducts
+                            : productList = state.categoryProducts;
                         return ItemBox(productList: productList);
                         // return buildProductGrid(
                         //     productList: productList,
