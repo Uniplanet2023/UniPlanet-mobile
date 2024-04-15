@@ -53,14 +53,16 @@ class SocketService {
         var chat = jsonDecode(data);
         bool isUserOnline = await joinChatAndCheckUserExist(
             chatId: chat['id'], targetUserId: chat['seller']['id']);
+        if (chat['seller']['id'] == userId) {
+          await NotificationService.showNotification(
+            title: chat['seller']['name'],
+            body: '${chat['seller']['name']} has started a conversation',
+            payload: {
+              "navigate": "true",
+            },
+          );
+        }
 
-        await NotificationService.showNotification(
-          title: chat['seller']['name'],
-          body: '${chat['seller']['name']} has started a conversation',
-          payload: {
-            "navigate": "true",
-          },
-        );
         ChatRoom chatRoom = ChatRoom.fromMap(chat);
         if (context.mounted) {
           context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
