@@ -394,10 +394,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _buildLikeButton() {
     return BlocBuilder<LikeBloc, LikeState>(
       builder: (context, state) {
-        if (state is LikeRemoved) {
-          isLikeProduct = false;
-        } else if (state is LikeAdded) {
-          isLikeProduct = true;
+        for (var element in state.likeProduct) {
+          if (element.id == widget.product.id) {
+            isLikeProduct = true;
+            continue;
+          }
         }
 
         return IconButton(
