@@ -10,6 +10,7 @@ import 'package:uniplanet_mobile/constants/global_variables.dart';
 import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
+import 'package:uniplanet_mobile/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/common/routes/router.dart';
 import 'package:uniplanet_mobile/network/notification/notification_handler/index.dart';
@@ -132,11 +133,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             return const BottomBar();
           } else if (state is AuthenticationDeny ||
               state is ValidationFailedState) {
-            return const AuthScreen();
+            return const OnBoardingScreen();
           } else if (state is UserNotVerifiedState) {
             return const SignupScreen();
           }
-          return const AuthScreen();
+          return const OnBoardingScreen();
         }),
       ),
     );

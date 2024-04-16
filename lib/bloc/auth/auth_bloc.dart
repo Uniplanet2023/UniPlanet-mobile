@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet_mobile/constants/utils.dart';
 import 'package:uniplanet_mobile/global.dart';
 import 'package:uniplanet_mobile/network/api_def/api_status/signup.dart';
 import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
@@ -109,10 +110,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   _otpValidationFunction(OtpValidationEvent event, emit) async {
     emit(const OtpValidatingState());
 
-    await _authRepository.otpValidation(
-            event.email, event.otpHash, event.otpCode)
-        ? emit(const OTPValidationCompleteState())
-        : emit(OtpValidationFailedState(hash: event.otpHash));
+    bool isVerified = await _authRepository.otpValidation(
+        event.email, event.otpHash, event.otpCode);
+    if (isVerified) {
+      emit(const OTPValidationCompleteState());
+      SnackbarGlobal.showSnackBar(
+        "OTP Verified Successfully",
+      );
+    } else {
+      emit(OtpValidationFailedState(hash: event.otpHash));
+    }
   }
 
   _signupFunction(SignUpEvent event, emit) async {
