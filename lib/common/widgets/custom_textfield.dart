@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet_mobile/constants/global_variables.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final int maxLines;
@@ -12,7 +12,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final bool validatorEnabled;
   final int? maxLength;
-  final Color? borderColor; // Added borderColor parameter
+  final Color? borderColor;
 
   const CustomTextField({
     super.key,
@@ -26,49 +26,73 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.validatorEnabled = true,
     this.maxLength,
-    this.borderColor, // Initialize borderColor
+    this.borderColor,
   });
+
+  @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget
+        .obscureText; // Initialize with widget's original obscureText value
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText; // Toggle the state
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      enabled: enabled,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      obscureText: obscureText,
+      controller: widget.controller,
+      enabled: widget.enabled,
+      keyboardType: widget.keyboardType,
+      inputFormatters: widget.inputFormatters,
+      obscureText: _obscureText, // Use the state variable here
       decoration: InputDecoration(
-          prefixText: prefixText,
-          hintText: hintText,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-          border: OutlineInputBorder(
-              borderSide: BorderSide(
-            color: borderColor ?? Colors.black38, // Use borderColor if provided
-          )),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-            color: borderColor ?? Colors.black38, // Use borderColor if provided
-          )),
-          // Add a focused border to highlight the field when it is active
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-            color: borderColor ??
-                GlobalVariables
-                    .secondaryColor, // Use borderColor if provided, default to blue
-            width: 2.0, // You can adjust the width
-          ))),
+        prefixText: widget.prefixText,
+        hintText: widget.hintText,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: widget.borderColor ?? Colors.black38),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: widget.borderColor ?? Colors.black38),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: widget.borderColor ?? GlobalVariables.secondaryColor,
+            width: 2.0,
+          ),
+        ),
+        suffixIcon: !_obscureText
+            ? const SizedBox()
+            : IconButton(
+                icon: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility),
+                onPressed: _togglePasswordVisibility,
+              ),
+      ),
       validator: (val) {
-        if (!validatorEnabled) {
+        if (!widget.validatorEnabled) {
           return null;
         }
         if (val == null || val.isEmpty) {
-          return 'Enter your $hintText';
+          return 'Enter your ${widget.hintText}';
         }
         return null;
       },
-      maxLines: maxLines,
-      maxLength: maxLength,
+      maxLines: widget.maxLines,
+      maxLength: widget.maxLength,
     );
   }
 }
