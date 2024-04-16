@@ -21,6 +21,22 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     });
   }
 
+  void _skipOnboarding() {
+    _controller.jumpToPage(2); // Skip to the last page
+  }
+
+  void _nextPage() {
+    if (_isLastPage) {
+      // Handle "Finish" or navigation to another part of your app
+      print('Finish onboarding');
+    } else {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose(); // Don't forget to dispose the controller
@@ -33,9 +49,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: Stack(
         children: [
           PageView(
-            physics: _isLastPage
-                ? const NeverScrollableScrollPhysics()
-                : const AlwaysScrollableScrollPhysics(),
             controller: _controller, // Attach the controller here
             onPageChanged: _onPageChanged, // Handle page changes
             children: const [
@@ -62,6 +75,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         dotColor: Colors.grey,
                       ),
                     ),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 20,
+            child: TextButton(
+              onPressed: _skipOnboarding,
+              child: const Text("Skip", style: TextStyle(color: Colors.white)),
+            ),
+          ),
+          Positioned(
+            bottom: 30,
+            right: 20,
+            child: TextButton(
+              onPressed: _nextPage,
+              child: Text(_isLastPage ? "Finish" : "Next",
+                  style: const TextStyle(color: Colors.white)),
             ),
           ),
         ],

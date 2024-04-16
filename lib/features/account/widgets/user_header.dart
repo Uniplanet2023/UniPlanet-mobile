@@ -26,24 +26,31 @@ class _UserHeaderState extends State<UserHeader> {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
         await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      image = File(pickedFile!.path);
-    });
-    if (pickedFile != null) {
-      // Show confirmation dialog
 
+    // Check if an image was picked
+    if (pickedFile != null) {
+      // Update the state to reflect the picked image
+      setState(() {
+        image = File(pickedFile.path);
+      });
+
+      // Show confirmation dialog
       bool confirmUpload = await showUploadConfirmationDialog();
       if (confirmUpload) {
+        // Assuming 'image' is a global variable that holds the File
         // Here you could upload the image to your server and then update the user's profile image URL
-        //// For example: uploadImage(image);
         SnackbarGlobal.key.currentContext!
             .read<AccountBloc>()
             .add(UpdateProfileImageEvent(image: image!));
       } else {
+        // Reset the image to null if the user cancels the upload
         setState(() {
           image = null;
         });
       }
+    } else {
+      // Handle the case where no image is picked
+      print("No image selected");
     }
   }
 
