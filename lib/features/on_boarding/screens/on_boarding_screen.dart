@@ -77,23 +77,28 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
             ),
           ),
-          Positioned(
-            bottom: 30,
-            left: 20,
-            child: TextButton(
-              onPressed: _skipOnboarding,
-              child: const Text("Skip", style: TextStyle(color: Colors.white)),
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            right: 20,
-            child: TextButton(
-              onPressed: _nextPage,
-              child: Text(_isLastPage ? "Finish" : "Next",
-                  style: const TextStyle(color: Colors.white)),
-            ),
-          ),
+          _isLastPage
+              ? const SizedBox()
+              : Positioned(
+                  bottom: 30,
+                  left: 20,
+                  child: TextButton(
+                    onPressed: _skipOnboarding,
+                    child: const Text("Skip",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+          _isLastPage
+              ? const SizedBox()
+              : Positioned(
+                  bottom: 30,
+                  right: 20,
+                  child: TextButton(
+                    onPressed: _nextPage,
+                    child: const Text("Next",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
         ],
       ),
     );
