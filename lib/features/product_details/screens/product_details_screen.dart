@@ -29,19 +29,13 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late User currentUser;
-  bool isLikeProduct = false;
+
   int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     currentUser = context.read<AccountBloc>().state.account.user;
-    context.read<LikeBloc>().state.likeProduct.forEach((element) {
-      if (element.id == widget.product.id) {
-        isLikeProduct = true;
-        return;
-      }
-    });
   }
 
   CarouselSlider _buildCarouselSlider() {
@@ -394,10 +388,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _buildLikeButton() {
     return BlocBuilder<LikeBloc, LikeState>(
       builder: (context, state) {
+        bool isLikeProduct = false;
         for (var element in state.likeProduct) {
           if (element.id == widget.product.id) {
             isLikeProduct = true;
-            continue;
+            break;
           }
         }
 
