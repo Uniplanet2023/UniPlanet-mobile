@@ -34,24 +34,8 @@ class Global {
       sound: false,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // This is where you receive messages when the app is in the foreground.
-      // If you want to prevent showing notifications in the foreground, simply do not display them here.
-
-      print("Received a message in the foreground: $message");
-      // You can still handle data messages here, if needed.
+      debugPrint("Received a message in the foreground: $message");
     });
-
-    // AwesomeNotifications().initialize(
-    //     null,
-    //     [
-    //       NotificationChannel(
-    //           channelKey: 'basic_channel',
-    //           channelName: 'Basic notifications',
-    //           channelDescription: 'Notification channel for basic tests',
-    //           defaultColor: const Color(0xFF9D50DD),
-    //           ledColor: Colors.white)
-    //     ],
-    //     debug: true);
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
