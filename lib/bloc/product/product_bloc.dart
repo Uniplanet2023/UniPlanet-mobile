@@ -138,7 +138,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   _loadProduct(LoadProductEvent event, emit) async {
-    emit(LoadingProductState(productList: state.productList, page: 1));
+    emit(const LoadingProductState(productList: [], page: 1));
     List<Product> result = await _productRepository.fetchProducts();
     emit(LoadedProductState(productList: result, page: 1));
   }

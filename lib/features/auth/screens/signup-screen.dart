@@ -164,6 +164,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           controller: _passwordController,
                           hintText: 'Password',
                           obscureText: true,
+                          isPassword: true,
                         ),
                         const SizedBox(height: 10),
                         FlutterPwValidator(

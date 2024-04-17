@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.example.uniplanet_mobile"
+package="shop.uniplanet.uniket"
 >
     <application
-        android:label="uniplanet_mobile"
+        android:label="uniket"
         android:name="${applicationName}"
         android:icon="@mipmap/_launcher_icon"
         android:usesCleartextTraffic="true"

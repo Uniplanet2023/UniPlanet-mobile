@@ -111,6 +111,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           controller: _passwordController,
                           hintText: 'Password',
                           obscureText: true,
+                          isPassword: true,
                         ),
                         const SizedBox(height: 10),
                         BlocBuilder<AuthBloc, AuthState>(

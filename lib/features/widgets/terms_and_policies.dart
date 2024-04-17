@@ -359,7 +359,7 @@ class TermsAndPolicies extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
-                        secondarySubTitleText('Effective Date: January 2024'),
+                        secondarySubTitleText('Effective Date: June 2023'),
                         const SizedBox(
                           height: 10,
                         ),
@@ -400,10 +400,6 @@ class TermsAndPolicies extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        secondarySubTitleText(
-                            'The types of information that we collect include:'),
-                        content(
-                            '- Personal information that we can reasonably use to directly or indirectly identify you, such as your internet protocol (IP) address, name, email or other similar identifier, and any other identifier we may use to contact you ("personal information").\n- Non-personal information that does not directly or indirectly reveal your identity or directly relate to an identified individual, such as demographic information, or statistical or aggregated information. We may derive non-personal statistical or aggregated data from personal information. For example, we may aggregate personal information to calculate the percentage of users accessing a specific app feature.\n- Technical information, including your device type, time zone setting, and usage details.'),
                         const SizedBox(
                           height: 20,
                         ),
@@ -568,4 +564,3 @@ class TermsAndPolicies extends StatelessWidget {
     );
   }
 }
-

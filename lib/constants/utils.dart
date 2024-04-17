@@ -27,7 +27,7 @@ Future<List<File>> pickImages() async {
     if (result != null && result.files.isNotEmpty) {
       images.addAll(result.files
           .map((file) => File(file.path!))
-          .take(5)); // Limit to 5 files
+          .take(10)); // Limit to 5 files
     }
   } catch (e) {
     debugPrint(e.toString());

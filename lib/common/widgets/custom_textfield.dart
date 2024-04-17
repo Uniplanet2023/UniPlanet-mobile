@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final String prefixText;
   final bool obscureText;
   final bool validatorEnabled;
+  final bool? isPassword;
   final int? maxLength;
   final Color? borderColor;
 
@@ -27,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.validatorEnabled = true,
     this.maxLength,
     this.borderColor,
+    this.isPassword,
   });
 
   @override
@@ -74,13 +76,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             width: 2.0,
           ),
         ),
-        suffixIcon: !_obscureText
-            ? const SizedBox()
-            : IconButton(
+        suffixIcon: widget.isPassword != null && widget.isPassword!
+            ? IconButton(
                 icon: Icon(
                     _obscureText ? Icons.visibility_off : Icons.visibility),
                 onPressed: _togglePasswordVisibility,
-              ),
+              )
+            : const SizedBox(),
       ),
       validator: (val) {
         if (!widget.validatorEnabled) {
