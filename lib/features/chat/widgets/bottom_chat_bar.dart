@@ -122,7 +122,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
           .uploadFile(
         CloudinaryFile.fromFile(tempMessage.message,
             resourceType: CloudinaryResourceType.Image,
-            folder: tempMessage.chat),
+            folder: 'chat-images/${tempMessage.chat}'),
       )
           .timeout(
         const Duration(seconds: 10),

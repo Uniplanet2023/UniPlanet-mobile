@@ -108,18 +108,27 @@ class _UserHeaderState extends State<UserHeader> {
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      Hero(
-                        tag: 'user-pfp',
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundImage: image != null
-                              ? FileImage(image!) as ImageProvider
-                              : CachedNetworkImageProvider(
-                                  widget.currentUser.profileImage ??
-                                      'https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg',
-                                ),
-                        ),
-                      ),
+                      widget.currentUser.profileImage == null ||
+                              widget.currentUser.profileImage == ""
+                          ? const CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              radius: 40,
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 60,
+                              ),
+                            )
+                          : Hero(
+                              tag: 'user-pfp',
+                              child: CircleAvatar(
+                                radius: 40,
+                                backgroundImage: image != null
+                                    ? FileImage(image!) as ImageProvider
+                                    : CachedNetworkImageProvider(
+                                        widget.currentUser.profileImage!),
+                              ),
+                            ),
                       Positioned(
                         right: 0, // Adjust the position based on your UI needs
                         bottom: 0, // Adjust the position based on your UI needs

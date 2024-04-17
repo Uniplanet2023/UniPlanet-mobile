@@ -183,13 +183,24 @@ class _ContactsListState extends State<ContactsList> {
                       ),
                       leading: Stack(
                         children: [
-                          CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                              "https://res.cloudinary.com/dtgmmfv3d/image/upload/v1698359487/defaultImage/uj24px95hnrhydxobjl1.jpg",
-                              cacheManager: GlobalVariables.customCacheManager,
-                            ),
-                            radius: 30,
-                          ),
+                          client.profileImage == null
+                              ? const CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 30,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                    size: 50,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    client.profileImage!,
+                                    cacheManager:
+                                        GlobalVariables.customCacheManager,
+                                  ),
+                                  radius: 30,
+                                ),
                           BlocBuilder<StatusBloc, StatusState>(
                             builder: (context, state) {
                               return Positioned(

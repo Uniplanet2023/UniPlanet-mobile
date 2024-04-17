@@ -39,16 +39,6 @@ class _ChatListState extends State<ChatList> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search, color: Colors.grey),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert, color: Colors.grey),
-                  onPressed: () {},
-                ),
-              ],
               bottom: const TabBar(
                 indicatorColor: GlobalVariables.secondaryColor,
                 indicatorWeight: 4,

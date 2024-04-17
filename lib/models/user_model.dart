@@ -38,7 +38,7 @@ class User {
       id: map['id'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
-      profileImage: map['profileImage'] ?? '',
+      profileImage: map['profileImage'],
       school: map['school'] as String,
     );
   }

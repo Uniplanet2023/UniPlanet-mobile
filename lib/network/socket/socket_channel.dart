@@ -164,7 +164,7 @@ class SocketService {
             .uploadFile(
           CloudinaryFile.fromFile(imageMessage.filePath,
               resourceType: CloudinaryResourceType.Image,
-              folder: imageMessage.message.chat),
+              folder: 'chat-images/${imageMessage.message.chat}'),
         )
             .timeout(
           const Duration(seconds: 10),

@@ -127,11 +127,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     },
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(widget.product.seller.profileImage!),
-                          radius: 20,
-                        ),
+                        widget.product.seller.profileImage == null
+                            ? const CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                radius: 20,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    widget.product.seller.profileImage!),
+                                radius: 20,
+                              ),
                         const SizedBox(
                           width: 10,
                         ),

@@ -145,7 +145,8 @@ class ProductRepository {
         // Concurrently upload all images and collect their URLs
         uploadTasks = images.map((image) async {
           final response = await Global.cloudinary.uploadFile(
-            CloudinaryFile.fromFile(image.path, folder: 'product-images'),
+            CloudinaryFile.fromFile(image.path,
+                folder: 'product-images/${product.id}'),
           );
           imageUrls.add(response.secureUrl); // Collect each image URL
         }).toList();

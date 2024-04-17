@@ -44,8 +44,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   _updateProfileImage(
       UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));
-    final response = await Global.cloudinary.uploadFile(
-        CloudinaryFile.fromFile(event.image.path, folder: 'product-images'));
+    final response = await Global.cloudinary.uploadFile(CloudinaryFile.fromFile(
+        event.image.path,
+        folder: 'profile_image/${state.account.user.id}'));
 
     Account? account = await _accountRepository.updateProfileImage(
         profileImage: response.secureUrl);
