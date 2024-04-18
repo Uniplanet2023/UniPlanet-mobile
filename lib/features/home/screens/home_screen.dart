@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           controller: widget.controller,
           slivers: <Widget>[
             SliverAppBar(
-              pinned: false,
+              pinned: widget.category != null,
               snap: true,
               floating: true,
               expandedHeight: 35.0,

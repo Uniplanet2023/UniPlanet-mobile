@@ -67,6 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: TextFormField(
                       controller: _searchController,
                       autofocus: true,
+                      autocorrect: false,
                       onFieldSubmitted: (query) =>
                           navigateToSearchScreen(query),
                       decoration: InputDecoration(

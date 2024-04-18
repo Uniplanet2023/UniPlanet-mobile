@@ -50,24 +50,28 @@ class _SearchedProductListState extends State<SearchedProductList> {
         if (state is EndSearchingProductState) {
           isEnded = true;
         }
-        return ListView.builder(
-          controller: _scrollController,
-          itemCount: widget.products.length + 1,
-          itemBuilder: (context, index) {
-            if (index >= widget.products.length &&
-                widget.products.length > 9 &&
-                state is! EndSearchingProductState) {
-              return const Center(
-                child: CircularProgressIndicator(),
+        return state.productList.isEmpty
+            ? const Center(
+                child: Text('No products found'),
+              )
+            : ListView.builder(
+                controller: _scrollController,
+                itemCount: widget.products.length + 1,
+                itemBuilder: (context, index) {
+                  if (index >= widget.products.length &&
+                      widget.products.length > 9 &&
+                      state is! EndSearchingProductState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (index == widget.products.length) {
+                    return const SizedBox(height: 100);
+                  }
+                  return SearchedProduct(
+                    product: widget.products[index],
+                  );
+                },
               );
-            } else if (index == widget.products.length) {
-              return const SizedBox(height: 100);
-            }
-            return SearchedProduct(
-              product: widget.products[index],
-            );
-          },
-        );
       },
     );
   }
