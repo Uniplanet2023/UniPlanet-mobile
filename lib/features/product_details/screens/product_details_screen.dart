@@ -58,7 +58,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         height: MediaQuery.of(context).size.height * 0.4,
                         width: MediaQuery.of(context).size.width,
                         placeholder: (_, __) =>
-                            const Center(child: CircularProgressIndicator()),
+                            // Placeholder widget while loading
+                            Container(
+                          color: Colors.grey, // Grey box as a placeholder
+                        ),
                         errorWidget: (_, __, ___) => const Icon(Icons.error,
                             color: Colors.red, size: 80),
                       ),
@@ -139,8 +142,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               )
                             : CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    widget.product.seller.profileImage!),
+                                  widget.product.seller.profileImage!,
+                                ),
                                 radius: 20,
+                                backgroundColor:
+                                    Colors.grey, // Placeholder color
                               ),
                         const SizedBox(
                           width: 10,
@@ -259,9 +265,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               elevation: 0, // No shadow
               leading: IconButton(
                 icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                  size: 20,
+                  Icons.arrow_back_ios_rounded,
+                  color: Colors.white,
+                  size: 30,
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
@@ -343,7 +349,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ),
                                   ),
                                   icon: const Icon(
-                                    Icons.price_change_outlined,
+                                    Icons.edit_note_sharp,
                                     color: GlobalVariables.secondaryColor,
                                   ),
                                 ),
@@ -359,7 +365,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     Navigator.pop(context);
                                   }),
                                   icon: const Icon(
-                                    Icons.archive_outlined,
+                                    Icons.delete_outline_rounded,
                                     color: Colors.red,
                                   ),
                                 ),
