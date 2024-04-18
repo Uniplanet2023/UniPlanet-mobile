@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/account/screens/change_password_screen.dart';
-import 'package:uniplanet_mobile/features/account/widgets/menu_section.dart';
-import 'package:uniplanet_mobile/network/notification/notification_handler/notification_service.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/common/widgets/custom_textfield.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/features/account/screens/change_password_screen.dart';
+import 'package:uniket/features/account/widgets/menu_section.dart';
+import 'package:uniket/network/notification/notification_handler/notification_service.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});

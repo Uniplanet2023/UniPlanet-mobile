@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniket/bloc/auth/auth_bloc.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/common/widgets/custom_textfield.dart';
+import 'package:uniket/constants/global_variables.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});

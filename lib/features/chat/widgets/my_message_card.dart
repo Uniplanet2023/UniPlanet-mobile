@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/models/message.dart';
 
 class MyMessageCard extends StatelessWidget {
   final Message message;

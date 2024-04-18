@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/network/repository/account_repository/account_repo.dart';
+import 'package:uniket/network/repository/account_repository/account_repo.dart';
 
 part 'search_history_event.dart';
 part 'search_history_state/search_history_basic.dart';

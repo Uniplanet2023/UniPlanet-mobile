@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
+import 'package:uniket/common/enums/message_status_enum.dart';
 
 class Message {
   final String id;

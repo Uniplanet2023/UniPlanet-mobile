@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet_mobile/features/on_boarding/widgets/height_spacer.dart';
+import 'package:uniket/features/on_boarding/widgets/height_spacer.dart';
 
 class PageTwo extends StatelessWidget {
   const PageTwo({super.key});

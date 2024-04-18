@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/global.dart';
-import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/global.dart';
+import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
 
 class Streamer {
   late StreamSubscription _chatStreamSubscription;

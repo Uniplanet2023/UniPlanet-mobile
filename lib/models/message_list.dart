@@ -1,6 +1,6 @@
 // import 'dart:convert';
 
-// import 'package:uniplanet_mobile/models/message.dart';
+// import 'package:uniket/models/message.dart';
 
 // class MessageList {
 //   final List<Message> msgList;

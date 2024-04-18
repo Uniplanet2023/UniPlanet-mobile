@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/account/account_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniket/bloc/account/account_bloc.dart';
+import 'package:uniket/bloc/product/product_bloc.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/common/widgets/custom_textfield.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:flutter/material.dart';
 
 class AddProductScreen extends StatefulWidget {

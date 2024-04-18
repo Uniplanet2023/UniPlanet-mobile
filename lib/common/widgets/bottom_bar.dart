@@ -1,14 +1,14 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/functions/streamer.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/account/screens/account-screen.dart';
-import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
-import 'package:uniplanet_mobile/features/category/screens/category_layout_screen.dart';
-import 'package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart';
-import 'package:uniplanet_mobile/features/home/screens/home_screen.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/common/functions/streamer.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/features/account/screens/account-screen.dart';
+import 'package:uniket/features/add-product/screens/add_product_screen.dart';
+import 'package:uniket/features/category/screens/category_layout_screen.dart';
+import 'package:uniket/features/chat/screens/chat_layout_screen.dart';
+import 'package:uniket/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 

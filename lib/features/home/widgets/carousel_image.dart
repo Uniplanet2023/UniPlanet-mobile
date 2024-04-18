@@ -1,4 +1,4 @@
-import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniket/constants/global_variables.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 

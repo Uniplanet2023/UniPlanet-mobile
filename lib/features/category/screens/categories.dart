@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/constants/global_variables.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({

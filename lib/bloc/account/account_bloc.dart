@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/global.dart';
-import 'package:uniplanet_mobile/models/account.dart';
-import 'package:uniplanet_mobile/network/repository/account_repository/account_repo.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/global.dart';
+import 'package:uniket/models/account.dart';
+import 'package:uniket/network/repository/account_repository/account_repo.dart';
 
 part 'account_event.dart';
 part 'account_state.dart';

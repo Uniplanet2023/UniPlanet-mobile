@@ -1,4 +1,4 @@
-import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniket/constants/utils.dart';
 
 void resetPassword(ressetPassword) {
   try {

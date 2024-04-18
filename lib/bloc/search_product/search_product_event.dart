@@ -15,6 +15,14 @@ class SearchProductEvent extends BaseSearchProductEvent {
   List<Object> get props => [productName];
 }
 
+class LoadMoreSearchProductEvent extends BaseSearchProductEvent {
+  final String productName;
+  final int? page;
+  const LoadMoreSearchProductEvent({this.page, required this.productName});
+  @override
+  List<Object> get props => [productName];
+}
+
 class InitalSearchProductEvent extends BaseSearchProductEvent {
   @override
   List<Object> get props => [];

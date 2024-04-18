@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniket/models/product.dart';
 
 class Order {
   final String id;

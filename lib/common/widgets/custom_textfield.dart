@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniket/constants/global_variables.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -59,6 +59,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
       obscureText: _obscureText, // Use the state variable here
+      autocorrect: false,
+      enableSuggestions: false,
       decoration: InputDecoration(
         prefixText: widget.prefixText,
         hintText: widget.hintText,

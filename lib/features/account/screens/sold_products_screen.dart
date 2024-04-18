@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
-import 'package:uniplanet_mobile/features/account/widgets/inventory_screen_product_box.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniket/bloc/product/product_bloc.dart';
+import 'package:uniket/features/account/widgets/inventory_screen_product_box.dart';
+import 'package:uniket/models/user_model.dart';
 
 class SoldProductsScreen extends StatelessWidget {
   final ScrollController controller;

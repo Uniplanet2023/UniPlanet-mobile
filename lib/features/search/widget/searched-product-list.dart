@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/bloc/product/product_bloc.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/features/search/widget/searched-product.dart';
-import 'package:uniplanet_mobile/models/product.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/bloc/product/product_bloc.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/features/search/widget/searched-product.dart';
+import 'package:uniket/models/product.dart';
 
 class SearchedProductList extends StatefulWidget {
   final List<Product> products;

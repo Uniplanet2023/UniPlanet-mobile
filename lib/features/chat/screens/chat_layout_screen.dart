@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniplanet_mobile/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/chat/widgets/contacts_list.dart';
+import 'package:uniket/bloc/chat/chat_bloc.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/features/chat/widgets/contacts_list.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});

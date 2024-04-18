@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/auth/functions/opt-request.dart';
-import 'package:uniplanet_mobile/features/auth/functions/opt-verification.dart';
+import 'package:uniket/bloc/auth/auth_bloc.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/features/auth/functions/opt-verification.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;
@@ -90,27 +89,43 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                CustomButton(
-                  text: 'Submit',
-                  onTap: () {
-                    if (_otpFormKey.currentState!.validate()) {
-                      optVerification(
-                          context, widget.email, _otpController.text);
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is OtpValidatingState) {
+                      return const CircularProgressIndicator();
                     }
+                    return CustomButton(
+                      text: 'Submit',
+                      onTap: () {
+                        if (_otpFormKey.currentState!.validate()) {
+                          optVerification(
+                              context, widget.email, _otpController.text);
+                        }
+                      },
+                    );
                   },
                 ),
                 const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    optRequest(context, widget.email);
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is OTPValidationRequestState) {
+                      return const CircularProgressIndicator();
+                    }
+                    return TextButton(
+                      onPressed: () {
+                        context
+                            .read<AuthBloc>()
+                            .add(RequestOtpEvent(widget.email));
+                      },
+                      child: const Text(
+                        "Resend Verification number",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: GlobalVariables.secondaryColor,
+                        ),
+                      ),
+                    );
                   },
-                  child: const Text(
-                    "Resend Verification number",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: GlobalVariables.secondaryColor,
-                    ),
-                  ),
                 ),
               ],
             ),

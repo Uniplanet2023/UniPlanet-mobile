@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/models/get_chat_room.dart';
-import 'package:uniplanet_mobile/models/message.dart';
-import 'package:uniplanet_mobile/models/chat_room.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
-import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
-import 'package:uniplanet_mobile/network/api_def/display_error_messages.dart';
+import 'package:uniket/constants/utils.dart';
+import 'package:uniket/models/get_chat_room.dart';
+import 'package:uniket/models/message.dart';
+import 'package:uniket/models/chat_room.dart';
+import 'package:uniket/models/user_model.dart';
+import 'package:uniket/network/api_def/api_server_address.dart';
+import 'package:uniket/network/api_def/dio_client.dart';
+import 'package:uniket/network/api_def/display_error_messages.dart';
 
 class ChatRepository {
   final DioClient _dioClient;

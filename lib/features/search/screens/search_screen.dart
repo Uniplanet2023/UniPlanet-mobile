@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniplanet_mobile/bloc/search_history/search_history_bloc.dart';
-import 'package:uniplanet_mobile/bloc/search_product/search_product_bloc.dart';
-import 'package:uniplanet_mobile/common/widgets/loader.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
+import 'package:uniket/bloc/search_history/search_history_bloc.dart';
+import 'package:uniket/bloc/search_product/search_product_bloc.dart';
+import 'package:uniket/common/widgets/loader.dart';
+import 'package:uniket/constants/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/features/search/widget/searched-product-list.dart';
+import 'package:uniket/features/search/widget/searched-product-list.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({
@@ -146,12 +146,12 @@ class _SearchScreenState extends State<SearchScreen> {
               recentSearches = state.searchHistory;
               return BlocBuilder<SearchProductBloc, SearchProductState>(
                 builder: (context, state) {
-                  if (state is SearchingProductState) {
+                  if (state is LoadingSearchingProductState) {
                     return const Center(
                       child: Loader(),
                     );
                   }
-                  if (state is SearchedProductState) {
+                  if (state is LoadedSearchingProductState) {
                     if (state.productList.isEmpty) {
                       return const Center(
                           child: Text('No Search Results Found!'));

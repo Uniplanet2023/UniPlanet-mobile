@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/enums/message_enum.dart';
-import 'package:uniplanet_mobile/common/enums/message_status_enum.dart';
-import 'package:uniplanet_mobile/global.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/common/enums/message_enum.dart';
+import 'package:uniket/common/enums/message_status_enum.dart';
+import 'package:uniket/global.dart';
 // Models
-import 'package:uniplanet_mobile/models/message.dart';
+import 'package:uniket/models/message.dart';
 // Repository
-import 'package:uniplanet_mobile/network/repository/index.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
+import 'package:uniket/network/repository/index.dart';
+import 'package:uniket/network/socket/socket_channel.dart';
 // Part of the bloc
 part 'message_bloc_event.dart';
 part 'message_bloc_state.dart';

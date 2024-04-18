@@ -1,9 +1,9 @@
 import 'package:page_transition/page_transition.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
+import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/features/auth/screens/signin-screen.dart';
+import 'package:uniket/features/auth/screens/signup-screen.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
+import 'package:uniket/features/auth/widgets/bezierContainer.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class AuthScreen extends StatelessWidget {

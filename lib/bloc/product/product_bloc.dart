@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
+import 'package:uniket/bloc/index.dart';
 // Models
-import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniket/models/product.dart';
+import 'package:uniket/models/user_model.dart';
 // Repository
-import 'package:uniplanet_mobile/network/repository/product_repository/product_repo.dart';
+import 'package:uniket/network/repository/product_repository/product_repo.dart';
 // Parts
 part 'product_event.dart';
 part 'product_state/basic_state.dart';

@@ -12,6 +12,13 @@ final class SignupFailedState extends AuthState {
   List<Object?> get props => [];
 }
 
+final class SignupSuccessState extends AuthState {
+  final String hash;
+  const SignupSuccessState({required this.hash});
+  @override
+  List<Object?> get props => [hash];
+}
+
 final class UserNotVerifiedState extends AuthState {
   const UserNotVerifiedState();
   @override

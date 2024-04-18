@@ -1,21 +1,21 @@
 import "package:flutter/material.dart";
-import "package:uniplanet_mobile/common/routes/names.dart";
-import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
-import 'package:uniplanet_mobile/features/add-product/screens/add_product_screen.dart';
-import "package:uniplanet_mobile/features/auth/screens/auth_screen.dart";
-import "package:uniplanet_mobile/features/auth/screens/opt_verfiy_screen.dart";
-import 'package:uniplanet_mobile/features/auth/screens/signin-screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/splash-screen.dart';
-import "package:uniplanet_mobile/features/category/screens/categories.dart";
-import "package:uniplanet_mobile/features/chat/screens/chat_layout_screen.dart";
-import "package:uniplanet_mobile/features/chat/screens/chat_screen.dart";
-import "package:uniplanet_mobile/features/home/screens/home_screen.dart";
-import "package:uniplanet_mobile/features/product_details/screens/product_details_screen.dart";
-import "package:uniplanet_mobile/features/search/screens/search_screen.dart";
-import "package:uniplanet_mobile/models/chat_room.dart";
-import "package:uniplanet_mobile/models/product.dart";
-import "package:uniplanet_mobile/models/user_model.dart";
+import "package:uniket/common/routes/names.dart";
+import 'package:uniket/common/widgets/bottom_bar.dart';
+import 'package:uniket/features/add-product/screens/add_product_screen.dart';
+import "package:uniket/features/auth/screens/auth_screen.dart";
+import "package:uniket/features/auth/screens/opt_verfiy_screen.dart";
+import 'package:uniket/features/auth/screens/signin-screen.dart';
+import 'package:uniket/features/auth/screens/signup-screen.dart';
+import 'package:uniket/features/auth/screens/splash-screen.dart';
+import "package:uniket/features/category/screens/categories.dart";
+import "package:uniket/features/chat/screens/chat_layout_screen.dart";
+import "package:uniket/features/chat/screens/chat_screen.dart";
+import "package:uniket/features/home/screens/home_screen.dart";
+import "package:uniket/features/product_details/screens/product_details_screen.dart";
+import "package:uniket/features/search/screens/search_screen.dart";
+import "package:uniket/models/chat_room.dart";
+import "package:uniket/models/product.dart";
+import "package:uniket/models/user_model.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
+import 'package:uniket/bloc/auth/auth_bloc.dart';
 
 void optVerification(BuildContext context, email, otpCode) async {
   final authState = context.read<AuthBloc>().state;
   if (authState is OTPValidationRequireState) {
+    if (otpCode != null) {
+      context
+          .read<AuthBloc>()
+          .add(OtpValidationEvent(email, otpCode, authState.hash));
+    }
+  } else if (authState is SignupSuccessState) {
     if (otpCode != null) {
       context
           .read<AuthBloc>()

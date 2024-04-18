@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
+import 'package:uniket/bloc/auth/auth_bloc.dart';
 
 void signUpUser(BuildContext context, email, name, school, validPassword,
     password, isChecked) async {

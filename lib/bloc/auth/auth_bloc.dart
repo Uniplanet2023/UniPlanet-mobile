@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/global.dart';
-import 'package:uniplanet_mobile/network/api_def/api_status/signup.dart';
-import 'package:uniplanet_mobile/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet_mobile/network/socket/socket_channel.dart';
+import 'package:uniket/constants/utils.dart';
+import 'package:uniket/global.dart';
+import 'package:uniket/network/api_def/api_status/signup.dart';
+import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniket/network/socket/socket_channel.dart';
 
 part 'auth_bloc_event.dart';
 part 'auth_state/basic_state.dart';
@@ -88,6 +88,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const OTPValidationRequestState());
     String hash = await _authRepository.requestOtp(email: event.email);
     if (hash != 'Failed') {
+      SnackbarGlobal.showSnackBar(
+        "OTP Code Sent Successfully",
+      );
       emit(OTPValidationRequireState(hash: hash));
     } else {
       emit(const OTPValidationRequestFailState());
@@ -131,7 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           name: event.name,
           school: event.school);
       if (hash != 'Failed') {
-        emit(OTPValidationRequireState(hash: hash));
+        emit(SignupSuccessState(hash: hash));
       } else {
         emit(const OTPValidationRequestFailState());
       }

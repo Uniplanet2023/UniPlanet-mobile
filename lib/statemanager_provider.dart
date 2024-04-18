@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/bloc/search_history/search_history_bloc.dart';
-import 'package:uniplanet_mobile/main.dart';
+import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/bloc/search_history/search_history_bloc.dart';
+import 'package:uniket/main.dart';
 import 'network/repository/index.dart';
 
 class StateManagerProvider extends StatelessWidget {

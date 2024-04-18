@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 // Repositories
-import 'package:uniplanet_mobile/network/repository/product_repository/product_repo.dart';
+import 'package:uniket/network/repository/product_repository/product_repo.dart';
 // Models
-import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
+import 'package:uniket/models/product.dart';
+import 'package:uniket/models/user_model.dart';
 // Parts of the bloc
 part 'like_event.dart';
 part 'like_state.dart';

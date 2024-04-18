@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
-import 'package:uniplanet_mobile/global.dart';
-import 'package:uniplanet_mobile/models/product.dart';
-import 'package:uniplanet_mobile/models/user_model.dart';
-import 'package:uniplanet_mobile/network/api_def/api_server_address.dart';
-import 'package:uniplanet_mobile/network/api_def/dio_client.dart';
-import 'package:uniplanet_mobile/network/api_def/display_error_messages.dart';
+import 'package:uniket/global.dart';
+import 'package:uniket/models/product.dart';
+import 'package:uniket/models/user_model.dart';
+import 'package:uniket/network/api_def/api_server_address.dart';
+import 'package:uniket/network/api_def/dio_client.dart';
+import 'package:uniket/network/api_def/display_error_messages.dart';
 
 class ProductRepository {
   final DioClient _dioClient;

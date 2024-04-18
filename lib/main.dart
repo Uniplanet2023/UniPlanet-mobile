@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/common/widgets/bottom_bar.dart';
-import 'package:uniplanet_mobile/common/widgets/error_screen.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/constants/utils.dart';
-import 'package:uniplanet_mobile/features/auth/screens/auth_screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
-import 'package:uniplanet_mobile/features/on_boarding/screens/on_boarding_screen.dart';
-import 'package:uniplanet_mobile/global.dart';
-import 'package:uniplanet_mobile/common/routes/router.dart';
-import 'package:uniplanet_mobile/network/notification/notification_handler/index.dart';
-import 'package:uniplanet_mobile/statemanager_provider.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/common/widgets/bottom_bar.dart';
+import 'package:uniket/common/widgets/error_screen.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/constants/utils.dart';
+import 'package:uniket/features/auth/screens/auth_screen.dart';
+import 'package:uniket/features/auth/screens/signup-screen.dart';
+import 'package:uniket/features/on_boarding/screens/on_boarding_screen.dart';
+import 'package:uniket/global.dart';
+import 'package:uniket/common/routes/router.dart';
+import 'package:uniket/network/notification/notification_handler/index.dart';
+import 'package:uniket/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {

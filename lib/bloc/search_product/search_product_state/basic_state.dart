@@ -1,4 +1,4 @@
-part of 'search_product_bloc.dart';
+part of '../search_product_bloc.dart';
 
 sealed class SearchProductState extends Equatable {
   final List<Product> productList;
@@ -10,12 +10,4 @@ sealed class SearchProductState extends Equatable {
 
 final class SearchProductInitial extends SearchProductState {
   const SearchProductInitial({super.productList});
-}
-
-final class SearchingProductState extends SearchProductState {
-  const SearchingProductState({super.productList});
-}
-
-final class SearchedProductState extends SearchProductState {
-  const SearchedProductState({super.productList});
 }

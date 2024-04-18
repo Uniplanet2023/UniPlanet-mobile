@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/auth/functions/signup.dart';
-import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
-import 'package:uniplanet_mobile/features/auth/widgets/terms_and_conditions.dart';
-import 'package:uniplanet_mobile/constants/university_list.dart';
+import 'package:uniket/bloc/auth/auth_bloc.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/common/widgets/custom_textfield.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/features/auth/functions/signup.dart';
+import 'package:uniket/features/auth/widgets/bezierContainer.dart';
+import 'package:uniket/features/auth/widgets/terms_and_conditions.dart';
+import 'package:uniket/constants/university_list.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -77,7 +77,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is OTPValidationRequireState) {
+        if (state is SignupSuccessState) {
           Navigator.pushNamed(context, AppRoutes.otpVerifyPage,
               arguments: _emailController.text);
         } else if (state is OTPValidationCompleteState) {
@@ -206,19 +206,26 @@ class _SignupScreenState extends State<SignupScreen> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        CustomButton(
-                          text: 'Sign Up',
-                          onTap: () {
-                            if (_signUpFormKey.currentState!.validate()) {
-                              signUpUser(
-                                  context,
-                                  _emailController.text,
-                                  _nameController.text,
-                                  school,
-                                  validPassword,
-                                  _passwordController.text,
-                                  isChecked);
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            if (state is SignupState) {
+                              return const CircularProgressIndicator();
                             }
+                            return CustomButton(
+                              text: 'Sign Up',
+                              onTap: () {
+                                if (_signUpFormKey.currentState!.validate()) {
+                                  signUpUser(
+                                      context,
+                                      _emailController.text,
+                                      _nameController.text,
+                                      school,
+                                      validPassword,
+                                      _passwordController.text,
+                                      isChecked);
+                                }
+                              },
+                            );
                           },
                         ),
                         Padding(

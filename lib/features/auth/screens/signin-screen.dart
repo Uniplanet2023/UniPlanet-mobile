@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniplanet_mobile/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet_mobile/common/routes/names.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_button.dart';
-import 'package:uniplanet_mobile/common/widgets/custom_textfield.dart';
-import 'package:uniplanet_mobile/constants/global_variables.dart';
-import 'package:uniplanet_mobile/features/auth/screens/forgotten_password_screen.dart';
-import 'package:uniplanet_mobile/features/auth/screens/signup-screen.dart';
-import 'package:uniplanet_mobile/features/auth/widgets/bezierContainer.dart';
-import 'package:uniplanet_mobile/network/notification/notification_handler/notification_service.dart';
+import 'package:uniket/bloc/auth/auth_bloc.dart';
+import 'package:uniket/common/routes/names.dart';
+import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/common/widgets/custom_textfield.dart';
+import 'package:uniket/constants/global_variables.dart';
+import 'package:uniket/features/auth/screens/forgotten_password_screen.dart';
+import 'package:uniket/features/auth/screens/signup-screen.dart';
+import 'package:uniket/features/auth/widgets/bezierContainer.dart';
+import 'package:uniket/network/notification/notification_handler/notification_service.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});

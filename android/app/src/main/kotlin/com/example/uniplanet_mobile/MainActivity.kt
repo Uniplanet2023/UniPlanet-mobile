@@ -1,4 +1,4 @@
-package com.example.uniplanet_mobile
+package com.example.uniket
 
 import io.flutter.embedding.android.FlutterActivity
 

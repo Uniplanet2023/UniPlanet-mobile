@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet_mobile/bloc/index.dart';
-import 'package:uniplanet_mobile/features/account/widgets/inventory_screen_product_box.dart';
+import 'package:uniket/bloc/index.dart';
+import 'package:uniket/features/account/widgets/inventory_screen_product_box.dart';
 
 class LikedProductsScreen extends StatelessWidget {
   final ScrollController controller;

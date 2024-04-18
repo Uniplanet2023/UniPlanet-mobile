@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:uniplanet_mobile/constants/utils.dart';
+import 'package:uniket/constants/utils.dart';
 
 String displayErrorMessages(String responseBody) {
   // Decode the JSON response body
