@@ -171,9 +171,8 @@ class _CategoryPageState extends State<CategoryPage> {
                         .take(5)
                         .map((text) => GestureDetector(
                               onTap: () {
-                                context
-                                    .read<SearchProductBloc>()
-                                    .add(SearchProductEvent(productName: text));
+                                context.read<SearchProductBloc>().add(
+                                    LoadSearchProductEvent(productName: text));
                                 Navigator.pushNamed(
                                     context, AppRoutes.searchScreenPage);
                               },

@@ -1,9 +1,11 @@
 part of '../search_product_bloc.dart';
 
 final class LoadingSearchingProductState extends SearchProductState {
-  const LoadingSearchingProductState({super.productList});
+  const LoadingSearchingProductState(
+      {super.productList, super.page, super.query});
 }
 
 final class LoadedSearchingProductState extends SearchProductState {
-  const LoadedSearchingProductState({super.productList});
+  const LoadedSearchingProductState(
+      {super.productList, super.page, super.query});
 }

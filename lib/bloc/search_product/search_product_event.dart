@@ -7,18 +7,16 @@ sealed class BaseSearchProductEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchProductEvent extends BaseSearchProductEvent {
+class LoadSearchProductEvent extends BaseSearchProductEvent {
   final String productName;
-  final int? page;
-  const SearchProductEvent({this.page, required this.productName});
+  const LoadSearchProductEvent({required this.productName});
   @override
   List<Object> get props => [productName];
 }
 
 class LoadMoreSearchProductEvent extends BaseSearchProductEvent {
   final String productName;
-  final int? page;
-  const LoadMoreSearchProductEvent({this.page, required this.productName});
+  const LoadMoreSearchProductEvent({required this.productName});
   @override
   List<Object> get props => [productName];
 }

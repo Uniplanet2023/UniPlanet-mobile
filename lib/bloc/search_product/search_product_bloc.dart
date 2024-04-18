@@ -14,18 +14,47 @@ class SearchProductBloc
 
   SearchProductBloc(this._productRepository)
       : super(const SearchProductInitial(productList: [])) {
-    on<SearchProductEvent>((event, emit) async {
+    on<LoadSearchProductEvent>((event, emit) async {
       await _searchProduct(event, emit);
     });
-    on(<InitalSearchProductEvent>(event, emit) =>
-        emit(const SearchProductInitial()));
+    on<LoadMoreSearchProductEvent>((event, emit) async {
+      await _loadMoreSearchProduct(event, emit);
+    });
+    on<InitalSearchProductEvent>((event, emit) async {
+      emit(const SearchProductInitial(productList: []));
+    });
   }
-  _searchProduct(
-      SearchProductEvent event, Emitter<SearchProductState> emit) async {
-    emit(LoadingSearchingProductState(productList: state.productList));
+
+  _loadMoreSearchProduct(LoadMoreSearchProductEvent event,
+      Emitter<SearchProductState> emit) async {
+    emit(LoadingMoreSearchingProductState(
+        productList: state.productList,
+        page: state.page,
+        query: event.productName));
+    int page = state.page + 1;
     List<Product> result =
-        await _productRepository.searchProduct(event.page, event.productName);
-    emit(LoadedSearchingProductState(productList: result));
+        await _productRepository.searchProduct(page, event.productName);
+    if (result.isEmpty) {
+      emit(EndSearchingProductState(
+          productList: state.productList,
+          page: state.page,
+          query: event.productName));
+      return;
+    }
+    state.productList.addAll(result);
+    emit(LoadedMoreSearchingProductState(
+        productList: state.productList, page: page, query: event.productName));
+  }
+
+  _searchProduct(
+      LoadSearchProductEvent event, Emitter<SearchProductState> emit) async {
+    emit(LoadingSearchingProductState(
+        productList: state.productList, page: 1, query: event.productName));
+    List<Product> result =
+        await _productRepository.searchProduct(state.page, event.productName);
+
+    emit(LoadedSearchingProductState(
+        productList: result, page: 1, query: event.productName));
   }
 
   @override
