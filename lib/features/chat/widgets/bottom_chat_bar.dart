@@ -33,7 +33,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
   final TextEditingController _messageController = TextEditingController();
 
   // FlutterSoundRecorder? _soundRecorder;
-  bool isRecorderInit = false;
+  // bool isRecorderInit = false;
   bool isShowEmojiContainer = false;
   bool isRecording = false;
   FocusNode focusNode = FocusNode();
@@ -50,7 +50,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     _messageController.removeListener(_handleTextChange);
     _messageController.dispose();
     // _soundRecorder!.closeRecorder();
-    isRecorderInit = false;
   }
 
   void openAudio() async {
@@ -59,7 +58,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
     //   throw RecordingPermissionException('Mic permission not allowed!');
     // }
     // await _soundRecorder!.openRecorder();
-    isRecorderInit = true;
+    // isRecorderInit = true;
   }
 
   void sendTextMessage() async {
@@ -278,7 +277,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                               sendImages([XFile(image!.path)]);
                             },
                             padding: const EdgeInsets.all(0),
-                            color: Colors.blue,
+                            color: GlobalVariables.primaryColor,
                           ),
                         ],
                       ),
@@ -296,35 +295,32 @@ class _BottomChatFieldState extends State<BottomChatField> {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.photo_library),
+                icon: const Icon(Icons.photo_size_select_actual_outlined),
                 onPressed: () async {
                   List<XFile> imageList = await pickImagesFromGallery(context);
                   sendImages(imageList);
                 },
+                color: Colors.black,
                 padding: const EdgeInsets.all(0),
-                color: Colors.blue,
               ),
               Padding(
                 padding: const EdgeInsets.only(
                   bottom: 0,
-                  right: 2,
+                  right: 10,
                   left: 2,
                 ),
-                child: CircleAvatar(
-                  backgroundColor: const Color(0xFF128C7E),
-                  radius: 20,
-                  child: GestureDetector(
-                    onTap: () => sendTextMessage(),
-                    child: Icon(
-                      isShowSendButton
-                          ? Icons.send
-                          : isRecording
-                              ? Icons.close
-                              : Icons.mic,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                child: !isShowSendButton
+                    ? const SizedBox()
+                    : CircleAvatar(
+                        backgroundColor: GlobalVariables.secondaryColor,
+                        radius: 15,
+                        child: GestureDetector(
+                            onTap: () => sendTextMessage(),
+                            child: const Icon(
+                              Icons.arrow_upward_sharp,
+                              color: Colors.white,
+                            )),
+                      ),
               ),
             ],
           ),
