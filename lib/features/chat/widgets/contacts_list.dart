@@ -72,28 +72,6 @@ class _ContactsListState extends State<ContactsList> {
 
               return Slidable(
                 key: Key(widget.list[index].id),
-                startActionPane: ActionPane(
-                  motion: const StretchMotion(),
-                  dismissible: DismissiblePane(
-                    onDismissed: () {
-                      _onDismissed(index, ChatActions.archive);
-                    },
-                  ),
-                  children: [
-                    SlidableAction(
-                      onPressed: (context) {
-                        _onDismissed(index, ChatActions.archive);
-                        // Delete chat room
-                        // context.read<MessageBloc>().add(DeleteChatRoomEvent(
-                        //     chatRoomId: widget.list[index].id));
-                      },
-                      icon: Icons.share,
-                      backgroundColor: Colors.blueAccent,
-                      foregroundColor: Colors.white,
-                      label: 'Share',
-                    ),
-                  ],
-                ),
                 endActionPane: ActionPane(
                   motion: const BehindMotion(),
                   children: [

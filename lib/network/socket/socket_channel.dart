@@ -62,7 +62,6 @@ class SocketService {
             },
           );
         }
-
         ChatRoom chatRoom = ChatRoom.fromMap(chat);
         if (context.mounted) {
           context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
@@ -75,7 +74,11 @@ class SocketService {
           }
         }
       });
-
+      socket.on('chat room deleted', (data) {
+        print('chat room deleted');
+        var chat = jsonDecode(data);
+        context.read<ChatBloc>().add(DeleteChatRoomEvent(chatId: chat['id']));
+      });
       socket.on('online user', (userId) {
         if (context.mounted) {
           context.read<StatusBloc>().add(ConnectedEvent(userId: userId));
@@ -266,6 +269,12 @@ class SocketService {
     if (context.mounted) {
       context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
     }
+  }
+
+  void sendDeleteChatRoomEvent(String chatId) {
+    socket.emitWithAck('delete chat room', chatId, ack: (data) {
+      print('chat room deleted');
+    });
   }
 
   Future<bool> chatRoomCreateAndCheckUserExist({required ChatRoom chat}) async {

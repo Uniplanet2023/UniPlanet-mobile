@@ -54,23 +54,31 @@ class _SearchedProductListState extends State<SearchedProductList> {
             ? const Center(
                 child: Text('No products found'),
               )
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: widget.products.length + 1,
-                itemBuilder: (context, index) {
-                  if (index >= widget.products.length &&
-                      widget.products.length > 9 &&
-                      state is! EndSearchingProductState) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (index == widget.products.length) {
-                    return const SizedBox(height: 100);
-                  }
-                  return SearchedProduct(
-                    product: widget.products[index],
-                  );
+            : RefreshIndicator(
+                onRefresh: () {
+                  context
+                      .read<SearchProductBloc>()
+                      .add(LoadSearchProductEvent(productName: widget.query));
+                  return Future.value();
                 },
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: widget.products.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index >= widget.products.length &&
+                        widget.products.length > 9 &&
+                        state is! EndSearchingProductState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (index == widget.products.length) {
+                      return const SizedBox(height: 100);
+                    }
+                    return SearchedProduct(
+                      product: widget.products[index],
+                    );
+                  },
+                ),
               );
       },
     );

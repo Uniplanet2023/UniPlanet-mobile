@@ -207,11 +207,13 @@ class MessageBox extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(textMessage,
-              style: const TextStyle(fontSize: 16),
-              maxLines: 9,
-              overflow: TextOverflow.ellipsis,
-              softWrap: true),
+          Expanded(
+            child: Text(textMessage,
+                style: const TextStyle(fontSize: 16),
+                maxLines: 9,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true),
+          ),
           const Text('View All', style: TextStyle(color: Colors.grey)),
         ],
       ),
