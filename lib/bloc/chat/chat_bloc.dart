@@ -40,7 +40,19 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<DeleteChatRoomEvent>((event, emit) async {
       await _deleteChatRoom(event, emit);
     });
+    on<DeletedChatByClient>((event, emit) {
+      _deleteChatByClient(event, emit);
+    });
   }
+
+  _deleteChatByClient(DeletedChatByClient event, emit) {
+    state.chatRooms.removeWhere((element) => element.id == event.chatId);
+    emit(DeletedChatRoomState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
+  }
+
   _deleteChatRoom(DeleteChatRoomEvent event, emit) async {
     try {
       emit(DeletingChatRoomState(

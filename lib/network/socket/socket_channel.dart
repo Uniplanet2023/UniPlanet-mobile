@@ -76,8 +76,8 @@ class SocketService {
       });
       socket.on('chat room deleted', (data) {
         print('chat room deleted');
-        var chat = jsonDecode(data);
-        context.read<ChatBloc>().add(DeleteChatRoomEvent(chatId: chat['id']));
+        var chat = data['chatRoom'];
+        context.read<ChatBloc>().add(DeletedChatByClient(chatId: chat));
       });
       socket.on('online user', (userId) {
         if (context.mounted) {
@@ -272,7 +272,7 @@ class SocketService {
   }
 
   void sendDeleteChatRoomEvent(String chatId) {
-    socket.emitWithAck('delete chat room', chatId, ack: (data) {
+    socket.emitWithAck('chat room deleted', chatId, ack: (data) {
       print('chat room deleted');
     });
   }
