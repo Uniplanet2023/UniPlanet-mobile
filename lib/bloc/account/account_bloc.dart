@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/global.dart';

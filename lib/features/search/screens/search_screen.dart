@@ -1,6 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uniket/bloc/search_history/search_history_bloc.dart';
 import 'package:uniket/bloc/search_product/search_product_bloc.dart';
 import 'package:uniket/common/widgets/loader.dart';

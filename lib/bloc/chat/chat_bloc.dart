@@ -10,7 +10,7 @@ import 'package:uniket/network/repository/chat_repository/chat_repo.dart';
 import 'package:uniket/models/chat_room.dart';
 import 'package:uniket/models/message.dart';
 import 'package:uniket/models/user_model.dart';
-import 'package:uniket/network/socket/socket_channel.dart';
+
 // Bloc Events, States
 part 'chat_bloc_event.dart';
 part 'chat_bloc_state.dart';

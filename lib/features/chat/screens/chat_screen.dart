@@ -117,7 +117,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           Navigator.of(context)
                               .pop(); // Navigate back from current screen
                         },
-                        child: const Text('Delete'),
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                     ],
                   );

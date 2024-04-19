@@ -6,17 +6,21 @@ class GlobalVariables {
   // COLORS
   static const appBarGradient = LinearGradient(
     colors: [
-      Color.fromRGBO(29, 201, 192, 1),
-      Color.fromARGB(255, 125, 221, 216),
+      Color.fromRGBO(76, 151, 228, 1),
+      Color.fromRGBO(60, 203, 228, 1),
     ],
     stops: [0.5, 1.0],
   );
   static const primaryColor = Color.fromARGB(255, 125, 221, 216);
-  static const secondaryColor = Color.fromRGBO(255, 153, 0, 1);
+  static const secondaryColor = Color.fromRGBO(78, 132, 233, 1);
   static const backgroundColor = Colors.white;
   static const Color greyBackgroundCOlor = Color(0xffebecee);
-  static var selectedNavBarColor = Colors.cyan[800]!;
+  static const selectedNavBarColor = Color.fromRGBO(60, 220, 228, 1);
   static const unselectedNavBarColor = Colors.black87;
+  static const bezierContainerColor = [
+    Color.fromRGBO(78, 132, 233, 1),
+    Color.fromRGBO(68, 108, 244, 1)
+  ];
 
   // STATIC IMAGES
   static final customCacheManager = CacheManager(Config(

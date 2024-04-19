@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/common/widgets/custom_button.dart';
 import 'package:uniket/features/auth/screens/auth_screen.dart';
 import 'package:uniket/features/on_boarding/widgets/height_spacer.dart';

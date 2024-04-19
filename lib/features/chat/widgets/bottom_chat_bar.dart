@@ -265,7 +265,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: GlobalVariables.backgroundColor,
+                    fillColor: GlobalVariables.greyBackgroundCOlor,
                     prefixIcon: SizedBox(
                       width: 50,
                       child: Row(

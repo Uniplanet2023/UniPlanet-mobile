@@ -8,7 +8,6 @@ import 'package:uniket/common/widgets/bottom_bar.dart';
 import 'package:uniket/common/widgets/error_screen.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/auth/screens/auth_screen.dart';
 import 'package:uniket/features/auth/screens/signup-screen.dart';
 import 'package:uniket/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniket/global.dart';

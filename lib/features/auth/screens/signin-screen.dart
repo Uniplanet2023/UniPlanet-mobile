@@ -9,7 +9,6 @@ import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/auth/screens/forgotten_password_screen.dart';
 import 'package:uniket/features/auth/screens/signup-screen.dart';
 import 'package:uniket/features/auth/widgets/bezierContainer.dart';
-import 'package:uniket/network/notification/notification_handler/notification_service.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
