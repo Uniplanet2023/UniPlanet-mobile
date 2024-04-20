@@ -268,12 +268,14 @@ class ProductRepository {
   }
 
   Future<List<Product>?> getMyProduct(
-      {required int page, required String status}) async {
+      {required int page,
+      required String status,
+      required String userId}) async {
     var productList = <Product>[];
     try {
       var response = await _dioClient.dio.get(
         '$productURI/get-my-products/$status',
-        queryParameters: {'page': page},
+        queryParameters: {'page': page, 'userId': userId},
         options: _dioClient.getDioOptions(),
       );
 

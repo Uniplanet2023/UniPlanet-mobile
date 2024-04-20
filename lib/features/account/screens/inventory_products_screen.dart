@@ -20,7 +20,9 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<OnSaleProductBloc>().add(const LoadOnSaleProductEvent());
+    context
+        .read<OnSaleProductBloc>()
+        .add(LoadOnSaleProductEvent(userId: widget.user.id));
     _scrollController.addListener(_loadMoreItems);
   }
 
@@ -37,7 +39,9 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
       setState(() {
         _isLoadingMore = true;
       });
-      context.read<OnSaleProductBloc>().add(const LoadMoreOnSaleProductEvent());
+      context
+          .read<OnSaleProductBloc>()
+          .add(LoadMoreOnSaleProductEvent(userId: widget.user.id));
       // Simulate a delay to load more items
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {

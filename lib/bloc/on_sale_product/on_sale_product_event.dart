@@ -8,11 +8,13 @@ sealed class OnSaleProductEvent extends Equatable {
 }
 
 class LoadOnSaleProductEvent extends OnSaleProductEvent {
-  const LoadOnSaleProductEvent();
+  final String userId;
+  const LoadOnSaleProductEvent({required this.userId});
 }
 
 class LoadMoreOnSaleProductEvent extends OnSaleProductEvent {
-  const LoadMoreOnSaleProductEvent();
+  final String userId;
+  const LoadMoreOnSaleProductEvent({required this.userId});
 }
 
 class AddOnSaleProductEvent extends OnSaleProductEvent {

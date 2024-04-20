@@ -8,11 +8,13 @@ sealed class SoldProductEvent extends Equatable {
 }
 
 class LoadSoldProductEvent extends SoldProductEvent {
-  const LoadSoldProductEvent();
+  final String userId;
+  const LoadSoldProductEvent({required this.userId});
 }
 
 class LoadMoreSoldProductEvent extends SoldProductEvent {
-  const LoadMoreSoldProductEvent();
+  final String userId;
+  const LoadMoreSoldProductEvent({required this.userId});
 }
 
 class AddSoldProductEvent extends SoldProductEvent {
