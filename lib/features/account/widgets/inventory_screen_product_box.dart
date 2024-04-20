@@ -100,9 +100,9 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                     ),
                     SlidableAction(
                       onPressed: (_) async => {
-                        widget.productList.removeAt(index),
                         context.read<ProductBloc>().add(DeleteProductEvent(
                             productId: widget.productList[index].id)),
+                        widget.productList.removeAt(index),
                       },
                       icon: Icons.delete,
                       label: 'Remove',
