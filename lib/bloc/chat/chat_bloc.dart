@@ -140,7 +140,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         totalUnseenMessageCount: getChatRooms.totalUnseenMessageCount,
       ));
     } catch (e) {
-      print(e);
+      log(e);
       throw Exception('Loading chat room API error');
     }
   }
@@ -182,12 +182,12 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   @override
   void onChange(Change<ChatBlocState> change) {
     super.onChange(change);
-    // print(change);
+    // log(change);
   }
 
   @override
   void onTransition(Transition<ChatBlocEvent, ChatBlocState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    // log(transition);
   }
 }

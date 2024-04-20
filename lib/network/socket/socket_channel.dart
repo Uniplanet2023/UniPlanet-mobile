@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/common/enums/message_enum.dart';
 import 'package:uniket/common/enums/message_status_enum.dart';
@@ -19,13 +19,13 @@ class SocketService {
   String userId;
   static List<ImageMessage> imageMessagesToRetry = [];
   static List<Message> messagesToRetry = [];
-  late final IO.Socket socket;
+  late final io.Socket socket;
   static String? currentChatLocation;
 
   SocketService(this.userId) {
-    socket = IO.io(
+    socket = io.io(
         messageURI,
-        IO.OptionBuilder()
+        io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
             .setReconnectionAttempts(1000)
@@ -49,7 +49,7 @@ class SocketService {
         resendUnacknowledgedMessages();
       }
       socket.on('chat room created', (data) async {
-        print('chat room created');
+        log('chat room created');
         var chat = jsonDecode(data);
         bool isUserOnline = await joinChatAndCheckUserExist(
             chatId: chat['id'], targetUserId: chat['seller']['id']);
@@ -75,7 +75,7 @@ class SocketService {
         }
       });
       socket.on('chat room deleted', (data) {
-        print('chat room deleted');
+        log('chat room deleted');
         var chat = jsonDecode(data);
         context.read<ChatBloc>().add(DeleteChatRoomEvent(chatId: chat['id']));
       });
@@ -115,7 +115,7 @@ class SocketService {
           context
               .read<ChatBloc>()
               .add(UpdateChatRoomLastMessageEvent(receivedMessage));
-          //TODO: Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
+          // Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
           if (currentChatLocation == receivedMessage.chat &&
               receivedMessage.receiver == userId) {
             readAllMessages(currentChatLocation!);
@@ -140,19 +140,19 @@ class SocketService {
           }
         }
       });
-      print('FirebaseToken: ${FirebaseApi.firebaseToken}');
+      log('FirebaseToken: ${FirebaseApi.firebaseToken}');
       if (FirebaseApi.firebaseToken == null) {
-        print('FirebaseToken is null');
+        log('FirebaseToken is null');
       } else if (context.read<AuthBloc>().state is Authorized) {
         socket.emit("setup", FirebaseApi.firebaseToken);
       }
     });
-    socket.onDisconnect((data) => print('Disconnected $data'));
-    socket.onConnectError((data) => print('ConnectError $data'));
-    socket.onConnectTimeout((data) => print('ConnectTimeout $data'));
-    socket.onReconnect((data) => print('Reconnect $data'));
-    socket.onReconnectAttempt((data) => print('ReconnectAttempt $data'));
-    socket.onReconnecting((data) => print('Reconnecting $data'));
+    socket.onDisconnect((data) => log('Disconnected $data'));
+    socket.onConnectError((data) => log('ConnectError $data'));
+    socket.onConnectTimeout((data) => log('ConnectTimeout $data'));
+    socket.onReconnect((data) => log('Reconnect $data'));
+    socket.onReconnectAttempt((data) => log('ReconnectAttempt $data'));
+    socket.onReconnecting((data) => log('Reconnecting $data'));
 
     socket.connect();
   }
@@ -194,7 +194,7 @@ class SocketService {
         imageMessagesToRetried.add(sentMessage);
       } catch (e) {
         // Handle the error
-        print("can't upload image");
+        log("can't upload image");
         imageMessagesToRetried.add(sentMessage);
       }
     }
@@ -248,7 +248,7 @@ class SocketService {
     messagesToRetry.clear();
   }
 
-  //TODO: message not sent, check instant reading message
+  // message not sent, check instant reading message
   void sendTypingEvent(String chatId, BuildContext context) {
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
@@ -273,7 +273,7 @@ class SocketService {
 
   void sendDeleteChatRoomEvent(String chatId) {
     socket.emitWithAck('delete chat room', chatId, ack: (data) {
-      print('chat room deleted');
+      log('chat room deleted');
     });
   }
 
@@ -386,7 +386,7 @@ class SocketService {
   }
 
   void disconnect() {
-    print('disconnect');
+    log('disconnect');
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Ensure to cancel the timer on disconnect
     }

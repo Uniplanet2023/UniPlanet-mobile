@@ -1,9 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniket/constants/utils.dart';
 import 'package:uniket/global.dart';
-import 'package:uniket/network/api_def/api_status/signup.dart';
 import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniket/network/socket/socket_channel.dart';
 
@@ -149,11 +147,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       String msg = await _authRepository.signInUser(
           email: event.email, password: event.password);
       if (msg == 'success') {
-        print('User ID: ${AuthRepository.userId}');
+        log('User ID: ${AuthRepository.userId}');
         Global.socketService = SocketService(AuthRepository.userId!);
         Global.socketService.connect();
         emit(const Authorized());
-      } else if (msg == USER_NOT_VERIFIED) {
+      } else if (msg == 'Verification required') {
         emit(const UserNotVerifiedState());
       } else {
         emit(const SigninFailedState());
@@ -183,6 +181,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   void onTransition(Transition<AuthEvent, AuthState> transition) {
     super.onTransition(transition);
-    debugPrint(transition.toString());
+    log(transition);
   }
 }

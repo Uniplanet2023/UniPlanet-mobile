@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:uniket/bloc/index.dart';
-import 'package:uniket/bloc/like/like_bloc.dart';
 import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/constants/number_formatter.dart';

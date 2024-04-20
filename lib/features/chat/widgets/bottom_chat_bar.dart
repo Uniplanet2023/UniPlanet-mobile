@@ -108,7 +108,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
             .read<MessageBloc>()
             .add(SentMessageEvent(sentMessage));
       } catch (e) {
-        print(e);
+        log(e);
       }
     }
     widget.scrollDownfuction();
@@ -265,7 +265,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: GlobalVariables.greyBackgroundCOlor,
+                    fillColor: GlobalVariables.greyBackgroundColor,
                     prefixIcon: SizedBox(
                       width: 50,
                       child: Row(

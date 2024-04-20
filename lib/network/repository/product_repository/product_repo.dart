@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:uniket/global.dart';
 import 'package:uniket/models/product.dart';
 import 'package:uniket/models/user_model.dart';
@@ -26,7 +27,7 @@ class ProductRepository {
         return "success";
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return 'failed';
   }
@@ -48,7 +49,7 @@ class ProductRepository {
         return productList;
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return productList;
   }
@@ -70,7 +71,7 @@ class ProductRepository {
         return productList;
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return productList;
   }
@@ -96,7 +97,7 @@ class ProductRepository {
         return product;
       }
     } on DioException catch (e) {
-      print("Dio Error - $e");
+      log("Dio Error - $e");
     }
     return null;
   }
@@ -129,7 +130,7 @@ class ProductRepository {
         return Product.fromMap(response.data);
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return null;
   }
@@ -164,7 +165,7 @@ class ProductRepository {
       // Check if the product update was successful
       return newProduct;
     } catch (e) {
-      print("An error occurred: $e");
+      log("An error occurred: $e");
       // Handle errors, e.g., by showing an error message to the user
     }
     return null;
@@ -188,7 +189,7 @@ class ProductRepository {
         throw Exception("Failed to like product");
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return false;
   }
@@ -211,7 +212,7 @@ class ProductRepository {
         throw Exception("Failed to unlike product");
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return false;
   }
@@ -231,7 +232,7 @@ class ProductRepository {
         return productList;
       }
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return productList;
   }
@@ -248,13 +249,13 @@ class ProductRepository {
       if (msg == "success") {
         var productDataObj = jsonDecode(response.data);
         for (var productData in productDataObj) {
-          print(productData);
+          log(productData);
           productList.add(Product.fromMap(productData));
         }
         return productList;
       }
     } on DioException catch (e) {
-      print('DioException occurred: ${e.message}');
+      log('DioException occurred: ${e.message}');
     }
     return productList;
   }
@@ -265,9 +266,9 @@ class ProductRepository {
         '$productURI/increase-click/$productId',
         options: _dioClient.getDioOptions(),
       );
-      print(response.data);
+      log(response.data);
     } on DioException catch (e) {
-      print('DioException occurred: ${e.message}');
+      log('DioException occurred: ${e.message}');
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniket/constants/utils.dart';
 // Repositories
 import 'package:uniket/network/repository/product_repository/product_repo.dart';
 // Models
@@ -71,8 +72,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
 
   @override
   void onChange(Change<LikeState> change) {
-    // TODO: implement onChange
     super.onChange(change);
-    print(change);
+    log(change);
   }
 }

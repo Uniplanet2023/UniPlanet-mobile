@@ -14,7 +14,7 @@ class GlobalVariables {
   static const primaryColor = Color.fromARGB(255, 125, 221, 216);
   static const secondaryColor = Color.fromRGBO(78, 132, 233, 1);
   static const backgroundColor = Colors.white;
-  static const Color greyBackgroundCOlor = Color(0xffebecee);
+  static const Color greyBackgroundColor = Color(0xffebecee);
   static const selectedNavBarColor = Color.fromRGBO(60, 220, 228, 1);
   static const unselectedNavBarColor = Colors.black87;
   static const bezierContainerColor = [

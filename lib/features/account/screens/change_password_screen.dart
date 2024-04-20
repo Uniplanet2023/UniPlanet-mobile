@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniket/bloc/auth/auth_bloc.dart';
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/common/widgets/custom_button.dart';
 import 'package:uniket/common/widgets/custom_textfield.dart';
@@ -64,9 +63,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.greyBackgroundCOlor,
+      backgroundColor: GlobalVariables.greyBackgroundColor,
       appBar: AppBar(
-        backgroundColor: GlobalVariables.greyBackgroundCOlor,
+        backgroundColor: GlobalVariables.greyBackgroundColor,
         title: const Text('Change Password'),
       ),
       body: SingleChildScrollView(

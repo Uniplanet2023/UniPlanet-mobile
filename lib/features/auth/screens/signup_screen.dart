@@ -9,7 +9,7 @@ import 'package:uniket/common/widgets/custom_button.dart';
 import 'package:uniket/common/widgets/custom_textfield.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/auth/functions/signup.dart';
-import 'package:uniket/features/auth/widgets/bezierContainer.dart';
+import 'package:uniket/features/auth/widgets/bezier_container.dart';
 import 'package:uniket/features/auth/widgets/terms_and_conditions.dart';
 import 'package:uniket/constants/university_list.dart';
 

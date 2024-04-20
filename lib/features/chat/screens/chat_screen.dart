@@ -134,7 +134,6 @@ class _ChatScreenState extends State<ChatScreen> {
       body: BlocListener<MessageBloc, MessageBlocState>(
         listener: (context, state) {
           var chatMessages = state.chatMessages[widget.chatRoomId] ?? [];
-          // TODO: implement listener
           if (state is LoadingMessageState ||
               state is LoadedMessageState ||
               state is ReceivedMessageState ||

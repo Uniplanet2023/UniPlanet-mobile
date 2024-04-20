@@ -66,9 +66,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.greyBackgroundCOlor,
+      backgroundColor: GlobalVariables.greyBackgroundColor,
       appBar: AppBar(
-        backgroundColor: GlobalVariables.greyBackgroundCOlor,
+        backgroundColor: GlobalVariables.greyBackgroundColor,
         title: const Text('Account Settings'),
       ),
       body: SingleChildScrollView(

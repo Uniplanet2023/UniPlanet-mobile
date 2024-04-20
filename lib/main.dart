@@ -8,7 +8,7 @@ import 'package:uniket/common/widgets/bottom_bar.dart';
 import 'package:uniket/common/widgets/error_screen.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/auth/screens/signup-screen.dart';
+import 'package:uniket/features/auth/screens/signup_screen.dart';
 import 'package:uniket/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniket/global.dart';
 import 'package:uniket/common/routes/router.dart';
@@ -17,7 +17,7 @@ import 'package:uniket/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("Handling a background message:");
+  log("Handling a background message:");
 
   if (message.data.containsKey('type')) {
     final String type = message.data['type'];
@@ -27,10 +27,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         break;
       case 'creating chat':
         creatingChatHandler(message);
-        debugPrint('notification');
+        log('notification');
         break;
       default:
-        debugPrint('Unable to handle message');
+        log('Unable to handle message');
     }
   }
 }
@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    print('dispose  called main.dart');
+    log('dispose  called main.dart');
     Global.socketService.disconnect();
     WidgetsBinding.instance.removeObserver(this);
   }
@@ -90,15 +90,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      print('resumed');
+      log('resumed');
     } else if (state == AppLifecycleState.paused) {
-      print('paused');
+      log('paused');
       // App is paused (sent to background)
     } else if (state == AppLifecycleState.inactive) {
-      print('inactive');
+      log('inactive');
       // App is inactive (terminated)
     } else if (state == AppLifecycleState.detached) {
-      print('detached');
+      log('detached');
       // App is detached (app suspended in the background)
       Global.socketService.disconnect();
     }

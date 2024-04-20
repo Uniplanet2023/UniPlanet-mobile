@@ -7,7 +7,6 @@ sealed class ProductEvent extends Equatable {
 class LoadProductEvent extends ProductEvent {
   const LoadProductEvent();
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 

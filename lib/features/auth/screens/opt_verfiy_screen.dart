@@ -5,7 +5,7 @@ import 'package:uniket/bloc/auth/auth_bloc.dart';
 import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/common/widgets/custom_button.dart';
 import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/auth/functions/opt-verification.dart';
+import 'package:uniket/features/auth/functions/opt_verification.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;

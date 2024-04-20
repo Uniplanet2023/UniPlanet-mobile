@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:uniket/models/product.dart';
 import 'package:uniket/network/repository/product_repository/product_repo.dart';
 
+import '../../constants/utils.dart';
+
 part 'category_event.dart';
 part 'category_state.dart';
 
@@ -74,12 +76,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   @override
   void onChange(Change<CategoryState> change) {
     super.onChange(change);
-    print(change);
+    log(change);
   }
 
   @override
   void onTransition(Transition<CategoryEvent, CategoryState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    // log(transition);
   }
 }

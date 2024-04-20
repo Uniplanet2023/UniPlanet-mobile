@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:uniket/features/chat/screens/chat_screen.dart';
 import 'package:uniket/main.dart';
 import 'package:uniket/models/user_model.dart';
@@ -53,7 +54,7 @@ class NotificationService {
         notificationAllowRequest(pref);
       }
     } catch (e) {
-      debugPrint(e.toString());
+      log(e);
     }
   }
 
@@ -81,17 +82,17 @@ class NotificationService {
   // Use this method to detect when a new notification or a schedule is created
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
-    debugPrint('Notification created: ${receivedNotification.id}');
+    log('Notification created: ${receivedNotification.id}');
   }
 
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    debugPrint('Notification displayed: ${receivedNotification.id}');
+    log('Notification displayed: ${receivedNotification.id}');
   }
 
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    debugPrint('Notification action: ${receivedAction.id}');
+    log('Notification action: ${receivedAction.id}');
     try {
       BuildContext? context = MyApp.navigatorKey.currentContext;
       if (receivedAction.payload?['navigate'] == 'true') {
@@ -117,13 +118,13 @@ class NotificationService {
         }
       }
     } catch (e) {
-      print(e);
+      log(e);
     }
   }
 
   static Future<void> onDismissActionReceived(
       ReceivedAction receivedAction) async {
-    debugPrint('Notification dismissed: ${receivedAction.id}');
+    log('Notification dismissed: ${receivedAction.id}');
     final payload = receivedAction.payload ?? {};
     if (payload['navigate'] == 'true') {
       MyApp.navigatorKey.currentState?.push(

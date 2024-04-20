@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/bloc/category/category_bloc.dart';
 import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniket/bloc/index.dart';
-import 'package:uniket/bloc/product/product_bloc.dart';
 import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/home/widgets/buildProductBox.dart';
+import 'package:uniket/features/home/widgets/build_product_box.dart';
 import 'package:uniket/models/product.dart';
 
 class HomeScreen extends StatefulWidget {

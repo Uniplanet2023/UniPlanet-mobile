@@ -111,7 +111,7 @@ class ChatRepository {
     if (e.response != null) {
       SnackbarGlobal.showSnackBar(e.response!.data['msg'].toString());
     } else {
-      print(e);
+      log(e);
     }
   }
 }

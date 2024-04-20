@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniket/bloc/auth/auth_bloc.dart';
+import 'package:uniket/constants/utils.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
 
   @override
-  _ResetPasswordPageState createState() => _ResetPasswordPageState();
+  ResetPasswordPageState createState() => ResetPasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class ResetPasswordPageState extends State<ResetPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -19,7 +20,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           .read<AuthBloc>()
           .add(ResetPasswordEvent(email: _emailController.text));
       // Implement your logic to send a reset password email
-      print('Sending reset password link to: ${_emailController.text}');
+      log('Sending reset password link to: ${_emailController.text}');
     }
   }
 

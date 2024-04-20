@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uniket/constants/utils.dart';
 
 class FirebaseApi {
   late String userId;
@@ -28,19 +29,19 @@ class FirebaseApi {
       firebaseToken = fcmToken;
     }
 
-    print('FCM Token: $firebaseToken');
+    log('FCM Token: $firebaseToken');
     // } else {
-    //   print('User declined permission');
+    //   log('User declined permission');
     // }
   }
 
   Future<void> subscribeToTopic(String topic) async {
     await firebaseMessaging.subscribeToTopic(topic);
-    print('Subscribed to $topic');
+    log('Subscribed to $topic');
   }
 
   Future<void> unsubscribeFromTopic(String topic) async {
     await firebaseMessaging.unsubscribeFromTopic(topic);
-    print('Unsubscribed from $topic');
+    log('Unsubscribed from $topic');
   }
 }

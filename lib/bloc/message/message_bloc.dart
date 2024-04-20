@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/common/enums/message_enum.dart';
 import 'package:uniket/common/enums/message_status_enum.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:uniket/global.dart';
 // Models
 import 'package:uniket/models/message.dart';
@@ -289,7 +290,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
           page: state.page,
           pendingMessages: state.pendingMessages));
     } catch (e) {
-      print(e.toString());
+      log(e);
       // Handle error, similar to success but marking the message as error
       List<Message> updatedMessagesWithError = chatMessages.map((message) {
         if (message.id == uniqueId) {
@@ -338,19 +339,19 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
             pendingMessages: state.pendingMessages));
       }
     } catch (e) {
-      print(e);
+      log(e);
     }
   }
 
   @override
   void onChange(Change<MessageBlocState> change) {
     super.onChange(change);
-    print(change);
+    log(change);
   }
 
   @override
   void onTransition(Transition<MessageBlocEvent, MessageBlocState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    // log(transition);
   }
 }

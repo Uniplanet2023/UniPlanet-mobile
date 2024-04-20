@@ -4,7 +4,7 @@ import 'package:uniket/bloc/index.dart';
 import 'package:uniket/common/functions/streamer.dart';
 import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/account/screens/account-screen.dart';
+import 'package:uniket/features/account/screens/account_screen.dart';
 import 'package:uniket/features/add-product/screens/add_product_screen.dart';
 import 'package:uniket/features/category/screens/category_layout_screen.dart';
 import 'package:uniket/features/chat/screens/chat_layout_screen.dart';

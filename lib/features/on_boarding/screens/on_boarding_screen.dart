@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:uniket/features/on_boarding/screens/first_page.dart';
 import 'package:uniket/features/on_boarding/screens/second_page.dart';
 import 'package:uniket/features/on_boarding/screens/third_page.dart';
@@ -28,7 +29,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void _nextPage() {
     if (_isLastPage) {
       // Handle "Finish" or navigation to another part of your app
-      print('Finish onboarding');
+      log('Finish onboarding');
     } else {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),

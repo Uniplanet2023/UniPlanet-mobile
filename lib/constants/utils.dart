@@ -30,7 +30,7 @@ Future<List<File>> pickImages() async {
           .take(10)); // Limit to 5 files
     }
   } catch (e) {
-    debugPrint(e.toString());
+    log(e);
   }
   return images;
 }
@@ -40,7 +40,7 @@ Future<List<XFile>> pickImagesFromGallery(BuildContext context) async {
   try {
     pickedImages = await ImagePicker().pickMultiImage();
   } catch (e) {
-    debugPrint('Error picking images: $e');
+    log('Error picking images: $e');
   }
   return pickedImages;
 }
@@ -89,3 +89,14 @@ Future<File?> openCamera() async {
   }
   return null;
 }
+
+// Development vs Deployment print()
+
+// During development use log to print() in the Debug Console
+// ignore_for_file: avoid_print, uncomment the function below during Development
+void log(message) => print(message);
+
+// During deployment make the funtion null, uncomment the function below during Deployment
+// void log(message) {
+//   return;
+// }

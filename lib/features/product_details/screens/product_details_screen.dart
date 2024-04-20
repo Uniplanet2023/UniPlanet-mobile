@@ -48,7 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   return GestureDetector(
                     onTap: () => _openGallery(context, entry.key),
                     child: Hero(
-                      tag: "product-picture-${widget.product.id}-${entry.key}",
+                      tag: "product-picture-${widget.product.id}",
                       child: CachedNetworkImage(
                         cacheManager: GlobalVariables.customCacheManager,
                         imageUrl: image,
@@ -274,23 +274,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ],
       ),
       bottomNavigationBar: _buildBottomAppBar(),
-    );
-  }
-
-  Widget _buildPopupIcon(BuildContext context) {
-    return Positioned(
-      top: MediaQuery.of(context).padding.top, // Align top with padding
-      left: 0, // Align to the left side of the screen
-      child: SafeArea(
-        // Ensures it is within the safe area of the screen
-        child: IconButton(
-          icon: const Icon(Icons.menu, size: 30), // Customize your icon here
-          onPressed: () {
-            // Define your popup menu or navigation drawer opening logic here
-            print("Popup menu icon tapped!");
-          },
-        ),
-      ),
     );
   }
 

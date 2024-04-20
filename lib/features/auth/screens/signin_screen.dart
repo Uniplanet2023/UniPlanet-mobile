@@ -7,8 +7,8 @@ import 'package:uniket/common/widgets/custom_button.dart';
 import 'package:uniket/common/widgets/custom_textfield.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/auth/screens/forgotten_password_screen.dart';
-import 'package:uniket/features/auth/screens/signup-screen.dart';
-import 'package:uniket/features/auth/widgets/bezierContainer.dart';
+import 'package:uniket/features/auth/screens/signup_screen.dart';
+import 'package:uniket/features/auth/widgets/bezier_container.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});

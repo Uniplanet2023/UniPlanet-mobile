@@ -10,6 +10,8 @@ import 'package:uniket/network/api_def/dio_client.dart';
 import 'package:uniket/network/notification/notification_handler/notification_service.dart';
 import 'package:uniket/network/socket/socket_channel.dart';
 
+import 'constants/utils.dart';
+
 class Global {
   static final cloudinary = CloudinaryPublic('dtgmmfv3d', 'l1zymzfi');
   static late SocketService socketService;
@@ -34,7 +36,7 @@ class Global {
       sound: false,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint("Received a message in the foreground: $message");
+      log("Received a message in the foreground: $message");
     });
 
     SystemChrome.setPreferredOrientations([

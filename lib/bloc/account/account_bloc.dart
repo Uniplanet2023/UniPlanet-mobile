@@ -5,6 +5,8 @@ import 'package:uniket/global.dart';
 import 'package:uniket/models/account.dart';
 import 'package:uniket/network/repository/account_repository/account_repo.dart';
 
+import '../../constants/utils.dart';
+
 part 'account_event.dart';
 part 'account_state.dart';
 
@@ -83,12 +85,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   @override
   void onChange(Change<AccountState> change) {
     super.onChange(change);
-    print(change);
+    log(change);
   }
 
   @override
   void onTransition(Transition<AccountEvent, AccountState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    // log(transition);
   }
 }

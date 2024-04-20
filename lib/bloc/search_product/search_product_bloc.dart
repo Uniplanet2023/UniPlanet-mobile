@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:uniket/models/product.dart';
 import 'package:uniket/network/repository/product_repository/product_repo.dart';
 
@@ -60,13 +61,13 @@ class SearchProductBloc
   @override
   void onChange(Change<SearchProductState> change) {
     super.onChange(change);
-    print(change);
+    log(change);
   }
 
   @override
   void onTransition(
       Transition<BaseSearchProductEvent, SearchProductState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    // log(transition);
   }
 }

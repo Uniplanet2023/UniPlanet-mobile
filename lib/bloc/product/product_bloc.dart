@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniket/bloc/index.dart';
+import 'package:uniket/constants/utils.dart';
 // Models
 import 'package:uniket/models/product.dart';
 import 'package:uniket/models/user_model.dart';
@@ -146,12 +147,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   @override
   void onChange(Change<ProductState> change) {
     super.onChange(change);
-    print(change);
+    log(change);
   }
 
   @override
   void onTransition(Transition<ProductEvent, ProductState> transition) {
     super.onTransition(transition);
-    // print(transition);
+    // log(transition);
   }
 }

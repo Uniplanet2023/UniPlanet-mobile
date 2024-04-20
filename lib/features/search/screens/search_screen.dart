@@ -4,8 +4,8 @@ import 'package:uniket/bloc/search_product/search_product_bloc.dart';
 import 'package:uniket/common/widgets/loader.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:uniket/features/search/widget/search-history-list.dart';
-import 'package:uniket/features/search/widget/searched-product-list.dart';
+import 'package:uniket/features/search/widget/search_history_list.dart';
+import 'package:uniket/features/search/widget/searched_product_list.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({

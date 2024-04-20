@@ -18,11 +18,10 @@ class GalleryPhotoViewWrapper extends StatefulWidget {
   });
 
   @override
-  _GalleryPhotoViewWrapperState createState() =>
-      _GalleryPhotoViewWrapperState();
+  GalleryPhotoViewWrapperState createState() => GalleryPhotoViewWrapperState();
 }
 
-class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
+class GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
   late int currentIndex;
 
   @override

@@ -68,7 +68,6 @@ class AuthRepository implements IAuthRepository {
       }
       return msg;
     } on DioException catch (e) {
-      //TODO: Handle error
       return e.response!.data['message'];
     }
   }
@@ -140,7 +139,7 @@ class AuthRepository implements IAuthRepository {
       }
       return false;
     } on DioException catch (e) {
-      print(e);
+      log(e);
     }
     return false; // Return false if the condition is not met
   }

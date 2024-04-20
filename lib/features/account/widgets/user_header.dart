@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniket/bloc/account/account_bloc.dart';
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/constants/utils.dart';
@@ -50,7 +48,7 @@ class _UserHeaderState extends State<UserHeader> {
       }
     } else {
       // Handle the case where no image is picked
-      print("No image selected");
+      log("No image selected");
     }
   }
 
