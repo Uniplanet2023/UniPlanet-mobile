@@ -75,9 +75,8 @@ class SocketService {
         }
       });
       socket.on('chat room deleted', (data) {
-        log('chat room deleted');
-        var chat = jsonDecode(data);
-        context.read<ChatBloc>().add(DeleteChatRoomEvent(chatId: chat['id']));
+        var chat = data['chatRoom'];
+        context.read<ChatBloc>().add(DeletedChatByClient(chatId: chat));
       });
       socket.on('online user', (userId) {
         if (context.mounted) {

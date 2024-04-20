@@ -1,0 +1,88 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:uniket/models/product.dart';
+import 'package:uniket/network/repository/product_repository/product_repo.dart';
+
+part 'on_sale_product_event.dart';
+part 'on_sale_product_state/basic_state.dart';
+part 'on_sale_product_state/load_product_state.dart';
+part 'on_sale_product_state/load_more_product_state.dart';
+
+class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
+  final ProductRepository _productRepository;
+  OnSaleProductBloc(this._productRepository)
+      : super(const OnSaleProductInitial(onSaleProduct: [], onSalePage: 1)) {
+    on<LoadOnSaleProductEvent>((event, emit) async {
+      await _loadOnSaleProduct(event, emit);
+    });
+    on<LoadMoreOnSaleProductEvent>((event, emit) async {
+      await _loadMoreOnSaleProduct(event, emit);
+    });
+    on<DeleteOnSaleProductEvent>((event, emit) async {
+      await _deleteOnSaleProduct(event, emit);
+    });
+  }
+  _deleteOnSaleProduct(DeleteOnSaleProductEvent event, emit) async {
+    emit(LoadingOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+    state.onSaleProduct.remove(event.product);
+    emit(LoadedOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+  }
+
+  _loadOnSaleProduct(LoadOnSaleProductEvent event, emit) async {
+    emit(const LoadingOnSaleProductState(
+      onSaleProduct: [],
+      onSalePage: 1,
+    ));
+
+    List<Product>? myProducts = await _productRepository.getMyProduct(
+        page: state.onSalePage, status: 'on-sale');
+    if (myProducts == null) {
+      emit(const ErrorOnSaleProductState("Error"));
+      return;
+    }
+    if (myProducts.isEmpty) {
+      emit(EndOnSaleProductState(
+        onSaleProduct: state.onSaleProduct,
+        onSalePage: state.onSalePage,
+      ));
+      return;
+    }
+
+    emit(LoadedOnSaleProductState(
+      onSaleProduct: myProducts,
+      onSalePage: state.onSalePage,
+    ));
+  }
+
+  _loadMoreOnSaleProduct(LoadMoreOnSaleProductEvent event, emit) async {
+    emit(LoadedOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+    int nextPage = state.onSalePage + 1;
+    List<Product>? onSaleProduct = await _productRepository.getMyProduct(
+        page: nextPage, status: "on-sale");
+    if (onSaleProduct == null) {
+      emit(const ErrorOnSaleProductState("Error"));
+      return;
+    }
+    if (onSaleProduct.isEmpty) {
+      emit(EndOnSaleProductState(
+        onSaleProduct: state.onSaleProduct,
+        onSalePage: state.onSalePage,
+      ));
+      return;
+    }
+    state.onSaleProduct.addAll(onSaleProduct);
+    emit(LoadedOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+  }
+}

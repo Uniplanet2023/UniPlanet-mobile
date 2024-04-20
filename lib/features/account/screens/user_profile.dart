@@ -126,7 +126,6 @@ class UserProfileScreen extends StatelessWidget {
                     "./assets/images/listings.jpeg",
                     "Items currently available for sale by ${user.name}",
                     InventoryProductsScreen(
-                      controller: ScrollController(),
                       user: user,
                     ),
                     Icons.inventory_sharp),
@@ -139,7 +138,6 @@ class UserProfileScreen extends StatelessWidget {
                     "./assets/images/sold.jpeg",
                     "Previously sold items by ${user.name}",
                     SoldProductsScreen(
-                      controller: ScrollController(),
                       user: user,
                     ),
                     Icons.history),

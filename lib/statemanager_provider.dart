@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniket/bloc/index.dart';
+import 'package:uniket/bloc/on_sale_product/on_sale_product_bloc.dart';
 import 'package:uniket/bloc/search_history/search_history_bloc.dart';
+import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniket/main.dart';
 import 'network/repository/index.dart';
 
@@ -56,6 +58,12 @@ class StateManagerProvider extends StatelessWidget {
           BlocProvider(
               create: (context) =>
                   SearchHistoryBloc(context.read<AccountRepository>())),
+          BlocProvider(
+              create: (context) =>
+                  OnSaleProductBloc(context.read<ProductRepository>())),
+          BlocProvider(
+              create: (context) =>
+                  SoldProductBloc(context.read<ProductRepository>())),
         ], child: const MyApp()));
   }
 }

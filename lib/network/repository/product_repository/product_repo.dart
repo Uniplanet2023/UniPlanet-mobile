@@ -140,21 +140,27 @@ class ProductRepository {
     required Product product,
   }) async {
     try {
-      final List<Future<Null>> uploadTasks;
-      final imageUrls = <String>[];
+      final imageUrls =
+          List<String?>.filled(images?.length ?? 0, null, growable: false);
+      print(product.id);
       if (images != null) {
         // Concurrently upload all images and collect their URLs
-        uploadTasks = images.map((image) async {
+        final uploadTasks =
+            List<Future<void>>.generate(images.length, (index) async {
+          final image = images[index];
           final response = await Global.cloudinary.uploadFile(
             CloudinaryFile.fromFile(image.path,
                 folder: 'product-images/${product.id}'),
           );
-          imageUrls.add(response.secureUrl); // Collect each image URL
-        }).toList();
+          imageUrls[index] = response
+              .secureUrl; // Place each image URL in the corresponding position
+        });
 
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
-        product.images.addAll(imageUrls);
+
+        // Remove any nulls in case some uploads failed
+        product.images.addAll(imageUrls.whereType<String>());
       }
 
       // After all uploads, update the product with the collected image URLs
@@ -217,11 +223,12 @@ class ProductRepository {
     return false;
   }
 
-  Future<List<Product>> getProductLikes() async {
+  Future<List<Product>> getProductLikes({required int page}) async {
     final productList = <Product>[];
     try {
       final response = await _dioClient.dio.get(
         '$productURI/get-like-product',
+        queryParameters: {'page': page},
         options: _dioClient.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
@@ -258,6 +265,27 @@ class ProductRepository {
       log('DioException occurred: ${e.message}');
     }
     return productList;
+  }
+
+  Future<List<Product>?> getMyProduct(
+      {required int page, required String status}) async {
+    var productList = <Product>[];
+    try {
+      var response = await _dioClient.dio.get(
+        '$productURI/get-my-products/$status',
+        queryParameters: {'page': page},
+        options: _dioClient.getDioOptions(),
+      );
+
+      var productDataObj = jsonDecode(response.data);
+      for (var productData in productDataObj) {
+        productList.add(Product.fromMap(productData));
+      }
+      return productList;
+    } on DioException catch (e) {
+      print('DioException occurred: ${e.message}');
+      return null;
+    }
   }
 
   void clickProduct(String productId) async {
