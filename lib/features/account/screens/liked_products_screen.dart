@@ -20,6 +20,7 @@ class _LikedProductsScreenState extends State<LikedProductsScreen> {
       setState(() {
         isLoadingMore = true;
       });
+      context.read<LikeBloc>().add(const LoadMoreLikeEvent());
       // Simulate a delay to load more items
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {

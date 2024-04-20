@@ -18,6 +18,13 @@ final class LoadLikeEvent extends LikeEvent {
   List<Object> get props => [];
 }
 
+// Load More Like
+final class LoadMoreLikeEvent extends LikeEvent {
+  const LoadMoreLikeEvent();
+  @override
+  List<Object> get props => [];
+}
+
 // Add Like
 final class AddLikeEvent extends LikeEvent {
   final Product product;

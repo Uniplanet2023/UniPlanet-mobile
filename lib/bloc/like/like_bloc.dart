@@ -11,7 +11,8 @@ part 'like_state.dart';
 
 class LikeBloc extends Bloc<LikeEvent, LikeState> {
   final ProductRepository _likeRepository;
-  LikeBloc(this._likeRepository) : super(const LikeInitial(likeProduct: [])) {
+  LikeBloc(this._likeRepository)
+      : super(const LikeInitial(likeProduct: [], page: 1)) {
     on<AddLikeEvent>((event, emit) async {
       await _addLike(event, emit);
     });
@@ -21,13 +22,34 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     on<LoadLikeEvent>((event, emit) async {
       await _loadLike(event, emit);
     });
+    on<LoadMoreLikeEvent>((event, emit) async {
+      await _loadMoreLike(event, emit);
+    });
   }
-  _loadLike(LoadLikeEvent event, emit) async {
-    emit(const LikeLoading(likeProduct: []));
+  _loadMoreLike(LoadMoreLikeEvent event, emit) async {
+    emit(LikeLoading(likeProduct: state.likeProduct, page: state.page));
     try {
-      List<Product> likeProduct = await _likeRepository.getProductLikes();
+      int nextPage = state.page + 1;
+      List<Product> likeProduct =
+          await _likeRepository.getProductLikes(page: nextPage);
+      if (likeProduct.isEmpty) {
+        emit(LikeEnd(likeProduct: state.likeProduct, page: state.page));
+        return;
+      }
+      state.likeProduct.addAll(likeProduct);
+      emit(LikeLoaded(likeProduct: state.likeProduct, page: nextPage));
+    } catch (e) {
+      emit(LikeError(message: e.toString()));
+    }
+  }
 
-      emit(LikeLoaded(likeProduct: likeProduct));
+  _loadLike(LoadLikeEvent event, emit) async {
+    emit(const LikeLoading(likeProduct: [], page: 1));
+    try {
+      List<Product> likeProduct =
+          await _likeRepository.getProductLikes(page: state.page);
+
+      emit(LikeLoaded(likeProduct: likeProduct, page: state.page));
     } catch (e) {
       emit(LikeError(message: e.toString()));
     }

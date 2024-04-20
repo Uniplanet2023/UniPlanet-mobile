@@ -222,11 +222,12 @@ class ProductRepository {
     return false;
   }
 
-  Future<List<Product>> getProductLikes() async {
+  Future<List<Product>> getProductLikes({required int page}) async {
     final productList = <Product>[];
     try {
       final response = await _dioClient.dio.get(
         '$productURI/get-like-product',
+        queryParameters: {'page': page},
         options: _dioClient.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
