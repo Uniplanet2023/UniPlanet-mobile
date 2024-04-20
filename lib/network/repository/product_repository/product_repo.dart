@@ -142,7 +142,7 @@ class ProductRepository {
     try {
       final imageUrls =
           List<String?>.filled(images?.length ?? 0, null, growable: false);
-      print(product.id);
+      log(product.id);
       if (images != null) {
         // Concurrently upload all images and collect their URLs
         final uploadTasks =
@@ -283,7 +283,7 @@ class ProductRepository {
       }
       return productList;
     } on DioException catch (e) {
-      print('DioException occurred: ${e.message}');
+      log('DioException occurred: ${e.message}');
       return null;
     }
   }
