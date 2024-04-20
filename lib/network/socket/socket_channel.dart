@@ -75,7 +75,6 @@ class SocketService {
         }
       });
       socket.on('chat room deleted', (data) {
-        print('chat room deleted');
         var chat = data['chatRoom'];
         context.read<ChatBloc>().add(DeletedChatByClient(chatId: chat));
       });

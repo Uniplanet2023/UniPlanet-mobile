@@ -60,7 +60,6 @@ class _AccountScreen extends State<AccountScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => InventoryProductsScreen(
-                            controller: ScrollController(),
                             user: currentUser,
                           ),
                         ),
@@ -79,7 +78,6 @@ class _AccountScreen extends State<AccountScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SoldProductsScreen(
-                            controller: ScrollController(),
                             user: currentUser,
                           ),
                         ),
@@ -97,8 +95,7 @@ class _AccountScreen extends State<AccountScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LikedProductsScreen(
-                              controller: ScrollController()),
+                          builder: (context) => const LikedProductsScreen(),
                         ),
                       );
                     },
