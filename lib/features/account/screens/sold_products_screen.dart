@@ -19,7 +19,9 @@ class _SoldProductsScreenState extends State<SoldProductsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<SoldProductBloc>().add(const LoadSoldProductEvent());
+    context
+        .read<SoldProductBloc>()
+        .add(LoadSoldProductEvent(userId: widget.user.id));
     _scrollController.addListener(_loadMoreItems);
   }
 
@@ -36,7 +38,9 @@ class _SoldProductsScreenState extends State<SoldProductsScreen> {
       setState(() {
         _isLoadingMore = true;
       });
-      context.read<SoldProductBloc>().add(const LoadMoreSoldProductEvent());
+      context
+          .read<SoldProductBloc>()
+          .add(LoadMoreSoldProductEvent(userId: widget.user.id));
       // Simulate a delay to load more items
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
