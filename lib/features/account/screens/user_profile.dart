@@ -7,6 +7,7 @@ import 'package:uniket/features/account/screens/sold_products_screen.dart';
 import 'package:uniket/features/product_details/screens/seller_inventory_screen.dart';
 import 'package:uniket/features/product_details/screens/seller_sold_products_screen.dart';
 import 'package:uniket/models/user_model.dart';
+import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final User user;
@@ -127,9 +128,13 @@ class UserProfileScreen extends StatelessWidget {
                     "Listings",
                     "./assets/images/listings.jpeg",
                     "Items currently available for sale by ${user.name}",
-                    SellerProductsScreen(
-                      user: user,
-                    ),
+                    user.id == AuthRepository.userId
+                        ? InventoryProductsScreen(
+                            user: user,
+                          )
+                        : SellerProductsScreen(
+                            user: user,
+                          ),
                     Icons.inventory_sharp),
                 SizedBox(
                   height: 5.h,
@@ -139,9 +144,13 @@ class UserProfileScreen extends StatelessWidget {
                     "Sold",
                     "./assets/images/sold.jpeg",
                     "Previously sold items by ${user.name}",
-                    SellerSoldProductsScreen(
-                      user: user,
-                    ),
+                    user.id == AuthRepository.userId
+                        ? SoldProductsScreen(
+                            user: user,
+                          )
+                        : SellerSoldProductsScreen(
+                            user: user,
+                          ),
                     Icons.history),
               ],
             ),
