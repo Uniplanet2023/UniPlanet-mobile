@@ -1,4 +1,4 @@
-part of 'on_sale_product_bloc.dart';
+part of 'sale_product_bloc.dart';
 
 sealed class OnSaleProductEvent extends Equatable {
   const OnSaleProductEvent();
@@ -25,9 +25,4 @@ class AddOnSaleProductEvent extends OnSaleProductEvent {
 class DeleteOnSaleProductEvent extends OnSaleProductEvent {
   final Product product;
   const DeleteOnSaleProductEvent({required this.product});
-}
-
-class UpdateOnSaleProductEvent extends OnSaleProductEvent {
-  final Product product;
-  const UpdateOnSaleProductEvent({required this.product});
 }

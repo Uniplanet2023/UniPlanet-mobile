@@ -150,7 +150,7 @@ class ProductRepository {
           final image = images[index];
           final response = await Global.cloudinary.uploadFile(
             CloudinaryFile.fromFile(image.path,
-                folder: 'product-images/${product.id}'),
+                folder: 'product-images/${product.id}/'),
           );
           imageUrls[index] = response
               .secureUrl; // Place each image URL in the corresponding position

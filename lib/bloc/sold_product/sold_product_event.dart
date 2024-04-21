@@ -18,7 +18,8 @@ class LoadMoreSoldProductEvent extends SoldProductEvent {
 }
 
 class AddSoldProductEvent extends SoldProductEvent {
-  const AddSoldProductEvent();
+  final Product product;
+  const AddSoldProductEvent({required this.product});
 }
 
 class DeleteSoldProductEvent extends SoldProductEvent {

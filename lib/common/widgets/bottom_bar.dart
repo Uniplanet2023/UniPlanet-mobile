@@ -1,6 +1,8 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniket/bloc/index.dart';
+import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniket/common/functions/streamer.dart';
 import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/constants/global_variables.dart';
@@ -11,6 +13,7 @@ import 'package:uniket/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniket/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:uniket/network/repository/index.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -38,7 +41,12 @@ class _BottomBarState extends State<BottomBar> {
     context.read<AccountBloc>().add(const GetAccountInfoEvent());
     context.read<ChatBloc>().add(const LoadChatRoomEvent());
     context.read<LikeBloc>().add(const LoadLikeEvent());
-
+    context
+        .read<SoldProductBloc>()
+        .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
+    context
+        .read<OnSaleProductBloc>()
+        .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);

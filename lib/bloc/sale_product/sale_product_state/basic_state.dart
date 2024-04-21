@@ -1,4 +1,4 @@
-part of '../on_sale_product_bloc.dart';
+part of '../sale_product_bloc.dart';
 
 sealed class OnSaleProductState extends Equatable {
   final List<Product> onSaleProduct;

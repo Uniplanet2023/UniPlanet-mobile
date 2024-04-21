@@ -66,6 +66,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       List<Product> productList = state.productList;
       int index =
           productList.indexWhere((element) => element.id == updatedProduct.id);
+
       if (index != -1) {
         productList[index] = updatedProduct;
         emit(ProductUpdatedState(productList: productList, page: state.page));
@@ -100,10 +101,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         Product? product =
             await _productRepository.uploadImagesAndUpdateProduct(
                 images: event.images, product: productData);
+
         if (product != null) {
           List<Product> productList = state.productList;
           productList.insert(0, product);
-          emit(ProductImageUploadedState(productList: productList));
+          emit(ProductImageUploadedState(
+              productList: productList,
+              page: state.page,
+              uploadedProduct: product));
         } else {
           emit(ErrorProductUploadState("Error uploading product",
               productList: state.productList, page: state.page));

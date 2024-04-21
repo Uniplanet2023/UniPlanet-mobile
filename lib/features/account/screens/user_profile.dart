@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uniket/features/account/screens/inventory_products_screen.dart';
 import 'package:uniket/features/account/screens/sold_products_screen.dart';
+import 'package:uniket/features/product_details/screens/seller_inventory_screen.dart';
+import 'package:uniket/features/product_details/screens/seller_sold_products_screen.dart';
 import 'package:uniket/models/user_model.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -125,7 +127,7 @@ class UserProfileScreen extends StatelessWidget {
                     "Listings",
                     "./assets/images/listings.jpeg",
                     "Items currently available for sale by ${user.name}",
-                    InventoryProductsScreen(
+                    SellerProductsScreen(
                       user: user,
                     ),
                     Icons.inventory_sharp),
@@ -137,7 +139,7 @@ class UserProfileScreen extends StatelessWidget {
                     "Sold",
                     "./assets/images/sold.jpeg",
                     "Previously sold items by ${user.name}",
-                    SoldProductsScreen(
+                    SellerSoldProductsScreen(
                       user: user,
                     ),
                     Icons.history),

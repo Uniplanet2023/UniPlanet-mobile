@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:uniket/bloc/on_sale_product/on_sale_product_bloc.dart';
+import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniket/bloc/product/product_bloc.dart';
 import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniket/constants/global_variables.dart';
@@ -49,10 +49,20 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                                 product: widget.productList[index],
                               ),
                             );
+                        context.read<OnSaleProductBloc>().add(
+                              AddOnSaleProductEvent(
+                                product: widget.productList[index],
+                              ),
+                            );
                       } else if (widget.productList[index].status ==
                           'On Sale') {
                         context.read<OnSaleProductBloc>().add(
                               DeleteOnSaleProductEvent(
+                                product: widget.productList[index],
+                              ),
+                            );
+                        context.read<SoldProductBloc>().add(
+                              AddSoldProductEvent(
                                 product: widget.productList[index],
                               ),
                             );
@@ -102,6 +112,22 @@ class _InventoryProductBoxState extends State<InventoryProductBox> {
                       onPressed: (_) async => {
                         context.read<ProductBloc>().add(DeleteProductEvent(
                             productId: widget.productList[index].id)),
+                        if (widget.productList[index].status == 'Sold')
+                          {
+                            context.read<SoldProductBloc>().add(
+                                  DeleteSoldProductEvent(
+                                    product: widget.productList[index],
+                                  ),
+                                ),
+                          }
+                        else
+                          {
+                            context.read<OnSaleProductBloc>().add(
+                                  DeleteOnSaleProductEvent(
+                                    product: widget.productList[index],
+                                  ),
+                                ),
+                          },
                         widget.productList.removeAt(index),
                       },
                       icon: Icons.delete,

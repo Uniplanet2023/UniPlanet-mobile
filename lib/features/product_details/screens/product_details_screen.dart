@@ -3,17 +3,25 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:uniket/bloc/account/account_bloc.dart';
 import 'package:uniket/bloc/chat/chat_bloc.dart';
 import 'package:uniket/bloc/like/like_bloc.dart';
+import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniket/bloc/product/product_bloc.dart';
+import 'package:uniket/bloc/seller_sale_product/seller_sale_product_bloc.dart';
+import 'package:uniket/bloc/seller_sold_product/sold_product_bloc.dart';
+import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/common/widgets/full_image_gallery.dart';
 import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/account/screens/user_profile.dart';
 import 'package:uniket/features/account/widgets/remove_product_dialog.dart';
 import 'package:uniket/features/edit-product/edit_product.dart';
+import 'package:uniket/features/product_details/screens/seller_inventory_screen.dart';
+import 'package:uniket/features/product_details/screens/seller_sold_products_screen.dart';
+import 'package:uniket/features/product_details/widgets/seller_other_list.dart';
 import 'package:uniket/models/product.dart';
 import 'package:uniket/models/user_model.dart';
 
@@ -34,6 +42,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     super.initState();
     currentUser = context.read<AccountBloc>().state.account.user;
+    context
+        .read<SellerSaleProductBloc>()
+        .add(LoadSellerSaleProductEvent(userId: widget.product.seller.id));
+    context
+        .read<SellerSoldProductBloc>()
+        .add(LoadSellerSoldProductEvent(userId: widget.product.seller.id));
   }
 
   CarouselSlider _buildCarouselSlider() {
@@ -115,7 +129,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -170,7 +184,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   endIndent: 8,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: Text(
                     widget.product.name,
                     style: const TextStyle(
@@ -184,7 +198,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
                   child: RichText(
                     text: TextSpan(
                         text: "${widget.product.category} . ",
@@ -211,7 +225,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
                   child: RichText(
                     text: TextSpan(
                         text: 'Where to meet: ',
@@ -235,7 +249,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
                   child: Text(
                     'Description:',
                     style: TextStyle(
@@ -248,8 +262,64 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
                   child: Text(widget.product.description),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Divider(
+                  height: 4,
+                  color: Colors.black12,
+                  indent: 8,
+                  endIndent: 8,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween, // This will space out the children to the start and end of the row.
+                    children: [
+                      Text(
+                        'Seller\'s Other Products',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontFamily: GoogleFonts.roboto().fontFamily,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SellerProductsScreen(
+                                user: widget.product.seller,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.arrow_forward_ios_rounded),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //TODO: Add GridView for Seller's other products
+                BlocBuilder<SellerSaleProductBloc, SellerSaleProductState>(
+                  builder: (context, state) {
+                    if (state is LoadingSellerSaleProductState) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is LoadedSellerSaleProductState) {
+                      return SellerOtherProductsGrid(
+                        otherProducts: state.sellerProduct,
+                      );
+                    }
+                    return const SellerOtherProductsGrid(otherProducts: []);
+                  },
                 ),
               ],
             ),
@@ -343,6 +413,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     context.read<ProductBloc>().add(
                                         DeleteProductEvent(
                                             productId: widget.product.id));
+                                    if (widget.product.status == 'Sold') {
+                                      context.read<SoldProductBloc>().add(
+                                            DeleteSoldProductEvent(
+                                              product: widget.product,
+                                            ),
+                                          );
+                                    } else {
+                                      context.read<OnSaleProductBloc>().add(
+                                            DeleteOnSaleProductEvent(
+                                              product: widget.product,
+                                            ),
+                                          );
+                                    }
                                     Navigator.pop(context);
                                   }),
                                   icon: const Icon(

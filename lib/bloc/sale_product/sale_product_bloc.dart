@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:uniket/models/product.dart';
 import 'package:uniket/network/repository/product_repository/product_repo.dart';
 
-part 'on_sale_product_event.dart';
-part 'on_sale_product_state/basic_state.dart';
-part 'on_sale_product_state/load_product_state.dart';
-part 'on_sale_product_state/load_more_product_state.dart';
+part 'sale_product_event.dart';
+part 'sale_product_state/basic_state.dart';
+part 'sale_product_state/load_product_state.dart';
+part 'sale_product_state/load_more_product_state.dart';
 
 class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
   final ProductRepository _productRepository;
@@ -21,12 +21,30 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
     on<DeleteOnSaleProductEvent>((event, emit) async {
       await _deleteOnSaleProduct(event, emit);
     });
+    on<AddOnSaleProductEvent>((event, emit) async {
+      await _addOnSaleProduct(event, emit);
+    });
   }
+
+  _addOnSaleProduct(AddOnSaleProductEvent event, emit) async {
+    emit(LoadingOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+
+    state.onSaleProduct.insert(0, event.product);
+    emit(LoadedOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+  }
+
   _deleteOnSaleProduct(DeleteOnSaleProductEvent event, emit) async {
     emit(LoadingOnSaleProductState(
       onSaleProduct: state.onSaleProduct,
       onSalePage: state.onSalePage,
     ));
+
     state.onSaleProduct.remove(event.product);
     emit(LoadedOnSaleProductState(
       onSaleProduct: state.onSaleProduct,

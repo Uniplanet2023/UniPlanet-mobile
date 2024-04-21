@@ -19,9 +19,6 @@ class _SoldProductsScreenState extends State<SoldProductsScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<SoldProductBloc>()
-        .add(LoadSoldProductEvent(userId: widget.user.id));
     _scrollController.addListener(_loadMoreItems);
   }
 

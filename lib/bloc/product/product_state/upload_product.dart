@@ -5,7 +5,9 @@ final class ProductUploadingState extends ProductState {
 }
 
 final class ProductImageUploadedState extends ProductState {
-  const ProductImageUploadedState({super.productList, super.page});
+  final Product uploadedProduct;
+  const ProductImageUploadedState(
+      {super.productList, super.page, required this.uploadedProduct});
 }
 
 final class ProductUploadedState extends ProductState {

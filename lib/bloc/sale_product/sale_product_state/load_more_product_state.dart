@@ -1,7 +1,7 @@
-part of '../on_sale_product_bloc.dart';
+part of '../sale_product_bloc.dart';
 
-final class LoadingOnSaleProductState extends OnSaleProductState {
-  const LoadingOnSaleProductState({
+final class LoadingMoreOnSaleProductState extends OnSaleProductState {
+  const LoadingMoreOnSaleProductState({
     super.onSaleProduct,
     super.onSalePage,
   });
@@ -13,8 +13,8 @@ final class LoadingOnSaleProductState extends OnSaleProductState {
       ];
 }
 
-final class LoadedOnSaleProductState extends OnSaleProductState {
-  const LoadedOnSaleProductState({
+final class LoadedMoreOnSaleProductState extends OnSaleProductState {
+  const LoadedMoreOnSaleProductState({
     super.onSaleProduct,
     super.onSalePage,
   });

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniket/bloc/account/account_bloc.dart';
+import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniket/bloc/product/product_bloc.dart';
 import 'package:uniket/common/routes/names.dart';
 import 'package:uniket/common/widgets/custom_button.dart';
@@ -132,8 +133,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return BlocListener<ProductBloc, ProductState>(
       listener: (context, state) {
-        if (state is ProductUploadedState ||
-            state is ProductImageUploadedState) {
+        if (state is ProductImageUploadedState) {
+          context
+              .read<OnSaleProductBloc>()
+              .add(AddOnSaleProductEvent(product: state.uploadedProduct));
           Navigator.pushNamedAndRemoveUntil(
               context, AppRoutes.bottomBarPage, (route) => false);
         }

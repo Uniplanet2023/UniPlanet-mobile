@@ -21,7 +21,22 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
     on<DeleteSoldProductEvent>((event, emit) async {
       await _deleteSoldProduct(event, emit);
     });
+    on<AddSoldProductEvent>((event, emit) async {
+      await _addSoldProduct(event, emit);
+    });
   }
+  _addSoldProduct(AddSoldProductEvent event, emit) async {
+    emit(LoadingSoldProductState(
+      soldProduct: state.soldProduct,
+      soldPage: state.soldPage,
+    ));
+    state.soldProduct.insert(0, event.product);
+    emit(LoadedSoldProductState(
+      soldProduct: state.soldProduct,
+      soldPage: state.soldPage,
+    ));
+  }
+
   _deleteSoldProduct(DeleteSoldProductEvent event, emit) async {
     emit(LoadingSoldProductState(
       soldProduct: state.soldProduct,

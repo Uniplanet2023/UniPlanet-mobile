@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniket/bloc/seller_sold_product/sold_product_bloc.dart';
 import 'package:uniket/features/account/widgets/inventory_screen_product_box.dart';
 import 'package:uniket/models/user_model.dart';
 
-class InventoryProductsScreen extends StatefulWidget {
+class SellerSoldProductsScreen extends StatefulWidget {
   final User user;
-  const InventoryProductsScreen({super.key, required this.user});
+  const SellerSoldProductsScreen({super.key, required this.user});
 
   @override
-  State<InventoryProductsScreen> createState() =>
-      _InventoryProductsScreenState();
+  State<SellerSoldProductsScreen> createState() =>
+      _SellerSoldProductsScreenState();
 }
 
-class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
+class _SellerSoldProductsScreenState extends State<SellerSoldProductsScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -37,8 +37,8 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
         _isLoadingMore = true;
       });
       context
-          .read<OnSaleProductBloc>()
-          .add(LoadMoreOnSaleProductEvent(userId: widget.user.id));
+          .read<SellerSoldProductBloc>()
+          .add(LoadMoreSellerSoldProductEvent(userId: widget.user.id));
       // Simulate a delay to load more items
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
@@ -53,19 +53,20 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Listings'),
+        title: const Text('Sold Products'),
       ),
-      body: BlocBuilder<OnSaleProductBloc, OnSaleProductState>(
+      body: BlocBuilder<SellerSoldProductBloc, SellerSoldProductState>(
         builder: (context, state) {
-          if (state is LoadingOnSaleProductState ||
-              state is OnSaleProductInitial) {
+          if (state is LoadingSellerSoldProductState ||
+              state is SellerSoldProductInitial) {
             return const Center(child: CircularProgressIndicator());
           }
+
           return CustomScrollView(
             controller: _scrollController,
             slivers: <Widget>[
               InventoryProductBox(
-                productList: state.onSaleProduct,
+                productList: state.soldProduct,
                 controller: _scrollController,
                 isLoadingMore: _isLoadingMore,
               ),
