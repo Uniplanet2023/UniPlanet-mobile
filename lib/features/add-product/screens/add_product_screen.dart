@@ -133,10 +133,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return BlocListener<ProductBloc, ProductState>(
       listener: (context, state) {
-        if (state is ProductImageUploadedState) {
-          context
-              .read<OnSaleProductBloc>()
-              .add(AddOnSaleProductEvent(product: state.uploadedProduct));
+        if (state is ProductUploadedState) {
           Navigator.pushNamedAndRemoveUntil(
               context, AppRoutes.bottomBarPage, (route) => false);
         }

@@ -39,16 +39,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-    context.read<AccountBloc>().add(const GetAccountInfoEvent());
-    context.read<ChatBloc>().add(const LoadChatRoomEvent());
-    context.read<LikeBloc>().add(const LoadLikeEvent());
-    context
-        .read<SoldProductBloc>()
-        .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
-    context
-        .read<OnSaleProductBloc>()
-        .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
-    context.read<HotProductBloc>().add(const LoadHotProductsEvent());
+
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);
@@ -79,6 +70,7 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.disposeChatListener();
     _streamer.disposeAccountListener();
     _streamer.disposeProductListener();
+
     _controller!.dispose();
     super.dispose();
   }
