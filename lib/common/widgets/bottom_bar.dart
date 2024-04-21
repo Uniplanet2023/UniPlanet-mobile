@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
@@ -47,6 +48,7 @@ class _BottomBarState extends State<BottomBar> {
     context
         .read<OnSaleProductBloc>()
         .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
+    context.read<HotProductBloc>().add(const LoadHotProductsEvent());
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);

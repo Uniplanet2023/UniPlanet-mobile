@@ -20,19 +20,8 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<HotProductBloc>().add(const LoadHotProductsEvent());
     context.read<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
   }
-
-  final List<String> interests = [
-    'tickets',
-    'coat rack',
-    'freecycle',
-    'plates',
-    'toyota highlander',
-    'table top easel',
-    'moncler',
-  ];
 
   @override
   Widget build(BuildContext context) {
