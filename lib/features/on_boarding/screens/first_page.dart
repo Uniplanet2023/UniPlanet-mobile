@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/on_boarding/widgets/height_spacer.dart';
 
 class PageOne extends StatelessWidget {
@@ -8,39 +9,49 @@ class PageOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Color(Colors.blueAccent.value),
-        child: Column(
-          children: [
-            Image.asset("assets/images/page1_Image.png",
-                height: 500, width: 500),
-            Column(
-              children: [
-                Text(
-                  "Welcome to University Marketplace!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.roboto().fontFamily,
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+      backgroundColor: GlobalVariables.secondaryColor,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 350,
+                height: 350,
+                child: Image.asset(
+                  "assets/images/page1_Image.png",
+                  fit: BoxFit.cover,
                 ),
-                const HeightSpacer(size: 10),
-                Text(
-                  "The best place to buy and sell your items in your university!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.roboto().fontFamily,
-                    fontSize: 20,
-                    color: Colors.white,
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Welcome to University Marketplace!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.roboto().fontFamily,
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
-            )
-          ],
+                  const HeightSpacer(size: 20),
+                  Text(
+                    "Your go-to marketplace for buying and selling items within your university community!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.roboto().fontFamily,
+                      fontSize: 18,
+                      color: GlobalVariables.greyBackgroundColor,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

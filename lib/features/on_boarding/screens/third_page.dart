@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/auth/screens/auth_screen.dart';
 import 'package:uniket/features/on_boarding/widgets/height_spacer.dart';
 
@@ -11,43 +12,60 @@ class PageThree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Color(Colors.blueAccent.value),
-        child: Column(
-          children: [
-            const HeightSpacer(size: 65),
-            Padding(padding: EdgeInsets.all(8.h)),
-            Image.asset("assets/images/page3_Image.jpg"),
-            const HeightSpacer(size: 70),
-            Column(
-              children: [
-                Text(
-                  "Enjoy your time in UniKet",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.roboto().fontFamily,
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+      backgroundColor: GlobalVariables.secondaryColor,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 50.0),
+                child: SizedBox(
+                  height: 300,
+                  width: 300,
+                  child: Lottie.asset('assets/animations/student.json',
+                      fit: BoxFit.cover),
                 ),
-                const HeightSpacer(size: 80),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CustomButton(
-                      text: "Go Travel",
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const AuthScreen();
-                        }));
-                      }),
-                )
-              ],
-            )
-          ],
+              ),
+              const HeightSpacer(size: 20),
+              Text(
+                "Elevate Your College Adventure!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: GoogleFonts.roboto().fontFamily,
+                  fontSize: 25,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const HeightSpacer(size: 20),
+              Text(
+                "Explore UniKet!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: GoogleFonts.roboto().fontFamily,
+                  fontSize: 18,
+                  color: GlobalVariables.greyBackgroundColor,
+                ),
+              ),
+              const HeightSpacer(size: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CustomButton(
+                    text: "Get Started!",
+                    color: GlobalVariables.backgroundColor,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const AuthScreen();
+                      }));
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );
