@@ -30,10 +30,10 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
       soldProduct: state.soldProduct,
       soldPage: state.soldPage,
     ));
-    List<Product> onSaleProduct = state.soldProduct;
-    onSaleProduct.insert(0, event.product);
+    List<Product> updatedSoldProduct = List<Product>.from(state.soldProduct)
+      ..insert(0, event.product);
     emit(LoadedSoldProductState(
-      soldProduct: onSaleProduct,
+      soldProduct: updatedSoldProduct,
       soldPage: state.soldPage,
     ));
   }

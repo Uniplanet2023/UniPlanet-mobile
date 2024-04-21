@@ -31,10 +31,11 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
       onSaleProduct: state.onSaleProduct,
       onSalePage: state.onSalePage,
     ));
-    List<Product> onSaleProduct = state.onSaleProduct;
-    onSaleProduct.insert(0, event.product);
+    List<Product> updatedOnSaleProduct = List<Product>.from(state.onSaleProduct)
+      ..insert(0, event.product);
+
     emit(LoadedOnSaleProductState(
-      onSaleProduct: onSaleProduct,
+      onSaleProduct: updatedOnSaleProduct,
       onSalePage: state.onSalePage,
     ));
   }
