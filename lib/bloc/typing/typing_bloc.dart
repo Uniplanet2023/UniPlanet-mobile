@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniket/constants/utils.dart';
+import 'package:uniplanet/constants/utils.dart';
 
 part 'typing_event.dart';
 part 'typing_state.dart';

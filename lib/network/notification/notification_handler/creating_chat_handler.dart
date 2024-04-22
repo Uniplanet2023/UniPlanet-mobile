@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:uniket/network/notification/notification_handler/notification_service.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
 
 void creatingChatHandler(RemoteMessage sdfmessage) async {
   var message = jsonDecode(sdfmessage.data['message']);

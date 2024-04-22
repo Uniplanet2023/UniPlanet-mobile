@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/auth/auth_bloc.dart';
-import 'package:uniket/features/account/widgets/account_button.dart';
+import 'package:uniplanet/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet/features/account/widgets/account_button.dart';
 import 'package:flutter/material.dart';
 
 class TopButtons extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniket/features/product_details/screens/product_details_screen.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/features/product_details/screens/product_details_screen.dart';
+import 'package:uniplanet/models/product.dart';
 
 class SellerOtherProductsGrid extends StatelessWidget {
   final List<Product> otherProducts;

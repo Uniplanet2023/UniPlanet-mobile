@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniket/constants/utils.dart';
+import 'package:uniplanet/constants/utils.dart';
 
 class FirebaseApi {
   late String userId;

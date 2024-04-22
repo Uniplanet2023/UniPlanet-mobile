@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/bloc/chat/chat_bloc.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/chat/widgets/contacts_list.dart';
+import 'package:uniplanet/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/chat/widgets/contacts_list.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});
@@ -31,7 +31,7 @@ class _ChatListState extends State<ChatList> {
               backgroundColor: GlobalVariables.backgroundColor,
               centerTitle: false,
               title: Text(
-                'UniKet',
+                'uniplanet',
                 style: TextStyle(
                   fontStyle: GoogleFonts.roboto().fontStyle,
                   fontSize: 20,

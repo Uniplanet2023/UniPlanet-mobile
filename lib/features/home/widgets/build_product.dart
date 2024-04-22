@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:uniket/constants/number_formatter.dart';
-import 'package:uniket/common/routes/names.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/constants/number_formatter.dart';
+import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/models/product.dart';
 
 Widget buildProductItem(
     {required BuildContext context, required Product product}) {

@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/common/widgets/custom_button.dart';
-import 'package:uniket/common/widgets/custom_textfield.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/widgets/custom_button.dart';
+import 'package:uniplanet/common/widgets/custom_textfield.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/models/product.dart';
 
 class EditProductScreen extends StatefulWidget {
   final Product product;

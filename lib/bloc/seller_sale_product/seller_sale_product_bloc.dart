@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniket/models/product.dart';
-import 'package:uniket/network/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/models/product.dart';
+import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
 
 part 'seller_sale_product_event.dart';
 part 'seller_sale_product_state/basic_state.dart';

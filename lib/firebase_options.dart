@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    iosBundleId: 'shop.uniplanet.uniket',
+    iosBundleId: 'shop.uniplanet.uniplanet',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    iosBundleId: 'shop.uniplanet.uniket',
+    iosBundleId: 'shop.uniplanet.uniplanet',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'pushnotification-uniplanet.appspot.com',
     measurementId: 'G-PY9F8JG34T',
   );
-
 }

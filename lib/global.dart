@@ -2,13 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/main.dart';
-import 'package:uniket/network/notification/firebase_api.dart';
-import 'package:uniket/network/notification/firebase_options.dart';
-import 'package:uniket/network/api_def/dio_client.dart';
-import 'package:uniket/network/notification/notification_handler/notification_service.dart';
-import 'package:uniket/network/socket/socket_channel.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/main.dart';
+import 'package:uniplanet/network/notification/firebase_api.dart';
+import 'package:uniplanet/network/notification/firebase_options.dart';
+import 'package:uniplanet/network/api_def/dio_client.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
+import 'package:uniplanet/network/socket/socket_channel.dart';
 
 import 'constants/utils.dart';
 

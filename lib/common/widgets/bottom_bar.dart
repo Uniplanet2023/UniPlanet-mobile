@@ -1,20 +1,20 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniket/common/functions/streamer.dart';
-import 'package:uniket/common/routes/names.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/account/screens/account_screen.dart';
-import 'package:uniket/features/add-product/screens/add_product_screen.dart';
-import 'package:uniket/features/category/screens/category_layout_screen.dart';
-import 'package:uniket/features/chat/screens/chat_layout_screen.dart';
-import 'package:uniket/features/home/screens/home_screen.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/common/functions/streamer.dart';
+import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/account/screens/account_screen.dart';
+import 'package:uniplanet/features/add-product/screens/add_product_screen.dart';
+import 'package:uniplanet/features/category/screens/category_layout_screen.dart';
+import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
+import 'package:uniplanet/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniket/network/repository/index.dart';
+import 'package:uniplanet/network/repository/index.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});

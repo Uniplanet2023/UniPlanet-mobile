@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniket/constants/text_size_formats.dart';
+import 'package:uniplanet/constants/text_size_formats.dart';
 
 class TermsAndPolicies extends StatelessWidget {
   const TermsAndPolicies({super.key});

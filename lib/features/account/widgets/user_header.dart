@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/account/screens/user_profile.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/account/screens/user_profile.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class UserHeader extends StatefulWidget {
   final User currentUser;

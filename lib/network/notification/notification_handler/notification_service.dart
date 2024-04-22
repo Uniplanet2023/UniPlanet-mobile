@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/chat/screens/chat_screen.dart';
-import 'package:uniket/main.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet/main.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class NotificationService {
   static bool isNotificationAllowed = false;

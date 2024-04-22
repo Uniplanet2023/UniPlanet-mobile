@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniket/common/widgets/bottom_bar.dart';
-import 'package:uniket/common/widgets/error_screen.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/auth/screens/signup_screen.dart';
-import 'package:uniket/features/on_boarding/screens/on_boarding_screen.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/common/routes/router.dart';
-import 'package:uniket/network/notification/notification_handler/index.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniket/statemanager_provider.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/common/widgets/bottom_bar.dart';
+import 'package:uniplanet/common/widgets/error_screen.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/auth/screens/signup_screen.dart';
+import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/common/routes/router.dart';
+import 'package:uniplanet/network/notification/notification_handler/index.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -104,7 +104,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.detached) {
       log('detached');
       // App is detached (app suspended in the background)
-      Global.socketService.disconnect();
+      if (Global.socketService.socket.connected) {
+        Global.socketService.disconnect();
+      }
     }
   }
 

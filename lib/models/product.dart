@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class Product {
   final String id;

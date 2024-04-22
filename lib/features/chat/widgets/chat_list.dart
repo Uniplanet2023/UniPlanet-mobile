@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/message/message_bloc.dart';
-import 'package:uniket/bloc/typing/typing_bloc.dart';
-import 'package:uniket/features/chat/widgets/message_card.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/bloc/message/message_bloc.dart';
+import 'package:uniplanet/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet/features/chat/widgets/message_card.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;

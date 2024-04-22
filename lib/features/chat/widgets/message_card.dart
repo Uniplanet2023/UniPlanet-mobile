@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'package:uniket/common/enums/message_enum.dart';
-import 'package:uniket/common/enums/message_status_enum.dart';
-import 'package:uniket/common/widgets/full_image.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/models/message.dart';
+import 'package:uniplanet/common/enums/message_enum.dart';
+import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/common/widgets/full_image.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/models/message.dart';
 
 class MessageCard extends StatelessWidget {
   final Message oldMessage;

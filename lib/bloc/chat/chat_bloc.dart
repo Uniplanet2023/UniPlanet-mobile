@@ -1,15 +1,15 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/models/get_chat_room.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/get_chat_room.dart';
 // Repositories
-import 'package:uniket/network/repository/chat_repository/chat_repo.dart';
+import 'package:uniplanet/network/repository/chat_repository/chat_repo.dart';
 // Models
-import 'package:uniket/models/chat_room.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 // Bloc Events, States
 part 'chat_bloc_event.dart';

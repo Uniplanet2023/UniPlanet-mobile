@@ -1,16 +1,16 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/chat/chat_bloc.dart';
-import 'package:uniket/bloc/status/status_bloc.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/chat/widgets/bottom_chat_bar.dart';
-import 'package:uniket/features/chat/widgets/chat_list.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/models/user_model.dart';
-import 'package:uniket/bloc/message/message_bloc.dart';
-import 'package:uniket/network/socket/socket_channel.dart';
+import 'package:uniplanet/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet/bloc/status/status_bloc.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/chat/widgets/bottom_chat_bar.dart';
+import 'package:uniplanet/features/chat/widgets/chat_list.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/bloc/message/message_bloc.dart';
+import 'package:uniplanet/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatRoomId;

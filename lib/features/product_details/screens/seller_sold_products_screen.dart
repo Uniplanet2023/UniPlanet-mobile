@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/seller_sold_product/sold_product_bloc.dart';
-import 'package:uniket/features/account/widgets/inventory_screen_product_box.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/bloc/seller_sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/features/account/widgets/inventory_screen_product_box.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class SellerSoldProductsScreen extends StatefulWidget {
   final User user;

@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/common/enums/message_enum.dart';
-import 'package:uniket/common/enums/message_status_enum.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/models/image_message.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniket/network/socket/socket_channel.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/enums/message_enum.dart';
+import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/image_message.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/network/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;

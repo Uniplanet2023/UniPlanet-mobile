@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:uniket/constants/utils.dart';
+import 'package:uniplanet/constants/utils.dart';
 
 void httpErrorHandle({
   required Response response,

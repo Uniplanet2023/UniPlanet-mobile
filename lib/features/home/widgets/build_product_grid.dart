@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uniket/features/home/widgets/build_product.dart';
-import 'package:uniket/features/search/widget/searched_product.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/features/home/widgets/build_product.dart';
+import 'package:uniplanet/features/search/widget/searched_product.dart';
+import 'package:uniplanet/models/product.dart';
 
 Widget buildProductGrid(
     {required BuildContext context,

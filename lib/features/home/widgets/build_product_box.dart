@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/like/like_bloc.dart';
-import 'package:uniket/bloc/product/product_bloc.dart';
-import 'package:uniket/constants/number_formatter.dart';
-import 'package:uniket/constants/price_formatter.dart';
-import 'package:uniket/constants/time_formatter.dart';
-import 'package:uniket/common/routes/names.dart';
-import 'package:uniket/common/widgets/loader.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/bloc/like/like_bloc.dart';
+import 'package:uniplanet/bloc/product/product_bloc.dart';
+import 'package:uniplanet/constants/number_formatter.dart';
+import 'package:uniplanet/constants/price_formatter.dart';
+import 'package:uniplanet/constants/time_formatter.dart';
+import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/common/widgets/loader.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ItemBox extends StatefulWidget {

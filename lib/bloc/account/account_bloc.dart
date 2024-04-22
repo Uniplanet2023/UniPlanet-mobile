@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:equatable/equatable.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/models/account.dart';
-import 'package:uniket/network/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/network/repository/account_repository/account_repo.dart';
 
 import '../../constants/utils.dart';
 
