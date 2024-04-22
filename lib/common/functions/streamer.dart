@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uniket/bloc/index.dart';
 import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniket/constants/utils.dart';
 import 'package:uniket/global.dart';
 import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
 
@@ -47,7 +48,7 @@ class Streamer {
     _productStreamSubscription =
         context.read<ProductBloc>().stream.listen((state) {
       if (state is ProductImageUploadedState) {
-        print('called');
+        log('called');
         context
             .read<OnSaleProductBloc>()
             .add(AddOnSaleProductEvent(product: state.uploadedProduct));

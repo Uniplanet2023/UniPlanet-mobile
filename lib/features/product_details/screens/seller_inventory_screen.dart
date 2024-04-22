@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniket/bloc/seller_sale_product/seller_sale_product_bloc.dart';
 import 'package:uniket/features/account/widgets/inventory_screen_product_box.dart';
 import 'package:uniket/models/user_model.dart';

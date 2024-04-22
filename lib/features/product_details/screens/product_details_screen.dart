@@ -20,7 +20,6 @@ import 'package:uniket/features/account/screens/user_profile.dart';
 import 'package:uniket/features/account/widgets/remove_product_dialog.dart';
 import 'package:uniket/features/edit-product/edit_product.dart';
 import 'package:uniket/features/product_details/screens/seller_inventory_screen.dart';
-import 'package:uniket/features/product_details/screens/seller_sold_products_screen.dart';
 import 'package:uniket/features/product_details/widgets/seller_other_list.dart';
 import 'package:uniket/models/product.dart';
 import 'package:uniket/models/user_model.dart';
@@ -308,7 +307,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
 
-                //TODO: Add GridView for Seller's other products
+                // Add GridView for Seller's other products
                 BlocBuilder<SellerSaleProductBloc, SellerSaleProductState>(
                   builder: (context, state) {
                     if (state is LoadingSellerSaleProductState) {
