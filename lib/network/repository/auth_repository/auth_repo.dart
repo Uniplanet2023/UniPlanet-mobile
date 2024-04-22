@@ -61,6 +61,12 @@ class AuthRepository implements IAuthRepository {
 
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
+        if (res.data['deletionDate'] != null) {
+          SnackbarGlobal.showSnackBar(
+            "Account Resumed",
+          );
+        }
+
         prefs.setString('userData', jsonEncode(res.data));
         userId = res.data['id'];
         school = res.data['school'];
