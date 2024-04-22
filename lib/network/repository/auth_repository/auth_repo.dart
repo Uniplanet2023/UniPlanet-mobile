@@ -63,7 +63,7 @@ class AuthRepository implements IAuthRepository {
       if (msg == "success") {
         if (res.data['deletionDate'] != null) {
           SnackbarGlobal.showSnackBar(
-            "Account Resumed",
+            "Account restored Successfully!",
           );
         }
 
