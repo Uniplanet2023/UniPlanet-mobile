@@ -25,7 +25,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         newMessageHandler(message);
         break;
       case 'creating chat':
-        // creatingChatHandler(message);
+        creatingChatHandler(message);
         log('notification');
         break;
       default:

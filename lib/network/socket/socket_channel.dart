@@ -57,16 +57,16 @@ class SocketService {
             chatId: chat['id'], targetUserId: chat['seller']['id']);
 
         if (chat['seller']['id'] == userId) {
-          int badgeCount = await NotificationService.getCurrentBadgeCount();
-          await NotificationService.showNotification(
-              title: chat['buyer']['name'],
-              body: '${chat['buyer']['name']} has started a conversation',
-              payload: {
-                "navigate": "true",
-              },
-              bigPicture: chat['buyer']['profileImage'],
-              notificationLayout: NotificationLayout.Messaging,
-              badgeCount: badgeCount);
+          // int badgeCount = await NotificationService.getCurrentBadgeCount();
+          // await NotificationService.showNotification(
+          //     title: chat['buyer']['name'],
+          //     body: '${chat['buyer']['name']} has started a conversation',
+          //     payload: {
+          //       "navigate": "true",
+          //     },
+          //     bigPicture: chat['buyer']['profileImage'],
+          //     notificationLayout: NotificationLayout.Messaging,
+          //     badgeCount: badgeCount);
         }
         ChatRoom chatRoom = ChatRoom.fromMap(chat);
         if (context.mounted) {
