@@ -68,8 +68,14 @@ class _BottomChatFieldState extends State<BottomChatField> {
           message: _messageController.text,
           receiverId: widget.sellerId,
           context: context));
+
+      // Check if the widget is still mounted before updating the state
+      if (!mounted) return;
+
       _messageController.clear();
-      isShowSendButton = false;
+      setState(() {
+        isShowSendButton = false;
+      });
       widget.scrollDownfuction();
     }
   }

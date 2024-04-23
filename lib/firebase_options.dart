@@ -42,17 +42,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCDnfaEQyYw_54serI8H9jphtGKQqmQAwU',
-    appId: '1:1003008222202:web:59e470045d22d8f3517a43',
+    appId: '1:1003008222202:web:4a98178618fb4422517a43',
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     authDomain: 'pushnotification-uniplanet.firebaseapp.com',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    measurementId: 'G-D2QQBBFX3Z',
+    measurementId: 'G-2XS7D6D3SD',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBw2Vy6fUh35DUppMs8jJXgSuRzA5Jz9NE',
-    appId: '1:1003008222202:android:0ef2d8ce865f9a7c517a43',
+    appId: '1:1003008222202:android:08b119dc523c7f98517a43',
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
@@ -60,7 +60,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyD_CUkH5w9cTWWnt4IWwqKhSeDeUIAUniw',
-    appId: '1:1003008222202:ios:784c18124b74d35a517a43',
+    appId: '1:1003008222202:ios:6965936a338d7754517a43',
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyD_CUkH5w9cTWWnt4IWwqKhSeDeUIAUniw',
-    appId: '1:1003008222202:ios:784c18124b74d35a517a43',
+    appId: '1:1003008222202:ios:6965936a338d7754517a43',
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
@@ -78,11 +78,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyCDnfaEQyYw_54serI8H9jphtGKQqmQAwU',
-    appId: '1:1003008222202:web:dc5b5a69e652573d517a43',
+    appId: '1:1003008222202:web:8a21a5ac6a258e15517a43',
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     authDomain: 'pushnotification-uniplanet.firebaseapp.com',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    measurementId: 'G-PY9F8JG34T',
+    measurementId: 'G-WZF2VQV7Q9',
   );
+
 }

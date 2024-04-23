@@ -50,7 +50,8 @@ void main() async {
     if (inDebug) {
       return ErrorWidget(details.exception);
     }
-    return const ErrorScreen();
+    return ErrorWidget(details.exception);
+    // return const ErrorScreen();
   };
 
   runApp(const StateManagerProvider());
