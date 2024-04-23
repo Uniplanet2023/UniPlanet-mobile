@@ -155,13 +155,18 @@ class NotificationService {
       'Interval must be provided when scheduling a notification',
     );
     if (NotificationService.isNotificationAllowed == false) return;
+    // Check if body starts with the specific URL and replace it
+    String modifiedBody =
+        body.startsWith("https://res.cloudinary.com/dtgmmfv3d/")
+            ? "image"
+            : body;
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: -1,
         channelKey: 'basic_channel',
         title: title,
-        body: body,
+        body: modifiedBody,
         payload: payload,
         summary: summary,
         notificationLayout: notificationLayout,
