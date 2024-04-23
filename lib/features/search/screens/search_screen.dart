@@ -23,6 +23,9 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     context.read<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
+    // context.read<SearchProductBloc>().add(
+    //         InitalSearchProductEvent(),
+    //       );
   }
 
   @override

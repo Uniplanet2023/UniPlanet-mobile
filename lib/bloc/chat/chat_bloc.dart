@@ -194,7 +194,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   @override
   void onChange(Change<ChatBlocState> change) {
     super.onChange(change);
-    // log(change);
+    log(change);
   }
 
   @override

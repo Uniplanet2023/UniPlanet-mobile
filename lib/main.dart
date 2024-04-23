@@ -8,7 +8,6 @@ import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/common/widgets/bottom_bar.dart';
-import 'package:uniplanet/common/widgets/error_screen.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/auth/screens/signup_screen.dart';
@@ -41,18 +40,18 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   await Global.init();
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    bool inDebug = false;
-    assert(() {
-      inDebug = true;
-      return true;
-    }());
-    if (inDebug) {
-      return ErrorWidget(details.exception);
-    }
-    return ErrorWidget(details.exception);
-    // return const ErrorScreen();
-  };
+  // ErrorWidget.builder = (FlutterErrorDetails details) {
+  //   bool inDebug = false;
+  //   assert(() {
+  //     inDebug = true;
+  //     return true;
+  //   }());
+  //   if (inDebug) {
+  //     return ErrorWidget(details.exception);
+  //   }
+  //   return ErrorWidget(details.exception);
+  //   // return const ErrorScreen();
+  // };
 
   runApp(const StateManagerProvider());
 }
@@ -136,16 +135,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         onGenerateRoute: (settings) => generateRoute(settings),
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           if (state is Authorized) {
-            context.read<AccountBloc>().add(const GetAccountInfoEvent());
-            context.read<ChatBloc>().add(const LoadChatRoomEvent());
-            context.read<LikeBloc>().add(const LoadLikeEvent());
-            context
-                .read<SoldProductBloc>()
-                .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
-            context
-                .read<OnSaleProductBloc>()
-                .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
-            context.read<HotProductBloc>().add(const LoadHotProductsEvent());
             return const BottomBar();
           } else if (state is AuthenticationDeny ||
               state is ValidationFailedState) {

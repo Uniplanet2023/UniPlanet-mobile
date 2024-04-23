@@ -14,7 +14,7 @@ import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet/network/repository/index.dart';
+import 'package:uniplanet/features/search/screens/search_screen.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -34,6 +34,15 @@ class _BottomBarState extends State<BottomBar> {
 
   void navigateToAddProduct() {
     Navigator.pushNamed(context, AppRoutes.addProductPage);
+  }
+
+  void navigateToSearchScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SearchScreen(),
+      ),
+    );
   }
 
   @override
@@ -83,14 +92,6 @@ class _BottomBarState extends State<BottomBar> {
     setState(() {
       _page = page;
     });
-  }
-
-  void navigateToSearchScreen() {
-    Navigator.pushNamed(context, AppRoutes.searchScreenPage).then(
-      (value) => context.read<SearchProductBloc>().add(
-            InitalSearchProductEvent(),
-          ),
-    );
   }
 
   @override
