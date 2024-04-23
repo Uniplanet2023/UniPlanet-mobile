@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/common/widgets/bottom_bar.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
@@ -15,7 +12,6 @@ import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/common/routes/router.dart';
 import 'package:uniplanet/network/notification/notification_handler/index.dart';
-import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/statemanager_provider.dart';
 
 @pragma('vm:entry-point')

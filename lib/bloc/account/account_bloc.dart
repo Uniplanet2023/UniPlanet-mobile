@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/account.dart';
 import 'package:uniplanet/network/repository/account_repository/account_repo.dart';
@@ -45,12 +46,15 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   _updateProfileImage(
       UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));
-    final response = await Global.cloudinary.uploadFile(CloudinaryFile.fromFile(
-        event.image.path,
-        folder: 'profile-image/${state.account.user.id}'));
+    final response = await Global.cloudinary.uploadFile(
+      CloudinaryFile.fromFile(event.image.path,
+          folder: 'profile-image/${state.account.user.id}'),
+    );
+
+    String transformedUrl = cloudinaryTransformImage(response.secureUrl);
 
     Account? account = await _accountRepository.updateProfileImage(
-        profileImage: response.secureUrl);
+        profileImage: transformedUrl);
     if (account != null) {
       emit(UpdatedProfileImageState(account: account));
     } else {

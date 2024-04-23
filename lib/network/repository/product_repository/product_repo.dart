@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
+import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/product.dart';
@@ -152,8 +153,11 @@ class ProductRepository {
             CloudinaryFile.fromFile(image.path,
                 folder: 'product-images/${product.id}/'),
           );
-          imageUrls[index] = response
-              .secureUrl; // Place each image URL in the corresponding position
+          imageUrls[index] = cloudinaryTransformImage(
+            response.secureUrl,
+            width: 250,
+            height: 250,
+          ); // Place each image URL in the corresponding position
         });
 
         // Wait for all uploads to complete

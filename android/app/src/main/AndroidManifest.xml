@@ -2,7 +2,7 @@
 package="shop.uniplanet.uniplanet"
 >
     <application
-        android:label="uniplanet"
+        android:label="UniPlanet"
         android:name="${applicationName}"
         android:icon="@mipmap/_launcher_icon"
         android:usesCleartextTraffic="true"

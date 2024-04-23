@@ -147,12 +147,15 @@ class NotificationService {
     final List<NotificationActionButton>? actionButtons,
     final bool scheduled = false,
     final int? interval,
+    final String? largeIcon,
+    final String? icon,
   }) async {
     assert(
       scheduled == false || interval != null,
       'Interval must be provided when scheduling a notification',
     );
     if (NotificationService.isNotificationAllowed == false) return;
+
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: -1,
@@ -164,7 +167,7 @@ class NotificationService {
         notificationLayout: notificationLayout,
         category: category,
         bigPicture: bigPicture,
-        largeIcon: 'assets/images/Logo.png',
+        largeIcon: largeIcon,
       ),
       actionButtons: actionButtons,
       schedule: scheduled

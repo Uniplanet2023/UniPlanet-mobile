@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
@@ -138,7 +139,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
       // Check if the context is still mounted before proceeding
       if (response.secureUrl.isEmpty) throw Exception('Image uploading failed');
-      tempMessage.message = response.secureUrl;
+      tempMessage.message = cloudinaryTransformImage(response.secureUrl);
       return tempMessage;
     } catch (e) {
       tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);

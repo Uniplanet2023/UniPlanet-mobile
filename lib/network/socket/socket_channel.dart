@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/chat_room.dart';
@@ -53,13 +55,16 @@ class SocketService {
         var chat = jsonDecode(data);
         bool isUserOnline = await joinChatAndCheckUserExist(
             chatId: chat['id'], targetUserId: chat['seller']['id']);
+
         if (chat['seller']['id'] == userId) {
           await NotificationService.showNotification(
-            title: chat['seller']['name'],
-            body: '${chat['seller']['name']} has started a conversation',
+            title: chat['buyer']['name'],
+            body: '${chat['buyer']['name']} has started a conversation',
             payload: {
               "navigate": "true",
             },
+            bigPicture: chat['buyer']['profileImage'],
+            notificationLayout: NotificationLayout.Messaging,
           );
         }
         ChatRoom chatRoom = ChatRoom.fromMap(chat);
@@ -179,7 +184,8 @@ class SocketService {
 
         sentMessage = await sendMessage(
           id: imageMessage.message.id,
-          message: response.secureUrl,
+          message: cloudinaryTransformImage(response.secureUrl,
+              width: 250, height: 250),
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
