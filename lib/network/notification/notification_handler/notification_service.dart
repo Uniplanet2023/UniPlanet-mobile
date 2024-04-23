@@ -135,6 +135,27 @@ class NotificationService {
     }
   }
 
+  static Future<int> getCurrentBadgeCount() async {
+    try {
+      int currentBadgeCount =
+          await AwesomeNotifications().getGlobalBadgeCounter();
+      print("Current Badge Count: $currentBadgeCount");
+      return currentBadgeCount;
+    } catch (e) {
+      print("Failed to fetch badge count: $e");
+      return 0; // Return 0 or handle the exception as necessary
+    }
+  }
+
+  void checkNotifications() async {
+    int badgeCount = await NotificationService.getCurrentBadgeCount();
+    // Now you can decide what to do with the badge count
+    // For example, reset if the user has seen all notifications
+    if (badgeCount > 0) {
+      await AwesomeNotifications().resetGlobalBadge();
+    }
+  }
+
   static Future<void> showNotification({
     required String title,
     required String body,
@@ -149,6 +170,7 @@ class NotificationService {
     final int? interval,
     final String? largeIcon,
     final String? icon,
+    final int? badgeCount,
   }) async {
     assert(
       scheduled == false || interval != null,
@@ -173,6 +195,7 @@ class NotificationService {
         category: category,
         bigPicture: bigPicture,
         largeIcon: largeIcon,
+        badge: badgeCount,
       ),
       actionButtons: actionButtons,
       schedule: scheduled
