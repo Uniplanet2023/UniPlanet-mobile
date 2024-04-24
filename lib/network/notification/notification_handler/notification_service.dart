@@ -7,7 +7,6 @@ import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/main.dart';
 import 'package:uniplanet/models/user_model.dart';
 
-@pragma('vm:entry-point')
 class NotificationService {
   static bool isNotificationAllowed = false;
   static Future<void> init() async {

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-@pragma('vm:entry-point')
 void newMessageHandler(RemoteMessage sdfmessage) async {
   var message = jsonDecode(sdfmessage.data['message']);
   var sender = jsonDecode(sdfmessage.data['sender']);
