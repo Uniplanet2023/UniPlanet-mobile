@@ -40,7 +40,7 @@ class _ChatListState extends State<ChatList> {
       if (!widget.scrollController.hasClients) return;
 
       if (widget.scrollController.position.pixels >=
-          widget.scrollController.position.maxScrollExtent) {
+          widget.scrollController.position.maxScrollExtent - 100) {
         // Ensure this is called only when there are items in the list
         if (widget.messages.isNotEmpty) {
           context
@@ -95,12 +95,13 @@ class _ChatListState extends State<ChatList> {
           if (itemNumber == widget.messages.length) {
             return BlocBuilder<MessageBloc, MessageBlocState>(
               builder: (context, state) {
-                return state is EndMessageState ||
-                        state.chatMessages.length < 19
-                    ? const SizedBox()
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                if (state is EndMessageState) {
+                  return const SizedBox();
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
               },
             );
           }

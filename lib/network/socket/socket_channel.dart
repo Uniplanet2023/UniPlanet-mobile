@@ -187,7 +187,7 @@ class SocketService {
         sentMessage = await sendMessage(
           id: imageMessage.message.id,
           message: cloudinaryTransformImage(response.secureUrl,
-              width: 250, height: 250),
+              width: 500, height: 500),
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
