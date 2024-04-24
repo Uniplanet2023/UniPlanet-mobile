@@ -27,7 +27,7 @@ class HelpScreen extends StatelessWidget {
             children: [
               subTitleText('Contact us\n'),
               content(
-                  'Should you have any inquiries regarding the Uniplanet Marketplace app, or should you encounter any technical difficulties or bugs, please do not hesitate to reach out to us via email at uniplanet.info@gmail.com. \nWe are committed to providing you with the best possible experience and appreciate your feedback.'),
+                  'Should you have any inquiries regarding the uniplanet Marketplace app, or should you encounter any technical difficulties or bugs, please do not hesitate to reach out to us via email at uniplanet.info@gmail.com. \nWe are committed to providing you with the best possible experience and appreciate your feedback.'),
               const Divider(
                 thickness: 0.1,
               ),

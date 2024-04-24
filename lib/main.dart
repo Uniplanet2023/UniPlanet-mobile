@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -114,7 +117,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: SnackbarGlobal.key,
         navigatorKey: MyApp.navigatorKey,
-        title: 'Uniplanet Marketplace',
+        title: 'UniPlanet Marketplace',
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
             primary: GlobalVariables.secondaryColor,

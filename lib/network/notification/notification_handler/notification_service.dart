@@ -94,7 +94,8 @@ class NotificationService {
       ReceivedAction receivedAction) async {
     log('Notification action: ${receivedAction.id}');
     try {
-      BuildContext? context = MyApp.navigatorKey.currentContext;
+      BuildContext? context = SnackbarGlobal.key.currentContext;
+      if (context == null) return;
       if (receivedAction.payload?['navigate'] == 'true') {
         if (receivedAction.payload?['sender'] != null &&
             receivedAction.payload?['message'] != null) {
@@ -104,7 +105,7 @@ class NotificationService {
           var pref = await SharedPreferences.getInstance();
           var userData = pref.getString('userRecord');
           var userRecord = jsonDecode(userData.toString());
-          if (userRecord != null && context != null && context.mounted) {
+          if (userRecord != null && context.mounted) {
             // SocketService.instance.readAllMessages(messageJson['chat']);
             await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) {

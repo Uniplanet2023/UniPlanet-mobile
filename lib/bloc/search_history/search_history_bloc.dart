@@ -61,11 +61,12 @@ class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
     try {
       List<String>? result =
           await _accountRepository.getSearchHistory(page: event.page);
-      if (result == null) {
-        throw Exception('Failed to get search history');
-      }
       // Create a new list instead of modifying the existing one
-
+      if (result == null) {
+        emit(const FailedToGetSearchHistoryState(
+            message: "Fail to Get Search History", searchHistory: []));
+        return;
+      }
       emit(GotSearchHistoryState(searchHistory: result));
     } catch (e) {
       emit(FailedToGetSearchHistoryState(

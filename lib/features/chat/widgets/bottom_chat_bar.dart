@@ -195,9 +195,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   void selectVideo() async {
     File? video = await pickVideoFromGallery(context);
-    if (video != null) {
-      sendFileMessage(video, MessageEnum.video);
-    }
+    if (video == null) return;
+    sendFileMessage(video, MessageEnum.video);
   }
 
   void selectGIF() async {
@@ -281,7 +280,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                             icon: const Icon(Icons.camera_alt),
                             onPressed: () async {
                               File? image = await openCamera();
-                              sendImages([XFile(image!.path)]);
+                              if (image == null) return;
+                              sendImages([XFile(image.path)]);
                             },
                             padding: const EdgeInsets.all(0),
                             color: GlobalVariables.primaryColor,

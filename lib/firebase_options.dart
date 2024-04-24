@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'pushnotification-uniplanet.appspot.com',
     measurementId: 'G-WZF2VQV7Q9',
   );
-
 }

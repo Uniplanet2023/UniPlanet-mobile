@@ -62,7 +62,11 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
     List<Product>? myProducts = await _productRepository.getMyProduct(
         page: state.onSalePage, status: 'on-sale', userId: event.userId);
     if (myProducts == null) {
-      emit(const ErrorOnSaleProductState("Error"));
+      emit(ErrorOnSaleProductState(
+        "Error loading on sale products",
+        onSaleProduct: state.onSaleProduct,
+        onSalePage: state.onSalePage,
+      ));
       return;
     }
     if (myProducts.isEmpty) {
@@ -88,7 +92,11 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
     List<Product>? onSaleProduct = await _productRepository.getMyProduct(
         page: nextPage, status: "on-sale", userId: event.userId);
     if (onSaleProduct == null) {
-      emit(const ErrorOnSaleProductState("Error"));
+      emit(ErrorOnSaleProductState(
+        "Error loading on sale products",
+        onSaleProduct: state.onSaleProduct,
+        onSalePage: state.onSalePage,
+      ));
       return;
     }
     if (onSaleProduct.isEmpty) {

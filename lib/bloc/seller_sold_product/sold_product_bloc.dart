@@ -27,7 +27,8 @@ class SellerSoldProductBloc
     List<Product>? myProducts = await _productRepository.getMyProduct(
         page: state.soldPage, status: 'sold', userId: event.userId);
     if (myProducts == null) {
-      emit(const ErrorSellerSoldProductState("Error"));
+      emit(ErrorSellerSoldProductState("Error loading sold product",
+          soldProduct: state.soldProduct, soldPage: state.soldPage));
       return;
     }
     if (myProducts.isEmpty) {
@@ -53,7 +54,8 @@ class SellerSoldProductBloc
     List<Product>? onSaleProduct = await _productRepository.getMyProduct(
         page: nextPage, status: "sold", userId: event.userId);
     if (onSaleProduct == null) {
-      emit(const ErrorSellerSoldProductState("Error"));
+      emit(ErrorSellerSoldProductState("Error loading sold product",
+          soldProduct: state.soldProduct, soldPage: state.soldPage));
       return;
     }
     if (onSaleProduct.isEmpty) {
