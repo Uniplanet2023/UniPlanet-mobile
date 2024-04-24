@@ -15,12 +15,13 @@ import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/common/routes/router.dart';
 import 'package:uniplanet/network/notification/notification_handler/index.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
 import 'package:uniplanet/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log("Handling a background message:");
-
+  await NotificationService.init();
   if (message.data.containsKey('type')) {
     final String type = message.data['type'];
     switch (type) {
