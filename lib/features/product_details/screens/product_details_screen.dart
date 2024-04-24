@@ -372,9 +372,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: BlocConsumer<ChatBloc, ChatBlocState>(
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
+            CreatedChatRoomState createdState = state;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
-              "seller": state.chatRooms.last.seller,
-              "chatRoom": state.chatRooms.last
+              "seller": createdState.chatRoomCreated.seller,
+              "chatRoom": createdState.chatRoomCreated
             });
           }
         },

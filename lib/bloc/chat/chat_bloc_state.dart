@@ -78,13 +78,6 @@ class EmptyUnseenMessageState extends ChatBlocState {
   List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }
 
-//Add ChatRoom
-class AddChatRoomState extends ChatBlocState {
-  const AddChatRoomState({super.chatRooms, super.totalUnseenMessageCount});
-  @override
-  List<Object?> get props => [chatRooms, totalUnseenMessageCount];
-}
-
 // Delete chatRoom
 class DeletingChatRoomState extends ChatBlocState {
   const DeletingChatRoomState({super.chatRooms, super.totalUnseenMessageCount});

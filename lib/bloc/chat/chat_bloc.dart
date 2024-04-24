@@ -78,8 +78,13 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _addChatRoom(AddChatRoomEvent event, emit) {
+    emit(CreatingChatRoomState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
     state.chatRooms.insert(0, event.chatRoom);
-    emit(AddChatRoomState(
+    emit(CreatedChatRoomState(
+      chatRoomCreated: event.chatRoom,
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
