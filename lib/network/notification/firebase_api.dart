@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/constants/utils.dart';
 
 class FirebaseApi {
@@ -20,7 +18,7 @@ class FirebaseApi {
       sound: true,
     );
     if (Platform.isIOS) {
-      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      final apnsToken = await firebaseMessaging.getAPNSToken();
       if (apnsToken == null) {
         throw Exception('APNS Token is null');
       }
