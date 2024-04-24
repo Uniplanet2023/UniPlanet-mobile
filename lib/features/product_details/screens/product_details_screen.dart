@@ -377,6 +377,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               "seller": createdState.chatRoomCreated.seller,
               "chatRoom": createdState.chatRoomCreated
             });
+          } else if (state is AddedChatRoomState) {
+            AddedChatRoomState addedChatRoomState = state;
+            Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
+              "seller": addedChatRoomState.chatRoomCreated.buyer,
+              "chatRoom": addedChatRoomState.chatRoomCreated,
+            });
           }
         },
         builder: (context, state) {

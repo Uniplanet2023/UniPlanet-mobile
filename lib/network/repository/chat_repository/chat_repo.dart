@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/status/status_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/chat_room.dart';
@@ -35,6 +38,19 @@ class ChatRepository {
       );
 
       chatRoom = ChatRoom.fromMap(res.data['chat']);
+      if (res.data['msg'] == 'existing chat') {
+        return chatRoom;
+      } else {
+        bool userOnline = await Global.socketService
+            .chatRoomCreateAndCheckUserExist(chat: chatRoom);
+        if (userOnline) {
+          // Check if the widget is still mounted before proceeding
+          if (!SnackbarGlobal.key.currentContext!.mounted) return chatRoom;
+          SnackbarGlobal.key.currentContext!
+              .read<StatusBloc>()
+              .add(ConnectedEvent(userId: chatRoom.seller.id));
+        }
+      }
     } on DioException catch (e) {
       _handleDioException(e);
     }

@@ -78,12 +78,12 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _addChatRoom(AddChatRoomEvent event, emit) {
-    emit(CreatingChatRoomState(
+    emit(AddingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
     state.chatRooms.insert(0, event.chatRoom);
-    emit(CreatedChatRoomState(
+    emit(AddedChatRoomState(
       chatRoomCreated: event.chatRoom,
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
@@ -174,16 +174,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         productId: event.productId,
         productName: event.productName,
       );
-
-      bool userOnline = await Global.socketService
-          .chatRoomCreateAndCheckUserExist(chat: chatRoom);
-      if (userOnline) {
-        // Check if the widget is still mounted before proceeding
-        if (!SnackbarGlobal.key.currentContext!.mounted) return;
-        SnackbarGlobal.key.currentContext!
-            .read<StatusBloc>()
-            .add(ConnectedEvent(userId: chatRoom.seller.id));
-      }
       state.chatRooms.add(chatRoom);
       emit(CreatedChatRoomState(
         chatRooms: state.chatRooms,

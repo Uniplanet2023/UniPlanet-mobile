@@ -67,11 +67,12 @@ class SocketService {
           //     bigPicture: chat['buyer']['profileImage'],
           //     notificationLayout: NotificationLayout.Messaging,
           //     badgeCount: badgeCount);
+          ChatRoom chatRoom = ChatRoom.fromMap(chat);
+          if (context.mounted) {
+            context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
+          }
         }
-        ChatRoom chatRoom = ChatRoom.fromMap(chat);
-        if (context.mounted) {
-          context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
-        }
+
         if (isUserOnline) {
           if (context.mounted) {
             context
