@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -15,7 +16,6 @@ import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/network/api_def/api_server_address.dart';
 import 'package:uniplanet/network/notification/firebase_api.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
 
 class SocketService {
   String userId;
@@ -52,21 +52,11 @@ class SocketService {
       }
       socket.on('chat room created', (data) async {
         log('chat room created');
-        var chat = jsonDecode(data);
+        var chat = jsonDecode(data[0]);
         bool isUserOnline = await joinChatAndCheckUserExist(
             chatId: chat['id'], targetUserId: chat['seller']['id']);
-
-        if (chat['seller']['id'] == userId) {
-          // int badgeCount = await NotificationService.getCurrentBadgeCount();
-          // await NotificationService.showNotification(
-          //     title: chat['buyer']['name'],
-          //     body: '${chat['buyer']['name']} has started a conversation',
-          //     payload: {
-          //       "navigate": "true",
-          //     },
-          //     bigPicture: chat['buyer']['profileImage'],
-          //     notificationLayout: NotificationLayout.Messaging,
-          //     badgeCount: badgeCount);
+        bool existingChat = data[1];
+        if (chat['seller']['id'] == userId && !existingChat) {
           ChatRoom chatRoom = ChatRoom.fromMap(chat);
           if (context.mounted) {
             context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
@@ -279,15 +269,17 @@ class SocketService {
   }
 
   void sendDeleteChatRoomEvent(String chatId) {
-    socket.emitWithAck('delete chat room', chatId, ack: (data) {
+    socket.emitWithAck('chat room deleted', chatId, ack: (data) {
       log('chat room deleted');
     });
   }
 
-  Future<bool> chatRoomCreateAndCheckUserExist({required ChatRoom chat}) async {
+  Future<bool> chatRoomCreateAndCheckUserExist(
+      {required ChatRoom chat, required bool existingChat}) async {
     final Completer<bool> completer = Completer();
 
-    socket.emitWithAck("chat room created", chat, ack: (data) {
+    socket.emitWithAck("chat room created", [chat.toJson(), existingChat],
+        ack: (data) {
       bool userExist = data;
       if (userExist) {
         completer.complete(true);

@@ -38,18 +38,16 @@ class ChatRepository {
       );
 
       chatRoom = ChatRoom.fromMap(res.data['chat']);
-      if (res.data['msg'] == 'existing chat') {
-        return chatRoom;
-      } else {
-        bool userOnline = await Global.socketService
-            .chatRoomCreateAndCheckUserExist(chat: chatRoom);
-        if (userOnline) {
-          // Check if the widget is still mounted before proceeding
-          if (!SnackbarGlobal.key.currentContext!.mounted) return chatRoom;
-          SnackbarGlobal.key.currentContext!
-              .read<StatusBloc>()
-              .add(ConnectedEvent(userId: chatRoom.seller.id));
-        }
+
+      bool userOnline = await Global.socketService
+          .chatRoomCreateAndCheckUserExist(
+              chat: chatRoom, existingChat: res.data['msg'] == 'existing chat');
+      if (userOnline) {
+        // Check if the widget is still mounted before proceeding
+        if (!SnackbarGlobal.key.currentContext!.mounted) return chatRoom;
+        SnackbarGlobal.key.currentContext!
+            .read<StatusBloc>()
+            .add(ConnectedEvent(userId: chatRoom.seller.id));
       }
     } on DioException catch (e) {
       _handleDioException(e);

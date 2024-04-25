@@ -95,7 +95,7 @@ class _ChatListState extends State<ChatList> {
           if (itemNumber == widget.messages.length) {
             return BlocBuilder<MessageBloc, MessageBlocState>(
               builder: (context, state) {
-                if (state is EndMessageState) {
+                if (state is EndMessageState || widget.messages.length < 19) {
                   return const SizedBox();
                 } else {
                   return const Center(
