@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
 import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/like/like_bloc.dart';

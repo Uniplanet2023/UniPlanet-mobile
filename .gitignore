@@ -49,3 +49,5 @@ app.*.map.json
 /android/app/release
 /server/node_modules
 node_modules
+# apple IOS 
+ios/Runner 2024*
