@@ -34,7 +34,6 @@ class _UserHeaderState extends State<UserHeader> {
         pickImage();
       } else {
         // Handle the situation when the user declines the permission request
-        log("Permission denied");
       }
     }
   }
