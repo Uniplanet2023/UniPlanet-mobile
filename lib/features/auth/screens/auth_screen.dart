@@ -1,5 +1,7 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uniket/common/widgets/custom_button.dart';
+import 'package:uniket/constants/global_variables.dart';
 import 'package:uniket/features/auth/screens/signin_screen.dart';
 import 'package:uniket/features/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(255, 245, 234, 1),
+      backgroundColor: GlobalVariables.backgroundColor,
       body: Stack(
         children: [
           Positioned(
@@ -35,12 +37,13 @@ class AuthScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 100),
-                    const Image(
-                      image: AssetImage('assets/images/Logo_nbg.png'),
-                      width: 200,
-                      height: 200,
+                    SizedBox(height: 100.h),
+                    Image(
+                      image: const AssetImage('assets/images/Logo_nbg.png'),
+                      width: 200.w,
+                      height: 200.h,
                     ),
+                    SizedBox(height: 10.h),
                     const Text(
                       'Selling Smarter,',
                       style: TextStyle(
@@ -48,7 +51,7 @@ class AuthScreen extends StatelessWidget {
                         fontWeight: FontWeight.w200,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     const Text(
                       'Buying Better,',
                       style: TextStyle(
@@ -56,7 +59,7 @@ class AuthScreen extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     SizedBox(
                       width: 250.0,
                       child: TextAnimator(
@@ -70,7 +73,7 @@ class AuthScreen extends StatelessWidget {
                         atRestEffect: WidgetRestingEffects.wave(),
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    SizedBox(height: 50.h),
                     CustomButton(
                       text: 'Sign Up',
                       onTap: () {

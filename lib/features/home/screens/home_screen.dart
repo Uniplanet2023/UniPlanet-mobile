@@ -138,10 +138,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           const SizedBox(width: 5),
-                          const Image(
-                              image: AssetImage('assets/images/Logo_nbg.png'),
-                              width: 30,
-                              height: 30),
+                          Image(
+                              image: const AssetImage(
+                                  'assets/images/Logo_nbg.png'),
+                              width: 30.w,
+                              height: 30.h),
                           Text(
                             'UniKet',
                             style: GoogleFonts.roboto(
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   : null,
-              leadingWidth: widget.category == null ? 200 : null,
+              leadingWidth: widget.category == null ? 200.w : null,
             ),
             SliverToBoxAdapter(
               child: SizedBox(

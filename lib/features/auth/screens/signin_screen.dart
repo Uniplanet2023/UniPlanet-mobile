@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uniket/bloc/auth/auth_bloc.dart';
 import 'package:uniket/common/routes/names.dart';
@@ -87,9 +88,9 @@ class _SigninScreenState extends State<SigninScreen> {
                     key: _signInFormKey,
                     child: Column(
                       children: [
-                        const SizedBox(height: 50),
+                        SizedBox(height: 50.h),
                         Lottie.asset('assets/animations/signin.json',
-                            width: 300),
+                            width: 300.w),
                         const SizedBox(height: 30),
                         const Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
