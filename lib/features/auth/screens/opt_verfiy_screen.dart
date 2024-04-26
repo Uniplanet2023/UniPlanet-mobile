@@ -57,7 +57,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   child: Text(
                     'Enter the verification number sent to your Email address to continue:',
                     style: TextStyle(
-                      fontSize: 20.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
-import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
@@ -103,8 +103,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       alignment: Alignment.topRight,
       children: [
         Container(
-          width: 70,
-          height: 70,
+          width: 70.w,
+          height: 70.h,
           margin: const EdgeInsets.only(right: 8, bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -175,8 +175,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           InkWell(
                             onTap: selectImages,
                             child: Container(
-                              width: 70,
-                              height: 70,
+                              width: 70.w,
+                              height: 70.h,
                               margin:
                                   const EdgeInsets.only(right: 8, bottom: 8),
                               decoration: BoxDecoration(
@@ -187,12 +187,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.camera_alt,
-                                      color: Colors.grey[600]),
+                                  Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.grey[600],
+                                    size: 20.sp,
+                                  ),
                                   Text('${images.length}/10',
                                       style: TextStyle(
                                           color: Colors.grey[600],
-                                          fontSize: 12)),
+                                          fontSize: 12.sp)),
                                 ],
                               ),
                             ),
@@ -203,7 +206,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
                     // Toggle Buttons
                     Align(
                       alignment: Alignment.centerLeft,
@@ -265,6 +268,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.h),
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
@@ -293,11 +297,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               .toList(),
                         ),
                       ),
+                    SizedBox(height: 10.h),
                     if (!freeStock)
                       CustomTextField(
                         controller: priceController,
                         hintText: 'Price',
                         enabled: !freeStock,
+                        maxLength: 5,
                         keyboardType: const TextInputType.numberWithOptions(
                             signed: false,
                             decimal: true), // Set the keyboard type to number
@@ -309,13 +315,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         validatorEnabled: !freeStock,
                       ),
 
-                    const SizedBox(height: 15),
+                    SizedBox(height: 10.h),
                     CustomTextField(
                       controller: meetingLocationController,
                       hintText: 'Enter custom meeting location',
                       maxLength: 30,
                     ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 10.h),
                     CustomTextField(
                       controller: descriptionController,
                       hintText: 'Description',
@@ -323,6 +329,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       maxLength: 300,
                       keyboardType: TextInputType.multiline,
                     ),
+                    SizedBox(height: 10.h),
 
                     Container(
                       child: (state is ProductUploadingState)

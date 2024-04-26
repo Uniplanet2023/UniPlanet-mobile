@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:uniplanet/bloc/index.dart';

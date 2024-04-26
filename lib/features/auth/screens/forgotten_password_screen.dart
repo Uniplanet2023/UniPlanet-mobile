@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/constants/utils.dart';
 
 class ResetPasswordPage extends StatefulWidget {
@@ -59,9 +60,9 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _resetPassword,
-                child: const Text('Send Reset Link'),
+              CustomButton(
+                text: 'Send Reset Link',
+                onTap: _resetPassword,
               ),
             ],
           ),

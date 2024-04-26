@@ -1,9 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/common/functions/streamer.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/constants/global_variables.dart';
@@ -133,7 +130,7 @@ class _BottomBarState extends State<BottomBar> {
                   children: [
                     Expanded(
                       child: Container(
-                        height: 42,
+                        height: 40.h,
                         margin: const EdgeInsets.only(left: 15),
                         child: Material(
                           borderRadius: BorderRadius.circular(7),
@@ -155,14 +152,14 @@ class _BottomBarState extends State<BottomBar> {
                                   Icon(
                                     Icons.search,
                                     color: Colors.black54,
-                                    size: 23,
+                                    size: 20,
                                   ),
                                   SizedBox(width: 8),
                                   Text(
                                     'Search College Market',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 17,
+                                      fontSize: 18,
                                     ),
                                   ),
                                 ],
@@ -174,7 +171,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     Container(
                       color: Colors.white,
-                      height: 42,
+                      height: 20.h,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       // child:
                       //     const Icon(Icons.mic, color: Colors.black, size: 25),
@@ -188,10 +185,12 @@ class _BottomBarState extends State<BottomBar> {
                 selectedItemColor: GlobalVariables.selectedNavBarColor,
                 unselectedItemColor: GlobalVariables.unselectedNavBarColor,
                 selectedLabelStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 0.035.sw),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
                 backgroundColor: GlobalVariables.backgroundColor,
                 enableFeedback: true,
-                iconSize: 28,
+                iconSize: 20.sp,
+                selectedIconTheme: IconThemeData(size: 21.sp),
+                unselectedLabelStyle: TextStyle(fontSize: 12.sp),
                 onTap: updatePage,
                 items: <BottomNavigationBarItem>[
                   const BottomNavigationBarItem(

@@ -308,7 +308,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
 
-                //TODO: Add GridView for Seller's other products
+                // Add GridView for Seller's other products
                 BlocBuilder<SellerSaleProductBloc, SellerSaleProductState>(
                   builder: (context, state) {
                     if (state is LoadingSellerSaleProductState) {

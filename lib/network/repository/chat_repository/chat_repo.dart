@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/status/status_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/get_chat_room.dart';

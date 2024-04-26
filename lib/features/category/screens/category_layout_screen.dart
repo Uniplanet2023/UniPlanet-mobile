@@ -32,12 +32,12 @@ class _CategoryPageState extends State<CategoryPage> {
           child: Text(
             'Categories',
             style: GoogleFonts.roboto(
-              fontSize: 20.sp,
+              fontSize: 18.sp,
               color: Colors.black,
             ),
           ),
         ),
-        leadingWidth: 200,
+        leadingWidth: 200.sw,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -73,7 +73,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   );
                 } else if (state is LoadedHotProductState) {
                   return Container(
-                    height: 160.h,
+                    height: 170.h,
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -130,7 +130,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         Expanded(
                           child: Text(
                             GlobalVariables.categories[index]['name'],
-                            style: const TextStyle(fontSize: 12),
+                            style: TextStyle(fontSize: 12.sp),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.visible,
                           ),
@@ -196,7 +196,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 },
               ),
             ),
-            SizedBox(height: 60.h),
+            SizedBox(height: 90.h),
           ],
         ),
       ),
