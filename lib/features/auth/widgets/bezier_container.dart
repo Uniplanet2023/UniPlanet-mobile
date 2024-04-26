@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:uniket/constants/global_variables.dart';
+import 'package:uniplanet/constants/global_variables.dart';
 
 import 'custom_clipper.dart';
 

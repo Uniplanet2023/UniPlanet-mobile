@@ -1,9 +1,16 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniket/network/socket/socket_channel.dart';
+import 'package:uniplanet/bloc/account/account_bloc.dart';
+import 'package:uniplanet/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/like/like_bloc.dart';
+import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/network/socket/socket_channel.dart';
 
 part 'auth_bloc_event.dart';
 part 'auth_state/basic_state.dart';
@@ -102,6 +109,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (auth) {
       Global.socketService = SocketService(AuthRepository.userId!);
       Global.socketService.connect();
+      BuildContext context = SnackbarGlobal.key.currentContext!;
+      if (!context.mounted) return;
+      context.read<AccountBloc>().add(const GetAccountInfoEvent());
+      context.read<ChatBloc>().add(const LoadChatRoomEvent());
+      context.read<LikeBloc>().add(const LoadLikeEvent());
+      context
+          .read<SoldProductBloc>()
+          .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
+      context
+          .read<OnSaleProductBloc>()
+          .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
+      context.read<HotProductBloc>().add(const LoadHotProductsEvent());
       emit(const Authorized());
     } else {
       emit(const AuthenticationDeny());
@@ -148,6 +167,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           email: event.email, password: event.password);
       if (msg == 'success') {
         log('User ID: ${AuthRepository.userId}');
+        BuildContext context = SnackbarGlobal.key.currentContext!;
+        if (!context.mounted) return;
+        context.read<AccountBloc>().add(const GetAccountInfoEvent());
+        context.read<ChatBloc>().add(const LoadChatRoomEvent());
+        context.read<LikeBloc>().add(const LoadLikeEvent());
+        context
+            .read<SoldProductBloc>()
+            .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
+        context
+            .read<OnSaleProductBloc>()
+            .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
+        context.read<HotProductBloc>().add(const LoadHotProductsEvent());
         Global.socketService = SocketService(AuthRepository.userId!);
         Global.socketService.connect();
         emit(const Authorized());

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniket/common/widgets/custom_button.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/auth/screens/auth_screen.dart';
-import 'package:uniket/features/on_boarding/widgets/height_spacer.dart';
+import 'package:uniplanet/common/widgets/custom_button.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/auth/screens/auth_screen.dart';
+import 'package:uniplanet/features/on_boarding/widgets/height_spacer.dart';
 
 class PageThree extends StatelessWidget {
   const PageThree({super.key});
@@ -43,7 +43,7 @@ class PageThree extends StatelessWidget {
               ),
               const HeightSpacer(size: 20),
               Text(
-                "Explore UniKet!",
+                "Explore uniplanet!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: GoogleFonts.roboto().fontFamily,

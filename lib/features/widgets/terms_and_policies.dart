@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniket/constants/text_size_formats.dart';
+import 'package:uniplanet/constants/text_size_formats.dart';
 
 class TermsAndPolicies extends StatelessWidget {
   const TermsAndPolicies({super.key});
@@ -22,7 +22,7 @@ class TermsAndPolicies extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                subtitle: const Text('View Uniplanet Marketplace Terms of Use'),
+                subtitle: const Text('View uniplanet Marketplace Terms of Use'),
                 children: <Widget>[
                   ListTile(
                     title: Column(
@@ -31,7 +31,7 @@ class TermsAndPolicies extends StatelessWidget {
                         titleText('Terms of Use'),
                         subTitleText('INTRODUCTION'),
                         content(
-                            '1. Welcome to the Uniplanet Marketplace. These Terms of Use apply when you are using the Uniplanet Marketplace mobile application (“App”) from within the United States of America. Please read these Terms of Use carefully.'),
+                            '1. Welcome to the uniplanet Marketplace. These Terms of Use apply when you are using the uniplanet Marketplace mobile application (“App”) from within the United States of America. Please read these Terms of Use carefully.'),
                         content(
                             '2. By downloading this App, you are agreeing to the following terms, including those available by hyperlink, which are designed to ensure the correct use of the App, and any associated services for everyone.'),
                         content(
@@ -39,7 +39,7 @@ class TermsAndPolicies extends StatelessWidget {
                         content(
                             '4. In these Terms, “Service” means the service you connect via the App or the Website, and the content we provide to you through it.'),
                         content(
-                            '5. These Terms constitute a legally binding agreement between you and Uniplanet LLC and are effective as of 1st January 2024.'),
+                            '5. These Terms constitute a legally binding agreement between you and uniplanet LLC and are effective as of 1st January 2024.'),
                         const SizedBox(
                           height: 20,
                         ),
@@ -61,7 +61,7 @@ class TermsAndPolicies extends StatelessWidget {
                             'The type, detail, and service charge of the Service are as follows:'),
                         content(
                             '1. Type: mobile service providing local information'),
-                        content('2. Service Name: Uniplanet marketplace'),
+                        content('2. Service Name: uniplanet marketplace'),
                         content(
                             '3. Description: The Service provides college students with the opportunity to join a school community market which allows the user to post information in relation to second hand goods the user wishes to buy or sell and shares the user’s location information in order to identify fellow student buyers and sellers. The Service also provides local lifestyle and advertising.'),
                         content(
@@ -111,7 +111,7 @@ class TermsAndPolicies extends StatelessWidget {
                         subTitleText(
                             'HOW YOU MAY USE THE APP, INCLUDING HOW MANY DEVICES YOU MAY USE IT ON'),
                         content(
-                            'The license granted to you in Clause 2 is in consideration of your agreement to abide by these Terms. This license does not extend to a right to use any Uniplanet trademark and logo. You are solely responsible for all the information you submit to the App and any consequence that could result from your submission.'),
+                            'The license granted to you in Clause 2 is in consideration of your agreement to abide by these Terms. This license does not extend to a right to use any uniplanet trademark and logo. You are solely responsible for all the information you submit to the App and any consequence that could result from your submission.'),
                         const SizedBox(
                           height: 10,
                         ),
@@ -143,7 +143,7 @@ class TermsAndPolicies extends StatelessWidget {
                         content(
                             '1. use the App or any Service in any unlawful manner, for any unlawful purpose, or in any manner inconsistent with these Terms, or act fraudulently or maliciously, for example, by hacking into or inserting malicious code, such as viruses, or harmful data, into the App, any Service or any operating system;'),
                         content(
-                            '2. use the App or any Service to buy or sell any goods or services listed in Uniplanet market\'s Forbidden Items Policy which is available here;'),
+                            '2. use the App or any Service to buy or sell any goods or services listed in uniplanet market\'s Forbidden Items Policy which is available here;'),
                         content(
                             '3. infringe our intellectual property rights or those of any third party in relation to your use of the App or any Service (to the extent that such use is not licensed by these Terms);'),
                         content(
@@ -349,7 +349,7 @@ class TermsAndPolicies extends StatelessWidget {
                   ),
                 ),
                 subtitle:
-                    const Text('View Uniplanet Marketplace Privacy Policy'),
+                    const Text('View uniplanet Marketplace Privacy Policy'),
                 children: <Widget>[
                   ListTile(
                     title: Column(
@@ -365,18 +365,18 @@ class TermsAndPolicies extends StatelessWidget {
                         ),
                         subTitleText('INTRODUCTION'),
                         content(
-                            'Uniplanet LLC. and our affiliates ("Company" or "We") respect your privacy and are committed to protecting it by complying with this privacy policy (this "Policy").'),
+                            'uniplanet LLC. and our affiliates ("Company" or "We") respect your privacy and are committed to protecting it by complying with this privacy policy (this "Policy").'),
                         const SizedBox(
                           height: 10,
                         ),
                         secondarySubTitleText('This Policy sets out:'),
                         content(
-                            '- The types of information we may collect or that app users ("you") may provide when you download, install, register with, access or use the Uniplanet Marketplace mobile application software ("App") and any of the services accessible through the App available on "uniplanet.shop" or other sites of ours (the "Service Sites", and collectively with the App, "Uniplanet Marketplace") regarding the collection, use, storage, transfer, and protection of your personal data.\n - Our practices for collecting, using, maintaining, protecting, and disclosing that information.\nWe will only use your personal information in accordance with this Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes.\nPrivacy laws in the United States of America generally define "personal information" as any information about an identifiable individual, which includes information that can be used to identify, locate, or contact an individual, alone or when combined with other personal or identifying information.'),
+                            '- The types of information we may collect or that app users ("you") may provide when you download, install, register with, access or use the uniplanet Marketplace mobile application software ("App") and any of the services accessible through the App available on "uniplanet.shop" or other sites of ours (the "Service Sites", and collectively with the App, "uniplanet Marketplace") regarding the collection, use, storage, transfer, and protection of your personal data.\n - Our practices for collecting, using, maintaining, protecting, and disclosing that information.\nWe will only use your personal information in accordance with this Policy unless otherwise required by applicable law. We take steps to ensure that the personal information that we collect about you is adequate, relevant, not excessive, and used for limited purposes.\nPrivacy laws in the United States of America generally define "personal information" as any information about an identifiable individual, which includes information that can be used to identify, locate, or contact an individual, alone or when combined with other personal or identifying information.'),
                         const SizedBox(
                           height: 10,
                         ),
                         secondarySubTitleText(
-                            'This Policy applies only to information we collect through or in connection with Uniplanet Marketplace, in email, text, and other electronic communications sent through or in connection with Uniplanet Marketplace. This Policy DOES NOT apply to information that:'),
+                            'This Policy applies only to information we collect through or in connection with uniplanet Marketplace, in email, text, and other electronic communications sent through or in connection with uniplanet Marketplace. This Policy DOES NOT apply to information that:'),
                         content(
                             '- We collect offline.\n - You provide to or are collected by any third party.'),
                         const SizedBox(
@@ -410,7 +410,7 @@ class TermsAndPolicies extends StatelessWidget {
                         secondarySubTitleText(
                             'When you download, register with, or use the App or access, use or visit the Service Sites, we may ask you to provide:'),
                         content(
-                            '- Information by filling in forms in the Uniplanet Marketplace app. This includes information you provide when registering to use the App and/or Service Sites, subscribing to our service, posting material, or requesting further services. We may also ask you for information when you report a problem with the App.\n- Records and copies of your correspondence, including emails if you contact us.\n- Your responses to surveys that we might ask you to complete for research or other purposes.\n- Details of transactions you carry out through the App and/or Service Sites.\n\n Your search queries on Uniplanet Marketplace.\nYou may also provide information (including without limitation profile images, photos, or other digital content) for publication or display ("posted") on public areas of the App and/or the Service Sites (collectively, "User Contributions"). You post and transmit User Contributions to others at your own risk. We cannot control the actions of third parties with whom you may choose to share your User Contributions. Therefore, we do not guarantee that unauthorized persons will not view your User Contributions.'),
+                            '- Information by filling in forms in the uniplanet Marketplace app. This includes information you provide when registering to use the App and/or Service Sites, subscribing to our service, posting material, or requesting further services. We may also ask you for information when you report a problem with the App.\n- Records and copies of your correspondence, including emails if you contact us.\n- Your responses to surveys that we might ask you to complete for research or other purposes.\n- Details of transactions you carry out through the App and/or Service Sites.\n\n Your search queries on uniplanet Marketplace.\nYou may also provide information (including without limitation profile images, photos, or other digital content) for publication or display ("posted") on public areas of the App and/or the Service Sites (collectively, "User Contributions"). You post and transmit User Contributions to others at your own risk. We cannot control the actions of third parties with whom you may choose to share your User Contributions. Therefore, we do not guarantee that unauthorized persons will not view your User Contributions.'),
                         const SizedBox(
                           height: 20,
                         ),
@@ -471,7 +471,7 @@ class TermsAndPolicies extends StatelessWidget {
                         secondarySubTitleText(
                             'We may disclose personal information that we collect or you provide as described in this privacy policy:'),
                         content(
-                            '- To our subsidiaries and affiliates.\n- According to applicable law, to a buyer or other successor in the event of a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of Uniplanet LLC.\'s assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which personal information held by Uniplanet LLC. about our customers and users is among the assets transferred.\n- To contractors, service providers, and other third parties we use to support our business, such as analytics and search engine providers that help us optimize and improve our services. We contractually require these third parties to keep personal information confidential, use it only for the purposes for which we disclose it to them, and to process personal information following the same standards set out in this policy.\n- For any other purpose we disclose when you provide the information with your consent.\n- To comply with any court order, law, or legal process, including to respond to any government or regulatory request, according to applicable law.\n- To enforce our rights arising from any contracts between you and us, including the App terms and conditions.\n- If we believe disclosure is necessary or appropriate to protect the rights, property, or safety of Daangn Inc., its affiliates, our customers, or others. This includes exchanging information with other companies and organizations for fraud prevention and credit risk reduction.'),
+                            '- To our subsidiaries and affiliates.\n- According to applicable law, to a buyer or other successor in the event of a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of uniplanet LLC.\'s assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which personal information held by uniplanet LLC. about our customers and users is among the assets transferred.\n- To contractors, service providers, and other third parties we use to support our business, such as analytics and search engine providers that help us optimize and improve our services. We contractually require these third parties to keep personal information confidential, use it only for the purposes for which we disclose it to them, and to process personal information following the same standards set out in this policy.\n- For any other purpose we disclose when you provide the information with your consent.\n- To comply with any court order, law, or legal process, including to respond to any government or regulatory request, according to applicable law.\n- To enforce our rights arising from any contracts between you and us, including the App terms and conditions.\n- If we believe disclosure is necessary or appropriate to protect the rights, property, or safety of Daangn Inc., its affiliates, our customers, or others. This includes exchanging information with other companies and organizations for fraud prevention and credit risk reduction.'),
                         const SizedBox(
                           height: 20,
                         ),
@@ -546,7 +546,7 @@ class TermsAndPolicies extends StatelessWidget {
                         content(
                             '\nWe welcome your questions, comments, and requests regarding this privacy policy and our privacy practices. Please contact us at:'),
                         content(
-                            '\nPrivacy officer : Sije Park\nUniplanet LLC.\n324 62nd st, West New York, NJ, 07093'),
+                            '\nPrivacy officer : Sije Park\nuniplanet LLC.\n324 62nd st, West New York, NJ, 07093'),
                         content(
                             '\nWe have procedures in place to receive and respond to complaints or inquiries about our handling of personal information and our compliance with this policy and with applicable privacy laws. To discuss our compliance with this policy please contact our Privacy Officer using the contact information listed above.'),
                         const SizedBox(

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniket/bloc/product/product_bloc.dart';
-import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/account/widgets/list_item.dart';
-import 'package:uniket/features/edit-product/edit_product.dart';
-import 'package:uniket/models/product.dart';
-import 'package:uniket/network/repository/index.dart';
+import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
+import 'package:uniplanet/bloc/product/product_bloc.dart';
+import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/account/widgets/list_item.dart';
+import 'package:uniplanet/features/edit-product/edit_product.dart';
+import 'package:uniplanet/models/product.dart';
+import 'package:uniplanet/network/repository/index.dart';
 
 class InventoryProductBox extends StatefulWidget {
   final List<Product> productList;

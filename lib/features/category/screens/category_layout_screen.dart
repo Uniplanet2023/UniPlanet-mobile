@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/bloc/search_history/search_history_bloc.dart';
-import 'package:uniket/common/routes/names.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
+import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/models/product.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});

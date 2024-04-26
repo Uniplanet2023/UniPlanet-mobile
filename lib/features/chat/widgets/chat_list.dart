@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/message/message_bloc.dart';
-import 'package:uniket/bloc/typing/typing_bloc.dart';
-import 'package:uniket/features/chat/widgets/message_card.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/bloc/message/message_bloc.dart';
+import 'package:uniplanet/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet/features/chat/widgets/message_card.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
@@ -40,7 +40,7 @@ class _ChatListState extends State<ChatList> {
       if (!widget.scrollController.hasClients) return;
 
       if (widget.scrollController.position.pixels >=
-          widget.scrollController.position.maxScrollExtent) {
+          widget.scrollController.position.maxScrollExtent - 100) {
         // Ensure this is called only when there are items in the list
         if (widget.messages.isNotEmpty) {
           context
@@ -81,7 +81,7 @@ class _ChatListState extends State<ChatList> {
                   return const Align(
                     alignment: Alignment.centerRight,
                     child: MessageBox(
-                      isMyMessage: true,
+                      isMyMessage: false,
                     ),
                   );
                 } else {
@@ -95,12 +95,13 @@ class _ChatListState extends State<ChatList> {
           if (itemNumber == widget.messages.length) {
             return BlocBuilder<MessageBloc, MessageBlocState>(
               builder: (context, state) {
-                return state is EndMessageState ||
-                        state.chatMessages.length < 19
-                    ? const SizedBox()
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                if (state is EndMessageState || widget.messages.length < 19) {
+                  return const SizedBox();
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
               },
             );
           }

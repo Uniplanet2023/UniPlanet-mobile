@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    iosBundleId: 'com.example.uniplanetMobile',
+    iosBundleId: 'shop.uniplanet.uniplanet',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -76,6 +76,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    iosBundleId: 'com.example.uniplanetMobile.RunnerTests',
+    iosBundleId: 'shop.uniplanet.uniplanet.RunnerTests',
   );
 }

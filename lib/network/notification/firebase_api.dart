@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniket/constants/utils.dart';
+import 'package:uniplanet/constants/utils.dart';
 
 class FirebaseApi {
   late String userId;
@@ -8,31 +8,39 @@ class FirebaseApi {
   // ignore: prefer_typing_uninitialized_variables
   static late final firebaseToken;
   Future<void> initNotification() async {
-    // NotificationSettings settings = await firebaseMessaging.requestPermission(
-    //   alert: true,
-    //   announcement: false,
-    //   badge: false,
-    //   carPlay: false,
-    //   criticalAlert: false,
-    //   provisional: false,
-    //   sound: true,
-    // );
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
-    // if (settings.authorizationStatus == AuthorizationStatus.authorized ||
-    //     settings.authorizationStatus == AuthorizationStatus.provisional) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var fcmToken = prefs.get('fcm_token');
-    if (fcmToken == null) {
-      firebaseToken = await firebaseMessaging.getToken();
-      prefs.setString('fcm_token', firebaseToken);
-    } else {
-      firebaseToken = fcmToken;
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: false,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    if (Platform.isIOS) {
+      final apnsToken = await firebaseMessaging.getAPNSToken();
+      if (apnsToken == null) {
+        log('APNS Token is null');
+      }
+      log('APNS Token: $apnsToken');
     }
+    await FirebaseMessaging.instance.setAutoInitEnabled(false);
+    if (settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional) {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      firebaseToken = await firebaseMessaging.getToken();
+      // var fcmToken = prefs.get('fcm_token');
+      // if (fcmToken == null) {
 
-    log('FCM Token: $firebaseToken');
-    // } else {
-    //   log('User declined permission');
-    // }
+      //   prefs.setString('fcm_token', firebaseToken);
+      // } else {
+      //   firebaseToken = fcmToken;
+      // }
+
+      log('FCM Token: $firebaseToken');
+    } else {
+      log('User declined permission');
+    }
   }
 
   Future<void> subscribeToTopic(String topic) async {

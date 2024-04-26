@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/on_boarding/widgets/height_spacer.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/on_boarding/widgets/height_spacer.dart';
 
 class PageOne extends StatelessWidget {
   const PageOne({super.key});

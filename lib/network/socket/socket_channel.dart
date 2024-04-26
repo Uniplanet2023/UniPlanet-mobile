@@ -1,19 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/common/enums/message_enum.dart';
-import 'package:uniket/common/enums/message_status_enum.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/models/chat_room.dart';
-import 'package:uniket/models/image_message.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/models/user_model.dart';
-import 'package:uniket/network/api_def/api_server_address.dart';
-import 'package:uniket/network/notification/firebase_api.dart';
-import 'package:uniket/network/notification/notification_handler/notification_service.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/enums/message_enum.dart';
+import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/common/functions/cloudinary_image.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/models/image_message.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/network/api_def/api_server_address.dart';
+import 'package:uniplanet/network/notification/firebase_api.dart';
 
 class SocketService {
   String userId;
@@ -50,22 +52,17 @@ class SocketService {
       }
       socket.on('chat room created', (data) async {
         log('chat room created');
-        var chat = jsonDecode(data);
+        var chat = jsonDecode(data[0]);
         bool isUserOnline = await joinChatAndCheckUserExist(
             chatId: chat['id'], targetUserId: chat['seller']['id']);
-        if (chat['seller']['id'] == userId) {
-          await NotificationService.showNotification(
-            title: chat['seller']['name'],
-            body: '${chat['seller']['name']} has started a conversation',
-            payload: {
-              "navigate": "true",
-            },
-          );
+        bool existingChat = data[1];
+        if (chat['seller']['id'] == userId && !existingChat) {
+          ChatRoom chatRoom = ChatRoom.fromMap(chat);
+          if (context.mounted) {
+            context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
+          }
         }
-        ChatRoom chatRoom = ChatRoom.fromMap(chat);
-        if (context.mounted) {
-          context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
-        }
+
         if (isUserOnline) {
           if (context.mounted) {
             context
@@ -90,8 +87,10 @@ class SocketService {
         }
       });
 
-      socket.on('typing', (chatId) {
-        if (context.mounted) {
+      socket.on('typing', (data) {
+        String chatId = data[0];
+        String senderId = data[1];
+        if (context.mounted && senderId != userId) {
           context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
         }
       });
@@ -179,7 +178,7 @@ class SocketService {
 
         sentMessage = await sendMessage(
           id: imageMessage.message.id,
-          message: response.secureUrl,
+          message: cloudinaryTransformImage(response.secureUrl),
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
@@ -253,9 +252,6 @@ class SocketService {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
     }
     socket.emit('typing', chatId);
-    if (context.mounted) {
-      context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
-    }
 
     // Set a new timer
     _typingTimer = Timer(const Duration(seconds: 1), () {
@@ -265,21 +261,20 @@ class SocketService {
 
   void sendStopTypingEvent(String chatId, BuildContext context) {
     socket.emit('stop typing', chatId);
-    if (context.mounted) {
-      context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
-    }
   }
 
   void sendDeleteChatRoomEvent(String chatId) {
-    socket.emitWithAck('delete chat room', chatId, ack: (data) {
+    socket.emitWithAck('chat room deleted', chatId, ack: (data) {
       log('chat room deleted');
     });
   }
 
-  Future<bool> chatRoomCreateAndCheckUserExist({required ChatRoom chat}) async {
+  Future<bool> chatRoomCreateAndCheckUserExist(
+      {required ChatRoom chat, required bool existingChat}) async {
     final Completer<bool> completer = Completer();
 
-    socket.emitWithAck("chat room created", chat, ack: (data) {
+    socket.emitWithAck("chat room created", [chat.toJson(), existingChat],
+        ack: (data) {
       bool userExist = data;
       if (userExist) {
         completer.complete(true);

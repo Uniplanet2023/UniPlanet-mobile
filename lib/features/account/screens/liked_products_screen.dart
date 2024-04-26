@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/features/account/widgets/inventory_screen_product_box.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/features/account/widgets/inventory_screen_product_box.dart';
 
 class LikedProductsScreen extends StatefulWidget {
   const LikedProductsScreen({super.key});

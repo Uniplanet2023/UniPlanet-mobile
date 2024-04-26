@@ -1,4 +1,4 @@
-# uniket
+# uniplanet
 
 resell market mobile flutter project
 

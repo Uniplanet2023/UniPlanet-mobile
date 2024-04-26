@@ -1,42 +1,39 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniket/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniket/common/widgets/bottom_bar.dart';
-import 'package:uniket/common/widgets/error_screen.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/auth/screens/signup_screen.dart';
-import 'package:uniket/features/on_boarding/screens/on_boarding_screen.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/common/routes/router.dart';
-import 'package:uniket/network/notification/notification_handler/index.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniket/statemanager_provider.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/widgets/bottom_bar.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/auth/screens/signup_screen.dart';
+import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/common/routes/router.dart';
+import 'package:uniplanet/network/notification/firebase_options.dart';
+import 'package:uniplanet/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   log("Handling a background message:");
-
-  if (message.data.containsKey('type')) {
-    final String type = message.data['type'];
-    switch (type) {
-      case 'new message':
-        newMessageHandler(message);
-        break;
-      case 'creating chat':
-        creatingChatHandler(message);
-        log('notification');
-        break;
-      default:
-        log('Unable to handle message');
-    }
-  }
+  // await NotificationService.init();
+  // if (message.data.containsKey('type')) {
+  //   final String type = message.data['type'];
+  //   switch (type) {
+  //     case 'new message':
+  //       newMessageHandler(message);
+  //       break;
+  //     case 'creating chat':
+  //       creatingChatHandler(message);
+  //       log('notification');
+  //       break;
+  //     default:
+  //       log('Unable to handle message');
+  //   }
+  // }
 }
 
 void main() async {
@@ -50,7 +47,8 @@ void main() async {
     if (inDebug) {
       return ErrorWidget(details.exception);
     }
-    return const ErrorScreen();
+    return ErrorWidget(details.exception);
+    // return const ErrorScreen();
   };
 
   runApp(const StateManagerProvider());
@@ -104,7 +102,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.detached) {
       log('detached');
       // App is detached (app suspended in the background)
-      Global.socketService.disconnect();
+      if (Global.socketService.socket.connected) {
+        Global.socketService.disconnect();
+      }
     }
   }
 
@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: SnackbarGlobal.key,
         navigatorKey: MyApp.navigatorKey,
-        title: 'Uniplanet Marketplace',
+        title: 'UniPlanet Marketplace',
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
             primary: GlobalVariables.secondaryColor,
@@ -133,16 +133,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         onGenerateRoute: (settings) => generateRoute(settings),
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           if (state is Authorized) {
-            context.read<AccountBloc>().add(const GetAccountInfoEvent());
-            context.read<ChatBloc>().add(const LoadChatRoomEvent());
-            context.read<LikeBloc>().add(const LoadLikeEvent());
-            context
-                .read<SoldProductBloc>()
-                .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
-            context
-                .read<OnSaleProductBloc>()
-                .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
-            context.read<HotProductBloc>().add(const LoadHotProductsEvent());
             return const BottomBar();
           } else if (state is AuthenticationDeny ||
               state is ValidationFailedState) {

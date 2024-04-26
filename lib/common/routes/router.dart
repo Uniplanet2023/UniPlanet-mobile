@@ -1,21 +1,21 @@
 import "package:flutter/material.dart";
-import "package:uniket/common/routes/names.dart";
-import 'package:uniket/common/widgets/bottom_bar.dart';
-import 'package:uniket/features/add-product/screens/add_product_screen.dart';
-import "package:uniket/features/auth/screens/auth_screen.dart";
-import "package:uniket/features/auth/screens/opt_verfiy_screen.dart";
-import 'package:uniket/features/auth/screens/signin_screen.dart';
-import 'package:uniket/features/auth/screens/signup_screen.dart';
-import 'package:uniket/features/auth/screens/splash_screen.dart';
-import "package:uniket/features/category/screens/categories.dart";
-import "package:uniket/features/chat/screens/chat_layout_screen.dart";
-import "package:uniket/features/chat/screens/chat_screen.dart";
-import "package:uniket/features/home/screens/home_screen.dart";
-import "package:uniket/features/product_details/screens/product_details_screen.dart";
-import "package:uniket/features/search/screens/search_screen.dart";
-import "package:uniket/models/chat_room.dart";
-import "package:uniket/models/product.dart";
-import "package:uniket/models/user_model.dart";
+import "package:uniplanet/common/routes/names.dart";
+import 'package:uniplanet/common/widgets/bottom_bar.dart';
+import 'package:uniplanet/features/add-product/screens/add_product_screen.dart';
+import "package:uniplanet/features/auth/screens/auth_screen.dart";
+import "package:uniplanet/features/auth/screens/opt_verfiy_screen.dart";
+import 'package:uniplanet/features/auth/screens/signin_screen.dart';
+import 'package:uniplanet/features/auth/screens/signup_screen.dart';
+import 'package:uniplanet/features/auth/screens/splash_screen.dart';
+import "package:uniplanet/features/category/screens/categories.dart";
+import "package:uniplanet/features/chat/screens/chat_layout_screen.dart";
+import "package:uniplanet/features/chat/screens/chat_screen.dart";
+import "package:uniplanet/features/home/screens/home_screen.dart";
+import "package:uniplanet/features/product_details/screens/product_details_screen.dart";
+import "package:uniplanet/features/search/screens/search_screen.dart";
+import "package:uniplanet/models/chat_room.dart";
+import "package:uniplanet/models/product.dart";
+import "package:uniplanet/models/user_model.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -92,7 +92,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => ChatScreen(
           client: client,
-          chatRoomId: chatRoom.id,
+          chatRoom: chatRoom,
         ),
       );
     case AppRoutes.chatLayoutPage:

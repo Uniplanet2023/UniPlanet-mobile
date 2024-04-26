@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniket/models/product.dart';
-import 'package:uniket/network/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/models/product.dart';
+import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
 
 part 'sold_product_event.dart';
 part 'sold_product_state/basic_state.dart';
@@ -56,7 +56,8 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
     List<Product>? myProducts = await _productRepository.getMyProduct(
         page: state.soldPage, status: 'sold', userId: event.userId);
     if (myProducts == null) {
-      emit(const ErrorSoldProductState("Error"));
+      emit(ErrorSoldProductState("Error loading sold product",
+          soldProduct: state.soldProduct, soldPage: state.soldPage));
       return;
     }
     if (myProducts.isEmpty) {
@@ -82,7 +83,8 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
     List<Product>? onSaleProduct = await _productRepository.getMyProduct(
         page: nextPage, status: "sold", userId: event.userId);
     if (onSaleProduct == null) {
-      emit(const ErrorSoldProductState("Error"));
+      emit(ErrorSoldProductState("Error loading sold product",
+          soldProduct: state.soldProduct, soldPage: state.soldPage));
       return;
     }
     if (onSaleProduct.isEmpty) {

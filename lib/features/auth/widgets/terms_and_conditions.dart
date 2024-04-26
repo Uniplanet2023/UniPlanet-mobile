@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/widgets/terms_and_policies.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/widgets/terms_and_policies.dart';
 
 class TermsAndConditions extends StatefulWidget {
   const TermsAndConditions({super.key});

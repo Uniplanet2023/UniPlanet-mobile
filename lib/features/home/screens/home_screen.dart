@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniket/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/home/widgets/build_product_box.dart';
-import 'package:uniket/models/product.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/home/widgets/build_product_box.dart';
+import 'package:uniplanet/models/product.dart';
 
 class HomeScreen extends StatefulWidget {
   final ScrollController controller;
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             bottom: 16,
                           ),
                           title: Text(widget.category ??
-                              'UniKet'), // Show category if it's not null otherwise 'UniKet'
+                              'UniPlanet'), // Show category if it's not null otherwise 'uniplanet'
                           background: Container(
                             decoration: const BoxDecoration(
                               gradient: GlobalVariables.appBarGradient,
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 30.w,
                               height: 30.h),
                           Text(
-                            'UniKet',
+                            'UniPlanet',
                             style: GoogleFonts.roboto(
                               fontSize: 20.sp,
                               fontWeight: FontWeight.w500,

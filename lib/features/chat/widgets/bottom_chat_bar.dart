@@ -2,16 +2,17 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/common/enums/message_enum.dart';
-import 'package:uniket/common/enums/message_status_enum.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/global.dart';
-import 'package:uniket/models/image_message.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniket/network/socket/socket_channel.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/enums/message_enum.dart';
+import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/common/functions/cloudinary_image.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/image_message.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/network/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
@@ -68,8 +69,14 @@ class _BottomChatFieldState extends State<BottomChatField> {
           message: _messageController.text,
           receiverId: widget.sellerId,
           context: context));
+
+      // Check if the widget is still mounted before updating the state
+      if (!mounted) return;
+
       _messageController.clear();
-      isShowSendButton = false;
+      setState(() {
+        isShowSendButton = false;
+      });
       widget.scrollDownfuction();
     }
   }
@@ -132,7 +139,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
       // Check if the context is still mounted before proceeding
       if (response.secureUrl.isEmpty) throw Exception('Image uploading failed');
-      tempMessage.message = response.secureUrl;
+      tempMessage.message = cloudinaryTransformImage(response.secureUrl);
       return tempMessage;
     } catch (e) {
       tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);
@@ -188,9 +195,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
   void selectVideo() async {
     File? video = await pickVideoFromGallery(context);
-    if (video != null) {
-      sendFileMessage(video, MessageEnum.video);
-    }
+    if (video == null) return;
+    sendFileMessage(video, MessageEnum.video);
   }
 
   void selectGIF() async {
@@ -274,7 +280,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                             icon: const Icon(Icons.camera_alt),
                             onPressed: () async {
                               File? image = await openCamera();
-                              sendImages([XFile(image!.path)]);
+                              if (image == null) return;
+                              sendImages([XFile(image.path)]);
                             },
                             padding: const EdgeInsets.all(0),
                             color: GlobalVariables.primaryColor,

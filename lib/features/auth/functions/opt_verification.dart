@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 
 void optVerification(BuildContext context, email, otpCode) async {
   final authState = context.read<AuthBloc>().state;

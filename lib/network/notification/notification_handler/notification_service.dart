@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/chat/screens/chat_screen.dart';
-import 'package:uniket/main.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
+import 'package:uniplanet/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet/main.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class NotificationService {
   static bool isNotificationAllowed = false;
@@ -94,7 +95,8 @@ class NotificationService {
       ReceivedAction receivedAction) async {
     log('Notification action: ${receivedAction.id}');
     try {
-      BuildContext? context = MyApp.navigatorKey.currentContext;
+      BuildContext? context = SnackbarGlobal.key.currentContext;
+      if (context == null) return;
       if (receivedAction.payload?['navigate'] == 'true') {
         if (receivedAction.payload?['sender'] != null &&
             receivedAction.payload?['message'] != null) {
@@ -104,14 +106,11 @@ class NotificationService {
           var pref = await SharedPreferences.getInstance();
           var userData = pref.getString('userRecord');
           var userRecord = jsonDecode(userData.toString());
-          if (userRecord != null && context != null && context.mounted) {
+          if (userRecord != null && context.mounted) {
             // SocketService.instance.readAllMessages(messageJson['chat']);
             await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) {
-                return ChatScreen(
-                  client: sender,
-                  chatRoomId: messageJson['chat'],
-                );
+                return const ChatList();
               }),
             );
           }
@@ -135,6 +134,27 @@ class NotificationService {
     }
   }
 
+  static Future<int> getCurrentBadgeCount() async {
+    try {
+      int currentBadgeCount =
+          await AwesomeNotifications().getGlobalBadgeCounter();
+      print("Current Badge Count: $currentBadgeCount");
+      return currentBadgeCount;
+    } catch (e) {
+      print("Failed to fetch badge count: $e");
+      return 0; // Return 0 or handle the exception as necessary
+    }
+  }
+
+  void checkNotifications() async {
+    int badgeCount = await NotificationService.getCurrentBadgeCount();
+    // Now you can decide what to do with the badge count
+    // For example, reset if the user has seen all notifications
+    if (badgeCount > 0) {
+      await AwesomeNotifications().resetGlobalBadge();
+    }
+  }
+
   static Future<void> showNotification({
     required String title,
     required String body,
@@ -147,24 +167,34 @@ class NotificationService {
     final List<NotificationActionButton>? actionButtons,
     final bool scheduled = false,
     final int? interval,
+    final String? largeIcon,
+    final String? icon,
+    final int? badgeCount,
   }) async {
     assert(
       scheduled == false || interval != null,
       'Interval must be provided when scheduling a notification',
     );
     if (NotificationService.isNotificationAllowed == false) return;
+    // Check if body starts with the specific URL and replace it
+    String modifiedBody =
+        body.startsWith("https://res.cloudinary.com/dtgmmfv3d/")
+            ? "image"
+            : body;
+
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: -1,
         channelKey: 'basic_channel',
         title: title,
-        body: body,
+        body: modifiedBody,
         payload: payload,
         summary: summary,
         notificationLayout: notificationLayout,
         category: category,
         bigPicture: bigPicture,
-        largeIcon: 'assets/images/Logo.png',
+        largeIcon: largeIcon,
+        badge: badgeCount,
       ),
       actionButtons: actionButtons,
       schedule: scheduled

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'package:uniket/common/enums/message_enum.dart';
-import 'package:uniket/common/enums/message_status_enum.dart';
-import 'package:uniket/common/widgets/full_image.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/models/message.dart';
+import 'package:uniplanet/common/enums/message_enum.dart';
+import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/common/widgets/full_image.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/models/message.dart';
 
 class MessageCard extends StatelessWidget {
   final Message oldMessage;
@@ -100,7 +100,10 @@ class MessageCard extends StatelessWidget {
                 child: Text(
                   oldMessage.createdAt.day + 1 == DateTime.now().toLocal().day
                       ? 'Yesterday'
-                      : DateFormat('d MMM').format(oldMessage.createdAt),
+                      : oldMessage.createdAt.day + 1 <
+                              DateTime.now().toLocal().day
+                          ? DateFormat('d MMM').format(oldMessage.createdAt)
+                          : '',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black54,
@@ -135,20 +138,24 @@ class MessageBox extends StatelessWidget {
           ? isOverflowing = true
           : isOverflowing = newlineCount > 9;
     }
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
-        maxHeight: isTyping ? 40.h : 250.h,
-      ),
-      child: Card(
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        color: getColorForCard(),
-        margin: EdgeInsets.fromLTRB(
-            isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
-        child: Padding(
-          padding: getPaddingForContent(),
-          child: getContentWidget(context, isTyping, isOverflowing),
+    return Align(
+      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
+          maxHeight: isTyping ? 40.h : 250.h,
+        ),
+        child: Card(
+          elevation: 1,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          color: getColorForCard(),
+          margin: EdgeInsets.fromLTRB(
+              isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
+          child: Padding(
+            padding: getPaddingForContent(),
+            child: getContentWidget(context, isTyping, isOverflowing),
+          ),
         ),
       ),
     );

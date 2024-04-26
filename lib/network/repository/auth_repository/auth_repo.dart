@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uniket/constants/error_handling.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/network/api_def/api_server_address.dart';
-import 'package:uniket/network/api_def/display_error_messages.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo_interface.dart';
-import 'package:uniket/network/api_def/dio_client.dart';
+import 'package:uniplanet/constants/error_handling.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/network/api_def/api_server_address.dart';
+import 'package:uniplanet/network/api_def/display_error_messages.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo_interface.dart';
+import 'package:uniplanet/network/api_def/dio_client.dart';
 
 class AuthRepository implements IAuthRepository {
   final DioClient _dioClient;

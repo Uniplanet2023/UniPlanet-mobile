@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniket/features/account/screens/inventory_products_screen.dart';
-import 'package:uniket/features/account/screens/sold_products_screen.dart';
-import 'package:uniket/features/product_details/screens/seller_inventory_screen.dart';
-import 'package:uniket/features/product_details/screens/seller_sold_products_screen.dart';
-import 'package:uniket/models/user_model.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
+import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
+import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
+import 'package:uniplanet/features/product_details/screens/seller_sold_products_screen.dart';
+import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final User user;

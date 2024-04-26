@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/search_history/search_history_bloc.dart';
-import 'package:uniket/bloc/search_product/search_product_bloc.dart';
-import 'package:uniket/common/widgets/loader.dart';
-import 'package:uniket/constants/global_variables.dart';
+import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
+import 'package:uniplanet/bloc/search_product/search_product_bloc.dart';
+import 'package:uniplanet/common/widgets/loader.dart';
+import 'package:uniplanet/constants/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:uniket/features/search/widget/search_history_list.dart';
-import 'package:uniket/features/search/widget/searched_product_list.dart';
+import 'package:uniplanet/features/search/widget/search_history_list.dart';
+import 'package:uniplanet/features/search/widget/searched_product_list.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({
@@ -23,6 +23,9 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     context.read<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
+    // context.read<SearchProductBloc>().add(
+    //         InitalSearchProductEvent(),
+    //       );
   }
 
   @override

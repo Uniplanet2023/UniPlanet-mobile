@@ -347,21 +347,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildPriceText(double price) {
-    return RichText(
-      text: TextSpan(
-        text: 'Price: ',
-        style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            overflow: TextOverflow.ellipsis),
-        children: [
-          TextSpan(
-            text: (price == 0) ? "Free" : '\$$price',
-            style: const TextStyle(
-                fontSize: 22, color: Colors.red, fontWeight: FontWeight.w500),
-          ),
-        ],
+    return Expanded(
+      child: RichText(
+        text: TextSpan(
+          text: 'Price: ',
+          style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              overflow: TextOverflow.ellipsis),
+          children: [
+            TextSpan(
+              text: (price == 0) ? "Free" : '\$$price',
+              style: const TextStyle(
+                  fontSize: 22,
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                  overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -371,9 +376,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: BlocConsumer<ChatBloc, ChatBlocState>(
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
+            CreatedChatRoomState createdState = state;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
-              "seller": state.chatRooms.last.seller,
-              "chatRoom": state.chatRooms.last
+              "seller": createdState.chatRoomCreated.seller,
+              "chatRoom": createdState.chatRoomCreated
+            });
+          } else if (state is AddedChatRoomState) {
+            AddedChatRoomState addedChatRoomState = state;
+            Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
+              "seller": addedChatRoomState.chatRoomCreated.buyer,
+              "chatRoom": addedChatRoomState.chatRoomCreated,
             });
           }
         },

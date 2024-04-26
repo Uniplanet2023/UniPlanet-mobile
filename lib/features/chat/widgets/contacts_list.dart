@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:uniket/bloc/chat/chat_bloc.dart';
-import 'package:uniket/bloc/status/status_bloc.dart';
-import 'package:uniket/bloc/typing/typing_bloc.dart';
-import 'package:uniket/common/enums/chat_enum.dart';
-import 'package:uniket/common/enums/message_enum.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/chat/screens/chat_screen.dart';
-import 'package:uniket/models/chat_room.dart';
-import 'package:uniket/models/message.dart';
-import 'package:uniket/models/user_model.dart';
-import 'package:uniket/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet/bloc/status/status_bloc.dart';
+import 'package:uniplanet/bloc/typing/typing_bloc.dart';
+import 'package:uniplanet/common/enums/chat_enum.dart';
+import 'package:uniplanet/common/enums/message_enum.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/account/screens/user_profile.dart';
+import 'package:uniplanet/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;
@@ -96,7 +97,7 @@ class _ContactsListState extends State<ContactsList> {
                             MaterialPageRoute(builder: (context) {
                               return ChatScreen(
                                 client: client,
-                                chatRoomId: widget.list[index].id,
+                                chatRoom: widget.list[index],
                               );
                             }),
                           );
@@ -171,13 +172,23 @@ class _ContactsListState extends State<ContactsList> {
                                     size: 50,
                                   ),
                                 )
-                              : CircleAvatar(
-                                  backgroundImage: CachedNetworkImageProvider(
-                                    client.profileImage!,
-                                    cacheManager:
-                                        GlobalVariables.customCacheManager,
+                              : GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                        return UserProfileScreen(
+                                            user: widget.list[index].seller);
+                                      }),
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundImage: CachedNetworkImageProvider(
+                                      client.profileImage!,
+                                      cacheManager:
+                                          GlobalVariables.customCacheManager,
+                                    ),
+                                    radius: 30,
                                   ),
-                                  radius: 30,
                                 ),
                           BlocBuilder<StatusBloc, StatusState>(
                             builder: (context, state) {

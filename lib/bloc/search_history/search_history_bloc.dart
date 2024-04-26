@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniket/network/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/network/repository/account_repository/account_repo.dart';
 
 part 'search_history_event.dart';
 part 'search_history_state/search_history_basic.dart';
@@ -61,11 +61,12 @@ class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
     try {
       List<String>? result =
           await _accountRepository.getSearchHistory(page: event.page);
-      if (result == null) {
-        throw Exception('Failed to get search history');
-      }
       // Create a new list instead of modifying the existing one
-
+      if (result == null) {
+        emit(const FailedToGetSearchHistoryState(
+            message: "Fail to Get Search History", searchHistory: []));
+        return;
+      }
       emit(GotSearchHistoryState(searchHistory: result));
     } catch (e) {
       emit(FailedToGetSearchHistoryState(

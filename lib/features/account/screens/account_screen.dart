@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniket/bloc/account/account_bloc.dart';
-import 'package:uniket/bloc/auth/auth_bloc.dart';
-import 'package:uniket/common/routes/names.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/account/screens/account_settings_screen.dart';
-import 'package:uniket/features/account/screens/help_screen.dart';
-import 'package:uniket/features/account/screens/inventory_products_screen.dart';
-import 'package:uniket/features/account/screens/liked_products_screen.dart';
-import 'package:uniket/features/account/screens/sold_products_screen.dart';
-import 'package:uniket/features/account/widgets/menu_section.dart';
-import 'package:uniket/features/account/widgets/user_header.dart';
-import 'package:uniket/features/widgets/terms_and_policies.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:uniplanet/bloc/account/account_bloc.dart';
+import 'package:uniplanet/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/account/screens/account_settings_screen.dart';
+import 'package:uniplanet/features/account/screens/help_screen.dart';
+import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
+import 'package:uniplanet/features/account/screens/liked_products_screen.dart';
+import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
+import 'package:uniplanet/features/account/widgets/menu_section.dart';
+import 'package:uniplanet/features/account/widgets/user_header.dart';
+import 'package:uniplanet/features/widgets/terms_and_policies.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});

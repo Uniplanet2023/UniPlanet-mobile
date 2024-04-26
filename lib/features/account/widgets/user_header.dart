@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniket/bloc/index.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/constants/utils.dart';
-import 'package:uniket/features/account/screens/user_profile.dart';
-import 'package:uniket/models/user_model.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/account/screens/user_profile.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class UserHeader extends StatefulWidget {
   final User currentUser;
@@ -21,6 +22,23 @@ class _UserHeaderState extends State<UserHeader> {
   File? image;
 
   Future<void> selectImage() async {
+    final permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted) {
+      pickImage();
+    } else if (permissionStatus.isPermanentlyDenied) {
+      openAppSettings();
+    } else {
+      final newStatus = await Permission.photos.request();
+      if (newStatus.isGranted) {
+        pickImage();
+      } else {
+        // Handle the situation when the user declines the permission request
+      }
+    }
+  }
+
+  Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
         await picker.pickImage(source: ImageSource.gallery);

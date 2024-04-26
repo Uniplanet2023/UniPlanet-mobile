@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniket/bloc/auth/auth_bloc.dart';
-import 'package:uniket/common/routes/names.dart';
-import 'package:uniket/common/widgets/custom_button.dart';
-import 'package:uniket/common/widgets/custom_textfield.dart';
-import 'package:uniket/constants/global_variables.dart';
-import 'package:uniket/features/auth/functions/signup.dart';
-import 'package:uniket/features/auth/widgets/bezier_container.dart';
-import 'package:uniket/features/auth/widgets/terms_and_conditions.dart';
-import 'package:uniket/constants/university_list.dart';
+import 'package:uniplanet/bloc/auth/auth_bloc.dart';
+import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/common/widgets/custom_button.dart';
+import 'package:uniplanet/common/widgets/custom_textfield.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/auth/functions/signup.dart';
+import 'package:uniplanet/features/auth/widgets/bezier_container.dart';
+import 'package:uniplanet/features/auth/widgets/terms_and_conditions.dart';
+import 'package:uniplanet/constants/university_list.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
