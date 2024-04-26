@@ -176,8 +176,7 @@ class SocketService {
 
         sentMessage = await sendMessage(
           id: imageMessage.message.id,
-          message: cloudinaryTransformImage(response.secureUrl,
-              width: 500, height: 500),
+          message: cloudinaryTransformImage(response.secureUrl),
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
@@ -251,9 +250,6 @@ class SocketService {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
     }
     socket.emit('typing', chatId);
-    if (context.mounted) {
-      context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
-    }
 
     // Set a new timer
     _typingTimer = Timer(const Duration(seconds: 1), () {
@@ -263,9 +259,6 @@ class SocketService {
 
   void sendStopTypingEvent(String chatId, BuildContext context) {
     socket.emit('stop typing', chatId);
-    if (context.mounted) {
-      context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
-    }
   }
 
   void sendDeleteChatRoomEvent(String chatId) {

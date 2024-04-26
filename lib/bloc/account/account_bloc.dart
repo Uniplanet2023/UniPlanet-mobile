@@ -51,7 +51,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           folder: 'profile-image/${state.account.user.id}'),
     );
 
-    String transformedUrl = cloudinaryTransformImage(response.secureUrl);
+    String transformedUrl =
+        cloudinaryTransformImage(response.secureUrl, width: 200, height: 200);
 
     Account? account = await _accountRepository.updateProfileImage(
         profileImage: transformedUrl);

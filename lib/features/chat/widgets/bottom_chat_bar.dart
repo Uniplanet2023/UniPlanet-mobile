@@ -139,8 +139,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
       // Check if the context is still mounted before proceeding
       if (response.secureUrl.isEmpty) throw Exception('Image uploading failed');
-      tempMessage.message =
-          cloudinaryTransformImage(response.secureUrl, width: 500, height: 500);
+      tempMessage.message = cloudinaryTransformImage(response.secureUrl);
       return tempMessage;
     } catch (e) {
       tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);

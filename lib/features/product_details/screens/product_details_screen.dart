@@ -20,7 +20,6 @@ import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/account/widgets/remove_product_dialog.dart';
 import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
-import 'package:uniplanet/features/product_details/screens/seller_sold_products_screen.dart';
 import 'package:uniplanet/features/product_details/widgets/seller_other_list.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user_model.dart';

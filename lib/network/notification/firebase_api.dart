@@ -20,7 +20,7 @@ class FirebaseApi {
     if (Platform.isIOS) {
       final apnsToken = await firebaseMessaging.getAPNSToken();
       if (apnsToken == null) {
-        throw Exception('APNS Token is null');
+        log('APNS Token is null');
       }
       log('APNS Token: $apnsToken');
     }

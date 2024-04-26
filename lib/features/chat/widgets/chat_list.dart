@@ -81,7 +81,7 @@ class _ChatListState extends State<ChatList> {
                   return const Align(
                     alignment: Alignment.centerRight,
                     child: MessageBox(
-                      isMyMessage: true,
+                      isMyMessage: false,
                     ),
                   );
                 } else {

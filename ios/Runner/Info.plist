@@ -30,6 +30,10 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>INSendMessageIntent</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>UniPlanet would like to access your camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>

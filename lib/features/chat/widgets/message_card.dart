@@ -100,7 +100,10 @@ class MessageCard extends StatelessWidget {
                 child: Text(
                   oldMessage.createdAt.day + 1 == DateTime.now().toLocal().day
                       ? 'Yesterday'
-                      : DateFormat('d MMM').format(oldMessage.createdAt),
+                      : oldMessage.createdAt.day + 1 <
+                              DateTime.now().toLocal().day
+                          ? DateFormat('d MMM').format(oldMessage.createdAt)
+                          : '',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black54,
