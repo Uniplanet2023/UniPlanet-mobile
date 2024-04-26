@@ -1,9 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/common/functions/streamer.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/constants/global_variables.dart';

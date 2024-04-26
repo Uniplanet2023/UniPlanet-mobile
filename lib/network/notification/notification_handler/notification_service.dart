@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
-import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/main.dart';
-import 'package:uniplanet/models/user_model.dart';
 
 class NotificationService {
   static bool isNotificationAllowed = false;
@@ -100,9 +98,9 @@ class NotificationService {
       if (receivedAction.payload?['navigate'] == 'true') {
         if (receivedAction.payload?['sender'] != null &&
             receivedAction.payload?['message'] != null) {
-          var messageJson = jsonDecode(receivedAction.payload!['message']!);
-          var userJson = jsonDecode(receivedAction.payload!['sender']!);
-          User sender = User.fromMap(userJson);
+          // var messageJson = jsonDecode(receivedAction.payload!['message']!);
+          // var userJson = jsonDecode(receivedAction.payload!['sender']!);
+          // User sender = User.fromMap(userJson);
           var pref = await SharedPreferences.getInstance();
           var userData = pref.getString('userRecord');
           var userRecord = jsonDecode(userData.toString());
@@ -138,10 +136,10 @@ class NotificationService {
     try {
       int currentBadgeCount =
           await AwesomeNotifications().getGlobalBadgeCounter();
-      print("Current Badge Count: $currentBadgeCount");
+      log("Current Badge Count: $currentBadgeCount");
       return currentBadgeCount;
     } catch (e) {
-      print("Failed to fetch badge count: $e");
+      log("Failed to fetch badge count: $e");
       return 0; // Return 0 or handle the exception as necessary
     }
   }

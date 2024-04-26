@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
@@ -75,8 +76,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       alignment: Alignment.topRight,
       children: [
         Container(
-          width: 70,
-          height: 70,
+          width: 70.w,
+          height: 70.h,
           margin: const EdgeInsets.only(right: 8, bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -200,6 +201,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Column(
                   children: [
+                    const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Wrap(
@@ -208,8 +210,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           InkWell(
                             onTap: selectImages,
                             child: Container(
-                              width: 70,
-                              height: 70,
+                              width: 70.w,
+                              height: 70.h,
                               margin:
                                   const EdgeInsets.only(right: 8, bottom: 8),
                               decoration: BoxDecoration(
@@ -220,13 +222,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.camera_alt,
-                                      color: Colors.grey[600]),
+                                  Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.grey[600],
+                                    size: 20.sp,
+                                  ),
                                   Text(
                                       '${images.length + originalImages.length}/10',
                                       style: TextStyle(
                                           color: Colors.grey[600],
-                                          fontSize: 12)),
+                                          fontSize: 12.sp)),
                                 ],
                               ),
                             ),
@@ -240,7 +245,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
                     // Toggle Buttons
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
@@ -324,6 +329,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.h),
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
@@ -352,11 +358,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               .toList(),
                         ),
                       ),
+                    SizedBox(height: 10.h),
                     if (!freeStock)
                       CustomTextField(
                         controller: priceController,
                         hintText: 'Price',
                         enabled: !freeStock,
+                        maxLength: 5,
                         keyboardType: const TextInputType.numberWithOptions(
                             signed: false,
                             decimal: true), // Set the keyboard type to number
@@ -368,13 +376,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         validatorEnabled: freeStock,
                       ),
 
-                    const SizedBox(height: 15),
+                    SizedBox(height: 10.h),
                     CustomTextField(
                       controller: meetingLocationController,
                       hintText: 'Enter custom meeting location',
                       maxLength: 30,
                     ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 10.h),
                     CustomTextField(
                       controller: descriptionController,
                       hintText: 'Description',
@@ -382,7 +390,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       maxLength: 300,
                       keyboardType: TextInputType.multiline,
                     ),
-
+                    SizedBox(height: 10.h),
                     Container(
                       child: isUploading
                           ? const Center(child: CircularProgressIndicator())
@@ -393,6 +401,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               },
                             ),
                     ),
+                    SizedBox(height: 10.h),
                   ],
                 ),
               ),

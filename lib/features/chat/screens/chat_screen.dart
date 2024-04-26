@@ -1,7 +1,6 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/get_product/get_product_bloc.dart';
