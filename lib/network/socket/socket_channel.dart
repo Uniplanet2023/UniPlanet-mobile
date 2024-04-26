@@ -87,8 +87,10 @@ class SocketService {
         }
       });
 
-      socket.on('typing', (chatId) {
-        if (context.mounted) {
+      socket.on('typing', (data) {
+        String chatId = data[0];
+        String senderId = data[1];
+        if (context.mounted && senderId != userId) {
           context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
         }
       });

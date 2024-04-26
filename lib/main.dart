@@ -13,45 +13,43 @@ import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/common/routes/router.dart';
 import 'package:uniplanet/network/notification/firebase_options.dart';
-import 'package:uniplanet/network/notification/notification_handler/index.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
 import 'package:uniplanet/statemanager_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   log("Handling a background message:");
-  await NotificationService.init();
-  if (message.data.containsKey('type')) {
-    final String type = message.data['type'];
-    switch (type) {
-      case 'new message':
-        newMessageHandler(message);
-        break;
-      case 'creating chat':
-        creatingChatHandler(message);
-        log('notification');
-        break;
-      default:
-        log('Unable to handle message');
-    }
-  }
+  // await NotificationService.init();
+  // if (message.data.containsKey('type')) {
+  //   final String type = message.data['type'];
+  //   switch (type) {
+  //     case 'new message':
+  //       newMessageHandler(message);
+  //       break;
+  //     case 'creating chat':
+  //       creatingChatHandler(message);
+  //       log('notification');
+  //       break;
+  //     default:
+  //       log('Unable to handle message');
+  //   }
+  // }
 }
 
 void main() async {
   await Global.init();
-  // ErrorWidget.builder = (FlutterErrorDetails details) {
-  //   bool inDebug = false;
-  //   assert(() {
-  //     inDebug = true;
-  //     return true;
-  //   }());
-  //   if (inDebug) {
-  //     return ErrorWidget(details.exception);
-  //   }
-  //   return ErrorWidget(details.exception);
-  //   // return const ErrorScreen();
-  // };
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    bool inDebug = false;
+    assert(() {
+      inDebug = true;
+      return true;
+    }());
+    if (inDebug) {
+      return ErrorWidget(details.exception);
+    }
+    return ErrorWidget(details.exception);
+    // return const ErrorScreen();
+  };
 
   runApp(const StateManagerProvider());
 }

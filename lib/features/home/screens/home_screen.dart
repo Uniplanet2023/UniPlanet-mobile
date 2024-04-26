@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             bottom: 16,
                           ),
                           title: Text(widget.category ??
-                              'uniplanet'), // Show category if it's not null otherwise 'uniplanet'
+                              'UniPlanet'), // Show category if it's not null otherwise 'uniplanet'
                           background: Container(
                             decoration: const BoxDecoration(
                               gradient: GlobalVariables.appBarGradient,
@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 30,
                               height: 30),
                           Text(
-                            'uniplanet',
+                            'UniPlanet',
                             style: GoogleFonts.roboto(
                               fontSize: 20.sp,
                               fontWeight: FontWeight.w500,

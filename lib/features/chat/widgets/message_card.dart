@@ -138,20 +138,24 @@ class MessageBox extends StatelessWidget {
           ? isOverflowing = true
           : isOverflowing = newlineCount > 9;
     }
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
-        maxHeight: isTyping ? 40.h : 250.h,
-      ),
-      child: Card(
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        color: getColorForCard(),
-        margin: EdgeInsets.fromLTRB(
-            isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
-        child: Padding(
-          padding: getPaddingForContent(),
-          child: getContentWidget(context, isTyping, isOverflowing),
+    return Align(
+      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
+          maxHeight: isTyping ? 40.h : 250.h,
+        ),
+        child: Card(
+          elevation: 1,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          color: getColorForCard(),
+          margin: EdgeInsets.fromLTRB(
+              isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
+          child: Padding(
+            padding: getPaddingForContent(),
+            child: getContentWidget(context, isTyping, isOverflowing),
+          ),
         ),
       ),
     );

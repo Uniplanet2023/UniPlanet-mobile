@@ -3,6 +3,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/main.dart';
 import 'package:uniplanet/models/user_model.dart';
@@ -109,10 +110,7 @@ class NotificationService {
             // SocketService.instance.readAllMessages(messageJson['chat']);
             await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) {
-                return ChatScreen(
-                  client: sender,
-                  chatRoomId: messageJson['chat'],
-                );
+                return const ChatList();
               }),
             );
           }

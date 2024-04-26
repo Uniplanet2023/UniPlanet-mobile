@@ -17,6 +17,22 @@ class ProductRepository {
 
   ProductRepository(this._dioClient);
 
+  Future<Product?> getProduct({required String productId}) async {
+    try {
+      final response = await _dioClient.dio.get(
+        '$productURI/get-product/$productId',
+        options: _dioClient.getDioOptions(),
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        return Product.fromJson(response.data);
+      }
+    } on DioException catch (e) {
+      log(e);
+    }
+    return null;
+  }
+
   Future<String> deleteProduct({required String productId}) async {
     try {
       final response = await _dioClient.dio.delete(

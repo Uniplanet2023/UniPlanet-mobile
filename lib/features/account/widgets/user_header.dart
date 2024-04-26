@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
@@ -21,6 +22,24 @@ class _UserHeaderState extends State<UserHeader> {
   File? image;
 
   Future<void> selectImage() async {
+    final permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted) {
+      pickImage();
+    } else if (permissionStatus.isPermanentlyDenied) {
+      openAppSettings();
+    } else {
+      final newStatus = await Permission.photos.request();
+      if (newStatus.isGranted) {
+        pickImage();
+      } else {
+        // Handle the situation when the user declines the permission request
+        log("Permission denied");
+      }
+    }
+  }
+
+  Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
         await picker.pickImage(source: ImageSource.gallery);

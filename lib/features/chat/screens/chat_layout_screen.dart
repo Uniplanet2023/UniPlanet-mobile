@@ -30,14 +30,22 @@ class _ChatListState extends State<ChatList> {
               elevation: 0,
               backgroundColor: GlobalVariables.backgroundColor,
               centerTitle: false,
-              title: Text(
-                'uniplanet',
-                style: TextStyle(
-                  fontStyle: GoogleFonts.roboto().fontStyle,
-                  fontSize: 20,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                ),
+              title: Row(
+                children: [
+                  const Image(
+                      image: AssetImage('assets/images/Logo_nbg.png'),
+                      width: 30,
+                      height: 30),
+                  Text(
+                    'UniPlanet',
+                    style: TextStyle(
+                      fontStyle: GoogleFonts.roboto().fontStyle,
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               bottom: const TabBar(
                 indicatorColor: GlobalVariables.secondaryColor,

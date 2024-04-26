@@ -10,6 +10,7 @@ import 'package:uniplanet/common/enums/chat_enum.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
@@ -96,7 +97,7 @@ class _ContactsListState extends State<ContactsList> {
                             MaterialPageRoute(builder: (context) {
                               return ChatScreen(
                                 client: client,
-                                chatRoomId: widget.list[index].id,
+                                chatRoom: widget.list[index],
                               );
                             }),
                           );
@@ -171,13 +172,23 @@ class _ContactsListState extends State<ContactsList> {
                                     size: 50,
                                   ),
                                 )
-                              : CircleAvatar(
-                                  backgroundImage: CachedNetworkImageProvider(
-                                    client.profileImage!,
-                                    cacheManager:
-                                        GlobalVariables.customCacheManager,
+                              : GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                        return UserProfileScreen(
+                                            user: widget.list[index].seller);
+                                      }),
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundImage: CachedNetworkImageProvider(
+                                      client.profileImage!,
+                                      cacheManager:
+                                          GlobalVariables.customCacheManager,
+                                    ),
+                                    radius: 30,
                                   ),
-                                  radius: 30,
                                 ),
                           BlocBuilder<StatusBloc, StatusState>(
                             builder: (context, state) {

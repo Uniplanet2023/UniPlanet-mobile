@@ -38,6 +38,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       await _deleteProduct(event, emit);
     });
   }
+
   _deleteProduct(DeleteProductEvent event, emit) async {
     emit(
         ProductDeletingState(productList: state.productList, page: state.page));

@@ -92,7 +92,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => ChatScreen(
           client: client,
-          chatRoomId: chatRoom.id,
+          chatRoom: chatRoom,
         ),
       );
     case AppRoutes.chatLayoutPage:

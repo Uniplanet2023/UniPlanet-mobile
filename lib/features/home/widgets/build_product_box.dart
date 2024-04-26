@@ -122,37 +122,47 @@ class _ItemBoxState extends State<ItemBox> {
                                             )
                                           : Row(
                                               children: [
-                                                RichText(
-                                                  text: TextSpan(children: [
-                                                    TextSpan(
-                                                        text: '\$',
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .grey.shade800,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    TextSpan(
-                                                        text:
-                                                            '${PriceFormatter(product.price).getDigit()}.',
-                                                        style: const TextStyle(
-                                                            fontSize: 25,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    TextSpan(
-                                                        text: PriceFormatter(
-                                                                product.price)
-                                                            .getDecimal(),
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .grey.shade800,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold))
-                                                  ]),
-                                                )
+                                                Expanded(
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                            text: '\$',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade800,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        TextSpan(
+                                                            text:
+                                                                '${PriceFormatter(product.price).getDigit()}.',
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 25,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            )),
+                                                        TextSpan(
+                                                            text: PriceFormatter(
+                                                                    product
+                                                                        .price)
+                                                                .getDecimal(),
+                                                            style: TextStyle(
+                                                              color: Colors.grey
+                                                                  .shade800,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                       const SizedBox(
