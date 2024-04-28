@@ -75,7 +75,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     context.read<AuthBloc>().add(const TokenValidationEvent());
-    context.read<ProductBloc>().add(const LoadProductEvent());
     initialize();
   }
 

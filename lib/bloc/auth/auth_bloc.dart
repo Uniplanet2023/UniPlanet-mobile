@@ -5,6 +5,7 @@ import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/like/like_bloc.dart';
+import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
@@ -111,6 +112,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       Global.socketService.connect();
       BuildContext context = SnackbarGlobal.key.currentContext!;
       if (!context.mounted) return;
+      context.read<ProductBloc>().add(const LoadProductEvent());
       context.read<AccountBloc>().add(const GetAccountInfoEvent());
       context.read<ChatBloc>().add(const LoadChatRoomEvent());
       context.read<LikeBloc>().add(const LoadLikeEvent());
@@ -169,6 +171,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         log('User ID: ${AuthRepository.userId}');
         BuildContext context = SnackbarGlobal.key.currentContext!;
         if (!context.mounted) return;
+        context.read<ProductBloc>().add(const LoadProductEvent());
         context.read<AccountBloc>().add(const GetAccountInfoEvent());
         context.read<ChatBloc>().add(const LoadChatRoomEvent());
         context.read<LikeBloc>().add(const LoadLikeEvent());
