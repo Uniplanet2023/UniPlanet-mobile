@@ -58,7 +58,6 @@ class AuthRepository implements IAuthRepository {
           data: {
             'email': email,
             'password': password,
-            'firebaseToken': FirebaseApi.firebaseToken
           },
           options: _dioClient.getDioOptions());
 

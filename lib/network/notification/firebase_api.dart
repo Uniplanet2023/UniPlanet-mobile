@@ -23,18 +23,10 @@ class FirebaseApi {
       }
       log('APNS Token: $apnsToken');
     }
-    await FirebaseMessaging.instance.setAutoInitEnabled(false);
+    await firebaseMessaging.setAutoInitEnabled(false);
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
       firebaseToken = await firebaseMessaging.getToken();
-      // var fcmToken = prefs.get('fcm_token');
-      // if (fcmToken == null) {
-
-      //   prefs.setString('fcm_token', firebaseToken);
-      // } else {
-      //   firebaseToken = fcmToken;
-      // }
 
       log('FCM Token: $firebaseToken');
     } else {
