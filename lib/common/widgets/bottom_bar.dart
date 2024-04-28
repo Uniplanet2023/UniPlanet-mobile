@@ -212,7 +212,7 @@ class _BottomBarState extends State<BottomBar> {
                   BottomNavigationBarItem(
                       icon: BlocBuilder<ChatBloc, ChatBlocState>(
                         builder: (context, state) {
-                          if (state.totalUnseenMessageCount != 0) {
+                          if (state.totalUnseenMessageCount > 0) {
                             return badges.Badge(
                               badgeContent: Container(
                                 decoration: BoxDecoration(
