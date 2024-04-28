@@ -18,22 +18,18 @@ class Global {
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    await DioClient.instance.initCookie();
-
     //Firebase
     //Firebase initialization
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    //Firebase notification initialization
-    await FirebaseApi().initNotification();
     //Firebase background message handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    await NotificationService.init();
+    // await NotificationService.init();
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-      alert: false,
-      badge: false,
-      sound: false,
+      alert: true,
+      badge: true,
+      sound: true,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("Received a message in the foreground: $message");

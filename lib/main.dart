@@ -6,12 +6,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/widgets/bottom_bar.dart';
+import 'package:uniplanet/common/widgets/error_screen.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/auth/screens/signup_screen.dart';
 import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/common/routes/router.dart';
+import 'package:uniplanet/network/api_def/dio_client.dart';
+import 'package:uniplanet/network/notification/firebase_api.dart';
 import 'package:uniplanet/network/notification/firebase_options.dart';
 import 'package:uniplanet/statemanager_provider.dart';
 
@@ -47,8 +50,7 @@ void main() async {
     if (inDebug) {
       return ErrorWidget(details.exception);
     }
-    return ErrorWidget(details.exception);
-    // return const ErrorScreen();
+    return const ErrorScreen();
   };
 
   runApp(const StateManagerProvider());
@@ -63,9 +65,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  splashScreenController() async {
-    await Future.delayed(const Duration(seconds: 3));
-    FlutterNativeSplash.remove();
+  void initialize() async {
+    await DioClient.instance.initCookie();
+    await FirebaseApi().initNotification();
   }
 
   @override
@@ -74,7 +76,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     context.read<AuthBloc>().add(const TokenValidationEvent());
     context.read<ProductBloc>().add(const LoadProductEvent());
-    splashScreenController();
+    initialize();
   }
 
   @override

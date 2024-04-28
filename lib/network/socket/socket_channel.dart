@@ -138,6 +138,7 @@ class SocketService {
       });
       log('FirebaseToken: ${FirebaseApi.firebaseToken}');
       if (FirebaseApi.firebaseToken == null) {
+        FirebaseApi().initNotification();
         log('FirebaseToken is null');
       } else if (context.read<AuthBloc>().state is Authorized) {
         socket.emit("setup", FirebaseApi.firebaseToken);

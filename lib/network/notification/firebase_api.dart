@@ -3,18 +3,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:uniplanet/constants/utils.dart';
 
 class FirebaseApi {
-  late String userId;
   static final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   // ignore: prefer_typing_uninitialized_variables
   static late final firebaseToken;
   Future<void> initNotification() async {
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
-      announcement: false,
-      badge: false,
+      announcement: true,
+      badge: true,
       carPlay: false,
-      criticalAlert: false,
-      provisional: false,
+      criticalAlert: true,
+      provisional: true,
       sound: true,
     );
     if (Platform.isIOS) {
