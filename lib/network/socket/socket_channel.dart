@@ -261,9 +261,12 @@ class SocketService {
     socket.emit('stop typing', chatId);
   }
 
-  void sendDeleteChatRoomEvent(String chatId) {
-    socket.emitWithAck('chat room deleted', chatId, ack: (data) {
-      log('chat room deleted');
+  void sendDeleteChatRoomEvent(String chatId, String clientId) {
+    // Emitting the event with acknowledgement
+    socket.emitWithAck(
+        'chat room deleted', {'chatRoom': chatId, 'clientId': clientId},
+        ack: (data) {
+      log('Chat room deleted: $data'); // Use print in Dart for logging
     });
   }
 

@@ -62,7 +62,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       String msg = await _chatRepository.deleteChatRoom(chatId: event.chatId);
       if (msg == 'success') {
         state.chatRooms.removeWhere((element) => element.id == event.chatId);
-        Global.socketService.sendDeleteChatRoomEvent(event.chatId);
+
+        Global.socketService
+            .sendDeleteChatRoomEvent(event.chatId, event.clientId);
         emit(DeletedChatRoomState(
           chatRooms: state.chatRooms,
           totalUnseenMessageCount: state.totalUnseenMessageCount,

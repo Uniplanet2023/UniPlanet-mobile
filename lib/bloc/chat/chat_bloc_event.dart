@@ -70,9 +70,10 @@ class EmptyUnseenMessageEvent extends ChatBlocEvent {
 // delete chat room
 class DeleteChatRoomEvent extends ChatBlocEvent {
   final String chatId;
-  const DeleteChatRoomEvent({required this.chatId});
+  final String clientId;
+  const DeleteChatRoomEvent({required this.chatId, required this.clientId});
   @override
-  List<Object?> get props => [chatId];
+  List<Object?> get props => [chatId, clientId];
 }
 
 class DeletedChatByClient extends ChatBlocEvent {

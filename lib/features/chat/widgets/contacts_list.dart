@@ -27,7 +27,7 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
-  _onDismissed(int index, ChatActions action) {
+  _onDismissed(int index, ChatActions action, User client) {
     switch (action) {
       case ChatActions.archive:
         // Archive chat room
@@ -35,9 +35,8 @@ class _ContactsListState extends State<ContactsList> {
       // ignore: constant_pattern_never_matches_value_type
       case ChatActions.delete:
         // Delete chat room
-        context
-            .read<ChatBloc>()
-            .add(DeleteChatRoomEvent(chatId: widget.list[index].id));
+        context.read<ChatBloc>().add(DeleteChatRoomEvent(
+            chatId: widget.list[index].id, clientId: client.id));
         setState(() {
           widget.list.removeAt(index);
         });
@@ -78,7 +77,7 @@ class _ContactsListState extends State<ContactsList> {
                   children: [
                     SlidableAction(
                       onPressed: (context) {
-                        _onDismissed(index, ChatActions.delete);
+                        _onDismissed(index, ChatActions.delete, client);
                       },
                       icon: Icons.delete,
                       backgroundColor: Colors.red,

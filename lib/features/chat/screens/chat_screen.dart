@@ -130,8 +130,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       TextButton(
                         onPressed: () {
                           // Proceed with deletion after confirmation
-                          context.read<ChatBloc>().add(
-                              DeleteChatRoomEvent(chatId: widget.chatRoom.id));
+                          context.read<ChatBloc>().add(DeleteChatRoomEvent(
+                              chatId: widget.chatRoom.id,
+                              clientId: widget.client.id));
                           Navigator.of(context).pop(); // Dismiss the dialog
                           Navigator.of(context)
                               .pop(); // Navigate back from current screen

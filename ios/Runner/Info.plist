@@ -35,10 +35,10 @@
 		<string>INSendMessageIntent</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>UniPlanet would like to access your camera</string>
+	<string>UniPlanet needs to access your camera to allow you to take photos of products you wish to sell, update your profile picture, and share images directly in chats.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>UniPlanet would like to access your photo library</string>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<key>UniPlanet needs to access your photo library to store and manage product images, profile pictures, and images from chats for buying and selling on the platform. </key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
@@ -64,5 +64,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

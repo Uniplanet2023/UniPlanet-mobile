@@ -15,7 +15,6 @@ class ChatList extends StatefulWidget {
 class _ChatListState extends State<ChatList> {
   @override
   void initState() {
-    context.read<ChatBloc>().add(const LoadChatRoomEvent());
     super.initState();
   }
 
