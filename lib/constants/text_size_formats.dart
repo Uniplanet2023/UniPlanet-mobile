@@ -18,7 +18,7 @@ Widget subTitleText(String title,
   return Text(
     title,
     textAlign: textAlign,
-    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: color),
+    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: color),
   );
 }
 
@@ -27,7 +27,7 @@ Widget secondarySubTitleText(String title,
   return Text(
     title,
     textAlign: textAlign,
-    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: color),
+    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: color),
   );
 }
 
