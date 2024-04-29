@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+import 'package:uniplanet/common/functions/open_gallery.dart';
 import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
 import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
@@ -39,13 +40,18 @@ class UserProfileScreen extends StatelessWidget {
                       SizedBox(
                         height: 20.h,
                       ),
-                      Hero(
-                        tag: 'user-pfp',
-                        child: CircleAvatar(
-                          radius: 60
-                              .w, // Assuming you have defined 'w' somewhere as a width factor
-                          backgroundImage:
-                              CachedNetworkImageProvider(user.profileImage!),
+                      GestureDetector(
+                        onTap: () {
+                          openGallery(context, 1, [user.profileImage!]);
+                        },
+                        child: Hero(
+                          tag: 'user-pfp',
+                          child: CircleAvatar(
+                            radius: 60
+                                .w, // Assuming you have defined 'w' somewhere as a width factor
+                            backgroundImage:
+                                CachedNetworkImageProvider(user.profileImage!),
+                          ),
                         ),
                       ),
                       SizedBox(

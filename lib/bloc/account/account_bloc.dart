@@ -52,7 +52,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     );
 
     String transformedUrl =
-        cloudinaryTransformImage(response.secureUrl, width: 200, height: 200);
+        cloudinaryTransformImage(response.secureUrl, width: 500, height: 500);
 
     Account? account = await _accountRepository.updateProfileImage(
         profileImage: transformedUrl);

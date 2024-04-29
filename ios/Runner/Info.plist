@@ -41,8 +41,8 @@
 	<key>NSCameraUsageDescription</key>
 	<string>UniPlanet needs to access your camera to allow you to take photos of products, update your profile picture, and share images in chats.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>UniPlanet would like to access your photo library</string>
-	<key>UniPlanet needs to access your photo library to store product images, profile pictures, and images from chats. </key>
+	<string>UniPlanet needs to access your photo library to store product images, profile pictures, and images from chats.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
