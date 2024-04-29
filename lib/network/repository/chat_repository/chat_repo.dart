@@ -82,11 +82,14 @@ class ChatRepository {
     }
   }
 
-  Future<GetChatRooms> getChatRooms() async {
+  Future<GetChatRooms> getChatRooms({required int page}) async {
     List<ChatRoom> chatRoomList = [];
     try {
-      Response res = await _dioClient.dio
-          .get('$chatURI/get-chat-list', options: _dioClient.getDioOptions());
+      Response res = await _dioClient.dio.get(
+        '$chatURI/get-chat-list',
+        options: _dioClient.getDioOptions(),
+        queryParameters: {'page': page},
+      );
       if (res.data.length == 0) {
         return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
       }

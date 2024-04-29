@@ -109,7 +109,7 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
     state.onSaleProduct.addAll(onSaleProduct);
     emit(LoadedOnSaleProductState(
       onSaleProduct: state.onSaleProduct,
-      onSalePage: state.onSalePage,
+      onSalePage: nextPage,
     ));
   }
 }

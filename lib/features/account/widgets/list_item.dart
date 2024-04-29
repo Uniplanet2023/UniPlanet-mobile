@@ -46,10 +46,8 @@ class ListItem extends StatelessWidget {
                               size: 135,
                             )
                           : Container(
-                              foregroundDecoration: BoxDecoration(
-                                color: (product.status == 'On Sale')
-                                    ? Colors.transparent
-                                    : Colors.grey,
+                              foregroundDecoration: const BoxDecoration(
+                                color: Colors.transparent,
                                 backgroundBlendMode: BlendMode.saturation,
                               ),
                               child: CachedNetworkImage(

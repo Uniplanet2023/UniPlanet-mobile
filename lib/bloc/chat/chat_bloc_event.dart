@@ -32,6 +32,12 @@ class LoadChatRoomEvent extends ChatBlocEvent {
   List<Object> get props => [];
 }
 
+class LoadMoreChatRoomEvent extends ChatBlocEvent {
+  const LoadMoreChatRoomEvent();
+  @override
+  List<Object> get props => [];
+}
+
 class LoadMessageEvent extends ChatBlocEvent {
   @override
   List<Object> get props => [];

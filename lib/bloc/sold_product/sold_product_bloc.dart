@@ -97,7 +97,7 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
     state.soldProduct.addAll(onSaleProduct);
     emit(LoadedSoldProductState(
       soldProduct: state.soldProduct,
-      soldPage: state.soldPage,
+      soldPage: nextPage,
     ));
   }
 }

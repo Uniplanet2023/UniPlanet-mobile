@@ -27,6 +27,32 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
+  bool _isLoading = false;
+
+  void _fetchData() async {
+    if (!_isLoading) {
+      setState(() => _isLoading = true);
+      context.read<ChatBloc>().add(const LoadMoreChatRoomEvent());
+      // Simulate a network request delay
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Fetch data logic here, possibly increasing _currentPage
+      // Update widget.list here with new items
+
+      setState(() => _isLoading = false);
+    }
+  }
+
+  bool _onScrollNotification(ScrollNotification notification) {
+    if (notification is ScrollEndNotification &&
+        notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+      if (context.read<ChatBloc>().state is! EndChatRoomState) {
+        _fetchData();
+      }
+    }
+    return false;
+  }
+
   _onDismissed(int index, ChatActions action, User client) {
     switch (action) {
       case ChatActions.archive:
@@ -50,217 +76,225 @@ class _ContactsListState extends State<ContactsList> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: SlidableAutoCloseBehavior(
-        closeWhenOpened: true,
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: widget.list.length,
-          itemBuilder: (context, index) {
-            return Builder(builder: (BuildContext innerContext) {
-              User client =
-                  widget.list[index].seller.id == AuthRepository.userId
-                      ? widget.list[index].buyer
-                      : widget.list[index].seller;
-
-              // Determine if the user is typing f    or this chat room.
-              Message last;
-              if (widget.list[index].lastMessage != null) {
-                last = widget.list[index].lastMessage!;
-              } else {
-                last = Message.initMessage();
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _onScrollNotification,
+        child: SlidableAutoCloseBehavior(
+          closeWhenOpened: true,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.list.length + (_isLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == widget.list.length && widget.list.length > 9) {
+                return const Center(child: CircularProgressIndicator());
               }
+              return Builder(builder: (BuildContext innerContext) {
+                User client =
+                    widget.list[index].seller.id == AuthRepository.userId
+                        ? widget.list[index].buyer
+                        : widget.list[index].seller;
 
-              return Slidable(
-                key: Key(widget.list[index].id),
-                endActionPane: ActionPane(
-                  motion: const BehindMotion(),
-                  children: [
-                    SlidableAction(
-                      onPressed: (context) {
-                        _onDismissed(index, ChatActions.delete, client);
-                      },
-                      icon: Icons.delete,
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      label: 'Delete',
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        final slidable = Slidable.of(innerContext);
-                        if (slidable == null) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) {
-                              return ChatScreen(
-                                client: client,
-                                chatRoom: widget.list[index],
-                              );
-                            }),
-                          );
-                        } else {
-                          final isClosed = slidable.actionPaneType.value ==
-                              ActionPaneType.none;
-                          if (isClosed) {
-                            slidable.openStartActionPane();
-                          } else {
-                            slidable.close();
-                          }
-                        }
-                      },
-                      title: Text(
-                        widget.sort == 'product'
-                            ? widget.list[index].productName
-                            : client.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                        ),
+                // Determine if the user is typing f    or this chat room.
+                Message last;
+                if (widget.list[index].lastMessage != null) {
+                  last = widget.list[index].lastMessage!;
+                } else {
+                  last = Message.initMessage();
+                }
+
+                return Slidable(
+                  key: Key(widget.list[index].id),
+                  endActionPane: ActionPane(
+                    motion: const BehindMotion(),
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) {
+                          _onDismissed(index, ChatActions.delete, client);
+                        },
+                        icon: Icons.delete,
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        label: 'Delete',
                       ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: BlocBuilder<TypingBloc, TypingState>(
-                          builder: (context, state) {
-                            bool isTyping = state is TypingStarted &&
-                                state.chatId == widget.list[index].id;
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if (isTyping)
-                                  const SpinKitThreeBounce(
-                                    color: Colors
-                                        .grey, // Adjust the color to fit your app theme
-                                    size:
-                                        20.0, // Adjust the size based on your UI
-                                  ),
-                                if (!isTyping)
-                                  Expanded(
-                                    child: Text(
-                                      last.messageType ==
-                                              MessageEnum.image.value
-                                          ? "Image"
-                                          : last.message,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: last.sender !=
-                                                    AuthRepository.userId &&
-                                                last.readDate == null
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines:
-                                          1, // Ensure only one line is shown
-                                    ),
-                                  ),
-                              ],
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        onTap: () {
+                          final slidable = Slidable.of(innerContext);
+                          if (slidable == null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) {
+                                return ChatScreen(
+                                  client: client,
+                                  chatRoom: widget.list[index],
+                                );
+                              }),
                             );
-                          },
+                          } else {
+                            final isClosed = slidable.actionPaneType.value ==
+                                ActionPaneType.none;
+                            if (isClosed) {
+                              slidable.openStartActionPane();
+                            } else {
+                              slidable.close();
+                            }
+                          }
+                        },
+                        title: Text(
+                          widget.sort == 'product'
+                              ? widget.list[index].productName
+                              : client.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      leading: Stack(
-                        children: [
-                          client.profileImage == null
-                              ? const CircleAvatar(
-                                  backgroundColor: Colors.grey,
-                                  radius: 30,
-                                  child: Icon(
-                                    Icons.person,
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                )
-                              : GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                        return UserProfileScreen(
-                                            user: widget.list[index].seller);
-                                      }),
-                                    );
-                                  },
-                                  child: CircleAvatar(
-                                    backgroundImage: CachedNetworkImageProvider(
-                                      client.profileImage!,
-                                      cacheManager:
-                                          GlobalVariables.customCacheManager,
-                                    ),
-                                    radius: 30,
-                                  ),
-                                ),
-                          BlocBuilder<StatusBloc, StatusState>(
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: BlocBuilder<TypingBloc, TypingState>(
                             builder: (context, state) {
-                              return Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: state.online.contains(client.id)
-                                      ? const Icon(Icons.circle,
-                                          color: Colors.green, size: 16)
-                                      : const Icon(Icons.circle,
-                                          color: Colors.red, size: 16));
+                              bool isTyping = state is TypingStarted &&
+                                  state.chatId == widget.list[index].id;
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  if (isTyping)
+                                    const SpinKitThreeBounce(
+                                      color: Colors
+                                          .grey, // Adjust the color to fit your app theme
+                                      size:
+                                          20.0, // Adjust the size based on your UI
+                                    ),
+                                  if (!isTyping)
+                                    Expanded(
+                                      child: Text(
+                                        last.messageType ==
+                                                MessageEnum.image.value
+                                            ? "Image"
+                                            : last.message,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: last.sender !=
+                                                      AuthRepository.userId &&
+                                                  last.readDate == null
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines:
+                                            1, // Ensure only one line is shown
+                                      ),
+                                    ),
+                                ],
+                              );
                             },
                           ),
-                        ],
-                      ),
-                      trailing: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 30,
-                            child: Text(
-                              widget.list[index].lastMessage?.createdAt != null
-                                  ? formatTimestamp(
-                                      widget.list[index].lastMessage!.createdAt)
-                                  : "",
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13,
+                        ),
+                        leading: Stack(
+                          children: [
+                            client.profileImage == null
+                                ? const CircleAvatar(
+                                    backgroundColor: Colors.grey,
+                                    radius: 30,
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                          return UserProfileScreen(
+                                              user: widget.list[index].seller);
+                                        }),
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                        client.profileImage!,
+                                        cacheManager:
+                                            GlobalVariables.customCacheManager,
+                                      ),
+                                      radius: 30,
+                                    ),
+                                  ),
+                            BlocBuilder<StatusBloc, StatusState>(
+                              builder: (context, state) {
+                                return Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: state.online.contains(client.id)
+                                        ? const Icon(Icons.circle,
+                                            color: Colors.green, size: 16)
+                                        : const Icon(Icons.circle,
+                                            color: Colors.red, size: 16));
+                              },
+                            ),
+                          ],
+                        ),
+                        trailing: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 30,
+                              child: Text(
+                                widget.list[index].lastMessage?.createdAt !=
+                                        null
+                                    ? formatTimestamp(widget
+                                        .list[index].lastMessage!.createdAt)
+                                    : "",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
-                          ),
-                          widget.list[index].unseenMessageCount == 0
-                              ? const SizedBox()
-                              : Container(
-                                  width: 25,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    color: Colors
-                                        .red, // Background color for the circle
-                                    borderRadius: BorderRadius.circular(
-                                        10), // Makes it round
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    minWidth:
-                                        45, // Minimum width for the red circle
-                                    minHeight:
-                                        25, // Minimum height for the red circle
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      widget.list[index].unseenMessageCount
-                                          .toString(),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize:
-                                            12, // You can adjust the font size as needed
+                            widget.list[index].unseenMessageCount == 0
+                                ? const SizedBox()
+                                : Container(
+                                    width: 25,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      color: Colors
+                                          .red, // Background color for the circle
+                                      borderRadius: BorderRadius.circular(
+                                          10), // Makes it round
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth:
+                                          45, // Minimum width for the red circle
+                                      minHeight:
+                                          25, // Minimum height for the red circle
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        widget.list[index].unseenMessageCount
+                                            .toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize:
+                                              12, // You can adjust the font size as needed
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                          const SizedBox()
-                        ],
+                            const SizedBox()
+                          ],
+                        ),
                       ),
-                    ),
-                    const Divider(
-                        color: GlobalVariables.backgroundColor, indent: 85),
-                  ],
-                ),
-              );
-            });
-          },
+                      const Divider(
+                          color: GlobalVariables.backgroundColor, indent: 85),
+                    ],
+                  ),
+                );
+              });
+            },
+          ),
         ),
       ),
     );

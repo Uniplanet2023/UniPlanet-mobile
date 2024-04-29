@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
@@ -10,6 +11,8 @@ import 'package:uniplanet/network/repository/chat_repository/chat_repo.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/network/repository/index.dart';
+import 'package:uniplanet/network/socket/socket_channel.dart';
 
 // Bloc Events, States
 part 'chat_bloc_event.dart';
@@ -25,6 +28,10 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     on<LoadChatRoomEvent>((event, emit) async {
       await _loadChatRooms(event, emit);
     });
+    on<LoadMoreChatRoomEvent>((event, emit) async {
+      await _loadMoreChatRooms(event, emit);
+    });
+
     on<UpdateChatRoomLastMessageEvent>((event, emit) {
       _updateChatRoomLastMessage(event, emit);
     });
@@ -49,12 +56,14 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(DeletingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
     ));
 
     state.chatRooms.removeWhere((element) => element.id == event.chatId);
     emit(DeletedChatRoomState(
       deletedChatRoomId: event.chatId,
       chatRooms: state.chatRooms,
+      page: state.page,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
   }
@@ -64,6 +73,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       emit(DeletingChatRoomState(
         chatRooms: state.chatRooms,
         totalUnseenMessageCount: state.totalUnseenMessageCount,
+        page: state.page,
       ));
       String msg = await _chatRepository.deleteChatRoom(chatId: event.chatId);
       if (msg == 'success') {
@@ -74,6 +84,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         emit(DeletedChatRoomState(
           deletedChatRoomId: event.chatId,
           chatRooms: state.chatRooms,
+          page: state.page,
           totalUnseenMessageCount: state.totalUnseenMessageCount,
         ));
       } else {
@@ -90,12 +101,14 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(AddingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
     ));
     state.chatRooms.insert(0, event.chatRoom);
     emit(AddedChatRoomState(
       chatRoomCreated: event.chatRoom,
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
     ));
   }
 
@@ -121,6 +134,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
     emit(EmptyUnseenMessageState(
         chatRooms: state.chatRooms,
+        page: state.page,
         totalUnseenMessageCount:
             state.totalUnseenMessageCount - unseenMessages));
   }
@@ -135,6 +149,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
     emit(UpdateUnseenMessageState(
         chatRooms: state.chatRooms,
+        page: state.page,
         totalUnseenMessageCount: state.totalUnseenMessageCount + 1));
   }
 
@@ -150,6 +165,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(UpdateLastMessageState(
       chatRooms: updatedChatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
     ));
   }
 
@@ -157,13 +173,66 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(LoadingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
     ));
     try {
-      GetChatRooms? getChatRooms = await _chatRepository.getChatRooms();
+      GetChatRooms getChatRooms = await _chatRepository.getChatRooms(page: 1);
 
       emit(LoadedChatRoomState(
         chatRooms: getChatRooms.chatRooms,
         totalUnseenMessageCount: getChatRooms.totalUnseenMessageCount,
+        page: state.page,
+      ));
+    } catch (e) {
+      log(e);
+      throw Exception('Loading chat room API error');
+    }
+  }
+
+  _loadMoreChatRooms(LoadMoreChatRoomEvent event, emit) async {
+    emit(LoadingChatRoomState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
+    ));
+    try {
+      int nextPage = state.page + 1;
+      GetChatRooms getChatRooms =
+          await _chatRepository.getChatRooms(page: nextPage);
+      if (getChatRooms.chatRooms.isEmpty) {
+        emit(EndChatRoomState(
+          chatRooms: state.chatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount,
+          page: state.page,
+        ));
+        return;
+      }
+
+      for (var chatRoom in getChatRooms.chatRooms) {
+        String clientId;
+        if (chatRoom.buyer.id == AuthRepository.userId) {
+          clientId = chatRoom.seller.id;
+        } else {
+          clientId = chatRoom.buyer.id;
+        }
+        bool isTargetUserOnline = await Global.socketService
+            .joinChatAndCheckUserExist(
+                chatId: chatRoom.id, targetUserId: clientId);
+        if (isTargetUserOnline) {
+          if (SnackbarGlobal.key.currentContext!.mounted) {
+            SnackbarGlobal.key.currentContext!
+                .read<StatusBloc>()
+                .add(ConnectedEvent(userId: clientId));
+          }
+        }
+      }
+
+      state.chatRooms.addAll(getChatRooms.chatRooms);
+      emit(LoadedChatRoomState(
+        chatRooms: state.chatRooms,
+        totalUnseenMessageCount: state.totalUnseenMessageCount +
+            getChatRooms.totalUnseenMessageCount,
+        page: nextPage,
       ));
     } catch (e) {
       log(e);
@@ -175,6 +244,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     emit(CreatingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
     ));
     try {
       ChatRoom chatRoom = await _chatRepository.creatingChatRoom(
@@ -198,6 +268,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         chatRooms: state.chatRooms,
         totalUnseenMessageCount: state.totalUnseenMessageCount,
         chatRoomCreated: chatRoom,
+        page: state.page,
       ));
     } catch (e) {
       emit(ErrorChatState(e.toString()));
