@@ -346,7 +346,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   @override
   void onChange(Change<MessageBlocState> change) {
     super.onChange(change);
-    log(change);
+    // log(change);
   }
 
   @override

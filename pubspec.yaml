@@ -71,16 +71,18 @@ dev_dependencies:
   flutter_lints: ^3.0.2
   flutter_test:
     sdk: flutter
+
 flutter_native_splash:
   color: "#C8F2FF"
   image: "assets/images/Logo_nbg.png"
   android: true
   ios: true
   web: false
+
 flutter_launcher_icons:
-  android: "_launcher_icon"
+  android: true
   ios: true
-  image_path: "assets/images/Logo.png"
+  image_path: "assets/images/app_logo.png"
   min_sdk_android: 21
 windows:
   generate: true

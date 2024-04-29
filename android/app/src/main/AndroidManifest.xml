@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="shop.uniplanet.uniplanet"
->
+    package="shop.uniplanet.uniplanet">
+
     <application
         android:label="UniPlanet"
         android:name="${applicationName}"
-        android:icon="@mipmap/_launcher_icon"
+        android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         >
