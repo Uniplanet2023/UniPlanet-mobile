@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/main.dart';
+import 'package:uniplanet/network/api_def/dio_client.dart';
 import 'package:uniplanet/network/notification/firebase_options.dart';
 import 'package:uniplanet/network/socket/socket_channel.dart';
 
@@ -21,7 +22,7 @@ class Global {
         options: DefaultFirebaseOptions.currentPlatform);
     //Firebase background message handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
+    await DioClient.instance.initCookie();
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,

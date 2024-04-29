@@ -1,18 +1,15 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 // Repositories
-import 'package:uniplanet/network/repository/chat_repository/chat_repo.dart';
 // Models
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/network/repository/index.dart';
-import 'package:uniplanet/network/socket/socket_channel.dart';
 
 // Bloc Events, States
 part 'chat_bloc_event.dart';
