@@ -46,7 +46,8 @@ class _ContactsListState extends State<ContactsList> {
   bool _onScrollNotification(ScrollNotification notification) {
     if (notification is ScrollEndNotification &&
         notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-      if (context.read<ChatBloc>().state is! EndChatRoomState) {
+      if (context.read<ChatBloc>().state is! EndChatRoomState &&
+          widget.list.length > 9) {
         _fetchData();
       }
     }
