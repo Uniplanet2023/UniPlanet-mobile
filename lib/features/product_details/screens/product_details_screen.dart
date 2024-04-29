@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
+import 'package:share_plus/share_plus.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/like/like_bloc.dart';
@@ -86,6 +88,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         viewportFraction: 1,
         height: 400,
         pageSnapping: true,
+        enableInfiniteScroll: false,
         onPageChanged: (index, reason) {
           if (index < widget.product.images.length) {
             setState(() {
@@ -341,6 +344,68 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
           ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height:
+                100, // Adjust the height to control the extent of the gradient shadow
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black
+                        .withOpacity(0.5), // More opacity for more shadow
+                    Colors.transparent
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AppBar(
+              backgroundColor: Colors.transparent, // AppBar transparent
+              elevation: 0, // No shadow
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: MediaQuery.of(context).size.width * 0.8,
+            right: 0,
+            child: AppBar(
+              backgroundColor: Colors.transparent, // AppBar transparent
+              elevation: 0, // No shadow
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.ios_share,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  if (Platform.isIOS) {
+                    Share.share(
+                        'Check out this product on UniPlanet: ${widget.product.name} on UniPlanet Market! The Campus Community marketplace app: https://uniplanet.shop/pages/download-application');
+                  } else {
+                    Share.share(
+                        'Check out this product on UniPlanet: ${widget.product.name} on UniPlanet Market! The Campus Community marketplace app: https://uniplanet.shop/pages/download-application');
+                  }
+                },
+              ),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: _buildBottomAppBar(),
@@ -392,7 +457,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         },
         builder: (context, state) {
           return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               widget.product.seller.id == currentUser.id
                   ? const SizedBox()

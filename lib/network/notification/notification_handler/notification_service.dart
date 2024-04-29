@@ -41,15 +41,15 @@ class NotificationService {
         onDismissActionReceivedMethod: onDismissActionReceived,
       );
 
-      var pref = await SharedPreferences.getInstance();
+      // Check notification permission directly from system settings
+      bool isNotificationAllowed =
+          await AwesomeNotifications().isNotificationAllowed();
 
-      bool? isNotificationAllow = pref.getBool('isNotificationAllowed');
-
-      // User already set
-      if (isNotificationAllow != null) {
-        NotificationService.isNotificationAllowed = isNotificationAllow;
-        return;
-      } else {
+      NotificationService.isNotificationAllowed = isNotificationAllowed;
+      if (isNotificationAllowed == false) {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setBool(
+            'isNotificationAllowed', NotificationService.isNotificationAllowed);
         notificationAllowRequest(pref);
       }
     } catch (e) {

@@ -14,6 +14,7 @@ class Product {
   double price;
   final DateTime createdAt;
   String location;
+  bool isAdvertisement;
   Product({
     required this.id,
     required this.name,
@@ -27,6 +28,7 @@ class Product {
     required this.price,
     required this.createdAt,
     required this.location,
+    this.isAdvertisement = false,
   });
   static initProduct() {
     return Product(
@@ -41,7 +43,8 @@ class Product {
         category: "",
         price: 0,
         location: "",
-        createdAt: DateTime.now());
+        createdAt: DateTime.now(),
+        isAdvertisement: false);
   }
 
   Map<String, dynamic> toMap() {
@@ -58,6 +61,7 @@ class Product {
       'createdAt': createdAt,
       'numberOfChat': numberOfChat,
       'location': location,
+      'isAdvertisement': isAdvertisement,
     };
   }
 
@@ -75,6 +79,7 @@ class Product {
       category: map['category'],
       location: map['location'] ?? "",
       createdAt: DateTime.parse(map['createdAt'].toString()),
+      isAdvertisement: map['isAdvertisement'] ?? false,
     );
   }
 

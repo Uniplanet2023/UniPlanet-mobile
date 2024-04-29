@@ -41,7 +41,7 @@ class SocketService {
   // }
   void connect() {
     BuildContext context = SnackbarGlobal.key.currentContext!;
-    socket.onConnect((_) {
+    socket.onConnect((_) async {
       if (imageMessagesToRetry.isNotEmpty) {
         resendUnacknowledgedImageMessages();
       }
@@ -136,13 +136,11 @@ class SocketService {
           }
         }
       });
-      log('FirebaseToken: ${FirebaseApi.firebaseToken}');
       if (FirebaseApi.firebaseToken == null) {
-        FirebaseApi().initNotification();
+        await FirebaseApi().initNotification();
         log('FirebaseToken is null');
-      } else if (context.read<AuthBloc>().state is Authorized) {
-        socket.emit("setup", FirebaseApi.firebaseToken);
       }
+      socket.emit("setup", FirebaseApi.firebaseToken);
     });
     socket.onDisconnect((data) => log('Disconnected $data'));
     socket.onConnectError((data) => log('ConnectError $data'));

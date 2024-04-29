@@ -16,7 +16,7 @@ class ErrorScreen extends StatelessWidget {
               height: 50,
             ),
             const Text(
-              '   An error occurred.\nPlease restart the app.',
+              '   An error occurred.\nPlease restart the app. If the problem persists,\ncontact the support team. Email: uniplanet.info@gmail.com',
               style: TextStyle(
                   color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold),
             ),

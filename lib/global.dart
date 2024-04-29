@@ -21,7 +21,7 @@ class Global {
         options: DefaultFirebaseOptions.currentPlatform);
     //Firebase background message handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    // await NotificationService.init();
+
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,

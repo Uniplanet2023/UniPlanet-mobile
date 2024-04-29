@@ -28,6 +28,10 @@
 	<true/>
 	<key>FirebaseMessagingAutoInitEnabled</key>
 	<false/>
+	<key>CFBundleAllowMixedLocalizations</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string> 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserActivityTypes</key>

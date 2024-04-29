@@ -104,7 +104,11 @@ class DeletingChatRoomState extends ChatBlocState {
 }
 
 class DeletedChatRoomState extends ChatBlocState {
-  const DeletedChatRoomState({super.chatRooms, super.totalUnseenMessageCount});
+  final String deletedChatRoomId;
+  const DeletedChatRoomState(
+      {super.chatRooms,
+      super.totalUnseenMessageCount,
+      required this.deletedChatRoomId});
   @override
   List<Object?> get props => [chatRooms, totalUnseenMessageCount];
 }

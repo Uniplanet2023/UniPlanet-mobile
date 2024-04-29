@@ -101,13 +101,12 @@ post_install do |installer|
         #'PERMISSION_ASSISTANT=1',
       ]
     end
+    ################  Awesome Notifications pod modification 1 ###################
+    awesome_pod_file = File.expand_path(File.join('plugins', 'awesome_notifications', 'ios', 'Scripts', 'AwesomePodFile'), '.symlinks')
+    require awesome_pod_file
+    update_awesome_pod_build_settings(installer)
+    ################  Awesome Notifications pod modification 1 ###################
   end
-
-  ################  Awesome Notifications pod modification 1 ###################
-  awesome_pod_file = File.expand_path(File.join('plugins', 'awesome_notifications', 'ios', 'Scripts', 'AwesomePodFile'), '.symlinks')
-  require awesome_pod_file
-  update_awesome_pod_build_settings(installer)
-  ################  Awesome Notifications pod modification 1 ###################
 end
 
 ################  Awesome Notifications pod modification 2 ###################

@@ -46,8 +46,14 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _deleteChatByClient(DeletedChatByClient event, emit) {
+    emit(DeletingChatRoomState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+    ));
+
     state.chatRooms.removeWhere((element) => element.id == event.chatId);
     emit(DeletedChatRoomState(
+      deletedChatRoomId: event.chatId,
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
@@ -66,6 +72,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         Global.socketService
             .sendDeleteChatRoomEvent(event.chatId, event.clientId);
         emit(DeletedChatRoomState(
+          deletedChatRoomId: event.chatId,
           chatRooms: state.chatRooms,
           totalUnseenMessageCount: state.totalUnseenMessageCount,
         ));
@@ -176,7 +183,17 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         productId: event.productId,
         productName: event.productName,
       );
-      state.chatRooms.add(chatRoom);
+      bool isChatRoomExist = false;
+      for (var chat in state.chatRooms) {
+        if (chat.buyer.id == chatRoom.buyer.id &&
+            chat.seller.id == chatRoom.seller.id) {
+          isChatRoomExist = true;
+          break;
+        }
+      }
+      if (isChatRoomExist == false) {
+        state.chatRooms.insert(0, chatRoom);
+      }
       emit(CreatedChatRoomState(
         chatRooms: state.chatRooms,
         totalUnseenMessageCount: state.totalUnseenMessageCount,

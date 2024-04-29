@@ -98,6 +98,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
   }
 
+  void selectImageFromCamera() async {
+    File? image = await openCamera();
+    if (image != null) {
+      if (images.length + 1 <= maxImages) {
+        setState(() {
+          images.add(image);
+        });
+      } else {
+        SnackbarGlobal.showSnackBar(
+            'You can only add up to $maxImages images.');
+      }
+    }
+  }
+
   Widget imageContainer(File image) {
     return Stack(
       alignment: Alignment.topRight,
@@ -173,7 +187,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         children: [
                           // Camera icon container to add new images
                           InkWell(
-                            onTap: selectImages,
+                            onTap: selectImageFromCamera,
                             child: Container(
                               width: 70.w,
                               height: 70.h,
@@ -189,6 +203,34 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 children: [
                                   Icon(
                                     Icons.camera_alt,
+                                    color: Colors.grey[600],
+                                    size: 20.sp,
+                                  ),
+                                  Text('${images.length}/10',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12.sp)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: selectImages,
+                            child: Container(
+                              width: 70.w,
+                              height: 70.h,
+                              margin:
+                                  const EdgeInsets.only(right: 8, bottom: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.photo,
                                     color: Colors.grey[600],
                                     size: 20.sp,
                                   ),
