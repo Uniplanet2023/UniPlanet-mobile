@@ -5,7 +5,7 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>UniPlanet</string>
 	<key>CFBundleExecutable</key>
@@ -26,18 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
-	<key>FirebaseMessagingAutoInitEnabled</key>
-	<false/>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<true/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string> 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSUserActivityTypes</key>
-	<array>
-		<string>INSendMessageIntent</string>
-	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>UniPlanet needs to access your camera to allow you to take photos of products, update your profile picture, and share images in chats.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -68,7 +60,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

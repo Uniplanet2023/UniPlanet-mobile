@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: "22600aa1e926be775fa5fe7e6894e7fb3df9efda8891c73f70fb3262399a432d"
+      sha256: "0763b45fa9294197a2885c8567927e2830ade852e5c896fd4ab7e0e348d0f373"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.10"
+    version: "3.5.0"
   args:
     dependency: transitive
     description:
@@ -62,6 +62,22 @@ packages:
     description:
       name: awesome_notifications
       sha256: d9e46ce7f5171ee1e9b1c5bc6dc40bd77528561f592842ce97ce3a0a9ae155ef
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3+1"
+  awesome_notifications_core:
+    dependency: "direct main"
+    description:
+      name: awesome_notifications_core
+      sha256: "38c9f9d2618c0c2abe0cea267dc161aa8c4a0a239ca2263400900b9610f33e6f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3"
+  awesome_notifications_fcm:
+    dependency: "direct main"
+    description:
+      name: awesome_notifications_fcm
+      sha256: "1b116e7069f61c10ec25de15cd8f67912db3fc8bd7a5e2e9ed8013cb95633c59"
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
@@ -117,10 +133,10 @@ packages:
     dependency: transitive
     description:
       name: cached_network_image_web
-      sha256: "42a835caa27c220d1294311ac409a43361088625a4f23c820b006dd9bffb3316"
+      sha256: "205d6a9f1862de34b93184f22b9d2d94586b2f05c581d546695e3d8f6a805cd7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -353,30 +369,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.16.0"
-  firebase_messaging:
+  firebase_crashlytics:
     dependency: "direct main"
     description:
-      name: firebase_messaging
-      sha256: "73a43445a7f8c6e6327f0ec3922b1c99a9f4a0e4896197bfe10a88259f775aad"
+      name: firebase_crashlytics
+      sha256: "1c499d1d97b93d24aee099259f89a5fbd6ce7d11d0fe98824586087f1291931b"
       url: "https://pub.dev"
     source: hosted
-    version: "14.9.1"
-  firebase_messaging_platform_interface:
+    version: "3.5.4"
+  firebase_crashlytics_platform_interface:
     dependency: transitive
     description:
-      name: firebase_messaging_platform_interface
-      sha256: "675527aadccb679c9dfd43a4558690427123ac1e99f03eef5bbce9dc216edc91"
+      name: firebase_crashlytics_platform_interface
+      sha256: "3160d049c220422f8de34690c39be42af8309a030d9dd370051582272181238e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.34"
-  firebase_messaging_web:
-    dependency: transitive
-    description:
-      name: firebase_messaging_web
-      sha256: "66deff69307f54fc7a20732b4278af327ae378b86607d5ac877d8f2201fe881e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.8.4"
+    version: "3.6.32"
   fixnum:
     dependency: transitive
     description:
@@ -402,10 +410,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_cache_manager
-      sha256: "8207f27539deb83732fdda03e259349046a39a4c767269285f449ade355d54ba"
+      sha256: "395d6b7831f21f3b989ebedbb785545932adb9afe2622c1ffacf7f4b53a7e544"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.1"
+    version: "3.3.2"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -620,10 +628,10 @@ packages:
     dependency: transitive
     description:
       name: json_annotation
-      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.1"
+    version: "4.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -872,14 +880,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  pointycastle:
-    dependency: transitive
-    description:
-      name: pointycastle
-      sha256: "79fbafed02cfdbe85ef3fd06c7f4bc2cbcba0177e61b765264853d4253b21744"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.9.0"
   provider:
     dependency: transitive
     description:
@@ -1193,10 +1193,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "0a989dc7ca2bb51eac91e8fd00851297cfffd641aa7538b165c62637ca0eaa4a"
+      sha256: "0eaf06e3446824099858367950a813472af675116bf63f008a4c2a75ae13e9cb"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "5.5.0"
   xdg_directories:
     dependency: transitive
     description:

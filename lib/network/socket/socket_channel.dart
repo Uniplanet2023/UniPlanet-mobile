@@ -13,7 +13,6 @@ import 'package:uniplanet/models/image_message.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/network/api_def/api_server_address.dart';
-import 'package:uniplanet/network/notification/firebase_api.dart';
 
 class SocketService {
   String userId;
@@ -134,11 +133,11 @@ class SocketService {
           }
         }
       });
-      if (FirebaseApi.firebaseToken == null) {
-        await FirebaseApi().initNotification();
-        log('FirebaseToken is null');
-      }
-      socket.emit("setup", FirebaseApi.firebaseToken);
+      // if (FirebaseApi.firebaseToken == null) {
+      //   await FirebaseApi().initNotification();
+      //   log('FirebaseToken is null');
+      // }
+      // socket.emit("setup", FirebaseApi.firebaseToken);
     });
     socket.onDisconnect((data) => log('Disconnected $data'));
     socket.onConnectError((data) => log('ConnectError $data'));
