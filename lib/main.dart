@@ -91,9 +91,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       log('resumed');
+      if (Global.socketService.socket.disconnected) {
+        Global.socketService.connect();
+      }
     } else if (state == AppLifecycleState.paused) {
       log('paused');
       // App is paused (sent to background)
+      if (Global.socketService.socket.connected) {
+        Global.socketService.disconnect();
+      }
     } else if (state == AppLifecycleState.inactive) {
       log('inactive');
       // App is inactive (terminated)

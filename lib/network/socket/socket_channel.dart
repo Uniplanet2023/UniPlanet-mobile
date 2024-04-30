@@ -36,12 +36,10 @@ class SocketService {
 
   Timer? _typingTimer; // Added to keep track of the typing event timer
 
-  // SocketService._internal() {
-
-  // }
   void connect() {
     BuildContext context = SnackbarGlobal.key.currentContext!;
     socket.onConnect((_) async {
+      removeListeners();
       if (imageMessagesToRetry.isNotEmpty) {
         resendUnacknowledgedImageMessages();
       }
@@ -150,6 +148,18 @@ class SocketService {
     socket.onReconnecting((data) => log('Reconnecting $data'));
 
     socket.connect();
+  }
+
+  void removeListeners() {
+    socket.off('chat room created');
+    socket.off('chat room deleted');
+    socket.off('online user');
+    socket.off('offline user');
+    socket.off('typing');
+    socket.off('stop typing');
+    socket.off('message received');
+    socket.off('read all message');
+    // Add other events here
   }
 
   void resendUnacknowledgedImageMessages() async {

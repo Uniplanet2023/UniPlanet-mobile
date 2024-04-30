@@ -27,20 +27,25 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   List<Message> messages = [];
   bool isExpanded = false;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    _initChat();
+    super.initState();
+  }
+
+  void _initChat() {
     context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
     context
         .read<GetProductBloc>()
         .add(GetProductLoadEvent(productId: widget.chatRoom.productId));
     SocketService.currentChatLocation = widget.chatRoom.id;
     Global.socketService.readAllMessages(widget.chatRoom.id);
-    super.initState();
   }
 
   void _scrollToBottom() {
@@ -58,9 +63,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     SocketService.currentChatLocation = null;
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
+      Global.socketService.readAllMessages(widget.chatRoom.id);
+    }
   }
 
   @override

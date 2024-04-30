@@ -35,7 +35,7 @@ dependencies:
   carousel_slider: 4.2.1
   cloudinary_public: 0.23.1
   cookie_jar: ^4.0.8
-  dependency_validator: ^3.2.3
+  dependency_validator: ^4.0.0
   dio: ^5.4.2+1
   dio_cookie_manager: ^3.1.1
   dots_indicator: ^3.0.0
@@ -59,9 +59,9 @@ dependencies:
   page_transition: 2.1.0
   path_provider: ^2.1.2
   permission_handler: ^11.3.1
-  photo_view: ^0.14.0
+  photo_view: ^0.15.0
   share_plus: ^9.0.0
-  shared_preferences: 2.2.2
+  shared_preferences: ^2.2.3
   smooth_page_indicator: ^1.1.0
   socket_io_client: ^2.0.3+1
   widget_and_text_animator: ^1.1.5

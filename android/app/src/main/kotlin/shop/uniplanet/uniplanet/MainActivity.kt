@@ -1,4 +1,4 @@
-package com.example.uniplanet
+package shop.uniplanet.uniplanet;
 
 import io.flutter.embedding.android.FlutterActivity
 
