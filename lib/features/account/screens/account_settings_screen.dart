@@ -1,11 +1,11 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/change_password_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -20,7 +20,17 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       TextEditingController();
 
   bool validPassword = false;
-  bool notify = NotificationService.isNotificationAllowed;
+  bool notify = false;
+  @override
+  void initState() {
+    super.initState();
+    checkNotification();
+  }
+
+  void checkNotification() async {
+    notify = await AwesomeNotifications().isNotificationAllowed();
+    setState(() {});
+  }
 
   final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
@@ -42,16 +52,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   void updateNotification(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (value) {
-      bool isAllow = await NotificationService.notificationAllowRequest(prefs);
-      NotificationService.isNotificationAllowed = isAllow;
-      notify = value;
+      notify = await NotificationController.displayNotificationRationale();
       setState(() {});
     } else {
-      prefs.setBool('isNotificationAllowed', value);
-      NotificationService.isNotificationAllowed = value;
-      notify = value;
+      notify = await NotificationController.displayNotificationRationale();
       setState(() {});
     }
   }

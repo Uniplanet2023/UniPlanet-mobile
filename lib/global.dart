@@ -1,9 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/network/api_def/dio_client.dart';
-import 'package:uniplanet/network/notification/firebase_options.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
 import 'package:uniplanet/network/socket/socket_channel.dart';
 
 class Global {
@@ -11,23 +10,14 @@ class Global {
   static late SocketService socketService;
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
+    // Notification initialization
+    await NotificationController.initializeLocalNotifications(debug: true);
+    await NotificationController.initializeRemoteNotifications(debug: true);
+    await NotificationController.initializeIsolateReceivePort();
+    await NotificationController.getInitialNotificationAction();
 
-    //Firebase
-    //Firebase initialization
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-    //Firebase background message handler
-    // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // Dio initialization (API client)
     await DioClient.instance.initCookie();
-    // await FirebaseMessaging.instance
-    //     .setForegroundNotificationPresentationOptions(
-    //   alert: true,
-    //   badge: true,
-    //   sound: true,
-    // );
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   log("Received a message in the foreground: $message");
-    // });
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
 import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/network/socket/socket_channel.dart';
 
@@ -132,6 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           .read<OnSaleProductBloc>()
           .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
       context.read<HotProductBloc>().add(const LoadHotProductsEvent());
+
       emit(const Authorized());
     } else {
       emit(const AuthenticationDeny());
@@ -193,6 +196,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         context.read<HotProductBloc>().add(const LoadHotProductsEvent());
         Global.socketService = SocketService(AuthRepository.userId!);
         Global.socketService.connect();
+        AwesomeNotifications().requestPermissionToSendNotifications();
         emit(const Authorized());
       } else if (msg == 'Verification required') {
         emit(const UserNotVerifiedState());

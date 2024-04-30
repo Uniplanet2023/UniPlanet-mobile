@@ -10,29 +10,8 @@ import 'package:uniplanet/features/auth/screens/signup_screen.dart';
 import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/common/routes/router.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_service.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
 import 'package:uniplanet/statemanager_provider.dart';
-
-// @pragma('vm:entry-point')
-// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-//   log("Handling a background message:");
-//   // await NotificationService.init();
-//   // if (message.data.containsKey('type')) {
-//   //   final String type = message.data['type'];
-//   //   switch (type) {
-//   //     case 'new message':
-//   //       newMessageHandler(message);
-//   //       break;
-//   //     case 'creating chat':
-//   //       creatingChatHandler(message);
-//   //       log('notification');
-//   //       break;
-//   //     default:
-//   //       log('Unable to handle message');
-//   //   }
-//   // }
-// }
 
 void main() async {
   await Global.init();
@@ -60,16 +39,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  void initialize() async {
-    await NotificationService.init();
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    NotificationController.startListeningNotificationEvents();
+    NotificationController.requestFirebaseToken();
     context.read<AuthBloc>().add(const TokenValidationEvent());
-    initialize();
   }
 
   @override
@@ -91,6 +67,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (Global.socketService.socket.disconnected) {
         Global.socketService.connect();
       }
+      SnackbarGlobal.key.currentState!.context
+          .read<ChatBloc>()
+          .add(const LoadChatRoomEvent());
     } else if (state == AppLifecycleState.paused) {
       log('paused');
       // App is paused (sent to background)

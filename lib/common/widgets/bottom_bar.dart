@@ -12,6 +12,7 @@ import 'package:uniplanet/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:uniplanet/features/search/screens/search_screen.dart';
+import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -45,7 +46,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   void initState() {
     super.initState();
-
+    NotificationController().addListener(() => setState(() {}));
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);

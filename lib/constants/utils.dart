@@ -23,7 +23,7 @@ Future<List<File>> pickImages() async {
   // Check storage permission status
   var permissionStatus = await Permission.storage.status;
 
-  if (permissionStatus.isGranted) {
+  if (permissionStatus.isGranted || Platform.isAndroid) {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -61,7 +61,7 @@ Future<List<XFile>> pickImagesFromGallery(BuildContext context) async {
   // Check gallery permission status
   var permissionStatus = await Permission.photos.status;
 
-  if (permissionStatus.isGranted) {
+  if (permissionStatus.isGranted || Platform.isAndroid) {
     try {
       pickedImages = await ImagePicker().pickMultiImage();
     } catch (e) {
@@ -161,6 +161,18 @@ String formatTimestamp(DateTime timestamp) {
 // Method to open the camera
 
 Future<File?> openCamera() async {
+  if (Platform.isAndroid) {
+    // Request camera permission for Android
+    await Permission.camera.request();
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      final File imageFile = File(pickedFile.path);
+      // Handle the captured image file (e.g., send it or display it)
+      return imageFile;
+    }
+    return null;
+  }
   // Check camera permission status
   var permissionStatus = await Permission.camera.status;
 

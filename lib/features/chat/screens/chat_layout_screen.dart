@@ -5,18 +5,8 @@ import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/chat/widgets/contacts_list.dart';
 
-class ChatList extends StatefulWidget {
+class ChatList extends StatelessWidget {
   const ChatList({super.key});
-
-  @override
-  State<ChatList> createState() => _ChatListState();
-}
-
-class _ChatListState extends State<ChatList> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

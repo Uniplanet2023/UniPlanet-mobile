@@ -24,7 +24,7 @@ class _UserHeaderState extends State<UserHeader> {
   Future<void> selectImage() async {
     final permissionStatus = await Permission.photos.status;
 
-    if (permissionStatus.isGranted) {
+    if (permissionStatus.isGranted || Platform.isAndroid) {
       pickImage();
     } else if (permissionStatus.isPermanentlyDenied) {
       openAppSettings();
