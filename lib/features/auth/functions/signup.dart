@@ -4,8 +4,7 @@ import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 
 void signUpUser(BuildContext context, email, name, school, validPassword,
     password, isChecked) async {
-  final bool emailValid =
-      RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.+-]+\.com$").hasMatch(email);
+  final bool emailValid = email.endsWith('.edu');
 
   if (isChecked == false) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -23,10 +22,9 @@ void signUpUser(BuildContext context, email, name, school, validPassword,
 
   if (!emailValid) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content:
-          Text('Email format not correct, only school accounts accepted(.edu)'),
+      content: Text(
+          'You\'re Sign Up With Visitor, Please Contact with UniPlanet! https://uniplanet.shop/pages/contact-us'),
     ));
-    return;
   }
   if (!validPassword) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

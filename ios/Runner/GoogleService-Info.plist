@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>shop.uniplanet.uniplanet</string>
+	<string>shop.uniplanet.uniplanet.notification</string>
 	<key>PROJECT_ID</key>
 	<string>pushnotification-uniplanet</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1003008222202:ios:6965936a338d7754517a43</string>
+	<string>1:1003008222202:ios:db1b38859bbd1065517a43</string>
 </dict>
 </plist>

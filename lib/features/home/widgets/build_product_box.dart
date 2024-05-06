@@ -65,8 +65,8 @@ class _ItemBoxState extends State<ItemBox> {
                                           imageUrl: product.images[0],
                                           key: UniqueKey(),
                                           fit: BoxFit.cover,
-                                          height: 135,
-                                          width: 135,
+                                          height: 125,
+                                          width: 125,
                                           placeholder: (context, url) =>
                                               const Center(
                                                   child:
@@ -98,7 +98,7 @@ class _ItemBoxState extends State<ItemBox> {
                                         style: const TextStyle(
                                           fontSize: 16,
                                         ),
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(
@@ -172,7 +172,7 @@ class _ItemBoxState extends State<ItemBox> {
                                                   ],
                                                 ),
                                       const SizedBox(
-                                        height: 25,
+                                        height: 10,
                                       ),
                                       Row(
                                         children: [

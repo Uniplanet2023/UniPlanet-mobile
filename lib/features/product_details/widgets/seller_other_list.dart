@@ -46,10 +46,12 @@ class SellerOtherProductsGrid extends StatelessWidget {
                   height: 100.h, // To make the image container square
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
-                    child: CachedNetworkImage(
-                      imageUrl: product.images.first,
-                      fit: BoxFit.cover,
-                    ),
+                    child: product.images.isEmpty
+                        ? const SizedBox()
+                        : CachedNetworkImage(
+                            imageUrl: product.images.first,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 SizedBox(height: 8.h),

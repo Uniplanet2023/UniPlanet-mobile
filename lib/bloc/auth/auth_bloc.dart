@@ -11,7 +11,6 @@ import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
 import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/network/socket/socket_channel.dart';
 

@@ -24,23 +24,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     on<UpdateProfileImageEvent>((event, emit) async {
       await _updateProfileImage(event, emit);
     });
-    on<UpdateNotificationEvent>((event, emit) async {
-      await _updateNotification(event, emit);
-    });
-  }
-
-  _updateNotification(
-      UpdateNotificationEvent event, Emitter<AccountState> emit) async {
-    emit(UpdatingNotificationState(account: state.account));
-    try {
-      bool isAllowed = await _accountRepository.updateNotification(
-          isAllow: event.notification);
-      state.account.isNotificationAllowed = isAllowed;
-      emit(UpdatedNotificationState(account: state.account));
-    } catch (e) {
-      emit(FailedToUpdateNotificationState(
-          message: e.toString(), account: state.account));
-    }
   }
 
   _updateProfileImage(

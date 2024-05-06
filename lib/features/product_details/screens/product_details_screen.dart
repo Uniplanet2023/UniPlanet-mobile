@@ -125,12 +125,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildCarouselSlider(),
-                Center(
-                  child: DotsIndicator(
-                    dotsCount: widget.product.images.length,
-                    position: currentIndex,
-                  ),
-                ),
+                widget.product.images.isEmpty
+                    ? const SizedBox()
+                    : Center(
+                        child: DotsIndicator(
+                          dotsCount: widget.product.images.length,
+                          position: currentIndex,
+                        ),
+                      ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: InkWell(

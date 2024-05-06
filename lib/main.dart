@@ -39,12 +39,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  void init() async {
+    await NotificationController.requestFirebaseToken();
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     NotificationController.startListeningNotificationEvents();
-    NotificationController.requestFirebaseToken();
+    init();
     context.read<AuthBloc>().add(const TokenValidationEvent());
   }
 

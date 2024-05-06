@@ -3,13 +3,9 @@ import 'dart:ui';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/main.dart';
-import 'package:uniplanet/network/notification/firebase_options.dart';
-
 import '../../../constants/utils.dart';
 
 class NotificationController extends ChangeNotifier {
@@ -50,7 +46,7 @@ class NotificationController extends ChangeNotifier {
             ledColor: Colors.deepPurple)
       ],
       debug: debug,
-      languageCode: 'ko',
+      languageCode: 'en',
     );
 
     // Get initial notification action is optional
@@ -60,32 +56,11 @@ class NotificationController extends ChangeNotifier {
 
   static Future<void> initializeRemoteNotifications(
       {required bool debug}) async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
     await AwesomeNotificationsFcm().initialize(
         onFcmTokenHandle: NotificationController.myFcmTokenHandle,
         onNativeTokenHandle: NotificationController.myNativeTokenHandle,
         onFcmSilentDataHandle: NotificationController.mySilentDataHandle,
-        licenseKeys:
-            // On this example app, the app ID / Bundle Id are different
-            // for each platform, so i used the main Bundle ID + 1 variation
-            [
-          // me.carda.awesomeNotificationsFcmExample
-          '2024-01-02==kZDwJQkSR7mrjEgDk7afWDSrqYCiqW6Ao/7wn/w6v5OKOgAnoEWt'
-              'gqO0ELI1BxWNzSde2gbaW+9Ki6Tx94pU2gQRJuJxXGsvcmCRla1mB/0U/rPh'
-              'f77bxgPRG+PHn9+p9sQ5nfvY6Ytw9IvDn4NjH3ccbjoXFRrs7R/ou9aapq2a'
-              'jRHqXlIzDR1ihyQHC91Wvkviw2qTOEYDhR5hE4T2l1iHsTTpeXOqWk0XmgnC'
-              'gO18e4Hv0P5WKICCull+PCh+OXQYTK5x0UwQPNOGN20rQu5zR9C0ph0hFQxk'
-              'WLa/ft206pBZmWDf4HiyAawXPoR1AMWAh/t0cjh8gRTTNfHeog==',
-
-          // me.carda.awesome_notifications_fcm_example
-          '2024-01-02==lYUBqt9kKmObnP7UzWd2KK9FOTOySkVATX/j/CGEzSlSKsQx5y5S9'
-              'RKHG1lP1TZ5KHO6+wwkNbzxmni4uJ418WM3ywTY199bHAp5MHWxZEEgvMMG4/'
-              '/V2W0acFhSgxH6GL/6XNYvhS2RwaX7X/z4NX7Z4dgZVOn0VW3GRyg7I/zLcgl'
-              'Dhh+n9obRuGnZI+Xakw2id97PSG4QZOCw15A0LzE1lip/Fzj0cMRsqpvcAW2K'
-              'VWYZm5ZmK2yKVcop1kxiq1faZGL1fBteJCQ8YeQKpqS+aaVmexdJXmB7sJVl0'
-              '5o87ORRfijpO+Q6gmTYfjYxoiQMismHUx6NAnoB/txaLw=='
-        ],
+        licenseKeys: null,
         debug: debug);
   }
 
@@ -123,6 +98,11 @@ class NotificationController extends ChangeNotifier {
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        '/BottomBar', // Adjust this if your route name differs
+        (route) => false, // This removes all routes below the stack
+        arguments: receivedAction);
+
     if (receivedAction.actionType == ActionType.SilentAction ||
         receivedAction.actionType == ActionType.SilentBackgroundAction) {
       // For background actions, you must hold the execution until the end
@@ -165,13 +145,19 @@ class NotificationController extends ChangeNotifier {
   /// (even while terminated)
   @pragma("vm:entry-point")
   static Future<void> mySilentDataHandle(FcmSilentData silentData) async {
-    Fluttertoast.showToast(
-        msg: 'Silent data received',
-        backgroundColor: Colors.blueAccent,
-        textColor: Colors.white,
-        fontSize: 16);
-
-    log('"SilentData": ${silentData.toString()}');
+    log('mySilentDataHandle received a FcmSilentData execution');
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: -1, // -1 is replaced by a random number
+          channelKey: 'alerts',
+          title: 'New Message',
+          body: " New Message Test",
+          bigPicture:
+              'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
+          largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
+          notificationLayout: NotificationLayout.BigPicture,
+          payload: {'notificationId': '1234567890'}),
+    );
 
     if (silentData.createdLifeCycle != NotificationLifeCycle.Foreground) {
       log("bg");
@@ -352,10 +338,11 @@ class NotificationController extends ChangeNotifier {
   ///  *********************************************
 
   static Future<String> requestFirebaseToken() async {
-    if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
+    if (!await AwesomeNotificationsFcm().isFirebaseAvailable) {
       try {
         _instance._firebaseToken =
             await AwesomeNotificationsFcm().requestFirebaseAppToken();
+        log(_instance._firebaseToken);
         return _instance._firebaseToken;
       } catch (exception) {
         debugPrint('$exception');

@@ -7,6 +7,11 @@ String displayErrorMessages(String responseBody) {
   final decoded = jsonDecode(responseBody);
   var message = "success";
   // Check if 'errors' key exists and is a list
+  if (decoded is! List && decoded.containsKey('error')) {
+    message = decoded['error'];
+    SnackbarGlobal.showSnackBar(message);
+    return message;
+  }
   if (decoded is! List &&
       decoded.containsKey('errors') &&
       decoded['errors'] is List) {

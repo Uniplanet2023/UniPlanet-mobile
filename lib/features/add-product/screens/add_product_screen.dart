@@ -314,7 +314,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
-                      maxLength: 30,
+                      maxLength: 100,
                     ),
                     if (showCategoryToggles)
                       SingleChildScrollView(
@@ -368,7 +368,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       controller: descriptionController,
                       hintText: 'Description',
                       maxLines: 7,
-                      maxLength: 300,
+                      maxLength: 800,
                       keyboardType: TextInputType.multiline,
                     ),
                     SizedBox(height: 10.h),

@@ -110,6 +110,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
     );
   }
 
+  void selectImageFromCamera() async {
+    File? image = await openCamera();
+    if (image != null) {
+      if (images.length + 1 <= maxImages) {
+        setState(() {
+          images.add(image);
+        });
+      } else {
+        SnackbarGlobal.showSnackBar(
+            'You can only add up to $maxImages images.');
+      }
+    }
+  }
+
   void selectImages() async {
     // Your logic to pick more images and add to the list, make sure it does not exceed maxImages
     var res = await pickImages(); // Implement pickImages to return List<File>
@@ -206,9 +220,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       alignment: Alignment.centerLeft,
                       child: Wrap(
                         children: [
-                          // Camera icon container to add new images
                           InkWell(
-                            onTap: selectImages,
+                            onTap: selectImageFromCamera,
                             child: Container(
                               width: 70.w,
                               height: 70.h,
@@ -227,8 +240,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                     color: Colors.grey[600],
                                     size: 20.sp,
                                   ),
-                                  Text(
-                                      '${images.length + originalImages.length}/10',
+                                  Text('${images.length}/10',
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 12.sp)),
@@ -236,6 +248,35 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               ),
                             ),
                           ),
+                          InkWell(
+                            onTap: selectImages,
+                            child: Container(
+                              width: 70.w,
+                              height: 70.h,
+                              margin:
+                                  const EdgeInsets.only(right: 8, bottom: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.photo,
+                                    color: Colors.grey[600],
+                                    size: 20.sp,
+                                  ),
+                                  Text('${images.length}/10',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12.sp)),
+                                ],
+                              ),
+                            ),
+                          ),
+
                           // Displaying existing images
                           for (String image in originalImages)
                             imageContainer(originalImage: image),
@@ -333,7 +374,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
-                      maxLength: 30,
+                      maxLength: 100,
                     ),
                     if (showCategoryToggles)
                       SingleChildScrollView(
@@ -387,7 +428,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       controller: descriptionController,
                       hintText: 'Description',
                       maxLines: 7,
-                      maxLength: 300,
+                      maxLength: 800,
                       keyboardType: TextInputType.multiline,
                     ),
                     SizedBox(height: 10.h),

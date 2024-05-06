@@ -60,11 +60,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyD_CUkH5w9cTWWnt4IWwqKhSeDeUIAUniw',
-    appId: '1:1003008222202:ios:6965936a338d7754517a43',
+    appId: '1:1003008222202:ios:db1b38859bbd1065517a43',
     messagingSenderId: '1003008222202',
     projectId: 'pushnotification-uniplanet',
     storageBucket: 'pushnotification-uniplanet.appspot.com',
-    iosBundleId: 'shop.uniplanet.uniplanet',
+    iosBundleId: 'shop.uniplanet.uniplanet.notification',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'pushnotification-uniplanet.appspot.com',
     measurementId: 'G-WZF2VQV7Q9',
   );
-
 }

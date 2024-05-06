@@ -235,11 +235,13 @@ Widget buildProductContent(
               child: ClipRRect(
                 borderRadius:
                     BorderRadius.circular(8.w), // Rounded corners for the image
-                child: CachedNetworkImage(
-                  imageUrl:
-                      product.images[0], // Replace with your product image path
-                  fit: BoxFit.cover,
-                ),
+                child: product.images.isEmpty
+                    ? const SizedBox()
+                    : CachedNetworkImage(
+                        imageUrl: product
+                            .images[0], // Replace with your product image path
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             // Product name

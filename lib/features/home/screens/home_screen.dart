@@ -77,135 +77,146 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollInfo) {
-          if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
+      body: BlocListener<ProductBloc, ProductState>(
+        listener: (context, state) {
+          if (state is ProductUploadedState) {
             setState(() => _showLoadingIndicator = true);
-            if (widget.category == 'Hot Products') {
-              context.read<HotProductBloc>().add(const LoadHotProductsEvent());
-            } else if (widget.category != null) {
-              context
-                  .read<CategoryBloc>()
-                  .add(LoadCategoryEvent(category: widget.category!));
-            } else {
-              context.read<ProductBloc>().add(const LoadProductEvent());
-            }
-
-            Future.delayed(const Duration(seconds: 2), () {
-              if (mounted) {
-                setState(() => _showLoadingIndicator = false);
-                // Dispatch LoadProductEvent only after the delay
-              }
-            });
+          } else if (state is ProductImageUploadedState) {
+            setState(() => _showLoadingIndicator = false);
           }
-          return false;
         },
-        child: CustomScrollView(
-          controller: widget.controller,
-          slivers: <Widget>[
-            SliverAppBar(
-              pinned: widget.category == null ? false : true,
-              snap: true,
-              floating: true,
-              expandedHeight: 35.0,
-              backgroundColor: Colors.white,
-              flexibleSpace: widget.category != null
-                  ? LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        var top = constraints.biggest.height;
-                        return FlexibleSpaceBar(
-                          titlePadding: EdgeInsets.only(
-                            left: top > 71.0
-                                ? 20
-                                : 0, // Or some other logic to position the title
-                            bottom: 16,
-                          ),
-                          title: Text(widget.category ??
-                              'UniPlanet'), // Show category if it's not null otherwise 'uniplanet'
-                          background: Container(
-                            decoration: const BoxDecoration(
-                              gradient: GlobalVariables.appBarGradient,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
+              setState(() => _showLoadingIndicator = true);
+              if (widget.category == 'Hot Products') {
+                context
+                    .read<HotProductBloc>()
+                    .add(const LoadHotProductsEvent());
+              } else if (widget.category != null) {
+                context
+                    .read<CategoryBloc>()
+                    .add(LoadCategoryEvent(category: widget.category!));
+              } else {
+                context.read<ProductBloc>().add(const LoadProductEvent());
+              }
+
+              Future.delayed(const Duration(seconds: 2), () {
+                if (mounted) {
+                  setState(() => _showLoadingIndicator = false);
+                  // Dispatch LoadProductEvent only after the delay
+                }
+              });
+            }
+            return false;
+          },
+          child: CustomScrollView(
+            controller: widget.controller,
+            slivers: <Widget>[
+              SliverAppBar(
+                pinned: widget.category == null ? false : true,
+                snap: true,
+                floating: true,
+                expandedHeight: 35.0,
+                backgroundColor: Colors.white,
+                flexibleSpace: widget.category != null
+                    ? LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          var top = constraints.biggest.height;
+                          return FlexibleSpaceBar(
+                            titlePadding: EdgeInsets.only(
+                              left: top > 71.0
+                                  ? 20
+                                  : 0, // Or some other logic to position the title
+                              bottom: 16,
                             ),
-                          ),
-                        );
-                      },
-                    )
-                  : const SizedBox(),
-              leading: widget.category == null
-                  ? Container(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 5),
-                          Image(
-                              image: const AssetImage(
-                                  'assets/images/Logo_nbg.png'),
-                              width: 30.w,
-                              height: 30.h),
-                          Text(
-                            'UniPlanet',
-                            style: GoogleFonts.roboto(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                            title: Text(widget.category ??
+                                'UniPlanet'), // Show category if it's not null otherwise 'uniplanet'
+                            background: Container(
+                              decoration: const BoxDecoration(
+                                gradient: GlobalVariables.appBarGradient,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : null,
-              leadingWidth: widget.category == null ? 200.w : null,
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10.h,
-              ),
-            ),
-            // Other slivers
-            if (_showLoadingIndicator)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-              ),
-            widget.category != null
-                ? widget.category == 'Hot Products'
-                    ? BlocBuilder<HotProductBloc, HotProductState>(
-                        builder: (context, state) {
-                        List<Product> productList = state.hotProducts;
-                        return ItemBox(productList: productList);
-                      })
-                    : BlocBuilder<CategoryBloc, CategoryState>(
-                        builder: (context, state) {
-                          List<Product> productList = state.categoryProducts;
-                          return ItemBox(productList: productList);
+                          );
                         },
                       )
-                : BlocBuilder<ProductBloc, ProductState>(
-                    builder: (context, state) {
-                      // Directly return ItemBox for any state other than LoadingProductState
-                      // Assuming that _showLoadingIndicator will handle showing the loader with delay
-                      return ItemBox(
-                        productList: state.productList,
-                      );
-                    },
-                  ),
-            if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
+                    : const SizedBox(),
+                leading: widget.category == null
+                    ? Container(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 5),
+                            Image(
+                                image: const AssetImage(
+                                    'assets/images/Logo_nbg.png'),
+                                width: 30.w,
+                                height: 30.h),
+                            Text(
+                              'UniPlanet',
+                              style: GoogleFonts.roboto(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : null,
+                leadingWidth: widget.category == null ? 200.w : null,
               ),
-            if (!_isFetchingMoreProducts)
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 100.h,
+                  height: 10.h,
                 ),
               ),
-          ],
+              // Other slivers
+              if (_showLoadingIndicator)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+              widget.category != null
+                  ? widget.category == 'Hot Products'
+                      ? BlocBuilder<HotProductBloc, HotProductState>(
+                          builder: (context, state) {
+                          List<Product> productList = state.hotProducts;
+                          return ItemBox(productList: productList);
+                        })
+                      : BlocBuilder<CategoryBloc, CategoryState>(
+                          builder: (context, state) {
+                            List<Product> productList = state.categoryProducts;
+                            return ItemBox(productList: productList);
+                          },
+                        )
+                  : BlocBuilder<ProductBloc, ProductState>(
+                      builder: (context, state) {
+                        // Directly return ItemBox for any state other than LoadingProductState
+                        // Assuming that _showLoadingIndicator will handle showing the loader with delay
+                        return ItemBox(
+                          productList: state.productList,
+                        );
+                      },
+                    ),
+              if (_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+              if (!_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 100.h,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
