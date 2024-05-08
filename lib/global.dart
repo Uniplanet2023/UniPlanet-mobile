@@ -12,8 +12,6 @@ class Global {
   static late SocketService socketService;
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
     // Notification initialization
     await NotificationController.initializeLocalNotifications(debug: true);
     await NotificationController.initializeRemoteNotifications(debug: true);
