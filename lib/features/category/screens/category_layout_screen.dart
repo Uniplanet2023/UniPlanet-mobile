@@ -74,7 +74,8 @@ class _CategoryPageState extends State<CategoryPage> {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is LoadedHotProductState) {
+                } else if (state is LoadedHotProductState ||
+                    state is EndHotProductState) {
                   return Container(
                     height: 170.h,
                     padding: EdgeInsets.symmetric(horizontal: 8.w),

@@ -28,6 +28,10 @@ class ContactsList extends StatefulWidget {
 
 class _ContactsListState extends State<ContactsList> {
   bool _isLoading = false;
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   void _fetchData() async {
     if (!_isLoading) {
@@ -35,6 +39,8 @@ class _ContactsListState extends State<ContactsList> {
       context.read<ChatBloc>().add(const LoadMoreChatRoomEvent());
       // Simulate a network request delay
       await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return; // Check if the widget is still mounted
 
       // Fetch data logic here, possibly increasing _currentPage
       // Update widget.list here with new items

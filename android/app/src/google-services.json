@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1003008222202:android:3860173d91d9afbb517a43",
-        "android_client_info": {
-          "package_name": "com.example.test2"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1003008222202-9cjrlsoens8i9km93e82433q4st58f7v.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBw2Vy6fUh35DUppMs8jJXgSuRzA5Jz9NE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1003008222202-9cjrlsoens8i9km93e82433q4st58f7v.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:1003008222202:android:08b119dc523c7f98517a43",
         "android_client_info": {
           "package_name": "shop.uniplanet.uniplanet"

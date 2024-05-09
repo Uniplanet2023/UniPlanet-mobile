@@ -80,6 +80,13 @@ class UpdateLastMessageState extends ChatBlocState {
 }
 
 //Update UnseenMessage
+class UpdatingUnseenMessageState extends ChatBlocState {
+  const UpdatingUnseenMessageState(
+      {super.chatRooms, super.totalUnseenMessageCount, super.page});
+  @override
+  List<Object?> get props => [chatRooms, totalUnseenMessageCount, page];
+}
+
 class UpdateUnseenMessageState extends ChatBlocState {
   const UpdateUnseenMessageState(
       {super.chatRooms, super.totalUnseenMessageCount, super.page});

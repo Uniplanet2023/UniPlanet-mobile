@@ -109,7 +109,6 @@ class SocketService {
           context
               .read<ChatBloc>()
               .add(UpdateChatRoomLastMessageEvent(receivedMessage));
-          // Decoupling? if ReadAllMessages is triggered first, and ReceiveMessageEvent is triggered after, then the message will not be marked as read
           if (currentChatLocation == receivedMessage.chat &&
               receivedMessage.receiver == userId) {
             readAllMessages(currentChatLocation!);
@@ -134,7 +133,9 @@ class SocketService {
           }
         }
       });
-      socket.emit("setup", NotificationController().firebaseToken);
+      String firebaseToken =
+          await NotificationController.requestFirebaseToken();
+      socket.emit("setup", firebaseToken);
     });
     socket.onDisconnect((data) => log('Disconnected $data'));
     socket.onConnectError((data) => log('ConnectError $data'));

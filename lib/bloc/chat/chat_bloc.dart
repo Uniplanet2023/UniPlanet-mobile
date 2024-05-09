@@ -137,28 +137,50 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _updateUnseenMessage(UpdateUnseenMessageEvent event, emit) {
+    emit(UpdatingUnseenMessageState(
+      chatRooms: state.chatRooms,
+      totalUnseenMessageCount: state.totalUnseenMessageCount,
+      page: state.page,
+    ));
+
     for (var chatRoom in state.chatRooms) {
       if (chatRoom.id == event.chatId) {
         chatRoom.unseenMessageCount++;
         break;
       }
     }
+    int toatalUnseenMessageCount = state.totalUnseenMessageCount + 1;
+
+    AwesomeNotifications().setGlobalBadgeCounter(toatalUnseenMessageCount);
 
     emit(UpdateUnseenMessageState(
         chatRooms: state.chatRooms,
         page: state.page,
-        totalUnseenMessageCount: state.totalUnseenMessageCount + 1));
+        totalUnseenMessageCount: toatalUnseenMessageCount));
   }
 
   _updateChatRoomLastMessage(UpdateChatRoomLastMessageEvent event, emit) {
-    // Update for buyingChatRooms
-    List<ChatRoom> updatedChatRooms = state.chatRooms.map((chatRoom) {
-      if (chatRoom.id == event.lastMessage.chat) {
-        return chatRoom.copyWith(lastMessage: event.lastMessage);
-      }
-      return chatRoom;
-    }).toList();
+    // Find the index of the chat room that needs to be updated
+    int? updatedChatRoomIndex = state.chatRooms
+        .indexWhere((chatRoom) => chatRoom.id == event.lastMessage.chat);
 
+    // Copy the list to avoid modifying the original list directly
+    List<ChatRoom> updatedChatRooms = List<ChatRoom>.from(state.chatRooms);
+
+    // Check if the chat room is found
+    if (updatedChatRoomIndex != -1) {
+      // Update the chat room with the new last message
+      ChatRoom updatedChatRoom = updatedChatRooms[updatedChatRoomIndex]
+          .copyWith(lastMessage: event.lastMessage);
+
+      // Remove the updated chat room from its original position
+      updatedChatRooms.removeAt(updatedChatRoomIndex);
+
+      // Insert the updated chat room at the front of the list
+      updatedChatRooms.insert(0, updatedChatRoom);
+    }
+
+    // Emit the new state with the reordered chat rooms
     emit(UpdateLastMessageState(
       chatRooms: updatedChatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
@@ -174,7 +196,8 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     ));
     try {
       GetChatRooms getChatRooms = await _chatRepository.getChatRooms(page: 1);
-
+      AwesomeNotifications()
+          .setGlobalBadgeCounter(getChatRooms.totalUnseenMessageCount);
       emit(LoadedChatRoomState(
         chatRooms: getChatRooms.chatRooms,
         totalUnseenMessageCount: getChatRooms.totalUnseenMessageCount,
