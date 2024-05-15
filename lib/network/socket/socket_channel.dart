@@ -13,7 +13,7 @@ import 'package:uniplanet/models/image_message.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/network/api_def/api_server_address.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
+import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
 
 class SocketService {
   String userId;

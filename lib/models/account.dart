@@ -55,7 +55,7 @@ class Account {
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
       user: User.fromMap(map),
-      type: map['type'] as String,
+      type: map['type'] ?? 'user',
       isBlocked: map['isBlocked'] as bool,
       isBlockedPost: map['isBlockedPost'] as bool,
       isBlockedChat: map['isBlockedChat'] as bool,

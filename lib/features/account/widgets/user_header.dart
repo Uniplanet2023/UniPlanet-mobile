@@ -24,16 +24,31 @@ class _UserHeaderState extends State<UserHeader> {
   Future<void> selectImage() async {
     final permissionStatus = await Permission.photos.status;
 
-    if (permissionStatus.isGranted || Platform.isAndroid) {
+    if (permissionStatus.isGranted ||
+        permissionStatus.isLimited ||
+        Platform.isAndroid) {
       pickImage();
     } else if (permissionStatus.isPermanentlyDenied) {
       openAppSettings();
     } else {
-      final newStatus = await Permission.photos.request();
-      if (newStatus.isGranted) {
-        pickImage();
-      } else {
-        // Handle the situation when the user declines the permission request
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text("Permission needed"),
+            content: const Text("This app needs gallery access to pick images"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("Deny"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              TextButton(
+                child: const Text("Settings"),
+                onPressed: () => openAppSettings(), // Open app settings
+              ),
+            ],
+          ),
+        );
       }
     }
   }

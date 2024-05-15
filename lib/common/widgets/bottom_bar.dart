@@ -12,7 +12,7 @@ import 'package:uniplanet/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:uniplanet/features/search/screens/search_screen.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
+import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});

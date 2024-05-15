@@ -86,7 +86,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void selectImages() async {
     // Your logic to pick more images and add to the list, make sure it does not exceed maxImages
-    var res = await pickImages(); // Implement pickImages to return List<File>
+    var res =
+        await pickImages(context); // Implement pickImages to return List<File>
 
     if ((images.length + res.length) <= maxImages) {
       setState(() {
@@ -99,7 +100,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void selectImageFromCamera() async {
-    File? image = await openCamera();
+    File? image = await openCamera(context);
     if (image != null) {
       if (images.length + 1 <= maxImages) {
         setState(() {

@@ -1,4 +1,5 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,13 +40,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     super.initState();
   }
 
-  void _initChat() {
+  void _initChat() async {
     context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
     context
         .read<GetProductBloc>()
         .add(GetProductLoadEvent(productId: widget.chatRoom.productId));
     SocketService.currentChatLocation = widget.chatRoom.id;
     Global.socketService.readAllMessages(widget.chatRoom.id);
+    var currentBadgeCount =
+        await AwesomeNotifications().getGlobalBadgeCounter() -
+            widget.chatRoom.unseenMessageCount;
+    if (currentBadgeCount > 0) {
+      AwesomeNotifications().setGlobalBadgeCounter(currentBadgeCount);
+    } else {
+      AwesomeNotifications().setGlobalBadgeCounter(0);
+    }
   }
 
   void _scrollToBottom() {

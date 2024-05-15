@@ -1,5 +1,7 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/network/repository/account_repository/account_repo.dart';
 
 part 'search_history_event.dart';
@@ -67,6 +69,7 @@ class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
             message: "Fail to Get Search History", searchHistory: []));
         return;
       }
+
       emit(GotSearchHistoryState(searchHistory: result));
     } catch (e) {
       emit(FailedToGetSearchHistoryState(

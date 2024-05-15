@@ -10,7 +10,7 @@ import 'package:uniplanet/features/auth/screens/signup_screen.dart';
 import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/common/routes/router.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
+import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/statemanager_provider.dart';
 
 void main() async {
@@ -43,7 +43,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    NotificationController.startListeningNotificationEvents();
     context.read<AuthBloc>().add(const TokenValidationEvent());
   }
 

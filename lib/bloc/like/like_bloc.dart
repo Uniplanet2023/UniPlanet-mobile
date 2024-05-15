@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet/common/functions/notification_scheduling.dart';
 import 'package:uniplanet/constants/utils.dart';
 // Repositories
 import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
@@ -49,7 +50,12 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     try {
       List<Product> likeProduct =
           await _likeRepository.getProductLikes(page: state.page);
-
+      if (likeProduct.isEmpty) {
+        emit(const LikeEnd(likeProduct: [], page: 1));
+        return;
+      } else {
+        notificationScheduling(likeProduct, 11);
+      }
       emit(LikeLoaded(likeProduct: likeProduct, page: state.page));
     } catch (e) {
       emit(LikeError(message: e.toString()));

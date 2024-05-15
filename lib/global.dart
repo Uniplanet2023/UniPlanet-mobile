@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/network/api_def/dio_client.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
+import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/network/socket/socket_channel.dart';
 
 class Global {
@@ -12,10 +12,8 @@ class Global {
     WidgetsFlutterBinding.ensureInitialized();
 
     // Notification initialization
-    await NotificationController.initializeLocalNotifications(debug: true);
-    await NotificationController.initializeRemoteNotifications(debug: true);
-    await NotificationController.initializeIsolateReceivePort();
-    await NotificationController.getInitialNotificationAction();
+    await LocalNotificationController.init(debug: true);
+    await LocalNotificationController.getInitialNotificationAction();
 
     // Dio initialization (API client)
     await DioClient.instance.initCookie();

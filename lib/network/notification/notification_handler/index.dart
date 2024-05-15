@@ -1,3 +1,4 @@
 library notification_handler;
 
-export 'notification_controller.dart';
+export 'remote_notification_controller.dart';
+export 'local_notification.dart';

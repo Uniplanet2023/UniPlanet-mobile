@@ -5,7 +5,8 @@ import 'package:uniplanet/common/widgets/custom_textfield.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/change_password_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
-import 'package:uniplanet/network/notification/notification_handler/notification_controller.dart';
+import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
+import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -53,10 +54,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   void updateNotification(bool value) async {
     if (value) {
-      notify = await NotificationController.displayNotificationRationale();
+      notify = await LocalNotificationController.displayNotificationRationale();
       setState(() {});
     } else {
-      notify = await NotificationController.displayNotificationRationale();
+      notify = await LocalNotificationController.displayNotificationRationale();
       setState(() {});
     }
   }

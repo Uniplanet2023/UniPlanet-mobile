@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uniplanet/main.dart';
 
 class SnackbarGlobal {
   static GlobalKey<ScaffoldMessengerState> key =
@@ -17,13 +18,15 @@ class SnackbarGlobal {
   }
 }
 
-Future<List<File>> pickImages() async {
+Future<List<File>> pickImages(BuildContext context) async {
   List<File> images = [];
 
   // Check storage permission status
   var permissionStatus = await Permission.storage.status;
 
-  if (permissionStatus.isGranted || Platform.isAndroid) {
+  if (permissionStatus.isGranted ||
+      permissionStatus.isLimited ||
+      Platform.isAndroid) {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -42,14 +45,32 @@ Future<List<File>> pickImages() async {
     // If permission is denied, request it again
     var requested = await Permission.storage.request();
     if (requested.isGranted) {
-      return pickImages(); // Recursive call to try picking images again
+      return pickImages(context); // Recursive call to try picking images again
     } else {
       // If permission still denied, show a dialog or snackbar
       log('Storage permission is denied.');
     }
-  } else if (permissionStatus.isPermanentlyDenied) {
+  } else {
     // Direct the user to the settings if permissions are permanently denied
-    log('Storage permission is permanently denied. Please enable from app settings.');
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text("Permission needed"),
+          content: const Text("This app needs gallery access to pick images"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Deny"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text("Settings"),
+              onPressed: () => openAppSettings(), // Open app settings
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   return images;
@@ -98,7 +119,9 @@ Future<List<XFile>> pickImagesFromGallery(BuildContext context) async {
         );
       }
     }
-  } else if (permissionStatus.isPermanentlyDenied) {
+  } else if (permissionStatus.isLimited) {
+    pickedImages = await ImagePicker().pickMultiImage();
+  } else {
     // Direct the user to the settings if permissions are permanently denied
     if (context.mounted) {
       showDialog(
@@ -160,7 +183,7 @@ String formatTimestamp(DateTime timestamp) {
 
 // Method to open the camera
 
-Future<File?> openCamera() async {
+Future<File?> openCamera(BuildContext context) async {
   if (Platform.isAndroid) {
     // Request camera permission for Android
     await Permission.camera.request();
@@ -189,17 +212,36 @@ Future<File?> openCamera() async {
     // If permission is denied, request it again
     var requested = await Permission.camera.request();
     if (requested.isGranted) {
-      return openCamera(); // Recursive call to open the camera again
+      if (context.mounted) {
+        return openCamera(context); // Recursive call to open the camera again
+      }
     } else {
       // Permission still denied, handle appropriately
       print('Camera permission is denied.');
     }
   } else if (permissionStatus.isPermanentlyDenied) {
     // Direct the user to the settings if permissions are permanently denied
-    print(
-        'Camera permission is permanently denied. Please enable from app settings.');
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text("Permission Denied"),
+          content: const Text(
+              "You have permanently denied access to photos. Please enable access in the system settings."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text("Settings"),
+              onPressed: () => openAppSettings(), // Open app settings
+            ),
+          ],
+        ),
+      );
+    }
   }
-
   return null;
 }
 

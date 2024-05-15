@@ -279,7 +279,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                           IconButton(
                             icon: const Icon(Icons.camera_alt),
                             onPressed: () async {
-                              File? image = await openCamera();
+                              File? image = await openCamera(context);
                               if (image == null) return;
                               sendImages([XFile(image.path)]);
                             },

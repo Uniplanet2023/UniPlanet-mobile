@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet/common/functions/notification_scheduling.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
 
@@ -48,6 +49,12 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
     List<Product> result = [];
     try {
       result = await _productRepository.getHotProducts(nextPage: 1);
+      if (result.isEmpty) {
+        emit(const EndHotProductState(hotProducts: [], hotProductPage: 1));
+        return;
+      } else {
+        notificationScheduling(result, 12);
+      }
     } catch (e) {
       emit(ErrorHotProductState(message: e.toString()));
     }
