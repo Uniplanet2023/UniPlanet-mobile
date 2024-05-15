@@ -68,14 +68,16 @@ class ChatRoom {
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
       id: map['id'],
-      seller: User.fromMap(map['seller']),
-      buyer: User.fromMap(map['buyer']),
+      seller: User.fromJson(map['seller']),
+      buyer: User.fromJson(map['buyer']),
       productId: map['productId'],
       productName: map['productName'] ?? "",
       lastMessage: map['lastMessage'] != null
-          ? Message.fromMap(map['lastMessage'])
+          ? Message.fromJson(map['lastMessage'])
           : null,
-      unseenMessageCount: map['unseenMessageCount'] ?? 0,
+      unseenMessageCount: map['unseenMessageCount'] == null
+          ? 0
+          : JsonEncoder(map['unseenMessageCount']) as int,
     );
   }
 

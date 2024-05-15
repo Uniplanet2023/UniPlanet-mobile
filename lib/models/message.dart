@@ -60,7 +60,7 @@ class Message {
         readDate: readDate ?? this.readDate,
       );
 
-  factory Message.fromRawJson(String str) => Message.fromMap(json.decode(str));
+  factory Message.fromJson(String str) => Message.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
