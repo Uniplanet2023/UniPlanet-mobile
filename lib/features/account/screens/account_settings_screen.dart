@@ -6,7 +6,6 @@ import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/change_password_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
 import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
-import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});

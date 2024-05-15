@@ -238,7 +238,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       child: Column(
         children: [
           Row(
@@ -273,7 +273,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                     filled: true,
                     fillColor: GlobalVariables.greyBackgroundColor,
                     prefixIcon: SizedBox(
-                      width: 50,
+                      width: 30,
                       child: Row(
                         children: [
                           IconButton(
@@ -291,13 +291,14 @@ class _BottomChatFieldState extends State<BottomChatField> {
                     ),
                     hintText: 'Type a message!',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(10.0),
                       borderSide: const BorderSide(
                         width: 0,
                         style: BorderStyle.none,
                       ),
                     ),
-                    contentPadding: const EdgeInsets.all(10),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 0, horizontal: 5), // Reduced content padding
                   ),
                 ),
               ),
@@ -313,7 +314,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
               Padding(
                 padding: const EdgeInsets.only(
                   bottom: 0,
-                  right: 10,
+                  right: 5,
                   left: 2,
                 ),
                 child: !isShowSendButton

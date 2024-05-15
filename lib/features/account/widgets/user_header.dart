@@ -33,6 +33,7 @@ class _UserHeaderState extends State<UserHeader> {
     } else {
       if (context.mounted) {
         showDialog(
+          // ignore: use_build_context_synchronously
           context: context,
           builder: (BuildContext context) => AlertDialog(
             title: const Text("Permission needed"),

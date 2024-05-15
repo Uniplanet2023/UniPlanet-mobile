@@ -1,9 +1,6 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/network/repository/account_repository/account_repo.dart';
-
 part 'search_history_event.dart';
 part 'search_history_state/search_history_basic.dart';
 part 'search_history_state/search_history_get.dart';

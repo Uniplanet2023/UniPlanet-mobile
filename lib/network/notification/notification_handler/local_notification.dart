@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -98,7 +95,10 @@ class LocalNotificationController {
       scheduled == false || calendar != null,
       'Calendar must be provided when scheduling a notification',
     );
-
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) {
+      return;
+    }
     // Check if body starts with the specific URL and replace it
     String modifiedBody =
         body.startsWith("https://res.cloudinary.com/dtgmmfv3d/")
@@ -139,14 +139,12 @@ class LocalNotificationController {
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    Fluttertoast.showToast(
-        msg: receivedAction.payload.toString(),
-        backgroundColor: Colors.blueAccent,
-        textColor: Colors.white,
-        fontSize: 10);
     try {
-      BuildContext? context = SnackbarGlobal.key.currentContext;
-      if (context == null) return;
+      bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+      if (!isAllowed) {
+        displayNotificationRationale();
+        return;
+      }
       // if (receivedAction.payload?['navigate'] == 'true') {
       if (receivedAction.payload != null &&
           receivedAction.payload!['payload'] != null) {
@@ -157,6 +155,13 @@ class LocalNotificationController {
           AwesomeNotifications().setGlobalBadgeCounter(currentBadgeCount);
         } else {
           AwesomeNotifications().setGlobalBadgeCounter(0);
+        }
+        if (MyApp.navigatorKey.currentState == null) {
+          Fluttertoast.showToast(
+              msg: 'currentstate is null',
+              backgroundColor: Colors.blueAccent,
+              textColor: Colors.white,
+              fontSize: 10);
         }
         MyApp.navigatorKey.currentState?.popUntil((route) => route.isFirst);
         MyApp.navigatorKey.currentState?.push(
@@ -225,7 +230,7 @@ class LocalNotificationController {
                     'Deny',
                     style: Theme.of(context)
                         .textTheme
-                        .titleLarge
+                        .titleMedium
                         ?.copyWith(color: Colors.red),
                   )),
               TextButton(
@@ -237,7 +242,7 @@ class LocalNotificationController {
                     'Allow',
                     style: Theme.of(context)
                         .textTheme
-                        .titleLarge
+                        .titleMedium
                         ?.copyWith(color: GlobalVariables.secondaryColor),
                   )),
             ],

@@ -17,6 +17,7 @@ import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/bloc/message/message_bloc.dart';
+import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -47,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         .add(GetProductLoadEvent(productId: widget.chatRoom.productId));
     SocketService.currentChatLocation = widget.chatRoom.id;
     Global.socketService.readAllMessages(widget.chatRoom.id);
+
     var currentBadgeCount =
         await AwesomeNotifications().getGlobalBadgeCounter() -
             widget.chatRoom.unseenMessageCount;
@@ -54,6 +56,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       AwesomeNotifications().setGlobalBadgeCounter(currentBadgeCount);
     } else {
       AwesomeNotifications().setGlobalBadgeCounter(0);
+    }
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) {
+      await LocalNotificationController.displayNotificationRationale();
+      return;
     }
   }
 

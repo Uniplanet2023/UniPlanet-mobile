@@ -1,10 +1,8 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/common/functions/notification_scheduling.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
 
 part 'search_product_event.dart';

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:uniplanet/main.dart';
 
 class SnackbarGlobal {
   static GlobalKey<ScaffoldMessengerState> key =
@@ -45,7 +44,10 @@ Future<List<File>> pickImages(BuildContext context) async {
     // If permission is denied, request it again
     var requested = await Permission.storage.request();
     if (requested.isGranted) {
-      return pickImages(context); // Recursive call to try picking images again
+      if (context.mounted) {
+        return pickImages(
+            context); // Recursive call to try picking images again
+      }
     } else {
       // If permission still denied, show a dialog or snackbar
       log('Storage permission is denied.');

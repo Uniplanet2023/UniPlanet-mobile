@@ -10,7 +10,7 @@ class Global {
   static late SocketService socketService;
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
-
+    // MobileAds.instance.initialize();
     // Notification initialization
     await LocalNotificationController.init(debug: true);
     await LocalNotificationController.getInitialNotificationAction();

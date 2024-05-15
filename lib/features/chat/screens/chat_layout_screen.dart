@@ -5,8 +5,30 @@ import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/chat/widgets/contacts_list.dart';
 
-class ChatList extends StatelessWidget {
+class ChatList extends StatefulWidget {
   const ChatList({super.key});
+
+  @override
+  State<ChatList> createState() => _ChatListState();
+}
+
+class _ChatListState extends State<ChatList> {
+  // BannerAd? _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+    // _createBannerAd();
+  }
+
+  // void _createBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.fullBanner,
+  //     adUnitId: AdMobService.bannerAdUnitId!,
+  //     listener: AdMobService.bannerListener,
+  //     request: const AdRequest(),
+  //   )..load();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +79,12 @@ class ChatList extends StatelessWidget {
             body: TabBarView(
               children: [
                 // User Tab
+                // _bannerAd == null
+                //     ? Container()
+                //     : SizedBox(
+                //         height: _bannerAd!.size.height.toDouble(),
+                //         child: AdWidget(ad: _bannerAd!),
+                //       ),
                 ContactsList(
                   list: state.chatRooms,
                   sort: 'user',
