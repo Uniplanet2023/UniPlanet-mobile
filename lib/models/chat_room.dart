@@ -75,9 +75,9 @@ class ChatRoom {
       lastMessage: map['lastMessage'] != null
           ? Message.fromJson(map['lastMessage'])
           : null,
-      unseenMessageCount: map['unseenMessageCount'] == null
-          ? 0
-          : JsonEncoder(map['unseenMessageCount']) as int,
+      unseenMessageCount: map['unseenMessageCount'] != null
+          ? int.tryParse(map['unseenMessageCount'].toString()) ?? 0
+          : 0,
     );
   }
 
