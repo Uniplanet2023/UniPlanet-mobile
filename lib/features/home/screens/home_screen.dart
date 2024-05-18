@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
             slivers: <Widget>[
               SliverAppBar(
                 pinned: widget.category == null ? false : true,
-                snap: true,
+                snap: false,
                 floating: true,
                 expandedHeight: 35.0,
                 backgroundColor: Colors.white,
@@ -131,8 +131,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   : 0, // Or some other logic to position the title
                               bottom: 16,
                             ),
-                            title: Text(widget.category ??
-                                'UniPlanet'), // Show category if it's not null otherwise 'uniplanet'
+                            title: Text(
+                              widget.category ?? 'UniPlanet',
+                              style: TextStyle(
+                                fontStyle: GoogleFonts.roboto().fontStyle,
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ), // Show category if it's not null otherwise 'uniplanet'
                             background: Container(
                               decoration: const BoxDecoration(
                                 gradient: GlobalVariables.appBarGradient,
@@ -155,10 +162,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 30.h),
                             Text(
                               'UniPlanet',
-                              style: GoogleFonts.roboto(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w500,
+                              style: TextStyle(
+                                fontStyle: GoogleFonts.roboto().fontStyle,
+                                fontSize: 20,
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],

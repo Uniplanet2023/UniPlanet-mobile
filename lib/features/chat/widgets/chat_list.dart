@@ -5,17 +5,20 @@ import 'package:uniplanet/bloc/message/message_bloc.dart';
 import 'package:uniplanet/bloc/typing/typing_bloc.dart';
 import 'package:uniplanet/features/chat/widgets/message_card.dart';
 import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;
   final String chatRoomId;
   final List<Message> messages;
+  final User client;
   const ChatList(
       {super.key,
       required this.scrollController,
       required this.chatRoomId,
-      required this.messages});
+      required this.messages,
+      required this.client});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -112,10 +115,10 @@ class _ChatListState extends State<ChatList> {
             recentMessage = widget.messages[itemNumber - 1];
           }
           return MessageCard(
-            oldMessage: oldMessage,
-            recentMessage: recentMessage,
-            isMyMessage: oldMessage.sender == AuthRepository.userId,
-          );
+              oldMessage: oldMessage,
+              recentMessage: recentMessage,
+              isMyMessage: oldMessage.sender == AuthRepository.userId,
+              client: widget.client);
         },
       ),
     );

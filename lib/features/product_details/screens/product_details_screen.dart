@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
@@ -26,6 +28,7 @@ import 'package:uniplanet/features/product_details/screens/seller_inventory_scre
 import 'package:uniplanet/features/product_details/widgets/seller_other_list.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/network/repository/index.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -50,6 +53,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     context
         .read<SellerSoldProductBloc>()
         .add(LoadSellerSoldProductEvent(userId: widget.product.seller.id));
+  }
+
+  void shareProduct(
+      BuildContext context, String productName, String productImage) async {
+    // Download the image to a temporary directory
+    final tempDir = await getTemporaryDirectory();
+    final imagePath = '${tempDir.path}/temp_image.jpg';
+    final response = await DioClient.instance.dio.get(
+      productImage,
+      options: Options(responseType: ResponseType.bytes),
+    );
+    final file = File(imagePath);
+    await file.writeAsBytes(response.data);
+
+    // Share the image along with text
+    if (Platform.isIOS || Platform.isAndroid) {
+      Share.shareXFiles(
+        [XFile(imagePath)],
+        text:
+            'Check out the product on UniPlanet: $productName on UniPlanet Market! Join our Campus Community marketplace now: https://uniplanet.shop',
+      );
+    } else {
+      Share.share(
+        'Check out the product on UniPlanet: $productName on UniPlanet Market! Join our Campus Community marketplace now: https://uniplanet.shop',
+      );
+    }
   }
 
   CarouselSlider _buildCarouselSlider() {
@@ -397,13 +426,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   size: 30,
                 ),
                 onPressed: () {
-                  if (Platform.isIOS) {
-                    Share.share(
-                        'Check out this product on UniPlanet: ${widget.product.name} on UniPlanet Market! The Campus Community marketplace app: https://uniplanet.shop/pages/download-application');
-                  } else {
-                    Share.share(
-                        'Check out this product on UniPlanet: ${widget.product.name} on UniPlanet Market! The Campus Community marketplace app: https://uniplanet.shop/pages/download-application');
-                  }
+                  shareProduct(context, widget.product.name,
+                      widget.product.images.first);
                 },
               ),
             ),

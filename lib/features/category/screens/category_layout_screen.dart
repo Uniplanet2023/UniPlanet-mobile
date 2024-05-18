@@ -27,18 +27,22 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Text(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: GlobalVariables.backgroundColor,
+          centerTitle: false,
+          title: Text(
             'Categories',
-            style: GoogleFonts.roboto(
-              fontSize: 18.sp,
+            style: TextStyle(
+              fontStyle: GoogleFonts.roboto().fontStyle,
+              fontSize: 20,
               color: Colors.black,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        leadingWidth: 200.sw,
       ),
       body: SingleChildScrollView(
         child: Column(

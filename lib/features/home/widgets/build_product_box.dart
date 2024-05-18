@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/like/like_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/constants/number_formatter.dart';
@@ -10,6 +11,7 @@ import 'package:uniplanet/common/widgets/loader.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:uniplanet/network/ads/ad_mob_service.dart';
 
 class ItemBox extends StatefulWidget {
   final List<Product> productList;
@@ -20,6 +22,35 @@ class ItemBox extends StatefulWidget {
 }
 
 class _ItemBoxState extends State<ItemBox> {
+  BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+  int numberOfAds = 0;
+  @override
+  void initState() {
+    super.initState();
+    numberOfAds = widget.productList.length % 11;
+    _createBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  void _createBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId!,
+      listener: AdMobService.createBannerListener(() {
+        setState(() {
+          _isAdLoaded = true;
+        });
+      }),
+      request: const AdRequest(),
+    )..load();
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.productList == []
@@ -27,7 +58,23 @@ class _ItemBoxState extends State<ItemBox> {
         : SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                final product = widget.productList[index];
+                if (index % 11 == 10) {
+                  // Return the banner ad every 10 products (index 10, 21, 32, ...)
+                  return _isAdLoaded
+                      ? Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: SizedBox(
+                            height: _bannerAd!.size.height.toDouble(),
+                            width: _bannerAd!.size.width.toDouble(),
+                            child: AdWidget(ad: _bannerAd!),
+                          ),
+                        )
+                      : Container();
+                }
+
+                final productIndex = index - (index ~/ 11);
+                final product = widget.productList[productIndex];
                 return InkWell(
                   onTap: () => {
                     context
@@ -302,7 +349,7 @@ class _ItemBoxState extends State<ItemBox> {
                 );
               },
               // 40 list items
-              childCount: widget.productList.length,
+              childCount: widget.productList.length + numberOfAds,
             ),
           );
   }

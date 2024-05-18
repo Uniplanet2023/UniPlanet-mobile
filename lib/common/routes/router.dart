@@ -6,7 +6,6 @@ import "package:uniplanet/features/auth/screens/auth_screen.dart";
 import "package:uniplanet/features/auth/screens/opt_verfiy_screen.dart";
 import 'package:uniplanet/features/auth/screens/signin_screen.dart';
 import 'package:uniplanet/features/auth/screens/signup_screen.dart';
-import 'package:uniplanet/features/auth/screens/splash_screen.dart';
 import "package:uniplanet/features/category/screens/categories.dart";
 import "package:uniplanet/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet/features/chat/screens/chat_screen.dart";
@@ -23,11 +22,6 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
-      );
-    case AppRoutes.splashScreenPage:
-      return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => const SplashScreen(),
       );
     case AppRoutes.signupPage:
       return MaterialPageRoute(

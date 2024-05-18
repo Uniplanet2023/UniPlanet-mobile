@@ -9,18 +9,21 @@ import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
 import 'package:uniplanet/common/widgets/full_image.dart';
 import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/models/user_model.dart';
 
 class MessageCard extends StatelessWidget {
   final Message oldMessage;
   final Message? recentMessage;
   final bool isMyMessage; // Determines if the message is sent by the user
-
+  final User client;
   const MessageCard({
     super.key,
     required this.oldMessage,
     this.recentMessage,
     required this.isMyMessage, // Add this to determine the message sender
+    required this.client,
   });
 
   @override
@@ -63,10 +66,12 @@ class MessageCard extends StatelessWidget {
                 )
               : oldMessage.status == MessageStatusEnum.received.value
                   ? oldMessage.readDate == null
-                      ? const Icon(
-                          Icons.local_fire_department_outlined,
-                          size: 20,
-                          color: Colors.black54,
+                      ? const Text(
+                          'unseen',
+                          style: TextStyle(
+                              color: GlobalVariables.secondaryColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold),
                         )
                       : const SizedBox()
                   : const Icon(
@@ -76,8 +81,36 @@ class MessageCard extends StatelessWidget {
                     )
         ],
       ),
+
       // Message Card
       MessageBox(isMyMessage: isMyMessage, oldMessage: oldMessage),
+
+      !hidePreviousDate && !isMyMessage
+          ? Container(
+              margin: const EdgeInsets.only(left: 15),
+              width: 30,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return UserProfileScreen(user: client);
+                    }),
+                  );
+                },
+                child: CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(
+                    client.profileImage!,
+                    cacheManager: GlobalVariables.customCacheManager,
+                  ),
+                  radius: 18,
+                ),
+              ),
+            )
+          : !isMyMessage
+              ? const SizedBox(
+                  width: 48,
+                )
+              : const SizedBox()
     ];
 
     return Column(
@@ -151,7 +184,7 @@ class MessageBox extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           color: getColorForCard(),
           margin: EdgeInsets.fromLTRB(
-              isMyMessage ? 5 : 15, 5, isMyMessage ? 15 : 5, 5),
+              isMyMessage ? 5 : 10, 5, isMyMessage ? 15 : 5, 5),
           child: Padding(
             padding: getPaddingForContent(),
             child: getContentWidget(context, isTyping, isOverflowing),

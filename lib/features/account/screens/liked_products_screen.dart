@@ -55,6 +55,7 @@ class _LikedProductsScreenState extends State<LikedProductsScreen> {
           BlocBuilder<LikeBloc, LikeState>(
             builder: (context, state) {
               return InventoryProductBox(
+                title: 'Liked',
                 productList: state.likeProduct,
                 controller: scrollController,
                 isLoadingMore: isLoadingMore,

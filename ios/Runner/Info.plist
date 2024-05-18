@@ -1,6 +1,6 @@
-<?xml version="1.1.5" encoding="UTF-8"?>
+<?xml version="1.1.8" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.1.5">
+<plist version="1.1.8">
 	<dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
@@ -60,5 +60,7 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
+		<key>GADApplicationIdentifier</key>
+		<string>ca-app-pub-9923099397206192~8964906949</string>
 	</dict>
 </plist>

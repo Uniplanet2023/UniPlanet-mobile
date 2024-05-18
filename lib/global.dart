@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/network/api_def/dio_client.dart';
 import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
@@ -10,7 +11,7 @@ class Global {
   static late SocketService socketService;
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    // MobileAds.instance.initialize();
+    MobileAds.instance.initialize();
     // Notification initialization
     await LocalNotificationController.init(debug: true);
     await LocalNotificationController.getInitialNotificationAction();

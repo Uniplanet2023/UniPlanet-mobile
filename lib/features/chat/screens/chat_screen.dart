@@ -262,8 +262,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 ),
                               ),
                               OutlinedButton.icon(
-                                icon: const Icon(Icons.star),
-                                label: const Text('Review Product'),
+                                icon: const Icon(Icons.shopping_cart_outlined),
+                                label: const Text('Product Detail'),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor:
                                       GlobalVariables.secondaryColor,
@@ -295,6 +295,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 scrollController: _scrollController,
                 chatRoomId: widget.chatRoom.id,
                 messages: messages.reversed.toList(),
+                client: widget.client,
               )),
               BottomChatField(
                 chatRoomId: widget.chatRoom.id,

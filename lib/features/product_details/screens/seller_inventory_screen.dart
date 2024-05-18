@@ -64,6 +64,7 @@ class _SellerProductsScreenState extends State<SellerProductsScreen> {
             controller: _scrollController,
             slivers: <Widget>[
               InventoryProductBox(
+                title: 'Seller Sale',
                 productList: state.sellerProduct,
                 controller: _scrollController,
                 isLoadingMore: _isLoadingMore,

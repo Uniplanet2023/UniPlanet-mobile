@@ -7,13 +7,14 @@ import 'package:uniplanet/network/notification/notification_handler/local_notifi
 // id = 12 Hot Product
 void notificationScheduling(List<Product> products, int id) async {
   // Cancel any existing notification with the same ID
-  AwesomeNotifications().listScheduledNotifications().then((value) {
-    for (var notification in value) {
-      if (notification.content?.id == id) {
-        return;
-      }
+  var notificationList =
+      await AwesomeNotifications().listScheduledNotifications();
+
+  for (var notification in notificationList) {
+    if (notification.content?.id == id) {
+      return;
     }
-  });
+  }
 
   // Get the current date and time
   DateTime now = DateTime.now();
@@ -39,7 +40,7 @@ void notificationScheduling(List<Product> products, int id) async {
     DateTime scheduledTime = DateTime(
       now.year,
       now.month,
-      now.day + index, // Schedule for the next day
+      now.day, // Schedule for the next day
       now.hour + 1 + index * 6, // Hour adjustment based on index
       now.minute + 21 + index * 10, // Minute adjustment based on index
     );

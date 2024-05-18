@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,49 +83,49 @@ class _ContactsListState extends State<ContactsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: NotificationListener<ScrollNotification>(
-        onNotification: _onScrollNotification,
-        child: SlidableAutoCloseBehavior(
-          closeWhenOpened: true,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.list.length + (_isLoading ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index == widget.list.length && widget.list.length > 9) {
-                return const Center(child: CircularProgressIndicator());
+    return NotificationListener<ScrollNotification>(
+      onNotification: _onScrollNotification,
+      child: SlidableAutoCloseBehavior(
+        closeWhenOpened: true,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.list.length + (_isLoading ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index == widget.list.length && widget.list.length > 9) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Builder(builder: (BuildContext innerContext) {
+              User client =
+                  widget.list[index].seller.id == AuthRepository.userId
+                      ? widget.list[index].buyer
+                      : widget.list[index].seller;
+
+              // Determine if the user is typing f    or this chat room.
+              Message last;
+              if (widget.list[index].lastMessage != null) {
+                last = widget.list[index].lastMessage!;
+              } else {
+                last = Message.initMessage();
               }
-              return Builder(builder: (BuildContext innerContext) {
-                User client =
-                    widget.list[index].seller.id == AuthRepository.userId
-                        ? widget.list[index].buyer
-                        : widget.list[index].seller;
 
-                // Determine if the user is typing f    or this chat room.
-                Message last;
-                if (widget.list[index].lastMessage != null) {
-                  last = widget.list[index].lastMessage!;
-                } else {
-                  last = Message.initMessage();
-                }
-
-                return Slidable(
-                  key: Key(widget.list[index].id),
-                  endActionPane: ActionPane(
-                    motion: const BehindMotion(),
-                    children: [
-                      SlidableAction(
-                        onPressed: (context) {
-                          _onDismissed(index, ChatActions.delete, client);
-                        },
-                        icon: Icons.delete,
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        label: 'Delete',
-                      ),
-                    ],
-                  ),
+              return Slidable(
+                key: Key(widget.list[index].id),
+                endActionPane: ActionPane(
+                  motion: const BehindMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDismissed(index, ChatActions.delete, client);
+                      },
+                      icon: Icons.delete,
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      label: 'Delete',
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Column(
                     children: [
                       ListTile(
@@ -153,11 +155,11 @@ class _ContactsListState extends State<ContactsList> {
                               ? widget.list[index].productName
                               : client.name,
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                           ),
                         ),
                         subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 6.0),
+                          padding: const EdgeInsets.only(top: 4.0),
                           child: BlocBuilder<TypingBloc, TypingState>(
                             builder: (context, state) {
                               bool isTyping = state is TypingStarted &&
@@ -170,7 +172,7 @@ class _ContactsListState extends State<ContactsList> {
                                       color: Colors
                                           .grey, // Adjust the color to fit your app theme
                                       size:
-                                          20.0, // Adjust the size based on your UI
+                                          16.0, // Adjust the size based on your UI
                                     ),
                                   if (!isTyping)
                                     Expanded(
@@ -180,7 +182,7 @@ class _ContactsListState extends State<ContactsList> {
                                             ? "Image"
                                             : last.message,
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 14,
                                           fontWeight: last.sender !=
                                                       AuthRepository.userId &&
                                                   last.readDate == null
@@ -202,11 +204,11 @@ class _ContactsListState extends State<ContactsList> {
                             client.profileImage == null
                                 ? const CircleAvatar(
                                     backgroundColor: Colors.grey,
-                                    radius: 30,
+                                    radius: 25,
                                     child: Icon(
                                       Icons.person,
                                       color: Colors.white,
-                                      size: 50,
+                                      size: 40,
                                     ),
                                   )
                                 : GestureDetector(
@@ -225,7 +227,7 @@ class _ContactsListState extends State<ContactsList> {
                                         cacheManager:
                                             GlobalVariables.customCacheManager,
                                       ),
-                                      radius: 30,
+                                      radius: 25,
                                     ),
                                   ),
                             BlocBuilder<StatusBloc, StatusState>(
@@ -235,19 +237,19 @@ class _ContactsListState extends State<ContactsList> {
                                     right: 0,
                                     child: state.online.contains(client.id)
                                         ? const Icon(Icons.circle,
-                                            color: Colors.green, size: 16)
+                                            color: Colors.green, size: 12)
                                         : const Icon(Icons.circle,
-                                            color: Colors.red, size: 16));
+                                            color: Colors.red, size: 12));
                               },
                             ),
                           ],
                         ),
                         trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              height: 30,
+                              height: 20,
                               child: Text(
                                 widget.list[index].lastMessage?.createdAt !=
                                         null
@@ -256,15 +258,15 @@ class _ContactsListState extends State<ContactsList> {
                                     : "",
                                 style: const TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 13,
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
                             widget.list[index].unseenMessageCount == 0
                                 ? const SizedBox()
                                 : Container(
-                                    width: 25,
-                                    height: 25,
+                                    width: 20,
+                                    height: 20,
                                     decoration: BoxDecoration(
                                       color: Colors
                                           .red, // Background color for the circle
@@ -273,7 +275,7 @@ class _ContactsListState extends State<ContactsList> {
                                     ),
                                     constraints: const BoxConstraints(
                                       minWidth:
-                                          45, // Minimum width for the red circle
+                                          25, // Minimum width for the red circle
                                       minHeight:
                                           25, // Minimum height for the red circle
                                     ),
@@ -294,14 +296,12 @@ class _ContactsListState extends State<ContactsList> {
                           ],
                         ),
                       ),
-                      const Divider(
-                          color: GlobalVariables.backgroundColor, indent: 85),
                     ],
                   ),
-                );
-              });
-            },
-          ),
+                ),
+              );
+            });
+          },
         ),
       ),
     );
