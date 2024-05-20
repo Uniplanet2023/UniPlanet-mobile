@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/get_product/get_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
@@ -76,6 +77,9 @@ class StateManagerProvider extends StatelessWidget {
           BlocProvider(
               create: (context) =>
                   GetProductBloc(context.read<ProductRepository>())),
+          BlocProvider(
+              create: (context) =>
+                  FreeProductBloc(context.read<ProductRepository>())),
         ], child: const MyApp()));
   }
 }

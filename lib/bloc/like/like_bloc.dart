@@ -89,7 +89,8 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
         emit(const LikeError(message: "Error unliking product"));
         return;
       }
-      state.likeProduct.remove(event.product);
+      state.likeProduct
+          .removeWhere((element) => element.id == event.product.id);
       // Remove like
       emit(LikeRemoved(
           likeProduct: state.likeProduct, removedProduct: event.product));

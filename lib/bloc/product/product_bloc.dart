@@ -125,7 +125,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   _loadMoreProduct(LoadMoreProductEvent event, emit) async {
-    emit(LoadingProductState(productList: state.productList, page: state.page));
+    emit(LoadingMoreProductState(
+        productList: state.productList, page: state.page));
     int nextPage = state.page + 1;
     List<Product> result = [];
     try {

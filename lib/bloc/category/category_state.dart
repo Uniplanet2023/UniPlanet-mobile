@@ -31,6 +31,15 @@ final class LoadingCategoryState extends CategoryState {
   List<Object> get props => [categoryProducts, categoryPage];
 }
 
+final class LoadingMoreCategoryState extends CategoryState {
+  const LoadingMoreCategoryState({
+    super.categoryProducts,
+    super.categoryPage,
+  });
+  @override
+  List<Object> get props => [categoryProducts, categoryPage];
+}
+
 final class LoadedCategoryState extends CategoryState {
   const LoadedCategoryState({
     super.categoryProducts,

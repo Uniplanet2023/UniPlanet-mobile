@@ -29,6 +29,15 @@ final class LoadingHotProductState extends HotProductState {
   List<Object> get props => [hotProducts, hotProductPage];
 }
 
+final class LoadingMoreHotProductState extends HotProductState {
+  const LoadingMoreHotProductState({
+    super.hotProducts,
+    super.hotProductPage,
+  });
+  @override
+  List<Object> get props => [hotProducts, hotProductPage];
+}
+
 final class LoadedHotProductState extends HotProductState {
   const LoadedHotProductState({
     super.hotProducts,

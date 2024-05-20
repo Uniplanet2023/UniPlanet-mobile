@@ -22,14 +22,23 @@ class AdMobService {
     return null;
   }
 
-  // static String? get rewardedAdUnitId {
-  //   if (Platform.isAndroid) {
-  //     return '';
-  //   } else if (Platform.isIOS) {
-  //     return '';
-  //   }
-  //   return null;
-  // }
+  static String? get rewardedAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-9923099397206192/7675257452';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-9923099397206192/6804527904';
+    }
+    return null;
+  }
+
+  static String? get rewardInterstitialAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-9923099397206192/5937388545';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-9923099397206192/3449906131';
+    }
+    return null;
+  }
 
   static BannerAdListener createBannerListener(
       void Function() onAdLoadedCallback) {

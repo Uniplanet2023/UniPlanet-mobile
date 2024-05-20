@@ -65,7 +65,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   SizedBox(width: 8.w),
                   IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.homePage,
+                        Navigator.pushNamed(context, AppRoutes.category,
                             arguments: 'Hot Products');
                       },
                       icon: Icon(Icons.arrow_forward_ios, size: 15.sp))
@@ -120,7 +120,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () => Navigator.pushNamed(
-                        context, AppRoutes.homePage,
+                        context, AppRoutes.category,
                         arguments: GlobalVariables.categories[index]['name']),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,

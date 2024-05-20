@@ -19,7 +19,7 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
   }
 
   _loadMoreHotProducts(LoadMoreHotProductsEvent event, emit) async {
-    emit(LoadingHotProductState(
+    emit(LoadingMoreHotProductState(
         hotProducts: state.hotProducts, hotProductPage: state.hotProductPage));
     int nextPage = state.hotProductPage + 1;
     List<Product> result = [];

@@ -57,10 +57,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const AddProductScreen(),
       );
-    case AppRoutes.categoryPage:
+    case AppRoutes.category:
+      var category = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const CategoriesPage(),
+        builder: (_) =>
+            CategoriesPage(controller: ScrollController(), category: category),
       );
     case AppRoutes.searchScreenPage:
       // var searchQuery = routeSettings.arguments as String?;

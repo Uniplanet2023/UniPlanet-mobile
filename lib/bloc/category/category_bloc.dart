@@ -20,7 +20,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   }
 
   _loadMoreCategoryProduct(LoadMoreCategoryEvent event, emit) async {
-    emit(LoadingCategoryState(
+    emit(LoadingMoreCategoryState(
       categoryProducts: state.categoryProducts,
       categoryPage: state.categoryPage,
     ));

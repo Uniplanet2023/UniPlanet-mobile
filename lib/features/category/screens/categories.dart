@@ -1,336 +1,244 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/widgets/loader.dart';
+import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/category/widget/category_header.dart';
+import 'package:uniplanet/features/home/widgets/build_product_box.dart';
+import 'package:uniplanet/network/ads/ad_mob_service.dart';
 
-class CategoriesPage extends StatelessWidget {
+class CategoriesPage extends StatefulWidget {
+  final ScrollController controller;
+  final String category;
   const CategoriesPage({
     super.key,
-  });
-
-  void navigateToCategoryPage(BuildContext context, String category) {
-    Navigator.pushNamed(context, AppRoutes.category, arguments: category);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 50,
-          ),
-          for (final category in GlobalVariables.categories)
-            InkWell(
-              onTap: () {
-                navigateToCategoryPage(
-                  context,
-                  category['name'],
-                );
-              },
-              child: CategoryListItem(
-                imageUrl: category['image'],
-                name: category['name'],
-                category: '',
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class CategoryListItem extends StatefulWidget {
-  const CategoryListItem({
-    super.key,
-    required this.imageUrl,
-    required this.name,
+    required this.controller,
     required this.category,
   });
 
-  final String imageUrl;
-  final String name;
-  final String category;
-
   @override
-  State<CategoryListItem> createState() => _CategoryListItemState();
+  State<CategoriesPage> createState() => _CategoriesPageState();
 }
 
-class _CategoryListItemState extends State<CategoryListItem> {
-  final GlobalKey _backgroundImageKey = GlobalKey();
-  late Image imageFile;
+class _CategoriesPageState extends State<CategoriesPage> {
+  bool showLoadingIndicator = false;
+  bool isFetchingMoreProducts = false;
+
+  void scrollListener() {
+    if (widget.controller.position.pixels >=
+            widget.controller.position.maxScrollExtent &&
+        !isFetchingMoreProducts) {
+      // User has reached the end, fetch more products
+      setState(() => isFetchingMoreProducts = true);
+      // Simulate fetching more products with a delay
+      if (widget.category == 'Hot Products') {
+        if (context.read<HotProductBloc>().state is LoadedHotProductState) {
+          context.read<HotProductBloc>().add(const LoadMoreHotProductsEvent());
+        }
+      } else if (context.read<CategoryBloc>().state is LoadedCategoryState) {
+        context
+            .read<CategoryBloc>()
+            .add(LoadMoreCategoryEvent(category: widget.category));
+      }
+
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) {
+          setState(() => isFetchingMoreProducts = false);
+          // You should replace the following line with the actual code to fetch more products
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    imageFile = Image.asset(widget.imageUrl,
-        key: _backgroundImageKey, fit: BoxFit.cover);
+    widget.controller.addListener(scrollListener); // Listen to scroll events
+    if (widget.category != 'Hot Products' &&
+        widget.category != 'Free Products') {
+      context
+          .read<CategoryBloc>()
+          .add(LoadCategoryEvent(category: widget.category));
+    } else {
+      if (widget.category == 'Free Products') {
+        context
+            .read<FreeProductBloc>()
+            .add(LoadFreeProductEvent(category: widget.category));
+        _createRewardedInterstitialAd();
+      }
+    }
   }
 
-  void didChnageDependencies() {
-    precacheImage(imageFile.image, context);
-    super.didChangeDependencies();
+  void _createRewardedInterstitialAd() {
+    RewardedInterstitialAd.load(
+      adUnitId: AdMobService.rewardInterstitialAdUnitId!,
+      request: const AdRequest(),
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (RewardedInterstitialAd ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (Ad ad) =>
+                log('Ad showed full screen content.'),
+            onAdDismissedFullScreenContent: (Ad ad) {
+              ad.dispose();
+            },
+            onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
+              ad.dispose();
+              _createRewardedInterstitialAd();
+            },
+          );
+          ad.show(
+            onUserEarnedReward: (ad, RewardItem reward) {
+              log('User earned reward of: ${reward.amount}');
+            },
+          );
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          // Ad failed to load
+          log('Ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(scrollListener); // Remove the listener
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
-      child: AspectRatio(
-        aspectRatio: 15 / 6,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Stack(
-            children: [
-              _buildParallaxBackground(context),
-              _buildGradient(),
-              _buildTitleAndSubtitle(),
+    return Scaffold(
+      body: BlocListener<ProductBloc, ProductState>(
+        listener: (context, state) {
+          if (state is ProductUploadedState) {
+            setState(() => showLoadingIndicator = true);
+          } else if (state is ProductImageUploadedState) {
+            setState(() => showLoadingIndicator = false);
+          }
+        },
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.pixels < -100 && !showLoadingIndicator) {
+              setState(() => showLoadingIndicator = true);
+              if (widget.category == 'Hot Products') {
+                context
+                    .read<HotProductBloc>()
+                    .add(const LoadHotProductsEvent());
+              }
+              if (widget.category == 'Free Products') {
+                context
+                    .read<FreeProductBloc>()
+                    .add(LoadMoreFreeProductEvent(category: widget.category));
+              } else {
+                context
+                    .read<CategoryBloc>()
+                    .add(LoadCategoryEvent(category: widget.category));
+              }
+
+              Future.delayed(const Duration(seconds: 2), () {
+                if (mounted) {
+                  setState(() => showLoadingIndicator = false);
+                  // Dispatch LoadProductEvent only after the delay
+                }
+              });
+            }
+            return false;
+          },
+          child: CustomScrollView(
+            controller: widget.controller,
+            slivers: <Widget>[
+              CategoryHeader(
+                category: widget.category,
+              ),
+
+              // Other slivers
+              if (showLoadingIndicator)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+
+              widget.category == 'Hot Products'
+                  ? BlocBuilder<HotProductBloc, HotProductState>(
+                      builder: (context, state) {
+                      if (state is LoadingHotProductState) {
+                        return const SliverToBoxAdapter(
+                          child: Loader(),
+                        );
+                      } else if (state is LoadedHotProductState ||
+                          state is LoadingMoreHotProductState ||
+                          state is EndHotProductState) {
+                        return ItemBox(
+                          productList: state.hotProducts,
+                        );
+                      } else {
+                        return const SliverToBoxAdapter(
+                          child: SizedBox(),
+                        );
+                      }
+                    })
+                  : widget.category == 'Free Products'
+                      ? BlocBuilder<FreeProductBloc, FreeProductState>(
+                          builder: (context, state) {
+                          if (state is LoadingFreeProductState) {
+                            return const SliverToBoxAdapter(
+                              child: Loader(),
+                            );
+                          } else if (state is LoadedFreeProductState ||
+                              state is LoadingMoreFreeProductState ||
+                              state is EndFreeProductState) {
+                            return ItemBox(
+                              productList: state.productList,
+                            );
+                          } else {
+                            return const SliverToBoxAdapter(
+                              child: SizedBox(),
+                            );
+                          }
+                        })
+                      : BlocBuilder<CategoryBloc, CategoryState>(
+                          builder: (context, state) {
+                            if (state is LoadingCategoryState) {
+                              return const SliverToBoxAdapter(
+                                child: Loader(),
+                              );
+                            } else if (state is LoadedCategoryState ||
+                                state is LoadingMoreCategoryState ||
+                                state is EndCategoryState) {
+                              return ItemBox(
+                                productList: state.categoryProducts,
+                              );
+                            } else {
+                              return const SliverToBoxAdapter(
+                                child: SizedBox(),
+                              );
+                            }
+                          },
+                        ),
+
+              if (isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+              if (!isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 100.h,
+                  ),
+                ),
             ],
           ),
         ),
       ),
     );
   }
-
-  Widget _buildParallaxBackground(BuildContext context) {
-    return Flow(
-      delegate: ParallaxFlowDelegate(
-        scrollable: Scrollable.of(context),
-        listItemContext: context,
-        backgroundImageKey: _backgroundImageKey,
-      ),
-      children: [imageFile],
-    );
-  }
-
-  Widget _buildGradient() {
-    return Positioned.fill(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0.6, 0.95],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTitleAndSubtitle() {
-    return Positioned(
-      left: 20,
-      bottom: 20,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            widget.category,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
-
-class ParallaxFlowDelegate extends FlowDelegate {
-  ParallaxFlowDelegate({
-    required this.scrollable,
-    required this.listItemContext,
-    required this.backgroundImageKey,
-  }) : super(repaint: scrollable.position);
-
-  final ScrollableState scrollable;
-  final BuildContext listItemContext;
-  final GlobalKey backgroundImageKey;
-
-  @override
-  BoxConstraints getConstraintsForChild(int i, BoxConstraints constraints) {
-    return BoxConstraints.tightFor(
-      width: constraints.maxWidth,
-    );
-  }
-
-  @override
-  void paintChildren(FlowPaintingContext context) {
-    // Calculate the position of this list item within the viewport.
-    final scrollableBox = scrollable.context.findRenderObject() as RenderBox;
-    final listItemBox = listItemContext.findRenderObject() as RenderBox;
-    final listItemOffset = listItemBox.localToGlobal(
-        listItemBox.size.centerLeft(Offset.zero),
-        ancestor: scrollableBox);
-
-    // Determine the percent position of this list item within the
-    // scrollable area.
-    final viewportDimension = scrollable.position.viewportDimension;
-    final scrollFraction =
-        (listItemOffset.dy / viewportDimension).clamp(0.0, 1.0);
-
-    // Calculate the vertical alignment of the background
-    // based on the scroll percent.
-    final verticalAlignment = Alignment(0.0, scrollFraction * 2 - 1);
-
-    // Convert the background alignment into a pixel offset for
-    // painting purposes.
-    final backgroundSize =
-        (backgroundImageKey.currentContext!.findRenderObject() as RenderBox)
-            .size;
-    final listItemSize = context.size;
-    final childRect =
-        verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
-
-    // Paint the background.
-    context.paintChild(
-      0,
-      transform:
-          Transform.translate(offset: Offset(0.0, childRect.top)).transform,
-    );
-  }
-
-  @override
-  bool shouldRepaint(ParallaxFlowDelegate oldDelegate) {
-    return scrollable != oldDelegate.scrollable ||
-        listItemContext != oldDelegate.listItemContext ||
-        backgroundImageKey != oldDelegate.backgroundImageKey;
-  }
-}
-
-class Parallax extends SingleChildRenderObjectWidget {
-  const Parallax({
-    super.key,
-    required Widget background,
-  }) : super(child: background);
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return RenderParallax(scrollable: Scrollable.of(context));
-  }
-
-  @override
-  void updateRenderObject(
-      BuildContext context, covariant RenderParallax renderObject) {
-    renderObject.scrollable = Scrollable.of(context);
-  }
-}
-
-class ParallaxParentData extends ContainerBoxParentData<RenderBox> {}
-
-class RenderParallax extends RenderBox
-    with RenderObjectWithChildMixin<RenderBox>, RenderProxyBoxMixin {
-  RenderParallax({
-    required ScrollableState scrollable,
-  }) : _scrollable = scrollable;
-
-  ScrollableState _scrollable;
-
-  ScrollableState get scrollable => _scrollable;
-
-  set scrollable(ScrollableState value) {
-    if (value != _scrollable) {
-      if (attached) {
-        _scrollable.position.removeListener(markNeedsLayout);
-      }
-      _scrollable = value;
-      if (attached) {
-        _scrollable.position.addListener(markNeedsLayout);
-      }
-    }
-  }
-
-  @override
-  void attach(covariant PipelineOwner owner) {
-    super.attach(owner);
-    _scrollable.position.addListener(markNeedsLayout);
-  }
-
-  @override
-  void detach() {
-    _scrollable.position.removeListener(markNeedsLayout);
-    super.detach();
-  }
-
-  @override
-  void setupParentData(covariant RenderObject child) {
-    if (child.parentData is! ParallaxParentData) {
-      child.parentData = ParallaxParentData();
-    }
-  }
-
-  @override
-  void performLayout() {
-    size = constraints.biggest;
-
-    // Force the background to take up all available width
-    // and then scale its height based on the image's aspect ratio.
-    final background = child!;
-    final backgroundImageConstraints =
-        BoxConstraints.tightFor(width: size.width);
-    background.layout(backgroundImageConstraints, parentUsesSize: true);
-
-    // Set the background's local offset, which is zero.
-    (background.parentData as ParallaxParentData).offset = Offset.zero;
-  }
-
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    // Get the size of the scrollable area.
-    final viewportDimension = scrollable.position.viewportDimension;
-
-    // Calculate the global position of this list item.
-    final scrollableBox = scrollable.context.findRenderObject() as RenderBox;
-    final backgroundOffset =
-        localToGlobal(size.centerLeft(Offset.zero), ancestor: scrollableBox);
-
-    // Determine the percent position of this list item within the
-    // scrollable area.
-    final scrollFraction =
-        (backgroundOffset.dy / viewportDimension).clamp(0.0, 1.0);
-
-    // Calculate the vertical alignment of the background
-    // based on the scroll percent.
-    final verticalAlignment = Alignment(0.0, scrollFraction * 2 - 1);
-
-    // Convert the background alignment into a pixel offset for
-    // painting purposes.
-    final background = child!;
-    final backgroundSize = background.size;
-    final listItemSize = size;
-    final childRect =
-        verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
-
-    // Paint the background.
-    context.paintChild(
-        background,
-        (background.parentData as ParallaxParentData).offset +
-            offset +
-            Offset(0.0, childRect.top));
-  }
-}
-
-class Category {
-  const Category({
-    required this.name,
-    required this.description,
-    required this.imageUrl,
-  });
-
-  final String name;
-  final String description;
-  final String imageUrl;
-}
-
-const urlPrefix = 'assets/images';

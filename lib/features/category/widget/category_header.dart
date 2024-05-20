@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:uniplanet/constants/global_variables.dart';
+
+class CategoryHeader extends StatelessWidget {
+  final String category;
+  const CategoryHeader({
+    super.key,
+    required this.category,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      pinned: true,
+      snap: false,
+      floating: true,
+      backgroundColor: Colors.white,
+      flexibleSpace: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          var top = constraints.biggest.height;
+          return FlexibleSpaceBar(
+            titlePadding: EdgeInsets.only(
+              left: top > 71.0
+                  ? 20
+                  : 0, // Or some other logic to position the title
+              bottom: 16,
+            ),
+            title: Text(
+              category,
+              style: TextStyle(
+                fontStyle: GoogleFonts.roboto().fontStyle,
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ), // Show category if it's not null otherwise 'uniplanet'
+            background: Container(
+              decoration: const BoxDecoration(
+                gradient: GlobalVariables.appBarGradient,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

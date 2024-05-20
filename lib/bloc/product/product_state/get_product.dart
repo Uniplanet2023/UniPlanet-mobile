@@ -4,6 +4,10 @@ final class LoadingProductState extends ProductState {
   const LoadingProductState({super.productList, super.page});
 }
 
+final class LoadingMoreProductState extends ProductState {
+  const LoadingMoreProductState({super.productList, super.page});
+}
+
 final class LoadedProductState extends ProductState {
   const LoadedProductState({super.productList, super.page});
 }

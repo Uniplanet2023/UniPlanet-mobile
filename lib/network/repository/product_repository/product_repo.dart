@@ -93,6 +93,31 @@ class ProductRepository {
     return productList;
   }
 
+  Future<List<Product>> getFreeProducts({int? page, String? category}) async {
+    final productList = <Product>[];
+    try {
+      if (category == 'Free Products') {
+        category = null;
+      }
+      final response = await _dioClient.dio.get(
+        '$productURI/get-free-products',
+        queryParameters: {'category': category, 'page': page},
+        options: _dioClient.getDioOptions(),
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        final obj = jsonDecode(response.data);
+        for (int i = 0; i < obj.length; i++) {
+          productList.add(Product.fromMap(obj[i]));
+        }
+        return productList;
+      }
+    } on DioException catch (e) {
+      log(e);
+    }
+    return productList;
+  }
+
   Future<Product?> updateProduct({required Product product}) async {
     try {
       final response = await _dioClient.dio.put(
