@@ -233,7 +233,7 @@ class _ItemBoxState extends State<ItemBox> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      TimeAgoFormatter(product.createdAt)
+                                      TimeAgoFormatter(product.updatedAt)
                                           .format(),
                                       style: TextStyle(
                                         color: Colors.grey.shade900,

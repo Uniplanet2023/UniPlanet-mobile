@@ -160,7 +160,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         images: originalImages,
         location: meetingLocationController.text,
         seller: widget.product.seller,
-        createdAt: widget.product.createdAt,
+        updatedAt: widget.product.updatedAt,
         likes: widget.product.likes,
         numberOfChat: widget.product.numberOfChat,
       );

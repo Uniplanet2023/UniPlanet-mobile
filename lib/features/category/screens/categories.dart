@@ -67,17 +67,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
         context
             .read<FreeProductBloc>()
             .add(LoadFreeProductEvent(category: widget.category));
-        _createRewardedInterstitialAd();
+        _createRewardedAd();
       }
     }
   }
 
-  void _createRewardedInterstitialAd() {
-    RewardedInterstitialAd.load(
-      adUnitId: AdMobService.rewardInterstitialAdUnitId!,
+  _createRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdMobService.rewardedAdUnitId!,
       request: const AdRequest(),
-      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-        onAdLoaded: (RewardedInterstitialAd ad) {
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdShowedFullScreenContent: (Ad ad) =>
                 log('Ad showed full screen content.'),
@@ -86,7 +86,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
             },
             onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
               ad.dispose();
-              _createRewardedInterstitialAd();
+              _createRewardedAd();
             },
           );
           ad.show(

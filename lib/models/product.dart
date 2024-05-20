@@ -12,7 +12,7 @@ class Product {
   int numberOfChat;
   String category;
   double price;
-  final DateTime createdAt;
+  final DateTime updatedAt;
   String location;
   bool isAdvertisement;
   Product({
@@ -26,7 +26,7 @@ class Product {
     this.numberOfChat = 0,
     required this.category,
     required this.price,
-    required this.createdAt,
+    required this.updatedAt,
     required this.location,
     this.isAdvertisement = false,
   });
@@ -43,7 +43,7 @@ class Product {
         category: "",
         price: 0,
         location: "",
-        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         isAdvertisement: false);
   }
 
@@ -58,7 +58,7 @@ class Product {
       'likes': likes,
       'category': category,
       'price': price,
-      'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'numberOfChat': numberOfChat,
       'location': location,
       'isAdvertisement': isAdvertisement,
@@ -78,7 +78,7 @@ class Product {
       price: map['price'].toDouble() as double,
       category: map['category'],
       location: map['location'] ?? "",
-      createdAt: DateTime.parse(map['createdAt'].toString()),
+      updatedAt: DateTime.parse(map['updatedAt'].toString()),
       isAdvertisement: map['isAdvertisement'] ?? false,
     );
   }
