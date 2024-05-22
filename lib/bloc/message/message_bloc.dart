@@ -130,12 +130,18 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
         List.from(state.chatMessages[event.message.chat]!);
     int messageIndex =
         currentChatMessages.indexWhere((m) => m.id == event.message.id);
+
     if (messageIndex != -1) {
-      currentChatMessages[messageIndex] =
-          currentChatMessages[messageIndex].copyWith(
-        status: MessageStatusEnum.received.value,
-        message: event.message.message,
-      );
+      event.message.status == MessageStatusEnum.error.value
+          ? currentChatMessages[messageIndex] =
+              currentChatMessages[messageIndex].copyWith(
+              status: MessageStatusEnum.error.value,
+            )
+          : currentChatMessages[messageIndex] =
+              currentChatMessages[messageIndex].copyWith(
+              status: MessageStatusEnum.received.value,
+              message: event.message.message,
+            );
     }
 
     emit(SentMessageState(

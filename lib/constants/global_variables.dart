@@ -41,4 +41,9 @@ class GlobalVariables {
     {'name': 'Vehicles & Parts', 'image': 'assets/images/car.jpg'},
     {'name': 'Other', 'image': 'assets/images/box.jpg'},
   ];
+  static const List<String> locations = [
+    'On Campus',
+    'Off Campus',
+    'Custom',
+  ];
 }

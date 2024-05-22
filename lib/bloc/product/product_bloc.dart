@@ -70,11 +70,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       if (index != -1) {
         productList[index] = updatedProduct;
-        emit(ProductUpdatedState(productList: productList, page: state.page));
-      } else {
-        emit(ProductUpdateFailedState("Error updating product",
-            productList: state.productList, page: state.page));
       }
+      emit(ProductUpdatedState(productList: productList, page: state.page));
     }
   }
 

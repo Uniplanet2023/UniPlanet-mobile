@@ -3,6 +3,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/get_product/get_product_bloc.dart';
 import 'package:uniplanet/bloc/status/status_bloc.dart';
@@ -33,6 +34,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   List<Message> messages = [];
   bool isExpanded = false;
+  bool isNotificationAllowed = false;
 
   @override
   void initState() {
@@ -57,11 +59,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } else {
       AwesomeNotifications().setGlobalBadgeCounter(0);
     }
-    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isAllowed) {
-      await LocalNotificationController.displayNotificationRationale();
-      return;
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isAllowed = prefs.getBool('isNotificationAllowed') ?? false;
+    isNotificationAllowed = isAllowed;
   }
 
   void _scrollToBottom() {
@@ -89,8 +89,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
-      Global.socketService.readAllMessages(widget.chatRoom.id);
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
+        Global.socketService.readAllMessages(widget.chatRoom.id);
+      });
     }
   }
 
@@ -155,6 +157,25 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
           centerTitle: false,
           actions: [
+            isNotificationAllowed
+                ? IconButton(
+                    onPressed: () async {
+                      await LocalNotificationController.notificationRationale(
+                          false);
+                      setState(() {
+                        isNotificationAllowed = false;
+                      });
+                    },
+                    icon: const Icon(Icons.notifications_active_outlined))
+                : IconButton(
+                    onPressed: () async {
+                      await LocalNotificationController.notificationRationale(
+                          true);
+                      setState(() {
+                        isNotificationAllowed = true;
+                      });
+                    },
+                    icon: const Icon(Icons.notifications_off_outlined)),
             IconButton(
               onPressed: () {
                 showDialog(

@@ -15,8 +15,8 @@ class NotificationController extends ChangeNotifier {
 
   NotificationController._internal();
 
-  String _firebaseToken = '';
-  String get firebaseToken => _firebaseToken;
+  String? _firebaseToken;
+  String? get firebaseToken => _firebaseToken;
 
   String _nativeToken = '';
   String get nativeToken => _nativeToken;
@@ -116,19 +116,22 @@ class NotificationController extends ChangeNotifier {
 
   static Future<void> deleteToken() async {
     await AwesomeNotificationsFcm().deleteToken();
-    await Future.delayed(const Duration(seconds: 5));
-    await requestFirebaseToken();
+    _instance._firebaseToken = null;
   }
 
-  static Future<String> requestFirebaseToken() async {
+  static Future<String?> requestFirebaseToken() async {
     try {
       _instance._firebaseToken =
           await AwesomeNotificationsFcm().requestFirebaseAppToken();
       log(_instance._firebaseToken);
-      return _instance._firebaseToken;
+      if (_instance._firebaseToken == null) {
+        throw Exception('Token is null');
+      } else {
+        return _instance._firebaseToken!;
+      }
     } catch (exception) {
       debugPrint('$exception');
     }
-    return _instance._firebaseToken;
+    return null;
   }
 }

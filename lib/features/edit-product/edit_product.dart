@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
 import 'package:uniplanet/constants/global_variables.dart';
@@ -33,7 +34,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   final int maxImages = 10; // Set the maximum number of images allowed
 
-  bool showCategoryToggles = false; // New variable to control visibility
+  bool showCategoryToggles = true; // New variable to control visibility
+  bool showCustomLocation = false;
   bool isUploading = false;
   bool freeStock = false;
   String category = 'Electronics & Appliances';
@@ -43,7 +45,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   late List<String> originalImages = [];
   final _editProductFormKey = GlobalKey<FormState>();
   int selectedIndex = 0; // Index of the selected category
-
+  String selectedLocation = 'Custom';
   @override
   void initState() {
     super.initState();
@@ -51,6 +53,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     freeStock = widget.product.price == 0;
     originalImages = widget.product.images;
     // Add listener to productNameController
+    if (widget.product.location != 'On Campus' ||
+        widget.product.location != 'Off Campus') {
+      selectedLocation = 'Custom';
+      showCustomLocation = true;
+    }
     productNameController.addListener(() {
       final bool shouldShowToggles = productNameController.text.isNotEmpty;
       // Update showCategoryToggles only if the value changes
@@ -145,7 +152,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'Please add at least one image and fill all fields.');
       return;
     }
-
+    if (selectedLocation == 'Custom' &&
+        meetingLocationController.text.isEmpty) {
+      SnackbarGlobal.showSnackBar('Please enter a custom location');
+      return;
+    }
     if (_editProductFormKey.currentState!.validate()) {
       Product newProduct = Product(
         id: widget.product.id,
@@ -158,12 +169,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
         category: selectedCategory,
         status: 'On Sale',
         images: originalImages,
-        location: meetingLocationController.text,
+        location: selectedLocation == 'Custom'
+            ? meetingLocationController.text
+            : selectedLocation,
         seller: widget.product.seller,
-        updatedAt: widget.product.updatedAt,
+        createdAt: widget.product.createdAt,
         likes: widget.product.likes,
         numberOfChat: widget.product.numberOfChat,
       );
+      context
+          .read<OnSaleProductBloc>()
+          .add(UpdateOnSaleProductEvent(product: newProduct));
       context.read<ProductBloc>().add(UpdateProductEvent(
             product: newProduct,
             images: images,
@@ -173,8 +189,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var state = context.watch<ProductBloc>().state;
-
     return BlocListener<ProductBloc, ProductState>(
       listener: (context, state) {
         if (state is ProductUpdatedState) {
@@ -419,10 +433,38 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
 
                     SizedBox(height: 10.h),
-                    CustomTextField(
-                      controller: meetingLocationController,
-                      hintText: 'Enter custom meeting location',
-                      maxLength: 30,
+                    if (showCustomLocation)
+                      CustomTextField(
+                        controller: meetingLocationController,
+                        hintText: 'Enter custom meeting location',
+                        maxLength: 30,
+                      ),
+
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: GlobalVariables.locations
+                            .map((location) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: ChoiceChip(
+                                    label: Text(location),
+                                    selected: selectedLocation == location,
+                                    onSelected: (selected) {
+                                      if (selected) {
+                                        if (location == 'Custom') {
+                                          showCustomLocation = true;
+                                        } else {
+                                          showCustomLocation = false;
+                                        }
+                                        selectedLocation = location;
+                                        setState(() {});
+                                      }
+                                    },
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                     ),
                     SizedBox(height: 10.h),
                     CustomTextField(

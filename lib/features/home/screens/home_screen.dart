@@ -42,9 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // User has reached the end, fetch more products
       setState(() => _isFetchingMoreProducts = true);
       // Simulate fetching more products with a delay
-      if (context.read<ProductBloc>().state is LoadedProductState) {
-        context.read<ProductBloc>().add(const LoadMoreProductEvent());
-      }
+      context.read<ProductBloc>().add(const LoadMoreProductEvent());
 
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {

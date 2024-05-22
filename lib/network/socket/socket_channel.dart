@@ -28,7 +28,7 @@ class SocketService {
         io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
-            .setReconnectionAttempts(1000)
+            .setReconnectionAttempts(100)
             .setReconnectionDelay(100)
             .setQuery({"userId": userId})
             .build());
@@ -39,13 +39,9 @@ class SocketService {
   void connect() {
     BuildContext context = SnackbarGlobal.key.currentContext!;
     socket.onConnect((_) async {
-      removeListeners();
-      if (imageMessagesToRetry.isNotEmpty) {
-        resendUnacknowledgedImageMessages();
-      }
-      if (messagesToRetry.isNotEmpty) {
-        resendUnacknowledgedMessages();
-      }
+      // removeListeners();
+      socket.clearListeners();
+
       socket.on('chat room created', (data) async {
         log('chat room created');
         var chat = jsonDecode(data[0]);
@@ -133,9 +129,12 @@ class SocketService {
           }
         }
       });
-      String firebaseToken =
-          await NotificationController.requestFirebaseToken();
-      socket.emit("setup", firebaseToken);
+      if (imageMessagesToRetry.isNotEmpty) {
+        // resendUnacknowledgedImageMessages();
+      }
+      if (messagesToRetry.isNotEmpty) {
+        // resendUnacknowledgedMessages();
+      }
     });
     socket.onDisconnect((data) => log('Disconnected $data'));
     socket.onConnectError((data) => log('ConnectError $data'));
@@ -211,6 +210,7 @@ class SocketService {
   void resendUnacknowledgedMessages() async {
     // Here, iterate over the messages to retry and call sendMessage for each
     List<Message> messagesToRetried = [];
+
     for (var message in messagesToRetry) {
       // Modify sendMessage to accept a Message object directly, or extract necessary fields
       Message msg = message;
@@ -274,6 +274,14 @@ class SocketService {
         ack: (data) {
       log('Chat room deleted: $data'); // Use print in Dart for logging
     });
+  }
+
+  void notificationEnableEvent() {
+    socket.emit("setup", NotificationController().firebaseToken);
+  }
+
+  void notificationDisableEvent() {
+    socket.emit("disable notification");
   }
 
   Future<bool> chatRoomCreateAndCheckUserExist(
@@ -392,7 +400,7 @@ class SocketService {
       _typingTimer?.cancel(); // Ensure to cancel the timer on disconnect
     }
     socket.disconnect();
-
+    socket.close();
     if (SnackbarGlobal.key.currentContext != null) {
       SnackbarGlobal.key.currentContext!
           .read<StatusBloc>()

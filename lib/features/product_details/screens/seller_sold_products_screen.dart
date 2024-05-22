@@ -30,8 +30,8 @@ class _SellerSoldProductsScreenState extends State<SellerSoldProductsScreen> {
   }
 
   void _loadMoreItems() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 50 &&
         !_isLoadingMore) {
       setState(() {
         _isLoadingMore = true;

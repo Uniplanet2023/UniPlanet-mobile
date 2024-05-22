@@ -159,7 +159,7 @@ class ListItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                TimeAgoFormatter(product.updatedAt).format(),
+                                TimeAgoFormatter(product.createdAt).format(),
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                 ),

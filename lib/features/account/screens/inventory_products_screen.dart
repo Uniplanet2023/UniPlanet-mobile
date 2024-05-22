@@ -30,8 +30,8 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
   }
 
   void _loadMoreItems() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 50 &&
         !_isLoadingMore) {
       if (context.read<OnSaleProductBloc>().state is! EndOnSaleProductState) {
         setState(() {
@@ -41,7 +41,7 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
             .read<OnSaleProductBloc>()
             .add(LoadMoreOnSaleProductEvent(userId: widget.user.id));
         // Simulate a delay to load more items
-        Future.delayed(const Duration(seconds: 2), () {
+        Future.delayed(const Duration(seconds: 1), () {
           setState(() {
             _isLoadingMore = false;
             // Add more items to your product list here or trigger a Bloc event to load more items

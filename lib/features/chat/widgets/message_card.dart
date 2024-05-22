@@ -269,7 +269,8 @@ class MessageBox extends StatelessWidget {
   }
 
   Widget handleImageMessage(BuildContext context) {
-    return oldMessage!.status == MessageStatusEnum.received.value
+    return oldMessage!.status == MessageStatusEnum.received.value ||
+            oldMessage!.status == MessageStatusEnum.error.value
         ? ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: GestureDetector(

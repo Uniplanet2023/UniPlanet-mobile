@@ -29,10 +29,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final int maxImages = 10; // Set the maximum number of images allowed
 
   bool showCategoryToggles = false; // New variable to control visibility
-
+  bool showCustomLocation = false;
   bool freeStock = false;
   String category = 'Electronics & Appliances';
   String selectedCategory = 'Electronics & Appliances'; // Initial category
+  String selectedLocation = 'On Campus';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
 
@@ -67,6 +68,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
           'Please add at least one image and fill all fields.');
       return;
     }
+    if (selectedLocation == 'Custom' &&
+        meetingLocationController.text.isEmpty) {
+      SnackbarGlobal.showSnackBar('Please enter a custom location');
+      return;
+    }
 
     if (_addProductFormKey.currentState!.validate()) {
       context.read<ProductBloc>().add(UploadProductEvent(
@@ -79,7 +85,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
           category: selectedCategory,
           status: 'On Sale',
           images: images,
-          location: meetingLocationController.text,
+          location: selectedLocation == 'Custom'
+              ? meetingLocationController.text
+              : selectedLocation,
           seller: context.read<AccountBloc>().state.account.user));
     }
   }
@@ -143,7 +151,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     var state = context.watch<ProductBloc>().state;
 
     return BlocListener<ProductBloc, ProductState>(
@@ -301,7 +308,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 5),
                             child: Text(
-                              'Free',
+                              'Free Item',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color:
@@ -359,10 +366,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
 
                     SizedBox(height: 10.h),
-                    CustomTextField(
-                      controller: meetingLocationController,
-                      hintText: 'Enter custom meeting location',
-                      maxLength: 30,
+                    if (showCustomLocation)
+                      CustomTextField(
+                        controller: meetingLocationController,
+                        hintText: 'Enter custom meeting location',
+                        maxLength: 30,
+                      ),
+
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: GlobalVariables.locations
+                            .map((location) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: ChoiceChip(
+                                    label: Text(location),
+                                    selected: selectedLocation == location,
+                                    onSelected: (selected) {
+                                      if (selected) {
+                                        if (location == 'Custom') {
+                                          showCustomLocation = true;
+                                        } else {
+                                          showCustomLocation = false;
+                                        }
+                                        selectedLocation = location;
+                                        setState(() {});
+                                      }
+                                    },
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                     ),
                     SizedBox(height: 10.h),
                     CustomTextField(

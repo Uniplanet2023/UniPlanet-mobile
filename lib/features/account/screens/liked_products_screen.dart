@@ -14,8 +14,8 @@ class _LikedProductsScreenState extends State<LikedProductsScreen> {
   bool isLoadingMore = false;
 
   void loadMoreItems() {
-    if (scrollController.position.pixels ==
-            scrollController.position.maxScrollExtent &&
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 60 &&
         !isLoadingMore) {
       setState(() {
         isLoadingMore = true;

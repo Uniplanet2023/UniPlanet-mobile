@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';

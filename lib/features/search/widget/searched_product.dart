@@ -99,7 +99,7 @@ class SearchedProduct extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              TimeAgoFormatter(product.updatedAt).format(),
+                              TimeAgoFormatter(product.createdAt).format(),
                             ),
                             Row(
                               children: [

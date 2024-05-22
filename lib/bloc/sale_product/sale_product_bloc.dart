@@ -24,6 +24,31 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
     on<AddOnSaleProductEvent>((event, emit) async {
       await _addOnSaleProduct(event, emit);
     });
+    on<UpdateOnSaleProductEvent>((event, emit) async {
+      _updateOnSaleProduct(event, emit);
+    });
+  }
+
+  _updateOnSaleProduct(UpdateOnSaleProductEvent event, emit) async {
+    emit(LoadingOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
+    int index = state.onSaleProduct
+        .indexWhere((element) => element.id == event.product.id);
+    if (index == -1) {
+      emit(ErrorOnSaleProductState(
+        "Error updating on sale products",
+        onSaleProduct: state.onSaleProduct,
+        onSalePage: state.onSalePage,
+      ));
+      return;
+    }
+    state.onSaleProduct[index] = event.product;
+    emit(LoadedOnSaleProductState(
+      onSaleProduct: state.onSaleProduct,
+      onSalePage: state.onSalePage,
+    ));
   }
 
   _addOnSaleProduct(AddOnSaleProductEvent event, emit) async {

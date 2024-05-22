@@ -6,33 +6,30 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/account/widgets/list_item.dart';
-import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/network/repository/index.dart';
 
-class InventoryProductBox extends StatefulWidget {
+class SoldInventoryProductBox extends StatefulWidget {
   final List<Product> productList;
   final ScrollController controller;
   final bool isLoadingMore;
-  final String title;
-  const InventoryProductBox(
+  const SoldInventoryProductBox(
       {super.key,
-      required this.title,
       required this.productList,
       required this.controller,
       required this.isLoadingMore});
 
   @override
-  State<InventoryProductBox> createState() => _InventoryProductBoxState();
+  State<SoldInventoryProductBox> createState() =>
+      _SoldInventoryProductBoxState();
 }
 
-class _InventoryProductBoxState extends State<InventoryProductBox>
+class _SoldInventoryProductBoxState extends State<SoldInventoryProductBox>
     with SingleTickerProviderStateMixin {
-  SlidableController? slidableController;
   // Coachmark
+  SlidableController? slidableController;
   TutorialCoachMark? tutorialCoachMark;
   GlobalKey<CoachmarkDescState> coachmarkKey = GlobalKey<CoachmarkDescState>();
   List<TargetFocus> targets = [];
@@ -55,16 +52,12 @@ class _InventoryProductBoxState extends State<InventoryProductBox>
   }
 
   Future<void> _checkFirstTimeUser() async {
-    if (widget.title != 'On Sale' && widget.title != 'Sold' ||
-        widget.productList.isEmpty) {
+    if (widget.productList.isEmpty) {
       return;
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (widget.title == 'On Sale') {
-      hasSeenMyListingTutorial =
-          prefs.getBool('hasSeenOnSaleTutorial') ?? false;
-    }
+    hasSeenMyListingTutorial = prefs.getBool('hasSeenSoldTutorial') ?? false;
 
     if (!hasSeenMyListingTutorial) {
       setState(() {
@@ -78,9 +71,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox>
           });
         });
       });
-      if (widget.title == 'On Sale') {
-        prefs.setBool('hasSeenOnSaleTutorial', true);
-      }
+      prefs.setBool('hasSeenSoldTutorial', true);
     }
   }
 
@@ -119,8 +110,7 @@ class _InventoryProductBoxState extends State<InventoryProductBox>
               align: ContentAlign.bottom,
               builder: (context, controller) {
                 return CoachmarkDesc(
-                  text:
-                      'Swipe right on this item to mark it as ${widget.title == 'On Sale' ? 'Sold' : 'On Sale'}',
+                  text: 'Swipe right on this item to mark it as Sold',
                   skip: 'Skip',
                   next: 'Next',
                   onNext: () {
@@ -210,7 +200,7 @@ class SlidableProduct extends StatelessWidget {
 
   final bool hasSeenMyListingTutorial;
   final SlidableController? slidableController;
-  final InventoryProductBox widget;
+  final SoldInventoryProductBox widget;
   final GlobalKey<State<StatefulWidget>> inventoryKey;
   final Product product;
   final int index;
@@ -223,22 +213,22 @@ class SlidableProduct extends StatelessWidget {
       enabled: widget.productList[index].seller.id == AuthRepository.userId,
       key: index == 0 && !hasSeenMyListingTutorial
           ? inventoryKey
-          : ValueKey("${product.id}_${product.status}_$index"),
+          : ValueKey("${product.id}_${product.status}"),
       startActionPane: ActionPane(
         motion: const ScrollMotion(),
         dismissible: DismissiblePane(
           onDismissed: () {
-            context.read<OnSaleProductBloc>().add(
-                  DeleteOnSaleProductEvent(
-                    product: widget.productList[index],
-                  ),
-                );
             context.read<SoldProductBloc>().add(
-                  AddSoldProductEvent(
+                  DeleteSoldProductEvent(
                     product: widget.productList[index],
                   ),
                 );
-            widget.productList[index].status = 'Sold';
+            context.read<OnSaleProductBloc>().add(
+                  AddOnSaleProductEvent(
+                    product: widget.productList[index],
+                  ),
+                );
+            widget.productList[index].status = 'On Sale';
 
             context
                 .read<ProductBloc>()
@@ -248,9 +238,9 @@ class SlidableProduct extends StatelessWidget {
         children: [
           SlidableAction(
             onPressed: (_) => {},
-            icon: Icons.done,
-            label: 'Mark as Sold',
-            backgroundColor: Colors.green,
+            icon: Icons.replay_outlined,
+            label: 'Mark as On Sale',
+            backgroundColor: Colors.blue,
           )
         ],
       ),
@@ -258,25 +248,11 @@ class SlidableProduct extends StatelessWidget {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (_) => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      EditProductScreen(product: widget.productList[index]),
-                ),
-              )
-            },
-            icon: Icons.edit,
-            label: 'Edit',
-            backgroundColor: GlobalVariables.secondaryColor,
-          ),
-          SlidableAction(
             onPressed: (_) async => {
               context.read<ProductBloc>().add(
                   DeleteProductEvent(productId: widget.productList[index].id)),
-              context.read<OnSaleProductBloc>().add(
-                    DeleteOnSaleProductEvent(
+              context.read<SoldProductBloc>().add(
+                    DeleteSoldProductEvent(
                       product: widget.productList[index],
                     ),
                   ),

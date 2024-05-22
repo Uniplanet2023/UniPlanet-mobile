@@ -1,5 +1,5 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
 import 'package:uniplanet/constants/global_variables.dart';
@@ -28,7 +28,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   void checkNotification() async {
-    notify = await AwesomeNotifications().isNotificationAllowed();
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    bool? isNotificationAllowed = pref.getBool('isNotificationAllowed');
+    if (isNotificationAllowed == null) {
+      pref.setBool('isNotificationAllowed', false);
+      isNotificationAllowed = false;
+    }
+    notify = isNotificationAllowed;
+
     setState(() {});
   }
 
@@ -51,14 +58,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         password: currentPassword, newPassword: newPassword));
   }
 
-  void updateNotification(bool value) async {
-    if (value) {
-      notify = await LocalNotificationController.displayNotificationRationale();
-      setState(() {});
-    } else {
-      notify = await LocalNotificationController.displayNotificationRationale();
-      setState(() {});
-    }
+  void updateNotification(bool currentState) async {
+    notify =
+        await LocalNotificationController.notificationRationale(currentState);
+    setState(() {});
   }
 
   @override

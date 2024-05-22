@@ -68,9 +68,12 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
       bool success = await _likeRepository.likeProduct(
           productId: event.product.id, user: event.user);
       if (success) {
-        state.likeProduct.add(event.product);
+        // Create a new mutable list from the existing unmodifiable list
+        List<Product> updatedLikeProduct = List.from(state.likeProduct);
+        updatedLikeProduct.add(event.product);
+
         emit(LikeAdded(
-            likeProduct: state.likeProduct, addedProduct: event.product));
+            likeProduct: updatedLikeProduct, addedProduct: event.product));
       } else {
         emit(const LikeError(message: "Error liking product"));
         return;

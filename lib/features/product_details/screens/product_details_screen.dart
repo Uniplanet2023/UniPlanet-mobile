@@ -246,7 +246,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           TextSpan(
                             text: DateFormat.yMd()
                                 .add_jm()
-                                .format(widget.product.updatedAt),
+                                .format(widget.product.createdAt),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,

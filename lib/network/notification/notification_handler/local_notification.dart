@@ -1,18 +1,21 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet/global.dart';
 import 'package:uniplanet/main.dart';
 import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/network/notification/functions/show_dialog.dart';
+import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
 import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
 
 class LocalNotificationController {
   static final LocalNotificationController _instance =
       LocalNotificationController._internal();
-
   factory LocalNotificationController() {
     return _instance;
   }
@@ -70,6 +73,40 @@ class LocalNotificationController {
     }
   }
 
+  Future<void> createMessageChannel() async {
+    await AwesomeNotifications().setChannel(NotificationChannel(
+      channelKey: 'chats',
+      channelName: 'Messages',
+      channelDescription: 'Notification tests as chats',
+      playSound: true,
+      enableVibration: true,
+      enableLights: true,
+      defaultRingtoneType: DefaultRingtoneType.Notification,
+      importance: NotificationImportance.Max,
+      defaultPrivacy: NotificationPrivacy.Private,
+      defaultColor: GlobalVariables.secondaryColor,
+      ledColor: GlobalVariables.secondaryColor,
+      soundSource: 'resource://raw/notification',
+    ));
+  }
+
+  Future<void> createScheduledChannel() async {
+    await AwesomeNotifications().setChannel(NotificationChannel(
+      channelKey: 'scheduled_channel',
+      channelName: 'Scheduled Notifications',
+      channelDescription: 'Notification tests as newProductAlerts',
+      playSound: true,
+      importance: NotificationImportance.Max,
+      defaultPrivacy: NotificationPrivacy.Private,
+      defaultRingtoneType: DefaultRingtoneType.Notification,
+      enableVibration: true,
+      enableLights: true,
+      defaultColor: GlobalVariables.secondaryColor,
+      ledColor: GlobalVariables.secondaryColor,
+      soundSource: 'resource://raw/notification',
+    ));
+  }
+
   static Future<void> getInitialNotificationAction() async {
     ReceivedAction? receivedAction = await AwesomeNotifications()
         .getInitialNotificationAction(removeFromActionEvents: true);
@@ -100,6 +137,7 @@ class LocalNotificationController {
       'Calendar must be provided when scheduling a notification',
     );
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+
     if (!isAllowed) {
       return;
     }
@@ -201,58 +239,30 @@ class LocalNotificationController {
   static Future<bool> displayNotificationRationale() async {
     bool userAuthorized = false;
     BuildContext context = MyApp.navigatorKey.currentContext!;
-    await showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            title: Text('Get Notified',
-                style: Theme.of(context).textTheme.titleLarge),
-            content: const Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Icon(
-                        Icons.notifications_active,
-                        size: 50,
-                        color: GlobalVariables.secondaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Text('Allow notifications to receive messages from clients!'),
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: Text(
-                    'Deny',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(color: Colors.red),
-                  )),
-              TextButton(
-                  onPressed: () async {
-                    userAuthorized = true;
-                    Navigator.of(ctx).pop();
-                  },
-                  child: Text(
-                    'Allow',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(color: GlobalVariables.secondaryColor),
-                  )),
-            ],
-          );
-        });
-    return userAuthorized &&
-        await AwesomeNotifications().requestPermissionToSendNotifications();
+    bool isAllowed = await showOptionDialog(context, 'Get Notified',
+        'Allow notifications to receive messages from clients!');
+
+    await notificationRationale(isAllowed);
+    return userAuthorized;
+  }
+
+  static Future<bool> notificationRationale(bool isAllowed) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (isAllowed) {
+      pref.setBool('isNotificationAllowed', true);
+      // Enable all notification
+      await LocalNotificationController.init();
+      await NotificationController.requestFirebaseToken();
+      Global.socketService.notificationEnableEvent();
+      if (!await AwesomeNotifications().isNotificationAllowed()) {
+        AwesomeNotifications().showNotificationConfigPage();
+      }
+    } else {
+      pref.setBool('isNotificationAllowed', false);
+      // Disable all notification
+      await AwesomeNotifications().cancelAll();
+      NotificationController.deleteToken();
+    }
+    return isAllowed;
   }
 }

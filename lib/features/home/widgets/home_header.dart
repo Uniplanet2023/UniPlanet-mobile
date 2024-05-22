@@ -54,7 +54,7 @@ class HomeHeader extends StatelessWidget {
                     label: const Row(
                       children: [
                         FaIcon(FontAwesomeIcons.squareYoutube, size: 15),
-                        Text(' Free'),
+                        Text(' Free Items'),
                       ],
                     ),
                     selected: false,

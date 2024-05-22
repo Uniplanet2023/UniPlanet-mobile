@@ -26,3 +26,8 @@ class DeleteOnSaleProductEvent extends OnSaleProductEvent {
   final Product product;
   const DeleteOnSaleProductEvent({required this.product});
 }
+
+class UpdateOnSaleProductEvent extends OnSaleProductEvent {
+  final Product product;
+  const UpdateOnSaleProductEvent({required this.product});
+}

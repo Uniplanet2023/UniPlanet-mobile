@@ -111,6 +111,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
           throw Exception('Image uploading failed');
         }
         Message sentMessage = await uploadMessage(imageUploadedMessage);
+
         SnackbarGlobal.key.currentContext!
             .read<MessageBloc>()
             .add(SentMessageEvent(sentMessage));
@@ -174,10 +175,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
           throw TimeoutException('Message sending timed out');
         },
       );
+      return sentMessage;
     } catch (e) {
-      SocketService.messagesToRetry.add(message);
+      Message tempMessage =
+          message.copyWith(status: MessageStatusEnum.error.value);
+      SocketService.messagesToRetry.add(tempMessage);
+      return tempMessage;
     }
-    return sentMessage;
   }
 
   void sendFileMessage(
@@ -197,18 +201,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     File? video = await pickVideoFromGallery(context);
     if (video == null) return;
     sendFileMessage(video, MessageEnum.video);
-  }
-
-  void selectGIF() async {
-    // final gif = await pickGIF(context);
-    // if (gif != null) {
-    //   ref.read(chatControllerProvider).sendGIFMessage(
-    //         context,
-    //         gif.url,
-    //         widget.recieverUserId,
-    //         widget.isGroupChat,
-    //       );
-    // }
   }
 
   void showKeyboard() => focusNode.requestFocus();
