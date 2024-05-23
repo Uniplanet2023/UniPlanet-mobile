@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:uniplanet/common/widgets/selectable_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -197,7 +197,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        SelectableText(
                           widget.product.seller.name,
                           style: const TextStyle(
                             fontSize: 20,
@@ -219,7 +219,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: Text(
+                  child: SelectableText(
                     widget.product.name,
                     style: const TextStyle(
                       fontSize: 20,
@@ -295,10 +295,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
-                  child: Text(widget.product.description),
-                ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 16),
+                    child:
+                        SelectableLinkText(text: widget.product.description)),
                 const SizedBox(
                   height: 30,
                 ),
@@ -315,7 +315,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment
                         .spaceBetween, // This will space out the children to the start and end of the row.
                     children: [
-                      Text(
+                      SelectableText(
                         'Seller\'s Other Products',
                         style: TextStyle(
                           fontSize: 20,

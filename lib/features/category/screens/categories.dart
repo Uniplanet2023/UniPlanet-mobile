@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/widgets/loader.dart';
-import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/category/widget/category_header.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
-import 'package:uniplanet/network/ads/ad_mob_service.dart';
 
 class CategoriesPage extends StatefulWidget {
   final ScrollController controller;
@@ -67,41 +64,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
         context
             .read<FreeProductBloc>()
             .add(LoadFreeProductEvent(category: widget.category));
-        _createRewardedAd();
+        // _createRewardedAd();
+        // _createUnterstitialAd();
       }
     }
   }
 
-  _createRewardedAd() {
-    RewardedAd.load(
-      adUnitId: AdMobService.rewardedAdUnitId!,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdShowedFullScreenContent: (Ad ad) =>
-                log('Ad showed full screen content.'),
-            onAdDismissedFullScreenContent: (Ad ad) {
-              ad.dispose();
-            },
-            onAdFailedToShowFullScreenContent: (Ad ad, AdError error) {
-              ad.dispose();
-              _createRewardedAd();
-            },
-          );
-          ad.show(
-            onUserEarnedReward: (ad, RewardItem reward) {
-              log('User earned reward of: ${reward.amount}');
-            },
-          );
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          // Ad failed to load
-          log('Ad failed to load: $error');
-        },
-      ),
-    );
-  }
+  //
 
   @override
   void dispose() {

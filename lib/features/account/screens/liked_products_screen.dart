@@ -21,13 +21,6 @@ class _LikedProductsScreenState extends State<LikedProductsScreen> {
         isLoadingMore = true;
       });
       context.read<LikeBloc>().add(const LoadMoreLikeEvent());
-      // Simulate a delay to load more items
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          isLoadingMore = false;
-          // Add more items to your product list here or trigger a Bloc event to load more items
-        });
-      });
     }
   }
 
@@ -54,6 +47,14 @@ class _LikedProductsScreenState extends State<LikedProductsScreen> {
         slivers: <Widget>[
           BlocBuilder<LikeBloc, LikeState>(
             builder: (context, state) {
+              if (state is LikeLoadedMore && isLoadingMore ||
+                  state is LikeEnd && isLoadingMore) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    isLoadingMore = false;
+                  });
+                });
+              }
               return InventoryProductBox(
                 title: 'Liked',
                 productList: state.likeProduct,

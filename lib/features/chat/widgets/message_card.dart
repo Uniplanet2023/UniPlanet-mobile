@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
 import 'package:uniplanet/common/widgets/full_image.dart';
+import 'package:uniplanet/common/widgets/selectable_text.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/models/message.dart';
@@ -229,11 +230,11 @@ class MessageBox extends StatelessWidget {
   Widget getTextMessage(BuildContext context) {
     var textMessage = oldMessage!.message;
 
-    return Text(textMessage,
-        style: const TextStyle(fontSize: 16),
-        maxLines: 10,
-        overflow: TextOverflow.ellipsis,
-        softWrap: true);
+    return SelectableLinkText(
+      text: textMessage,
+      maxLines: 10,
+      minLines: 1,
+    );
   }
 
   Widget getOverflowTextMessage(BuildContext context) {
@@ -344,12 +345,10 @@ class MessageDetailScreen extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: SizedBox(
-            width: double.infinity,
-            child: Text(
-              message.message,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
+              width: double.infinity,
+              child: SelectableLinkText(
+                text: message.message,
+              )),
         ),
       ),
     );

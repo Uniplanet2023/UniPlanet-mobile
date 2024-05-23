@@ -29,7 +29,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
     });
   }
   _loadMoreLike(LoadMoreLikeEvent event, emit) async {
-    emit(LikeLoading(likeProduct: state.likeProduct, page: state.page));
+    emit(LikeLoadingMore(likeProduct: state.likeProduct, page: state.page));
     try {
       int nextPage = state.page + 1;
       List<Product> likeProduct =
@@ -39,7 +39,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
         return;
       }
       state.likeProduct.addAll(likeProduct);
-      emit(LikeLoaded(likeProduct: state.likeProduct, page: nextPage));
+      emit(LikeLoadedMore(likeProduct: state.likeProduct, page: nextPage));
     } catch (e) {
       emit(LikeError(message: e.toString()));
     }

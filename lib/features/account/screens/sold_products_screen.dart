@@ -38,13 +38,6 @@ class _SoldProductsScreenState extends State<SoldProductsScreen> {
       context
           .read<SoldProductBloc>()
           .add(LoadMoreSoldProductEvent(userId: widget.user.id));
-      // Simulate a delay to load more items
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoadingMore = false;
-          // Add more items to your product list here or trigger a Bloc event to load more items
-        });
-      });
     }
   }
 
@@ -58,6 +51,13 @@ class _SoldProductsScreenState extends State<SoldProductsScreen> {
         builder: (context, state) {
           if (state is LoadingSoldProductState || state is SoldProductInitial) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is LoadedMoreSoldProductState && _isLoadingMore ||
+              state is EndSoldProductState && _isLoadingMore) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                _isLoadingMore = false;
+              });
+            });
           }
 
           return CustomScrollView(

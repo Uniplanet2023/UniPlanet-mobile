@@ -75,7 +75,7 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
   }
 
   _loadMoreSoldProduct(LoadMoreSoldProductEvent event, emit) async {
-    emit(LoadedSoldProductState(
+    emit(LoadingMoreSoldProductState(
       soldProduct: state.soldProduct,
       soldPage: state.soldPage,
     ));
@@ -95,7 +95,7 @@ class SoldProductBloc extends Bloc<SoldProductEvent, SoldProductState> {
       return;
     }
     state.soldProduct.addAll(onSaleProduct);
-    emit(LoadedSoldProductState(
+    emit(LoadedMoreSoldProductState(
       soldProduct: state.soldProduct,
       soldPage: nextPage,
     ));

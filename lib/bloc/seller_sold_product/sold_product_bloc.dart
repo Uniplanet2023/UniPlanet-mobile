@@ -46,7 +46,7 @@ class SellerSoldProductBloc
   }
 
   _loadMoreSellerSoldProduct(LoadMoreSellerSoldProductEvent event, emit) async {
-    emit(LoadedSellerSoldProductState(
+    emit(LoadingMoreSellerSoldProductState(
       soldProduct: state.soldProduct,
       soldPage: state.soldPage,
     ));
@@ -66,7 +66,7 @@ class SellerSoldProductBloc
       return;
     }
     state.soldProduct.addAll(onSaleProduct);
-    emit(LoadedSellerSoldProductState(
+    emit(LoadedMoreSellerSoldProductState(
       soldProduct: state.soldProduct,
       soldPage: state.soldPage,
     ));

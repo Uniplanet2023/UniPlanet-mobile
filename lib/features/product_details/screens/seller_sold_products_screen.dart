@@ -40,12 +40,6 @@ class _SellerSoldProductsScreenState extends State<SellerSoldProductsScreen> {
           .read<SellerSoldProductBloc>()
           .add(LoadMoreSellerSoldProductEvent(userId: widget.user.id));
       // Simulate a delay to load more items
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoadingMore = false;
-          // Add more items to your product list here or trigger a Bloc event to load more items
-        });
-      });
     }
   }
 
@@ -60,6 +54,14 @@ class _SellerSoldProductsScreenState extends State<SellerSoldProductsScreen> {
           if (state is LoadingSellerSoldProductState ||
               state is SellerSoldProductInitial) {
             return const Center(child: CircularProgressIndicator());
+          } else if (_isLoadingMore &&
+                  state is LoadedMoreSellerSoldProductState ||
+              _isLoadingMore && state is EndSellerSoldProductState) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                _isLoadingMore = false;
+              });
+            });
           }
 
           return CustomScrollView(

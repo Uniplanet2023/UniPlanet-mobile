@@ -56,7 +56,7 @@ class SellerSaleProductBloc
         return;
       }
       state.sellerProduct.addAll(products);
-      emit(LoadedSellerSaleProductState(
+      emit(LoadedMoreSellerSaleProductState(
           sellerProduct: state.sellerProduct, page: nextPage));
     } catch (e) {
       emit(const ErrorSellerSaleProductState());

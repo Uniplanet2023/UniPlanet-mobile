@@ -31,7 +31,7 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
 
   void _loadMoreItems() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 50 &&
+            _scrollController.position.maxScrollExtent - 10 &&
         !_isLoadingMore) {
       if (context.read<OnSaleProductBloc>().state is! EndOnSaleProductState) {
         setState(() {
@@ -40,13 +40,6 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
         context
             .read<OnSaleProductBloc>()
             .add(LoadMoreOnSaleProductEvent(userId: widget.user.id));
-        // Simulate a delay to load more items
-        Future.delayed(const Duration(seconds: 1), () {
-          setState(() {
-            _isLoadingMore = false;
-            // Add more items to your product list here or trigger a Bloc event to load more items
-          });
-        });
       }
     }
   }
@@ -62,6 +55,13 @@ class _InventoryProductsScreenState extends State<InventoryProductsScreen> {
           if (state is LoadingOnSaleProductState ||
               state is OnSaleProductInitial) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is EndOnSaleProductState && _isLoadingMore ||
+              state is LoadedMoreOnSaleProductState && _isLoadingMore) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                _isLoadingMore = false;
+              });
+            });
           }
           return CustomScrollView(
             controller: _scrollController,

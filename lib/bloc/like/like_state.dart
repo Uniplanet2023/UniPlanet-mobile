@@ -27,6 +27,19 @@ final class LikeLoaded extends LikeState {
   @override
   List<Object> get props => [likeProduct, page];
 }
+// Like Loading More
+
+final class LikeLoadingMore extends LikeState {
+  const LikeLoadingMore({required super.likeProduct, required super.page});
+  @override
+  List<Object> get props => [likeProduct, page];
+}
+
+final class LikeLoadedMore extends LikeState {
+  const LikeLoadedMore({required super.likeProduct, required super.page});
+  @override
+  List<Object> get props => [likeProduct, page];
+}
 
 //Like Adding
 final class LikeAdding extends LikeState {

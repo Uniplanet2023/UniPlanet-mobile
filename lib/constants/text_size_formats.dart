@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/common/widgets/selectable_text.dart';
 
 Widget titleText(String title,
     {Color color = Colors.black, TextAlign textAlign = TextAlign.start}) {
@@ -33,9 +34,8 @@ Widget secondarySubTitleText(String title,
 
 Widget content(String title,
     {Color color = Colors.black, TextAlign textAlign = TextAlign.start}) {
-  return Text(
-    title,
-    textAlign: textAlign,
-    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: color),
+  return SelectableLinkText(
+    text: title,
+    fontSize: 14,
   );
 }

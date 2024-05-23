@@ -32,7 +32,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   void initState() {
     super.initState();
-
     _checkFirstTimeUser();
   }
 

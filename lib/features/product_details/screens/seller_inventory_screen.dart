@@ -19,6 +19,9 @@ class _SellerProductsScreenState extends State<SellerProductsScreen> {
   @override
   void initState() {
     super.initState();
+    context
+        .read<SellerSaleProductBloc>()
+        .add(LoadSellerSaleProductEvent(userId: widget.user.id));
     _scrollController.addListener(_loadMoreItems);
   }
 
@@ -39,12 +42,6 @@ class _SellerProductsScreenState extends State<SellerProductsScreen> {
           .read<SellerSaleProductBloc>()
           .add(LoadMoreSellerSaleProductEvent(userId: widget.user.id));
       // Simulate a delay to load more items
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoadingMore = false;
-          // Add more items to your product list here or trigger a Bloc event to load more items
-        });
-      });
     }
   }
 
@@ -59,6 +56,14 @@ class _SellerProductsScreenState extends State<SellerProductsScreen> {
           if (state is LoadingSellerSaleProductState ||
               state is SellerSaleProductInitial) {
             return const Center(child: CircularProgressIndicator());
+          } else if ((_isLoadingMore &&
+                  state is LoadedMoreSellerSaleProductState) ||
+              (_isLoadingMore && state is EndSellerSaleProductState)) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                _isLoadingMore = false;
+              });
+            });
           }
           return CustomScrollView(
             controller: _scrollController,

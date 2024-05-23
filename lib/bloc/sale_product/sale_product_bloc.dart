@@ -109,7 +109,7 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
   }
 
   _loadMoreOnSaleProduct(LoadMoreOnSaleProductEvent event, emit) async {
-    emit(LoadedOnSaleProductState(
+    emit(LoadingMoreOnSaleProductState(
       onSaleProduct: state.onSaleProduct,
       onSalePage: state.onSalePage,
     ));
@@ -132,7 +132,7 @@ class OnSaleProductBloc extends Bloc<OnSaleProductEvent, OnSaleProductState> {
       return;
     }
     state.onSaleProduct.addAll(onSaleProduct);
-    emit(LoadedOnSaleProductState(
+    emit(LoadedMoreOnSaleProductState(
       onSaleProduct: state.onSaleProduct,
       onSalePage: nextPage,
     ));

@@ -55,16 +55,22 @@ class SellerOtherProductsGrid extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Text(
-                  product.name,
-                  style: TextStyle(fontSize: 14.sp),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                SizedBox(
+                  width: 150.w,
+                  child: Text(
+                    product.name,
+                    style: TextStyle(fontSize: 14.sp),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                Text(
-                  '\$${product.price}',
-                  style:
-                      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: 150.w,
+                  child: Text(
+                    '\$${product.price}',
+                    style:
+                        TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
