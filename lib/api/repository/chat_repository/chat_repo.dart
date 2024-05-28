@@ -8,7 +8,7 @@ import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/chat_room.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/api_def/api_server_address.dart';
 import 'package:uniplanet/api/api_def/dio_client.dart';
 import 'package:uniplanet/api/api_def/display_error_messages.dart';

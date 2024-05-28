@@ -14,7 +14,7 @@ import "package:uniplanet/features/product_details/screens/product_details_scree
 import "package:uniplanet/features/search/screens/search_screen.dart";
 import "package:uniplanet/models/chat_room.dart";
 import "package:uniplanet/models/product.dart";
-import "package:uniplanet/models/user_model.dart";
+import "package:uniplanet/models/user.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {

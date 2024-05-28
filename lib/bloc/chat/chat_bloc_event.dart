@@ -84,7 +84,8 @@ class DeleteChatRoomEvent extends ChatBlocEvent {
 
 class DeletedChatByClient extends ChatBlocEvent {
   final String chatId;
-  const DeletedChatByClient({required this.chatId});
+  final String clientId;
+  const DeletedChatByClient({required this.chatId, required this.clientId});
   @override
-  List<Object?> get props => [chatId];
+  List<Object?> get props => [chatId, clientId];
 }

@@ -54,14 +54,18 @@ class SendTextMessageEvent extends MessageBlocEvent {
   List<Object> get props => [chatId, message, receiverId, context];
 }
 
-// Upload Image Message Event
-class SendingImageMessageEvent extends MessageBlocEvent {
-  final Message tempMessage;
-  final BuildContext context;
-  const SendingImageMessageEvent({
-    required this.tempMessage,
-    required this.context,
+class SendImageMessageEvent extends MessageBlocEvent {
+  final String chatId;
+  final String receiverId;
+  final List<XFile> images;
+
+  const SendImageMessageEvent({
+    required this.chatId,
+    required this.images,
+    required this.receiverId,
   });
+  @override
+  List<Object> get props => [chatId, images, receiverId];
 }
 
 // Retry Sending Message Event

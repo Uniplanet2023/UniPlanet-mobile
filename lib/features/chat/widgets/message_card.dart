@@ -12,7 +12,7 @@ import 'package:uniplanet/common/widgets/selectable_text.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 
 class MessageCard extends StatelessWidget {
   final Message oldMessage;

@@ -12,7 +12,7 @@ import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/image_message.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/api_def/api_server_address.dart';
 import 'package:uniplanet/api/notification/notification_handler/remote_notification_controller.dart';
 
@@ -49,8 +49,13 @@ class SocketService {
         bool isUserOnline = await joinChatAndCheckUserExist(
             chatId: chat['id'], targetUserId: chat['seller']['id']);
         bool existingChat = data[1];
+
         if (chat['seller']['id'] == userId && !existingChat) {
-          ChatRoom chatRoom = ChatRoom.fromMap(chat);
+          // Perform a deep copy of chat
+          var chatFormat = jsonDecode(jsonEncode(chat));
+          chatFormat['seller'] = jsonEncode(chat['seller']);
+          chatFormat['buyer'] = jsonEncode(chat['buyer']);
+          ChatRoom chatRoom = ChatRoom.fromMap(chatFormat);
           if (context.mounted) {
             context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
           }
@@ -66,7 +71,11 @@ class SocketService {
       });
       socket.on('chat room deleted', (data) {
         var chat = data['chatRoom'];
-        context.read<ChatBloc>().add(DeletedChatByClient(chatId: chat));
+        var clientId =
+            data['clientId']; // Ensure you have this data passed correctly
+        context
+            .read<ChatBloc>()
+            .add(DeletedChatByClient(chatId: chat, clientId: clientId));
       });
       socket.on('online user', (userId) {
         if (context.mounted) {
@@ -170,8 +179,7 @@ class SocketService {
           return;
         }
         String? secureUrl = await ImageUploadService()
-            .uploadImage(imageFile,
-                'chat-images/${AuthRepository.school}/${sentMessage.chat}')
+            .uploadImage(imageFile, 'chat-images/${sentMessage.chat}')
             .timeout(
           const Duration(seconds: 30),
           onTimeout: () {

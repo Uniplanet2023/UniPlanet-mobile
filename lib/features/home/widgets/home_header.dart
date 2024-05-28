@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +21,8 @@ class HomeHeader extends StatelessWidget {
       toolbarHeight: 95.h,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
-        titlePadding: const EdgeInsets.only(left: 10, top: 60, bottom: 0),
+        titlePadding: EdgeInsets.only(
+            left: 10, top: Platform.isAndroid ? 35 : 60, bottom: 0),
         title: Column(
           children: [
             Row(

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 
 class Account {
   final User user;

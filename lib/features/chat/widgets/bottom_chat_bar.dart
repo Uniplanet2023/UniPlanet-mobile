@@ -1,18 +1,10 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniplanet/api/image_handling/image_upload_function.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/enums/message_enum.dart';
-import 'package:uniplanet/common/enums/message_status_enum.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
-import 'package:uniplanet/models/image_message.dart';
-import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet/api/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
@@ -32,17 +24,11 @@ class BottomChatField extends StatefulWidget {
 class _BottomChatFieldState extends State<BottomChatField> {
   bool isShowSendButton = false;
   final TextEditingController _messageController = TextEditingController();
-
-  // FlutterSoundRecorder? _soundRecorder;
-  // bool isRecorderInit = false;
-  bool isShowEmojiContainer = false;
-  bool isRecording = false;
   FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    // _soundRecorder = FlutterSoundRecorder();
   }
 
   @override
@@ -50,16 +36,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     super.dispose();
     _messageController.removeListener(_handleTextChange);
     _messageController.dispose();
-    // _soundRecorder!.closeRecorder();
-  }
-
-  void openAudio() async {
-    // final status = await Permission.microphone.request();
-    // if (status != PermissionStatus.granted) {
-    //   throw RecordingPermissionException('Mic permission not allowed!');
-    // }
-    // await _soundRecorder!.openRecorder();
-    // isRecorderInit = true;
   }
 
   void sendTextMessage() async {
@@ -72,7 +48,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
       // Check if the widget is still mounted before updating the state
       if (!mounted) return;
-
       _messageController.clear();
       setState(() {
         isShowSendButton = false;
@@ -82,120 +57,16 @@ class _BottomChatFieldState extends State<BottomChatField> {
   }
 
   void sendImages(List<XFile> imageList) async {
-    List<Message> messages = [];
-    for (var image in imageList) {
-      // Generate a unique ID for the message
-      String uniqueId = UniqueKey().toString();
-      // Create a temporary message with the image path
-      String imagePath = File(image.path).path;
-      Message tempMessage = Message(
-        id: uniqueId,
-        chat: widget.chatRoomId,
-        message: imagePath,
-        status: MessageStatusEnum.sending.value,
-        messageType: MessageEnum.image.value,
-        sender: AuthRepository.userId!,
-        receiver: widget.sellerId,
-        createdAt: DateTime.now(),
-      );
-      // Add the temporary message to the list of messages
-      messages.add(tempMessage);
-      context
-          .read<MessageBloc>()
-          .add(SendingMessageEvent(tempMessage: tempMessage, context: context));
-    }
-    for (var tempMessage in messages) {
-      try {
-        Message? imageUploadedMessage = await uploadImage(tempMessage);
-        if (imageUploadedMessage == null) {
-          throw Exception('Image uploading failed');
-        }
-        Message sentMessage = await uploadMessage(imageUploadedMessage);
-
-        SnackbarGlobal.key.currentContext!
-            .read<MessageBloc>()
-            .add(SentMessageEvent(sentMessage));
-      } catch (e) {
-        log(e);
+    if (imageList.isNotEmpty) {
+      if (context.mounted) {
+        context.read<MessageBloc>().add(SendImageMessageEvent(
+              images: imageList,
+              chatId: widget.chatRoomId,
+              receiverId: widget.sellerId,
+            ));
       }
+      widget.scrollDownfuction();
     }
-    widget.scrollDownfuction();
-  }
-
-  Future<Message?> uploadImage(Message tempMessage) async {
-    try {
-      File imageFile = File(tempMessage.message);
-      String? secureUrl = await ImageUploadService()
-          .uploadImage(imageFile,
-              'chat-images/${AuthRepository.school}/${tempMessage.chat}')
-          .timeout(
-        const Duration(seconds: 30),
-        onTimeout: () {
-          throw TimeoutException('Image uploading timed out');
-        },
-      );
-
-      tempMessage.message = secureUrl;
-      return tempMessage;
-    } catch (e) {
-      tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);
-      ImageMessage imageMessage = ImageMessage(
-        filePath: tempMessage.message,
-        message: tempMessage,
-      );
-      SocketService.imageMessagesToRetry.add(imageMessage);
-      // Update the temporary message's status to error
-      SnackbarGlobal.key.currentContext!
-          .read<MessageBloc>()
-          .add(ErrorMessageEvent(tempMessage));
-      return null;
-    }
-  }
-
-  Future<Message> uploadMessage(Message message) async {
-    Message sentMessage = message;
-    try {
-      sentMessage = await Global.socketService
-          .sendMessage(
-        id: message.id,
-        message: message.message,
-        chatId: message.chat,
-        messageType: MessageEnum.image.value,
-        receiver: message.receiver,
-        context: context,
-      )
-          .timeout(
-        const Duration(seconds: 20),
-        onTimeout: () {
-          throw TimeoutException('Message sending timed out');
-        },
-      );
-      return sentMessage;
-    } catch (e) {
-      Message tempMessage =
-          message.copyWith(status: MessageStatusEnum.error.value);
-      SocketService.messagesToRetry.add(tempMessage);
-      return tempMessage;
-    }
-  }
-
-  void sendFileMessage(
-    File file,
-    MessageEnum messageEnum,
-  ) {
-    // ref.read(chatControllerProvider).sendFileMessage(
-    //       context,
-    //       file,
-    //       widget.recieverUserId,
-    //       messageEnum,
-    //       widget.isGroupChat,
-    //     );
-  }
-
-  void selectVideo() async {
-    File? video = await pickVideoFromGallery(context);
-    if (video == null) return;
-    sendFileMessage(video, MessageEnum.video);
   }
 
   void showKeyboard() => focusNode.requestFocus();

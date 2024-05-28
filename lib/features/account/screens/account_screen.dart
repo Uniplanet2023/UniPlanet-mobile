@@ -12,7 +12,7 @@ import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
 import 'package:uniplanet/features/account/widgets/user_header.dart';
 import 'package:uniplanet/features/widgets/terms_and_policies.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});

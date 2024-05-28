@@ -6,7 +6,7 @@ import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
 // Models
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 // Parts of the bloc
 part 'like_event.dart';
 part 'like_state.dart';

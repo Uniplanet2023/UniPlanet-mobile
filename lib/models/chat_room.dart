@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 
 class ChatRoom {
   final String productId;
@@ -10,7 +10,7 @@ class ChatRoom {
   final User buyer;
   Message? lastMessage;
   int unseenMessageCount;
-  final String? deletedFrom;
+  String? deletedFrom;
 
   ChatRoom({
     required this.id,
@@ -80,12 +80,16 @@ class ChatRoom {
       productId: map['productId'],
       productName: map['productName'] ?? "",
       lastMessage: map['lastMessage'] != null
-          ? Message.fromJson(map['lastMessage'])
+          ? map['lastMessage'] is Map
+              ? Message.fromMap(map['lastMessage'])
+              : Message.fromJson(map['lastMessage'])
           : null,
       unseenMessageCount: map['unseenMessageCount'] != null
           ? int.tryParse(map['unseenMessageCount'].toString()) ?? 0
           : 0,
-      deletedFrom: map['deletedFrom'],
+      deletedFrom: map['deletedFrom'] == null || map['deletedFrom'] == ""
+          ? null
+          : map['deletedFrom'],
     );
   }
 

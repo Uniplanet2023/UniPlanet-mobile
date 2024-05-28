@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 
 class Product {
   final String id;
@@ -13,6 +13,7 @@ class Product {
   String category;
   double price;
   final DateTime createdAt;
+  final DateTime updatedAt;
   String location;
   bool isAdvertisement;
   Product({
@@ -27,6 +28,7 @@ class Product {
     required this.category,
     required this.price,
     required this.createdAt,
+    required this.updatedAt,
     required this.location,
     this.isAdvertisement = false,
   });
@@ -44,6 +46,7 @@ class Product {
         price: 0,
         location: "",
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         isAdvertisement: false);
   }
 
@@ -59,6 +62,7 @@ class Product {
       'category': category,
       'price': price,
       'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'numberOfChat': numberOfChat,
       'location': location,
       'isAdvertisement': isAdvertisement,
@@ -79,6 +83,7 @@ class Product {
       category: map['category'],
       location: map['location'] ?? "",
       createdAt: DateTime.parse(map['createdAt'].toString()),
+      updatedAt: DateTime.parse(map['updatedAt'].toString()),
       isAdvertisement: map['isAdvertisement'] ?? false,
     );
   }

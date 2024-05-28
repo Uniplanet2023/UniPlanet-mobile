@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uniplanet/api/image_handling/image_upload_function.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
+import 'package:uniplanet/models/image_message.dart';
 // Models
 import 'package:uniplanet/models/message.dart';
 // Repository
@@ -25,6 +29,9 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     });
     on<SendTextMessageEvent>((event, emit) async {
       await _sendMessage(event, emit);
+    });
+    on<SendImageMessageEvent>((event, emit) async {
+      await _sendImageMessage(event, emit);
     });
     on<ReceiveMessageEvent>((event, emit) async {
       await _receiveMessage(event, emit);
@@ -107,6 +114,92 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
         page: state.page,
         pendingMessages: state.pendingMessages,
       ));
+    }
+  }
+
+  Future<void> _sendImageMessage(SendImageMessageEvent event, emit) async {
+    List<Message> messages = [];
+    for (var image in event.images) {
+      String uniqueId = UniqueKey().toString();
+      String imagePath = File(image.path).path;
+      Message tempMessage = Message(
+        id: uniqueId,
+        chat: event.chatId,
+        message: imagePath,
+        status: MessageStatusEnum.sending.value,
+        messageType: MessageEnum.image.value,
+        sender: AuthRepository.userId!,
+        receiver: event.receiverId,
+        createdAt: DateTime.now(),
+      );
+      messages.add(tempMessage);
+      BuildContext context = SnackbarGlobal.key.currentContext!;
+      add(SendingMessageEvent(tempMessage: tempMessage, context: context));
+    }
+    for (var tempMessage in messages) {
+      try {
+        Message? imageUploadedMessage = await _uploadImage(tempMessage);
+        if (imageUploadedMessage == null) {
+          throw Exception('Image uploading failed');
+        }
+        Message sentMessage = await _uploadMessage(imageUploadedMessage);
+        add(SentMessageEvent(sentMessage));
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+  }
+
+  Future<Message?> _uploadImage(Message tempMessage) async {
+    try {
+      File imageFile = File(tempMessage.message);
+      String? secureUrl = await ImageUploadService()
+          .uploadImage(imageFile, 'chat-images/${tempMessage.chat}')
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Image uploading timed out');
+        },
+      );
+
+      tempMessage.message = secureUrl;
+      return tempMessage;
+    } catch (e) {
+      tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);
+      ImageMessage imageMessage = ImageMessage(
+        filePath: tempMessage.message,
+        message: tempMessage,
+      );
+      SocketService.imageMessagesToRetry.add(imageMessage);
+      add(ErrorMessageEvent(tempMessage));
+      return null;
+    }
+  }
+
+  Future<Message> _uploadMessage(Message message) async {
+    try {
+      BuildContext context = SnackbarGlobal.key.currentContext!;
+      Message sentMessage = await Global.socketService
+          .sendMessage(
+        id: message.id,
+        message: message.message,
+        chatId: message.chat,
+        messageType: MessageEnum.image.value,
+        receiver: message.receiver,
+        context: context,
+      )
+          .timeout(
+        const Duration(seconds: 20),
+        onTimeout: () {
+          throw TimeoutException('Message sending timed out');
+        },
+      );
+      return sentMessage;
+    } catch (e) {
+      Message tempMessage =
+          message.copyWith(status: MessageStatusEnum.error.value);
+      SocketService.messagesToRetry.add(tempMessage);
+      return tempMessage;
     }
   }
 

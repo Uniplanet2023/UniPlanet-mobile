@@ -27,7 +27,7 @@ import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/widgets/seller_other_list.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/repository/index.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -246,7 +246,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           TextSpan(
                             text: DateFormat.yMd()
                                 .add_jm()
-                                .format(widget.product.createdAt),
+                                .format(widget.product.updatedAt),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,

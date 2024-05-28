@@ -8,7 +8,7 @@ import 'package:uniplanet/models/get_chat_room.dart';
 // Models
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/repository/index.dart';
 
 // Bloc Events, States
@@ -50,16 +50,27 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _deleteChatByClient(DeletedChatByClient event, emit) {
+    // Emit DeletingChatRoomState to indicate deletion in progress
     emit(DeletingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
       page: state.page,
     ));
 
-    state.chatRooms.removeWhere((element) => element.id == event.chatId);
+    // Create a new list of chat rooms with the updated `deletedFrom` field
+    final updatedChatRooms = state.chatRooms.map((chatRoom) {
+      if (chatRoom.id == event.chatId) {
+        return chatRoom.copyWith(
+          deletedFrom: event.clientId,
+        );
+      }
+      return chatRoom;
+    }).toList();
+
+    // Emit DeletedChatRoomState with the updated chat rooms list
     emit(DeletedChatRoomState(
       deletedChatRoomId: event.chatId,
-      chatRooms: state.chatRooms,
+      chatRooms: updatedChatRooms,
       page: state.page,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
     ));
@@ -275,8 +286,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       );
       bool isChatRoomExist = false;
       for (var chat in state.chatRooms) {
-        if (chat.buyer.id == chatRoom.buyer.id &&
-            chat.seller.id == chatRoom.seller.id) {
+        if (chat.id == chatRoom.id) {
           isChatRoomExist = true;
           break;
         }

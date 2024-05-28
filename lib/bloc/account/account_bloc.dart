@@ -31,8 +31,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));
     File imageFile = File(event.image.path);
-    String? secureUrl = await ImageUploadService()
-        .uploadImage(imageFile, 'profile-image/${AuthRepository.school}')
+    String secureUrl = await ImageUploadService()
+        .uploadImage(imageFile,
+            'profile-image/${AuthRepository.school}/${state.account.user.id}')
         .timeout(
       const Duration(seconds: 30),
       onTimeout: () {

@@ -16,7 +16,7 @@ import 'package:uniplanet/features/product_details/screens/product_details_scree
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/bloc/message/message_bloc.dart';
 import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/api/socket/socket_channel.dart';
@@ -35,10 +35,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   List<Message> messages = [];
   bool isExpanded = false;
   bool isNotificationAllowed = false;
-
+  bool isChatRoomDeleted = false;
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    isChatRoomDeleted = widget.chatRoom.deletedFrom != null ? true : false;
     _initChat();
     super.initState();
   }
@@ -102,7 +103,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       listener: (context, state) {
         if (state is DeletedChatRoomState) {
           if (state.deletedChatRoomId == widget.chatRoom.id) {
-            Navigator.of(context).pop();
+            setState(() {
+              isChatRoomDeleted = true;
+            });
+            widget.chatRoom.deletedFrom = widget.client.id;
             SnackbarGlobal.key.currentState!.showSnackBar(
               const SnackBar(
                 content: Text('User has deleted this chat room'),
@@ -322,11 +326,25 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 messages: messages.reversed.toList(),
                 client: widget.client,
               )),
-              BottomChatField(
-                chatRoomId: widget.chatRoom.id,
-                scrollDownfuction: _scrollToBottom,
-                sellerId: widget.client.id,
-              ),
+              widget.chatRoom.deletedFrom == null
+                  ? BottomChatField(
+                      chatRoomId: widget.chatRoom.id,
+                      scrollDownfuction: _scrollToBottom,
+                      sellerId: widget.client.id,
+                    )
+                  : Column(
+                      children: [
+                        Center(
+                          child: Text(
+                              '${widget.client.name} leaves the chat room',
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(height: 30)
+                      ],
+                    ),
               const SizedBox(
                 height: 10,
               )

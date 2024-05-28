@@ -5,7 +5,7 @@ import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/constants/utils.dart';
 // Models
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 // Repository
 import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
 // Parts

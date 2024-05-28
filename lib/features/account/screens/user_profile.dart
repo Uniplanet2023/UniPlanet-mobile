@@ -9,7 +9,7 @@ import 'package:uniplanet/features/account/screens/inventory_products_screen.dar
 import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
 import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/screens/seller_sold_products_screen.dart';
-import 'package:uniplanet/models/user_model.dart';
+import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 
 class UserProfileScreen extends StatefulWidget {

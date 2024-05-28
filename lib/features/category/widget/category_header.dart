@@ -18,14 +18,11 @@ class CategoryHeader extends StatelessWidget {
       backgroundColor: Colors.white,
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          var top = constraints.biggest.height;
           return FlexibleSpaceBar(
-            titlePadding: EdgeInsets.only(
-              left: top > 71.0
-                  ? 20
-                  : 0, // Or some other logic to position the title
+            titlePadding: const EdgeInsets.only(
               bottom: 16,
             ),
+            centerTitle: true,
             title: Text(
               category,
               style: TextStyle(
