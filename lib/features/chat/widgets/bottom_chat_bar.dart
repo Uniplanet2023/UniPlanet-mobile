@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uniplanet/api/image_handling/image_upload_function.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
-import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/image_message.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet/network/socket/socket_channel.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/api/socket/socket_channel.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
@@ -123,24 +123,19 @@ class _BottomChatFieldState extends State<BottomChatField> {
   }
 
   Future<Message?> uploadImage(Message tempMessage) async {
-    CloudinaryResponse? response;
     try {
-      response = await Global.cloudinary
-          .uploadFile(
-        CloudinaryFile.fromFile(tempMessage.message,
-            resourceType: CloudinaryResourceType.Image,
-            folder: 'chat-images/${tempMessage.chat}'),
-      )
+      File imageFile = File(tempMessage.message);
+      String? secureUrl = await ImageUploadService()
+          .uploadImage(imageFile,
+              'chat-images/${AuthRepository.school}/${tempMessage.chat}')
           .timeout(
-        const Duration(seconds: 10),
+        const Duration(seconds: 30),
         onTimeout: () {
           throw TimeoutException('Image uploading timed out');
         },
       );
 
-      // Check if the context is still mounted before proceeding
-      if (response.secureUrl.isEmpty) throw Exception('Image uploading failed');
-      tempMessage.message = cloudinaryTransformImage(response.secureUrl);
+      tempMessage.message = secureUrl;
       return tempMessage;
     } catch (e) {
       tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);

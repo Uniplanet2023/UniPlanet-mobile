@@ -9,7 +9,7 @@ import 'package:uniplanet/bloc/seller_sale_product/seller_sale_product_bloc.dart
 import 'package:uniplanet/bloc/seller_sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/main.dart';
-import 'network/repository/index.dart';
+import 'api/repository/index.dart';
 
 class StateManagerProvider extends StatelessWidget {
   const StateManagerProvider({

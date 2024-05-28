@@ -37,7 +37,6 @@ dependencies:
   bloc: ^8.1.3
   cached_network_image: ^3.3.1
   carousel_slider: 4.2.1
-  cloudinary_public: 0.23.1
   cookie_jar: ^4.0.8
   dependency_validator: ^4.0.0
   dio: ^5.4.2+1
@@ -73,6 +72,8 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   url_launcher: ^6.2.6
   flutter_linkify: ^6.0.0
+  firebase_storage: ^11.7.6
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

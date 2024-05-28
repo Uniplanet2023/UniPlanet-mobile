@@ -1,19 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:uniplanet/api/image_handling/image_upload_function.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
-import 'package:uniplanet/common/functions/cloudinary_image.dart';
 import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/image_message.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
-import 'package:uniplanet/network/api_def/api_server_address.dart';
-import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
+import 'package:uniplanet/api/api_def/api_server_address.dart';
+import 'package:uniplanet/api/notification/notification_handler/remote_notification_controller.dart';
 
 class SocketService {
   String userId;
@@ -164,30 +165,29 @@ class SocketService {
     for (var imageMessage in imageMessagesToRetry) {
       Message sentMessage = imageMessage.message;
       try {
-        CloudinaryResponse response = await Global.cloudinary
-            .uploadFile(
-          CloudinaryFile.fromFile(imageMessage.filePath,
-              resourceType: CloudinaryResourceType.Image,
-              folder: 'chat-images/${imageMessage.message.chat}'),
-        )
+        File imageFile = File(imageMessage.filePath);
+        if (!imageFile.existsSync()) {
+          return;
+        }
+        String? secureUrl = await ImageUploadService()
+            .uploadImage(imageFile,
+                'chat-images/${AuthRepository.school}/${sentMessage.chat}')
             .timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 30),
           onTimeout: () {
             throw TimeoutException('Image uploading timed out');
           },
         );
 
-        if (response.secureUrl.isEmpty) return;
-
         sentMessage = await sendMessage(
           id: imageMessage.message.id,
-          message: cloudinaryTransformImage(response.secureUrl),
+          message: secureUrl,
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
           context: SnackbarGlobal.key.currentContext!,
         ).timeout(
-          const Duration(seconds: 20),
+          const Duration(seconds: 10),
           onTimeout: () {
             throw TimeoutException('Message sending timed out');
           },

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:uniplanet/common/functions/notification_scheduling.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
 
 part 'search_product_event.dart';
 part 'search_product_state/basic_state.dart';

@@ -10,6 +10,8 @@ class ChatRoom {
   final User buyer;
   Message? lastMessage;
   int unseenMessageCount;
+  final String? deletedFrom;
+
   ChatRoom({
     required this.id,
     required this.seller,
@@ -18,6 +20,7 @@ class ChatRoom {
     required this.productName,
     this.lastMessage,
     this.unseenMessageCount = 0,
+    this.deletedFrom,
   });
 
   static initChatRoom() {
@@ -29,6 +32,7 @@ class ChatRoom {
       productName: "",
       lastMessage: null,
       unseenMessageCount: 0,
+      deletedFrom: "",
     );
   }
 
@@ -41,6 +45,7 @@ class ChatRoom {
     String? productName,
     Message? lastMessage,
     int? unseenMessageCount,
+    String? deletedFrom,
   }) {
     return ChatRoom(
       id: id ?? this.id,
@@ -50,6 +55,7 @@ class ChatRoom {
       productName: productName ?? this.productName,
       lastMessage: lastMessage ?? this.lastMessage,
       unseenMessageCount: unseenMessageCount ?? this.unseenMessageCount,
+      deletedFrom: deletedFrom ?? this.deletedFrom,
     );
   }
 
@@ -62,6 +68,7 @@ class ChatRoom {
       'productId': productId,
       'lastMessage': lastMessage?.toMap(),
       'unseenMessageCount': unseenMessageCount,
+      'deletedFrom': deletedFrom ?? '',
     };
   }
 
@@ -78,6 +85,7 @@ class ChatRoom {
       unseenMessageCount: map['unseenMessageCount'] != null
           ? int.tryParse(map['unseenMessageCount'].toString()) ?? 0
           : 0,
+      deletedFrom: map['deletedFrom'],
     );
   }
 

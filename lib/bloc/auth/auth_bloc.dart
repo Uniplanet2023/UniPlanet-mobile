@@ -5,7 +5,7 @@ import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/common/functions/init_data.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
-import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 
 part 'auth_bloc_event.dart';
 part 'auth_state/basic_state.dart';

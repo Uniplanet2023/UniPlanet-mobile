@@ -9,4 +9,3 @@ export 'search_product/search_product_bloc.dart';
 export 'status/status_bloc.dart';
 export 'typing/typing_bloc.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
-export 'package:cloudinary_public/cloudinary_public.dart';

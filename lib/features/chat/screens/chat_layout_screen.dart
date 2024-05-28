@@ -5,7 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/chat/widgets/contacts_list.dart';
-import 'package:uniplanet/network/ads/ad_mob_service.dart';
+import 'package:uniplanet/api/ads/ad_mob_service.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});

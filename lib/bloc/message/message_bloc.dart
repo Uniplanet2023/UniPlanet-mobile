@@ -10,8 +10,8 @@ import 'package:uniplanet/global.dart';
 // Models
 import 'package:uniplanet/models/message.dart';
 // Repository
-import 'package:uniplanet/network/repository/index.dart';
-import 'package:uniplanet/network/socket/socket_channel.dart';
+import 'package:uniplanet/api/repository/index.dart';
+import 'package:uniplanet/api/socket/socket_channel.dart';
 // Part of the bloc
 part 'message_bloc_event.dart';
 part 'message_bloc_state.dart';

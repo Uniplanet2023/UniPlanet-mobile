@@ -5,9 +5,9 @@ import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
-import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
-import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
-import 'package:uniplanet/network/socket/socket_channel.dart';
+import 'package:uniplanet/api/notification/notification_handler/remote_notification_controller.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/api/socket/socket_channel.dart';
 
 Future<void> initData() async {
   await NotificationController.initializeRemoteNotifications(debug: true);

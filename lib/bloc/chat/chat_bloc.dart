@@ -9,7 +9,7 @@ import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
-import 'package:uniplanet/network/repository/index.dart';
+import 'package:uniplanet/api/repository/index.dart';
 
 // Bloc Events, States
 part 'chat_bloc_event.dart';

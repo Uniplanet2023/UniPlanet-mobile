@@ -1,6 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
+import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
 
 // id = 10 Search Product
 // id = 11 Like Product

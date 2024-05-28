@@ -10,7 +10,7 @@ import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:uniplanet/network/ads/ad_mob_service.dart';
+import 'package:uniplanet/api/ads/ad_mob_service.dart';
 
 class ItemBox extends StatefulWidget {
   final List<Product> productList;

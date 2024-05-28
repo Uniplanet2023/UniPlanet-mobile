@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/common/functions/notification_scheduling.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
 
 part 'hot_product_event.dart';
 part 'hot_product_state.dart';

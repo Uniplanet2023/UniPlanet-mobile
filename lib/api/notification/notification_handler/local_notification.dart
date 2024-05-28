@@ -9,9 +9,9 @@ import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/main.dart';
 import 'package:uniplanet/models/chat_room.dart';
-import 'package:uniplanet/network/notification/functions/show_dialog.dart';
-import 'package:uniplanet/network/notification/notification_handler/remote_notification_controller.dart';
-import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/api/notification/functions/show_dialog.dart';
+import 'package:uniplanet/api/notification/notification_handler/remote_notification_controller.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 
 class LocalNotificationController {
   static final LocalNotificationController _instance =

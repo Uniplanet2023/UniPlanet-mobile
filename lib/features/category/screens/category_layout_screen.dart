@@ -8,7 +8,7 @@ import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/network/repository/index.dart';
+import 'package:uniplanet/api/repository/index.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});

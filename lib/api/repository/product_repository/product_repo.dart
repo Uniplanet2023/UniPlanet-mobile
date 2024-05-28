@@ -1,16 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:dio/dio.dart';
-import 'package:uniplanet/common/functions/cloudinary_image.dart';
+import 'package:uniplanet/api/image_handling/image_upload_function.dart';
+import 'package:uniplanet/api/repository/index.dart';
 import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user_model.dart';
-import 'package:uniplanet/network/api_def/api_server_address.dart';
-import 'package:uniplanet/network/api_def/dio_client.dart';
-import 'package:uniplanet/network/api_def/display_error_messages.dart';
+import 'package:uniplanet/api/api_def/api_server_address.dart';
+import 'package:uniplanet/api/api_def/display_error_messages.dart';
 
 class ProductRepository {
   final DioClient _dioClient;
@@ -190,18 +188,23 @@ class ProductRepository {
         final uploadTasks =
             List<Future<void>>.generate(images.length, (index) async {
           final image = images[index];
-          final response = await Global.cloudinary.uploadFile(
-            CloudinaryFile.fromFile(image.path,
-                folder: 'product-images/${product.id}/'),
+          final secureUrl = await ImageUploadService()
+              .uploadImage(
+            image,
+            'product-images/${AuthRepository.school}/${product.id}',
+          )
+              .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              throw TimeoutException('Image uploading timed out');
+            },
           );
-          imageUrls[index] = cloudinaryTransformImage(
-            response.secureUrl,
-          ); // Place each image URL in the corresponding position
+
+          imageUrls[index] = secureUrl;
         });
 
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
-
         // Remove any nulls in case some uploads failed
         product.images.addAll(imageUrls.whereType<String>());
       }

@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet/api/image_handling/image_upload_function.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/functions/cloudinary_image.dart';
-import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/account.dart';
-import 'package:uniplanet/network/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/api/repository/account_repository/account_repo.dart';
 
 import '../../constants/utils.dart';
 
@@ -29,16 +30,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   _updateProfileImage(
       UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));
-    final response = await Global.cloudinary.uploadFile(
-      CloudinaryFile.fromFile(event.image.path,
-          folder: 'profile-image/${state.account.user.id}'),
+    File imageFile = File(event.image.path);
+    String? secureUrl = await ImageUploadService()
+        .uploadImage(imageFile, 'profile-image/${AuthRepository.school}')
+        .timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        throw TimeoutException('Image uploading timed out');
+      },
     );
 
-    String transformedUrl =
-        cloudinaryTransformImage(response.secureUrl, width: 500, height: 500);
-
-    Account? account = await _accountRepository.updateProfileImage(
-        profileImage: transformedUrl);
+    Account? account =
+        await _accountRepository.updateProfileImage(profileImage: secureUrl);
     if (account != null) {
       emit(UpdatedProfileImageState(account: account));
     } else {

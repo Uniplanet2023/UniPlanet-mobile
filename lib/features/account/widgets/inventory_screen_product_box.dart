@@ -11,7 +11,7 @@ import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/account/widgets/list_item.dart';
 import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/network/repository/index.dart';
+import 'package:uniplanet/api/repository/index.dart';
 
 class InventoryProductBox extends StatefulWidget {
   final List<Product> productList;

@@ -18,8 +18,8 @@ import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user_model.dart';
 import 'package:uniplanet/bloc/message/message_bloc.dart';
-import 'package:uniplanet/network/notification/notification_handler/local_notification.dart';
-import 'package:uniplanet/network/socket/socket_channel.dart';
+import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
+import 'package:uniplanet/api/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatRoom chatRoom;
@@ -162,18 +162,22 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     onPressed: () async {
                       await LocalNotificationController.notificationRationale(
                           false);
-                      setState(() {
-                        isNotificationAllowed = false;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          isNotificationAllowed = false;
+                        });
+                      }
                     },
                     icon: const Icon(Icons.notifications_active_outlined))
                 : IconButton(
                     onPressed: () async {
                       await LocalNotificationController.notificationRationale(
                           true);
-                      setState(() {
-                        isNotificationAllowed = true;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          isNotificationAllowed = true;
+                        });
+                      }
                     },
                     icon: const Icon(Icons.notifications_off_outlined)),
             IconButton(

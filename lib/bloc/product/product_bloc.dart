@@ -7,7 +7,7 @@ import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user_model.dart';
 // Repository
-import 'package:uniplanet/network/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
 // Parts
 part 'product_event.dart';
 part 'product_state/basic_state.dart';

@@ -4,7 +4,7 @@ import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
-import 'package:uniplanet/network/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 
 class Streamer {
   late StreamSubscription _chatStreamSubscription;
