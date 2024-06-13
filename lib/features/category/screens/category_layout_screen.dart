@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
@@ -33,10 +32,9 @@ class _CategoryPageState extends State<CategoryPage> {
           elevation: 0,
           backgroundColor: GlobalVariables.backgroundColor,
           centerTitle: false,
-          title: Text(
+          title: const Text(
             'Categories',
             style: TextStyle(
-              fontStyle: GoogleFonts.roboto().fontStyle,
               fontSize: 20,
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -48,6 +46,11 @@ class _CategoryPageState extends State<CategoryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Container(
+              margin: const EdgeInsets.only(top: 0),
+              height: 2, // Thickness of the line
+              color: Colors.grey[200], // Color of the line
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 left: 16,
@@ -55,20 +58,37 @@ class _CategoryPageState extends State<CategoryPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      '🔥Hot items in ${AuthRepository.school}',
-                      style: GoogleFonts.roboto(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold),
+                    child: RichText(
                       overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '🔥Hot items in ',
+                            style: GoogleFonts.roboto(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: GlobalVariables.secondaryColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '${AuthRepository.school}',
+                            style: GoogleFonts.roboto(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(width: 8.w),
+                  const SizedBox(width: 8),
                   IconButton(
                       onPressed: () {
                         Navigator.pushNamed(context, AppRoutes.category,
                             arguments: 'Hot Products');
                       },
-                      icon: Icon(Icons.arrow_forward_ios, size: 15.sp))
+                      icon: const Icon(Icons.arrow_forward_ios, size: 15))
                 ],
               ),
             ),
@@ -81,8 +101,8 @@ class _CategoryPageState extends State<CategoryPage> {
                 } else if (state is LoadedHotProductState ||
                     state is EndHotProductState) {
                   return Container(
-                    height: 170.h,
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    height: 170,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.hotProducts.length,
@@ -97,22 +117,34 @@ class _CategoryPageState extends State<CategoryPage> {
                 return const SizedBox();
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16,
-              ),
-              child: Text('Browse by category',
-                  style: Theme.of(context).textTheme.titleLarge),
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              height: 2, // Thickness of the line
+              color: Colors.grey[200], // Color of the line
             ),
-            // Search bar here
+
             Padding(
-              padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  top: 10,
+                  bottom: 10,
+                ),
+                child: Text(
+                  '✨ Browse By Category',
+                  style: GoogleFonts.roboto(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: GlobalVariables.secondaryColor),
+                )),
+            // Search bar here
+            Container(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  childAspectRatio: 9 / 10,
+                  childAspectRatio: 10 / 10,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
@@ -128,8 +160,8 @@ class _CategoryPageState extends State<CategoryPage> {
                         ClipOval(
                           child: Container(
                             color: Colors.grey[200],
-                            width: 55.w,
-                            height: 55.h,
+                            width: 55,
+                            height: 55,
                             child: Image.asset(
                                 GlobalVariables.categories[index]['image'],
                                 fit: BoxFit.cover),
@@ -138,7 +170,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         Expanded(
                           child: Text(
                             GlobalVariables.categories[index]['name'],
-                            style: TextStyle(fontSize: 12.sp),
+                            style: const TextStyle(fontSize: 12),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.visible,
                           ),
@@ -149,20 +181,29 @@ class _CategoryPageState extends State<CategoryPage> {
                 },
               ),
             ),
+            Container(
+              height: 2, // Thickness of the line
+              color: Colors.grey[200], // Color of the line
+            ),
             Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Text('Based on your interests',
-                    style: Theme.of(context).textTheme.titleLarge)),
+                padding: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
+                child: Text(
+                  '🔍 Based on your interests',
+                  style: GoogleFonts.roboto(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: GlobalVariables.secondaryColor),
+                )),
             // Interests section here
             // Interests section here
             Padding(
-              padding: const EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.only(left: 16),
               child: BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
                 builder: (context, state) {
                   return Wrap(
-                    spacing: 10
-                        .w, // Space between individual chips on the same line.
-                    runSpacing: 10.h, // Space between lines of chips.
+                    spacing:
+                        10, // Space between individual chips on the same line.
+                    runSpacing: 10, // Space between lines of chips.
                     children: state.searchHistory
                         .take(5)
                         .map((text) => GestureDetector(
@@ -178,20 +219,20 @@ class _CategoryPageState extends State<CategoryPage> {
                                   side: const BorderSide(
                                       color: Colors.black45, width: 1),
                                 ),
-                                labelPadding: EdgeInsets.symmetric(
-                                    horizontal: 0.w, vertical: 0.h),
+                                labelPadding: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 0),
                                 label: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.search,
-                                      size: 15.sp,
+                                      size: 15,
                                       color: Colors.black54,
                                     ),
                                     Text(
                                       text,
                                       style: GoogleFonts.roboto(
-                                        fontSize: 15.sp,
+                                        fontSize: 15,
                                         color: Colors.black54,
                                       ),
                                     ),
@@ -204,7 +245,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 },
               ),
             ),
-            SizedBox(height: 90.h),
+            const SizedBox(height: 90),
           ],
         ),
       ),
@@ -224,9 +265,9 @@ Widget buildProductContent(
         );
       },
       child: Container(
-        width: 140.w, // Set a fixed width for each card
-        padding: EdgeInsets.symmetric(
-            horizontal: 4.w), // Add some horizontal padding
+        width: 140, // Set a fixed width for each card
+        padding: const EdgeInsets.symmetric(
+            horizontal: 4), // Add some horizontal padding
         child: Column(
           crossAxisAlignment:
               CrossAxisAlignment.start, // Align text to the start
@@ -234,12 +275,12 @@ Widget buildProductContent(
           children: [
             // Fixed size container for the image
             Container(
-              height: 100.h, // Fixed height for the image
+              height: 100, // Fixed height for the image
               width: double.infinity, // Take the full width of the container
-              padding: EdgeInsets.all(8.w),
+              padding: const EdgeInsets.all(8),
               child: ClipRRect(
                 borderRadius:
-                    BorderRadius.circular(8.w), // Rounded corners for the image
+                    BorderRadius.circular(8), // Rounded corners for the image
                 child: product.images.isEmpty
                     ? const SizedBox()
                     : CachedNetworkImage(
@@ -251,11 +292,11 @@ Widget buildProductContent(
             ),
             // Product name
             Padding(
-              padding: EdgeInsets.all(4.w),
+              padding: const EdgeInsets.all(4),
               child: Text(
                 product.name, // Replace with your product name
-                style: TextStyle(
-                  fontSize: 12.sp, // Use ScreenUtil for responsive font size
+                style: const TextStyle(
+                  fontSize: 12, // Use ScreenUtil for responsive font size
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -263,12 +304,12 @@ Widget buildProductContent(
             ),
             // Product price
             Padding(
-              padding: EdgeInsets.only(
-                  bottom: 4.h), // Use ScreenUtil for responsive padding
+              padding: const EdgeInsets.only(
+                  bottom: 4), // Use ScreenUtil for responsive padding
               child: Text(
                 ' \$${product.price.toStringAsFixed(2)}', // Format the price to two decimal places
-                style: TextStyle(
-                  fontSize: 10.sp,
+                style: const TextStyle(
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),
               ),

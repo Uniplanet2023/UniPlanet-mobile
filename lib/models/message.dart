@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:uniplanet/common/enums/message_status_enum.dart';
 
 class Message {

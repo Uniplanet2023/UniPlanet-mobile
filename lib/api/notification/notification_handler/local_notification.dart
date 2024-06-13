@@ -27,7 +27,7 @@ class LocalNotificationController {
     try {
       AwesomeNotifications().initialize(
           // set the icon to null if you want to use the default app icon
-          null,
+          'resource://drawable/res_notification_logo',
           [
             NotificationChannel(
               channelKey: 'scheduled_channel',
@@ -41,7 +41,7 @@ class LocalNotificationController {
               enableLights: true,
               defaultColor: GlobalVariables.secondaryColor,
               ledColor: GlobalVariables.secondaryColor,
-              soundSource: 'resource://raw/notification',
+              soundSource: 'resource://raw/res_custom_notification',
             ),
             NotificationChannel(
               channelKey: 'chats',
@@ -55,7 +55,7 @@ class LocalNotificationController {
               defaultPrivacy: NotificationPrivacy.Private,
               defaultColor: GlobalVariables.secondaryColor,
               ledColor: GlobalVariables.secondaryColor,
-              soundSource: 'resource://raw/notification',
+              soundSource: 'resource://raw/res_custom_notification',
             )
           ],
           debug: true);
@@ -86,7 +86,7 @@ class LocalNotificationController {
       defaultPrivacy: NotificationPrivacy.Private,
       defaultColor: GlobalVariables.secondaryColor,
       ledColor: GlobalVariables.secondaryColor,
-      soundSource: 'resource://raw/notification',
+      // soundSource: 'resource://raw/notification',
     ));
   }
 
@@ -103,14 +103,13 @@ class LocalNotificationController {
       enableLights: true,
       defaultColor: GlobalVariables.secondaryColor,
       ledColor: GlobalVariables.secondaryColor,
-      soundSource: 'resource://raw/notification',
+      // soundSource: 'resource://raw/notification',
     ));
   }
 
   static Future<void> getInitialNotificationAction() async {
     ReceivedAction? receivedAction = await AwesomeNotifications()
         .getInitialNotificationAction(removeFromActionEvents: true);
-    if (receivedAction == null) return;
     log('App launched by a notification action: $receivedAction');
   }
 
@@ -187,10 +186,8 @@ class LocalNotificationController {
         displayNotificationRationale();
         return;
       }
-      // if (receivedAction.payload?['navigate'] == 'true') {
-      if (receivedAction.payload != null &&
-          receivedAction.payload!['payload'] != null) {
-        var chatRoom = ChatRoom.fromJson(receivedAction.payload!['payload']!);
+      if (receivedAction.payload != null) {
+        var chatRoom = ChatRoom.fromMap(receivedAction.payload!);
         var badgeCount = await AwesomeNotifications().getGlobalBadgeCounter();
         var currentBadgeCount = badgeCount - chatRoom.unseenMessageCount;
         if (currentBadgeCount > 0) {
@@ -249,13 +246,18 @@ class LocalNotificationController {
   static Future<bool> notificationRationale(bool isAllowed) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (isAllowed) {
-      pref.setBool('isNotificationAllowed', true);
       // Enable all notification
       await LocalNotificationController.init();
       await NotificationController.requestFirebaseToken();
       Global.socketService.notificationEnableEvent();
+
       if (!await AwesomeNotifications().isNotificationAllowed()) {
-        AwesomeNotifications().showNotificationConfigPage();
+        bool isNotiAllowed =
+            await AwesomeNotifications().requestPermissionToSendNotifications();
+        pref.setBool('isNotificationAllowed', isNotiAllowed);
+        return isNotiAllowed;
+      } else {
+        pref.setBool('isNotificationAllowed', true);
       }
     } else {
       pref.setBool('isNotificationAllowed', false);

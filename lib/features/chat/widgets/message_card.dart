@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
@@ -176,8 +174,8 @@ class MessageBox extends StatelessWidget {
       alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: isTyping ? 100.w : 250.w, // Smaller width when typing
-          maxHeight: isTyping ? 40.h : 250.h,
+          maxWidth: isTyping ? 100 : 250, // Smaller width when typing
+          maxHeight: isTyping ? 40 : 250,
         ),
         child: Card(
           elevation: 1,

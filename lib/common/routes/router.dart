@@ -41,11 +41,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const SigninScreen(),
       );
     case AppRoutes.homePage:
-      var category = routeSettings.arguments as String;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) =>
-            HomeScreen(controller: ScrollController(), category: category),
+        builder: (_) => HomeScreen(
+          controller: ScrollController(),
+        ),
       );
     case AppRoutes.bottomBarPage:
       return MaterialPageRoute(

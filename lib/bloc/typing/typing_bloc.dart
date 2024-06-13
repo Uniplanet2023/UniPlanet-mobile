@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet/constants/utils.dart';
 
 part 'typing_event.dart';
 part 'typing_state.dart';
@@ -18,6 +17,6 @@ class TypingBloc extends Bloc<TypingEvent, TypingState> {
   @override
   void onChange(Change<TypingState> change) {
     super.onChange(change);
-    log(change);
+    // log(change);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/constants/global_variables.dart';
@@ -29,46 +30,38 @@ class AuthScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Welcome',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                     SizedBox(height: 100.h),
                     Image(
                       image: const AssetImage('assets/images/Logo_nbg.png'),
                       width: 200.w,
                       height: 200.h,
                     ),
-                    SizedBox(height: 10.h),
-                    const Text(
+                    SizedBox(height: 30.h),
+                    Text(
                       'Selling Smarter,',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w200,
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    const Text(
-                      'Buying Better,',
-                      style: TextStyle(
-                        fontSize: 30,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 25,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 5.h),
+                    Text(
+                      'Buying Better,',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
                     SizedBox(
                       width: 250.0,
                       child: TextAnimator(
                         'All on Campus',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 30.0,
-                          color: Colors.blueAccent,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 30,
                           fontWeight: FontWeight.w800,
+                          color: GlobalVariables.secondaryColor,
                         ),
                         atRestEffect: WidgetRestingEffects.wave(),
                       ),

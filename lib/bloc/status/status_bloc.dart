@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet/constants/utils.dart';
-
 part 'status_event.dart';
 part 'status_state.dart';
 
@@ -25,7 +23,7 @@ class StatusBloc extends Bloc<StatusEvent, StatusState> {
   @override
   void onChange(Change<StatusState> change) {
     super.onChange(change);
-    log(change);
+    // log(change);
   }
 
   @override

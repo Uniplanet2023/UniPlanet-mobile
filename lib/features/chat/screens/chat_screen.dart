@@ -13,6 +13,7 @@ import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet/features/product_details/screens/product_details_screen.dart';
+import 'package:uniplanet/features/report/screen/report_screen.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
@@ -161,6 +162,19 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
           centerTitle: false,
           actions: [
+            IconButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportUserPage(
+                        client: widget.client,
+                        productId: widget.chatRoom.productId,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.report_gmailerrorred)),
             isNotificationAllowed
                 ? IconButton(
                     onPressed: () async {

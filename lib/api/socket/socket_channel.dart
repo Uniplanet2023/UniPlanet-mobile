@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:uniplanet/api/image_handling/image_upload_function.dart';
-import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
@@ -40,8 +39,8 @@ class SocketService {
   void connect() {
     BuildContext context = SnackbarGlobal.key.currentContext!;
     socket.onConnect((_) async {
-      // removeListeners();
       socket.clearListeners();
+      removeListeners();
 
       socket.on('chat room created', (data) async {
         log('chat room created');

@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/functions/check_blocked.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
@@ -272,6 +273,14 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
+    bool isBloced = checkBlockedAccount(blockType: "Chat");
+    if (isBloced) {
+      emit(ErrorChatState('You are blocked from chatting',
+          page: state.page,
+          chatRooms: state.chatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount));
+      return;
+    }
     emit(CreatingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
@@ -309,7 +318,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   @override
   void onChange(Change<ChatBlocState> change) {
     super.onChange(change);
-    log(change);
+    // log(change);
   }
 
   @override

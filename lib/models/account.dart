@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:uniplanet/models/user.dart';
 
 class Account {
-  final User user;
+  User user;
   final String type;
   final bool isBlocked;
   final bool isBlockedPost;

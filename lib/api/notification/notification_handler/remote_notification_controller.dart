@@ -54,7 +54,7 @@ class NotificationController extends ChangeNotifier {
     }
 
     log('mySilentDataHandle received a FcmSilentData execution');
-    await executeLongTaskInBackground();
+    // await executeLongTaskInBackground();
   }
 
   /// Use this method to detect when a new fcm token is received
@@ -120,6 +120,9 @@ class NotificationController extends ChangeNotifier {
       _instance._firebaseToken =
           await AwesomeNotificationsFcm().requestFirebaseAppToken();
       log(_instance._firebaseToken);
+      await AwesomeNotifications().requestPermissionToSendNotifications();
+      log(await AwesomeNotificationsFcm().isFirebaseAvailable);
+
       if (_instance._firebaseToken == null) {
         throw Exception('Token is null');
       } else {

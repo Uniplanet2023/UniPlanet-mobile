@@ -28,7 +28,7 @@ class CategoryHeader extends StatelessWidget {
               style: TextStyle(
                 fontStyle: GoogleFonts.roboto().fontStyle,
                 fontSize: 20,
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
             ), // Show category if it's not null otherwise 'uniplanet'

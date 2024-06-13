@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/common/functions/check_blocked.dart';
+import 'package:uniplanet/isar/isar_service.dart';
 // Models
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user.dart';
@@ -83,6 +84,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(ProductUploadingState(
         productList: state.productList, page: state.page));
     try {
+      bool isBloced = checkBlockedAccount(blockType: "Post");
+      if (isBloced) {
+        emit(ErrorProductUploadState("Error uploading product",
+            productList: state.productList, page: state.page));
+        return;
+      }
       Product? productData = await _productRepository.uploadProduct(
         productName: event.productName,
         category: event.category,
@@ -91,6 +98,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         price: event.price,
         seller: event.seller,
         location: event.location,
+        type: event.type,
+        isNegotiable: event.isNegotiable,
       );
 
       if (productData != null) {
@@ -145,13 +154,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   _loadProduct(LoadProductEvent event, emit) async {
     emit(const LoadingProductState(productList: [], page: 1));
     List<Product> result = await _productRepository.fetchProducts();
+    if (result.isEmpty) {
+      result = await IsarService.instance.getProductList();
+      emit(ErrorProductLoadState("Error loading product",
+          productList: result, page: 1));
+      return;
+    }
     emit(LoadedProductState(productList: result, page: 1));
   }
 
   @override
   void onChange(Change<ProductState> change) {
     super.onChange(change);
-    log(change);
+    // log(change);
   }
 
   @override

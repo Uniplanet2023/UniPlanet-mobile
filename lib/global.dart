@@ -16,6 +16,7 @@ class Global {
         options: DefaultFirebaseOptions.currentPlatform);
     // Mobile Ads initialization
     MobileAds.instance.initialize();
+
     // Notification initialization
     await LocalNotificationController.init(debug: true);
     await LocalNotificationController.getInitialNotificationAction();

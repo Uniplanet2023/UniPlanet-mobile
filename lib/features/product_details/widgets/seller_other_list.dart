@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/features/product_details/screens/product_details_screen.dart';
 import 'package:uniplanet/models/product.dart';
 
@@ -18,13 +17,13 @@ class SellerOtherProductsGrid extends StatelessWidget {
     int displayCount = otherProducts.length > 4 ? 4 : otherProducts.length;
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 8.h,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
       ),
       child: Wrap(
-        spacing: 10.w,
-        runSpacing: 10.h,
+        spacing: 10,
+        runSpacing: 10,
         alignment: WrapAlignment.start,
         children: otherProducts.getRange(0, displayCount).map((product) {
           return GestureDetector(
@@ -42,10 +41,10 @@ class SellerOtherProductsGrid extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  width: 150.w,
-                  height: 100.h, // To make the image container square
+                  width: 150,
+                  height: 100, // To make the image container square
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(8),
                     child: product.images.isEmpty
                         ? const SizedBox()
                         : CachedNetworkImage(
@@ -54,22 +53,22 @@ class SellerOtherProductsGrid extends StatelessWidget {
                           ),
                   ),
                 ),
-                SizedBox(height: 8.h),
+                const SizedBox(height: 8),
                 SizedBox(
-                  width: 150.w,
+                  width: 150,
                   child: Text(
                     product.name,
-                    style: TextStyle(fontSize: 14.sp),
+                    style: const TextStyle(fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(
-                  width: 150.w,
+                  width: 150,
                   child: Text(
                     '\$${product.price}',
-                    style:
-                        TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

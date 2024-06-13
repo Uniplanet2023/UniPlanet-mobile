@@ -62,7 +62,7 @@ class HelpScreen extends StatelessWidget {
               ),
               subTitleText('\nBuying a Product'),
               content(
-                  '\nTo purchase a product, please adhere to the following steps:\n 1. Navigate to the \'Home\' page and select your desired product, which will redirect you to the Product Detail page.\n 2. Click the \'Chat\' button located at the bottom right of the Product Detail page to initiate a conversation with the seller regarding the product.\n 3. Once an agreement has been reached concerning the sale of the product, coordinate a suitable time and location for the transaction with the seller.\n 4. Upon verifying that the product\'s condition matches its advertisement, proceed with payment (unless the product is offered at no cost) and collect the item. '),
+                  '\nTo purchase a product, please adhere to the following steps:\n 1. Navigate to the \'Home\' page and select your desired product, which will redirect you to the Product Detail page.\n 2. Click the \'Chat\' button located at the bottom right of the Product Detail page to initiate a conversation with the seller regarding the product.\n 3. Once an agreement has been reached concerning the sale of the product, coordinate a suitable time and location for the transaction with the seller.value.\n 4. Upon verifying that the product\'s condition matches its advertisement, proceed with payment (unless the product is offered at no cost) and collect the item. '),
               const Divider(
                 thickness: 0.1,
               ),

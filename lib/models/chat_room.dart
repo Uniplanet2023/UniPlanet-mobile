@@ -6,8 +6,8 @@ class ChatRoom {
   final String productId;
   final String productName;
   final String id;
-  final User seller;
-  final User buyer;
+  User seller;
+  User buyer;
   Message? lastMessage;
   int unseenMessageCount;
   String? deletedFrom;

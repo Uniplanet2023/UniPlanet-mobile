@@ -144,8 +144,9 @@ class DeletedChatRoomState extends ChatBlocState {
 //Error
 class ErrorChatState extends ChatBlocState {
   final String errMsg;
-  const ErrorChatState(this.errMsg);
+  const ErrorChatState(this.errMsg,
+      {super.chatRooms, super.totalUnseenMessageCount, super.page});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [errMsg, chatRooms, totalUnseenMessageCount, page];
 }

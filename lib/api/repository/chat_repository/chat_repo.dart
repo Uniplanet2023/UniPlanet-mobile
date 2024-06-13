@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
+import 'package:uniplanet/isar/isar_service.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/chat_room.dart';
@@ -95,13 +95,19 @@ class ChatRepository {
       }
       chatRoomList = List<ChatRoom>.from(
           res.data['chatList'].map((data) => ChatRoom.fromMap(data['chat'])));
-
+      IsarService.instance.saveChatData(chatRoomList);
       return GetChatRooms(
           chatRooms: chatRoomList,
           totalUnseenMessageCount: res.data["totalUnseenMessage"]);
     } on DioException catch (e) {
       _handleDioException(e);
-      return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
+      List<ChatRoom> chatRoomsList = await IsarService.instance.getChatRooms();
+      if (page > 1) {
+        return GetChatRooms(chatRooms: [], totalUnseenMessageCount: 0);
+      } else {
+        return GetChatRooms(
+            chatRooms: chatRoomsList, totalUnseenMessageCount: 0);
+      }
     }
   }
 

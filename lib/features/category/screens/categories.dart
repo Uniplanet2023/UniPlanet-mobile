@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
@@ -61,9 +60,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
           .add(LoadCategoryEvent(category: widget.category));
     } else {
       if (widget.category == 'Free Products') {
-        context
-            .read<FreeProductBloc>()
-            .add(LoadFreeProductEvent(category: widget.category));
         // _createRewardedAd();
         // _createUnterstitialAd();
       }
@@ -123,13 +119,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
               CategoryHeader(
                 category: widget.category,
               ),
-
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 10,
+                ),
+              ),
               // Other slivers
               if (showLoadingIndicator)
-                SliverToBoxAdapter(
+                const SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                    child: const Center(child: CircularProgressIndicator()),
+                    padding: EdgeInsets.only(bottom: 50, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
                   ),
                 ),
 
@@ -192,16 +192,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         ),
 
               if (isFetchingMoreProducts)
-                SliverToBoxAdapter(
+                const SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                    child: const Center(child: CircularProgressIndicator()),
+                    padding: EdgeInsets.only(bottom: 100, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
                   ),
                 ),
               if (!isFetchingMoreProducts)
-                SliverToBoxAdapter(
+                const SliverToBoxAdapter(
                   child: SizedBox(
-                    height: 100.h,
+                    height: 100,
                   ),
                 ),
             ],

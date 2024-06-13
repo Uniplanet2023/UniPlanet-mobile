@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/account_settings_screen.dart';
 import 'package:uniplanet/features/account/screens/help_screen.dart';
 import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
@@ -32,9 +31,9 @@ class _AccountScreen extends State<AccountScreen> {
     late final User currentUser;
     currentUser = context.watch<AccountBloc>().state.account.user;
     return Scaffold(
-      backgroundColor: GlobalVariables.greyBackgroundColor,
+      backgroundColor: const Color.fromARGB(255, 242, 245, 252),
       appBar: AppBar(
-        backgroundColor: GlobalVariables.greyBackgroundColor,
+        backgroundColor: const Color.fromARGB(255, 234, 239, 252),
         title: const Text('My Account'),
       ),
       body: SingleChildScrollView(

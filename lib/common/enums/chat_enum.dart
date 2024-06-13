@@ -1,1 +1,1 @@
-enum ChatActions { share, delete, archive, edit, view, search, fetch }
+enum ChatActions { share, report, delete, archive, edit, view, search, fetch }

@@ -8,7 +8,18 @@ class AdMobService {
     if (Platform.isAndroid) {
       return 'ca-app-pub-9923099397206192/2555411269';
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-9923099397206192/8504321060';
+      return 'ca-app-pub-3940256099942544/2934735716'; //Test ID
+      // return 'ca-app-pub-9923099397206192/8504321060';
+    }
+    return null;
+  }
+
+  static String? get adaptiveBannerAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/9214589741';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/9214589741'; //Test ID
+      // return 'ca-app-pub-9923099397206192/8504321060';
     }
     return null;
   }
@@ -18,6 +29,15 @@ class AdMobService {
       return 'ca-app-pub-9923099397206192/2990525534';
     } else if (Platform.isIOS) {
       return 'ca-app-pub-9923099397206192/9910237232';
+    }
+    return null;
+  }
+
+  static String? get nativeAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/2247696110'; //Test ID
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/3986624511'; //Test ID
     }
     return null;
   }
@@ -43,6 +63,21 @@ class AdMobService {
   static BannerAdListener createBannerListener(
       void Function() onAdLoadedCallback) {
     return BannerAdListener(
+      onAdLoaded: (Ad ad) {
+        onAdLoadedCallback();
+      },
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        ad.dispose();
+        log('Ad failed to load: $error');
+      },
+      onAdOpened: (Ad ad) => log('Ad opened: $ad'),
+      onAdClosed: (Ad ad) => log('Ad closed: $ad'),
+    );
+  }
+
+  static NativeAdListener createNativeAdListener(
+      void Function() onAdLoadedCallback) {
+    return NativeAdListener(
       onAdLoaded: (Ad ad) {
         onAdLoadedCallback();
       },

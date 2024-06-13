@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/isar/isar_service.dart';
 import 'package:uniplanet/models/account.dart';
 import 'package:uniplanet/api/api_def/api_server_address.dart';
 import 'package:uniplanet/api/api_def/dio_client.dart';
@@ -19,12 +20,17 @@ class AccountRepository implements IAccountRepository {
       String msg = displayErrorMessages(res.toString());
 
       if (msg == "success") {
-        Account result = Account.fromJson(res.data);
-        return result;
+        Account account = Account.fromJson(res.data);
+        IsarService.instance.saveAccount(account);
+        return account;
       } else {
         throw Exception('Failed to get account info');
       }
     } catch (e) {
+      Account? account = await IsarService.instance.getAccount();
+      if (account != null) {
+        return account;
+      }
       rethrow;
     }
   }
@@ -69,6 +75,37 @@ class AccountRepository implements IAccountRepository {
       }
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<bool> reportUser({
+    required String reportedUserId,
+    required String description,
+    required String reportType,
+    required String productId,
+  }) async {
+    try {
+      Response res = await _dioClient.dio.post('$accountURI/report-user',
+          data: {
+            'reportedUserId': reportedUserId,
+            'description': description,
+            'reportType': reportType,
+            'productId': productId,
+          },
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        SnackbarGlobal.showSnackBar("User reported successfully");
+
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      SnackbarGlobal.showSnackBar("Somehitng went wrong. Please try again.");
+      return false;
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:uniplanet/api/image_handling/image_upload_function.dart';
 import 'package:uniplanet/api/repository/index.dart';
 import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/isar/isar_service.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/api_def/api_server_address.dart';
@@ -70,10 +71,34 @@ class ProductRepository {
   }
 
   Future<List<Product>> fetchProducts({int? page, String? category}) async {
-    final productList = <Product>[];
+    List<Product> productList = <Product>[];
     try {
       final response = await _dioClient.dio.get(
         '$productURI/get-products',
+        queryParameters: {'category': category, 'page': page},
+        options: _dioClient.getDioOptions(),
+      );
+      final msg = displayErrorMessages(response.toString());
+      if (msg == "success") {
+        final obj = jsonDecode(response.data);
+        for (int i = 0; i < obj.length; i++) {
+          productList.add(Product.fromMap(obj[i]));
+        }
+        IsarService.instance.saveProductList(productList);
+        return productList;
+      }
+    } catch (e) {
+      SnackbarGlobal.showSnackBar("Network is not stable. Please try again.");
+      log(e);
+    }
+    return [];
+  }
+
+  Future<List<Product>> getWantedProducts({int? page, String? category}) async {
+    final productList = <Product>[];
+    try {
+      final response = await _dioClient.dio.get(
+        '$productURI/get-wanted-products',
         queryParameters: {'category': category, 'page': page},
         options: _dioClient.getDioOptions(),
       );
@@ -106,6 +131,9 @@ class ProductRepository {
       if (msg == "success") {
         final obj = jsonDecode(response.data);
         for (int i = 0; i < obj.length; i++) {
+          Product product = Product.fromMap(obj[i]);
+          User user = User.fromMap(obj[i]['seller']);
+          product.seller = user;
           productList.add(Product.fromMap(obj[i]));
         }
         return productList;
@@ -128,6 +156,8 @@ class ProductRepository {
           'category': product.category,
           'location': product.location,
           'images': product.images,
+          'type': product.type,
+          'isNegotiable': product.isNegotiable,
         },
         options: _dioClient.getDioOptions(),
       );
@@ -149,6 +179,8 @@ class ProductRepository {
     required double price,
     required String category,
     required String location,
+    required bool isNegotiable,
+    required String type,
     required User seller,
   }) async {
     try {
@@ -162,6 +194,8 @@ class ProductRepository {
           'category': category,
           'location': location,
           'seller': seller,
+          'isNegotiable': isNegotiable,
+          'type': type,
         },
         options: _dioClient.getDioOptions(),
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/features/search/widget/searched_product.dart';
+import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 import 'package:uniplanet/models/product.dart';
 
 class SearchedProductList extends StatefulWidget {
@@ -74,9 +74,7 @@ class _SearchedProductListState extends State<SearchedProductList> {
                     } else if (index == widget.products.length) {
                       return const SizedBox(height: 100);
                     }
-                    return SearchedProduct(
-                      product: widget.products[index],
-                    );
+                    return Item(product: widget.products[index]);
                   },
                 ),
               );

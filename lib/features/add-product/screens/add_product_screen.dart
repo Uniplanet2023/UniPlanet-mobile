@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
@@ -27,10 +25,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       TextEditingController();
 
   final int maxImages = 10; // Set the maximum number of images allowed
-
+  bool isOpenToOffers = false;
   bool showCategoryToggles = false; // New variable to control visibility
   bool showCustomLocation = false;
-  bool freeStock = false;
+  String type = 'For Sale';
   String category = 'Electronics & Appliances';
   String selectedCategory = 'Electronics & Appliances'; // Initial category
   String selectedLocation = 'On Campus';
@@ -78,12 +76,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       context.read<ProductBloc>().add(UploadProductEvent(
           productName: productNameController.text,
           description: descriptionController.text,
-          price: !freeStock
-              ? double.parse(
-                  double.parse(priceController.text).toStringAsFixed(2))
-              : 0,
+          price: type == 'Free Item'
+              ? 0
+              : double.parse(
+                  double.parse(priceController.text).toStringAsFixed(2)),
           category: selectedCategory,
           status: 'On Sale',
+          type: type,
+          isNegotiable: isOpenToOffers,
           images: images,
           location: selectedLocation == 'Custom'
               ? meetingLocationController.text
@@ -126,8 +126,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       alignment: Alignment.topRight,
       children: [
         Container(
-          width: 70.w,
-          height: 70.h,
+          width: 70,
+          height: 70,
           margin: const EdgeInsets.only(right: 8, bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -171,9 +171,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
             title: const Text(
               'New listing',
-              style: TextStyle(
-                color: Colors.black,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ),
         ),
@@ -197,8 +195,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           InkWell(
                             onTap: selectImageFromCamera,
                             child: Container(
-                              width: 70.w,
-                              height: 70.h,
+                              width: 70,
+                              height: 70,
                               margin:
                                   const EdgeInsets.only(right: 8, bottom: 8),
                               decoration: BoxDecoration(
@@ -212,12 +210,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   Icon(
                                     Icons.camera_alt,
                                     color: Colors.grey[600],
-                                    size: 20.sp,
+                                    size: 20,
                                   ),
                                   Text('${images.length}/10',
                                       style: TextStyle(
                                           color: Colors.grey[600],
-                                          fontSize: 12.sp)),
+                                          fontSize: 12)),
                                 ],
                               ),
                             ),
@@ -225,8 +223,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           InkWell(
                             onTap: selectImages,
                             child: Container(
-                              width: 70.w,
-                              height: 70.h,
+                              width: 70,
+                              height: 70,
                               margin:
                                   const EdgeInsets.only(right: 8, bottom: 8),
                               decoration: BoxDecoration(
@@ -240,12 +238,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   Icon(
                                     Icons.photo,
                                     color: Colors.grey[600],
-                                    size: 20.sp,
+                                    size: 20,
                                   ),
                                   Text('${images.length}/10',
                                       style: TextStyle(
                                           color: Colors.grey[600],
-                                          fontSize: 12.sp)),
+                                          fontSize: 12)),
                                 ],
                               ),
                             ),
@@ -256,7 +254,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 30.h),
+                    const SizedBox(height: 30),
                     // Toggle Buttons
                     Align(
                       alignment: Alignment.centerLeft,
@@ -271,19 +269,29 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         onPressed: (int index) {
                           setState(() {
                             if (index == 0) {
-                              freeStock = false;
+                              type = 'For Sale';
+                              priceController.clear();
+                            } else if (index == 1) {
+                              type = 'Free Item';
                               priceController.clear();
                             } else {
-                              freeStock = true;
+                              type = 'Buying';
+                              priceController.clear();
                             }
                           });
                         },
-                        isSelected: [freeStock, !freeStock],
+                        isSelected: [
+                          type == 'For Sale',
+                          type == 'Free Item',
+                          type == 'Buying'
+                        ],
                         children: <Widget>[
                           Container(
                             margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
-                              color: !freeStock ? Colors.black : Colors.white,
+                              color: type == 'For Sale'
+                                  ? Colors.black
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(30),
                               border:
                                   Border.all(width: 1, color: Colors.black45),
@@ -294,13 +302,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               'For Sale',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color:
-                                      freeStock ? Colors.black : Colors.white),
+                                  color: type == 'For Sale'
+                                      ? Colors.white
+                                      : Colors.black),
                             ),
                           ),
                           Container(
+                            margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
-                              color: freeStock ? Colors.black : Colors.white,
+                              color: type == 'Free Item'
+                                  ? Colors.black
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(30),
                               border:
                                   Border.all(width: 1, color: Colors.black45),
@@ -311,14 +323,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               'Free Item',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color:
-                                      freeStock ? Colors.white : Colors.black),
+                                  color: type == 'Free Item'
+                                      ? Colors.white
+                                      : Colors.black),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: type == 'Buying'
+                                  ? Colors.black
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                              border:
+                                  Border.all(width: 1, color: Colors.black45),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 5),
+                            child: Text(
+                              'Wanted to buy',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: type == 'Buying'
+                                      ? Colors.white
+                                      : Colors.black),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    const SizedBox(height: 10),
                     CustomTextField(
                       controller: productNameController,
                       hintText: 'Product Name',
@@ -347,25 +380,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               .toList(),
                         ),
                       ),
-                    SizedBox(height: 10.h),
-                    if (!freeStock)
-                      CustomTextField(
-                        controller: priceController,
-                        hintText: 'Price',
-                        enabled: !freeStock,
-                        maxLength: 5,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            signed: false,
-                            decimal: true), // Set the keyboard type to number
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d{0,9}')),
+                    const SizedBox(height: 10),
+                    if (type != 'Free Item')
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextField(
+                            controller: priceController,
+                            hintText: 'Price',
+                            enabled: true,
+                            maxLength: 5,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                signed: false,
+                                decimal:
+                                    true), // Set the keyboard type to number
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,9}')),
+                            ],
+                            prefixText: type != 'Free Item' ? '\$' : '',
+                            validatorEnabled: type != 'Free Item',
+                          ),
+                          Row(
+                            children: [
+                              Switch(
+                                value: isOpenToOffers,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isOpenToOffers = value;
+                                  });
+                                },
+                              ),
+                              const Text('Open to Offers'),
+                            ],
+                          ),
                         ],
-                        prefixText: !freeStock ? '\$' : '',
-                        validatorEnabled: !freeStock,
                       ),
 
-                    SizedBox(height: 10.h),
+                    const SizedBox(height: 10),
                     if (showCustomLocation)
                       CustomTextField(
                         controller: meetingLocationController,
@@ -399,7 +451,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             .toList(),
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    const SizedBox(height: 10),
                     CustomTextField(
                       controller: descriptionController,
                       hintText: 'Description',
@@ -407,7 +459,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       maxLength: 800,
                       keyboardType: TextInputType.multiline,
                     ),
-                    SizedBox(height: 10.h),
+                    const SizedBox(height: 10),
 
                     Container(
                       child: (state is ProductUploadingState)

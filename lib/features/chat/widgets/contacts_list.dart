@@ -12,6 +12,7 @@ import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet/features/report/screen/report_screen.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
@@ -74,6 +75,18 @@ class _ContactsListState extends State<ContactsList> {
           widget.list.removeAt(index);
         });
         break;
+      case ChatActions.report:
+        // Report chat room
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReportUserPage(
+              client: client,
+              productId: widget.list[index].productId,
+            ),
+          ),
+        );
+        break;
       default:
         break;
     }
@@ -111,6 +124,15 @@ class _ContactsListState extends State<ContactsList> {
                 endActionPane: ActionPane(
                   motion: const BehindMotion(),
                   children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        _onDismissed(index, ChatActions.report, client);
+                      },
+                      icon: Icons.report_gmailerrorred_rounded,
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                      label: 'Report',
+                    ),
                     SlidableAction(
                       onPressed: (context) {
                         _onDismissed(index, ChatActions.delete, client);
@@ -249,8 +271,7 @@ class _ContactsListState extends State<ContactsList> {
                             SizedBox(
                               height: 20,
                               child: Text(
-                                widget.list[index].lastMessage?.createdAt !=
-                                        null
+                                widget.list[index].lastMessage != null
                                     ? formatTimestamp(widget
                                         .list[index].lastMessage!.createdAt)
                                     : "",

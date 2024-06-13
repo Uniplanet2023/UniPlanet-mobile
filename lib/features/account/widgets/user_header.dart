@@ -23,14 +23,15 @@ class _UserHeaderState extends State<UserHeader> {
 
   Future<void> selectImage() async {
     final permissionStatus = await Permission.photos.status;
-
     if (permissionStatus.isGranted ||
         permissionStatus.isLimited ||
         Platform.isAndroid) {
       pickImage();
     } else if (permissionStatus.isPermanentlyDenied) {
+      Permission.photos.request();
       openAppSettings();
     } else {
+      Permission.photos.request();
       if (context.mounted) {
         showDialog(
           // ignore: use_build_context_synchronously

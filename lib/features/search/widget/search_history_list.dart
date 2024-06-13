@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
@@ -48,7 +47,7 @@ class SearchHistoryList extends State<SearchHistory> {
             children: [
               Text('Recent Searches',
                   style: GoogleFonts.roboto(
-                    fontSize: 15.sp,
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                   )),
               IconButton(

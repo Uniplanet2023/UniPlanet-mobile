@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
@@ -49,15 +48,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               children: [
                 Image.asset(
                   'assets/images/Logo_nbg.png',
-                  width: 100.w,
+                  width: 100,
                 ),
-                SizedBox(height: 30.h),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                const SizedBox(height: 30),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
                     'Enter the verification number sent to your Email address to continue:',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -88,7 +87,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                const SizedBox(height: 20),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is OtpValidatingState) {

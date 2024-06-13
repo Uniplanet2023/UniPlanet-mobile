@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		0A0086BFF4F12656BFFC16F1 /* Pods_notification.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F60450E4E5D564A42D6446C /* Pods_notification.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		2101CBF42C1A8109006C298D /* res_custom_notification.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 2101CBF32C1A8109006C298D /* res_custom_notification.aiff */; };
 		21CDC41E2BEACCF000617432 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CDC41D2BEACCF000617432 /* NotificationService.swift */; };
 		21CDC4222BEACCF000617432 /* notification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 21CDC41B2BEACCF000617432 /* notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		21CE3B1B2C1AB2A70079C1E9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21CE3B1A2C1AB2A70079C1E9 /* GoogleService-Info.plist */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
@@ -68,11 +70,14 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		1F60450E4E5D564A42D6446C /* Pods_notification.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_notification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2101CBF32C1A8109006C298D /* res_custom_notification.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = res_custom_notification.aiff; sourceTree = "<group>"; };
+		2148A0E32C1AC1B600000431 /* notificationProfile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = notificationProfile.entitlements; sourceTree = "<group>"; };
 		21CDC41B2BEACCF000617432 /* notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = notification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		21CDC41D2BEACCF000617432 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		21CDC41F2BEACCF000617432 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21CDC4282BEACD1600617432 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		21CDC4392BEAD10100617432 /* notification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = notification.entitlements; sourceTree = "<group>"; };
+		21CE3B1A2C1AB2A70079C1E9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		32EBD57E042683F4557418E9 /* Pods-notification.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notification.release.xcconfig"; path = "Target Support Files/Pods-notification/Pods-notification.release.xcconfig"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +133,7 @@
 		21CDC41C2BEACCF000617432 /* notification */ = {
 			isa = PBXGroup;
 			children = (
+				2148A0E32C1AC1B600000431 /* notificationProfile.entitlements */,
 				21CDC4392BEAD10100617432 /* notification.entitlements */,
 				21CDC41D2BEACCF000617432 /* NotificationService.swift */,
 				21CDC41F2BEACCF000617432 /* Info.plist */,
@@ -201,7 +207,9 @@
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
 				97C147021CF9000F007C117D /* Info.plist */,
+				2101CBF32C1A8109006C298D /* res_custom_notification.aiff */,
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
+				21CE3B1A2C1AB2A70079C1E9 /* GoogleService-Info.plist */,
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
@@ -351,6 +359,8 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				2101CBF42C1A8109006C298D /* res_custom_notification.aiff in Resources */,
+				21CE3B1B2C1AB2A70079C1E9 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,7 +660,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
+				CODE_SIGN_ENTITLEMENTS = notification/notificationProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 33SYJ25VQW;

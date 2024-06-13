@@ -26,6 +26,7 @@ import 'package:uniplanet/features/account/widgets/remove_product_dialog.dart';
 import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/widgets/seller_other_list.dart';
+import 'package:uniplanet/features/report/screen/report_screen.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/repository/index.dart';
@@ -362,23 +363,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             top: 0,
             left: 0,
             right: 0,
-            child: AppBar(
-              backgroundColor: Colors.transparent, // AppBar transparent
-              elevation: 0, // No shadow
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
             height:
                 100, // Adjust the height to control the extent of the gradient shadow
             child: Container(
@@ -414,7 +398,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           Positioned(
             top: 0,
-            left: MediaQuery.of(context).size.width * 0.8,
+            left: MediaQuery.of(context).size.width * 0.75,
             right: 0,
             child: AppBar(
               backgroundColor: Colors.transparent, // AppBar transparent
@@ -428,6 +412,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 onPressed: () {
                   shareProduct(context, widget.product.name,
                       widget.product.images.first);
+                },
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: MediaQuery.of(context).size.width * 0.85,
+            right: 0,
+            child: AppBar(
+              backgroundColor: Colors.transparent, // AppBar transparent
+              elevation: 0, // No shadow
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.menu_sharp,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  showOptions(
+                      context, widget.product.seller, widget.product.id);
                 },
               ),
             ),
@@ -629,4 +633,56 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           : const Text('Chat', style: TextStyle(color: Colors.white)),
     );
   }
+}
+
+void showOptions(BuildContext context, User client, String productId) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Wrap(
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(Icons.report),
+            title: const Text('Report'),
+            onTap: () {
+              Navigator.of(context).pop();
+              // Navigate to the report page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReportUserPage(
+                    client: client, // Pass the appropriate user object
+                    productId: productId, // Pass the appropriate product ID
+                  ),
+                ),
+              );
+            },
+          ),
+          // ListTile(
+          //   leading: const Icon(Icons.hide_source),
+          //   title: const Text("Hide this user's listing?"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     // Handle hiding the user's listing
+          //   },
+          // ),
+          ListTile(
+            leading: const Icon(Icons.cancel),
+            title: const Text('Cancel'),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          // ListTile(
+          //   leading: const Icon(Icons.block),
+          //   title: const Text('Block'),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     // Handle blocking the user
+          //   },
+          // ),
+        ],
+      );
+    },
+  );
 }

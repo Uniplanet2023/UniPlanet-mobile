@@ -1,5 +1,4 @@
 import 'package:flutter/rendering.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/functions/streamer.dart';
 import 'package:uniplanet/common/routes/names.dart';
@@ -23,7 +22,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _page = 0;
-  double bottomBarWidth = 42.w;
+  double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
   ScrollController? _controller;
   bool _isVisible = true;
@@ -131,7 +130,7 @@ class _BottomBarState extends State<BottomBar> {
                   children: [
                     Expanded(
                       child: Container(
-                        height: 40.h,
+                        height: 40,
                         margin: const EdgeInsets.only(left: 15),
                         child: Material(
                           borderRadius: BorderRadius.circular(7),
@@ -157,9 +156,10 @@ class _BottomBarState extends State<BottomBar> {
                                   ),
                                   SizedBox(width: 8),
                                   Text(
-                                    'Search College Market',
+                                    'Search Items',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
+                                      color: Colors.black26,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -172,7 +172,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     Container(
                       color: Colors.white,
-                      height: 20.h,
+                      height: 20,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       // child:
                       //     const Icon(Icons.mic, color: Colors.black, size: 25),
@@ -183,15 +183,15 @@ class _BottomBarState extends State<BottomBar> {
               BottomNavigationBar(
                 currentIndex: _page,
                 type: BottomNavigationBarType.fixed,
-                selectedItemColor: GlobalVariables.selectedNavBarColor,
+                selectedItemColor: GlobalVariables.secondaryColor,
                 unselectedItemColor: GlobalVariables.unselectedNavBarColor,
                 selectedLabelStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                 backgroundColor: GlobalVariables.backgroundColor,
                 enableFeedback: true,
-                iconSize: 20.sp,
-                selectedIconTheme: IconThemeData(size: 21.sp),
-                unselectedLabelStyle: TextStyle(fontSize: 12.sp),
+                iconSize: 20,
+                selectedIconTheme: const IconThemeData(size: 21),
+                unselectedLabelStyle: const TextStyle(fontSize: 12),
                 onTap: updatePage,
                 items: <BottomNavigationBarItem>[
                   const BottomNavigationBarItem(
@@ -221,8 +221,8 @@ class _BottomBarState extends State<BottomBar> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 constraints: const BoxConstraints(
-                                  minWidth: 10,
-                                  minHeight: 10,
+                                  minWidth: 5,
+                                  minHeight: 5,
                                 ),
                                 child: Text(
                                   state.totalUnseenMessageCount.toString(),
