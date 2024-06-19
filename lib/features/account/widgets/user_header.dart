@@ -1,17 +1,18 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
-import 'package:uniplanet/models/user.dart';
+import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/models/advertiser.dart';
 
 class UserHeader extends StatefulWidget {
-  final User currentUser;
+  final Account currentUser;
   const UserHeader({super.key, required this.currentUser});
 
   @override
@@ -113,6 +114,10 @@ class _UserHeaderState extends State<UserHeader> {
 
   @override
   Widget build(BuildContext context) {
+    Advertiser? advertiser;
+    if (widget.currentUser.type == "advertiser") {
+      advertiser = context.watch<AdvertiserBloc>().state.advertiser;
+    }
     return Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(20),
@@ -121,7 +126,7 @@ class _UserHeaderState extends State<UserHeader> {
           context,
           MaterialPageRoute(
             builder: (context) => UserProfileScreen(
-              user: widget.currentUser,
+              user: widget.currentUser.user,
             ),
           ),
         ),
@@ -141,8 +146,8 @@ class _UserHeaderState extends State<UserHeader> {
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      widget.currentUser.profileImage == null ||
-                              widget.currentUser.profileImage == ""
+                      widget.currentUser.user.profileImage == null ||
+                              widget.currentUser.user.profileImage == ""
                           ? const CircleAvatar(
                               backgroundColor: Colors.grey,
                               radius: 40,
@@ -159,7 +164,7 @@ class _UserHeaderState extends State<UserHeader> {
                                 backgroundImage: image != null
                                     ? FileImage(image!) as ImageProvider
                                     : CachedNetworkImageProvider(
-                                        widget.currentUser.profileImage!),
+                                        widget.currentUser.user.profileImage!),
                               ),
                             ),
                       Positioned(
@@ -188,16 +193,44 @@ class _UserHeaderState extends State<UserHeader> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.currentUser.name,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              widget.currentUser.user.name,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          widget.currentUser.type == "advertiser"
+                              ? const Icon(
+                                  Icons.campaign,
+                                  color: GlobalVariables.secondaryColor,
+                                )
+                              : const Icon(
+                                  Icons.verified,
+                                  color: GlobalVariables.secondaryColor,
+                                ),
+                        ],
                       ),
-                      Text(widget.currentUser.email),
+                      Text(widget.currentUser.user.email),
                       Text(
-                        widget.currentUser.school,
+                        widget.currentUser.user.school,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
+                      widget.currentUser.type == "advertiser"
+                          ? Text(
+                              "My Credits: ${(advertiser!.givenCredit - advertiser.usedCredit + advertiser.budget - advertiser.spent).toStringAsFixed(2)}\$ ",
+                              style: const TextStyle(
+                                color: GlobalVariables.secondaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                 ),

@@ -1,4 +1,3 @@
-// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -218,6 +217,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         TextButton(
                           onPressed: () {
                             // Proceed with deletion after confirmation
+                            Global.socketService
+                                .readAllMessages(widget.chatRoom.id);
                             context.read<ChatBloc>().add(DeleteChatRoomEvent(
                                 chatId: widget.chatRoom.id,
                                 clientId: widget.client.id));

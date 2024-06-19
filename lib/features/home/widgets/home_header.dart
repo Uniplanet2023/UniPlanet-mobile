@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 
 class HomeHeader extends StatefulWidget {
@@ -33,25 +32,24 @@ class _HomeHeaderState extends State<HomeHeader> {
             left: 10, top: Platform.isAndroid ? 40 : 50, bottom: 0),
         title: Column(
           children: [
-            Row(
+            const Row(
               children: [
-                const SizedBox(width: 5),
-                const Image(
+                SizedBox(width: 5),
+                Image(
                     image: AssetImage('assets/images/Logo_nbg.png'),
                     width: 30,
                     height: 30),
-                Text(
-                  'UniPlanet',
-                  // style: TextStyle(
-                  //   fontSize: 17,
-                  //   color: Colors.black,
-                  //   fontWeight: FontWeight.w600,
-                  // )
-                  style: GoogleFonts.satisfy(
+                Text('UniPlanet',
+                    style: TextStyle(
                       fontSize: 17,
                       color: Colors.black,
-                      fontWeight: FontWeight.w600),
-                ),
+                      fontWeight: FontWeight.w600,
+                    )
+                    // style: GoogleFonts.satisfy(
+                    //     fontSize: 17,
+                    //     color: Colors.black,
+                    //     fontWeight: FontWeight.w600),
+                    ),
               ],
             ),
             SizedBox(

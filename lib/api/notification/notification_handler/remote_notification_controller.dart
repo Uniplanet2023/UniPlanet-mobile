@@ -119,9 +119,8 @@ class NotificationController extends ChangeNotifier {
     try {
       _instance._firebaseToken =
           await AwesomeNotificationsFcm().requestFirebaseAppToken();
-      log(_instance._firebaseToken);
+
       await AwesomeNotifications().requestPermissionToSendNotifications();
-      log(await AwesomeNotificationsFcm().isFirebaseAvailable);
 
       if (_instance._firebaseToken == null) {
         throw Exception('Token is null');

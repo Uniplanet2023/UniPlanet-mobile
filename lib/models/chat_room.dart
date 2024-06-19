@@ -75,8 +75,12 @@ class ChatRoom {
   factory ChatRoom.fromMap(Map<String, dynamic> map) {
     return ChatRoom(
       id: map['id'],
-      seller: User.fromJson(map['seller']),
-      buyer: User.fromJson(map['buyer']),
+      seller: map['seller'] is Map
+          ? User.fromMap(map['seller'])
+          : User.fromJson(map['seller']),
+      buyer: map['buyer'] is Map
+          ? User.fromMap(map['buyer'])
+          : User.fromJson(map['buyer']),
       productId: map['productId'],
       productName: map['productName'] ?? "",
       lastMessage: map['lastMessage'] != null

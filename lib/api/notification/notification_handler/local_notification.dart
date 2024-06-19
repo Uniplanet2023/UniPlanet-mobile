@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -86,7 +88,7 @@ class LocalNotificationController {
       defaultPrivacy: NotificationPrivacy.Private,
       defaultColor: GlobalVariables.secondaryColor,
       ledColor: GlobalVariables.secondaryColor,
-      // soundSource: 'resource://raw/notification',
+      soundSource: 'resource://raw/res_custom_notification',
     ));
   }
 
@@ -103,7 +105,7 @@ class LocalNotificationController {
       enableLights: true,
       defaultColor: GlobalVariables.secondaryColor,
       ledColor: GlobalVariables.secondaryColor,
-      // soundSource: 'resource://raw/notification',
+      soundSource: 'resource://raw/res_custom_notification',
     ));
   }
 
@@ -141,10 +143,7 @@ class LocalNotificationController {
       return;
     }
     // Check if body starts with the specific URL and replace it
-    String modifiedBody =
-        body.startsWith("https://res.cloudinary.com/dtgmmfv3d/")
-            ? "image"
-            : body;
+    String modifiedBody = body.startsWith("https://") ? "image" : body;
     var resizedBigPicture = bigPicture;
     if (bigPicture != null) {
       resizedBigPicture =
@@ -186,8 +185,15 @@ class LocalNotificationController {
         displayNotificationRationale();
         return;
       }
-      if (receivedAction.payload != null) {
-        var chatRoom = ChatRoom.fromMap(receivedAction.payload!);
+      ChatRoom? chatRoom;
+      if (Platform.isAndroid && receivedAction.payload != null) {
+        chatRoom = ChatRoom.fromMap(receivedAction.payload!);
+      } else if (receivedAction.payload != null &&
+          receivedAction.payload!["iOS.content.payload.ios"] != null) {
+        chatRoom = ChatRoom.fromJson(
+            receivedAction.payload!["iOS.content.payload.ios"]!);
+      }
+      if (chatRoom != null) {
         var badgeCount = await AwesomeNotifications().getGlobalBadgeCounter();
         var currentBadgeCount = badgeCount - chatRoom.unseenMessageCount;
         if (currentBadgeCount > 0) {
@@ -206,14 +212,13 @@ class LocalNotificationController {
         MyApp.navigatorKey.currentState?.push(
           MaterialPageRoute(
             builder: (context) => ChatScreen(
-              chatRoom: chatRoom,
+              chatRoom: chatRoom!,
               client: AuthRepository.userId == chatRoom.seller.id
                   ? chatRoom.buyer
                   : chatRoom.seller,
             ),
           ),
         );
-        // }
       }
     } catch (e) {
       log(e);
@@ -255,8 +260,14 @@ class LocalNotificationController {
         bool isNotiAllowed =
             await AwesomeNotifications().requestPermissionToSendNotifications();
         pref.setBool('isNotificationAllowed', isNotiAllowed);
+        if (isNotiAllowed) {
+          await LocalNotificationController._instance.createMessageChannel();
+          await LocalNotificationController._instance.createScheduledChannel();
+        }
         return isNotiAllowed;
       } else {
+        await LocalNotificationController._instance.createMessageChannel();
+        await LocalNotificationController._instance.createScheduledChannel();
         pref.setBool('isNotificationAllowed', true);
       }
     } else {

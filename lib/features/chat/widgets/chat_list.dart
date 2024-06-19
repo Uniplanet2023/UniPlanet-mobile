@@ -13,12 +13,14 @@ class ChatList extends StatefulWidget {
   final String chatRoomId;
   final List<Message> messages;
   final User client;
-  const ChatList(
-      {super.key,
-      required this.scrollController,
-      required this.chatRoomId,
-      required this.messages,
-      required this.client});
+
+  const ChatList({
+    super.key,
+    required this.scrollController,
+    required this.chatRoomId,
+    required this.messages,
+    required this.client,
+  });
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -26,15 +28,19 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
-    // Add a listener to the scrollController here
-
     widget.scrollController.addListener(_scrollListener);
   }
 
-  // Define the scroll listener method
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
+
   void _scrollListener() {
     if (_debounce?.isActive ?? false) {
       _debounce!.cancel();
@@ -44,7 +50,6 @@ class _ChatListState extends State<ChatList> {
 
       if (widget.scrollController.position.pixels >=
           widget.scrollController.position.maxScrollExtent - 100) {
-        // Ensure this is called only when there are items in the list
         if (widget.messages.isNotEmpty) {
           context
               .read<MessageBloc>()
@@ -55,27 +60,19 @@ class _ChatListState extends State<ChatList> {
   }
 
   @override
-  void dispose() {
-    // Don't forget to remove the listener when the widget is disposed
-    widget.scrollController.removeListener(_scrollListener);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: ListView.builder(
-        itemCount: widget.messages.length +
-            2, // first item is typing indicator and last item is loading indicator
+        key: ValueKey('ChatList_${widget.chatRoomId}}'),
+        itemCount: widget.messages.length + 2,
         controller: widget.scrollController,
         cacheExtent: 100.0,
         reverse: true,
         itemBuilder: (context, index) {
           var itemNumber = index - 1;
-          // if it is the first item, return a typing indicator
           if (itemNumber == -1) {
             return BlocBuilder<TypingBloc, TypingState>(
               builder: (context, state) {
@@ -83,9 +80,7 @@ class _ChatListState extends State<ChatList> {
                     state.chatId == widget.chatRoomId) {
                   return const Align(
                     alignment: Alignment.centerRight,
-                    child: MessageBox(
-                      isMyMessage: false,
-                    ),
+                    child: MessageBox(isMyMessage: false),
                   );
                 } else {
                   return const SizedBox();
@@ -93,7 +88,6 @@ class _ChatListState extends State<ChatList> {
               },
             );
           }
-          // if it is the last item, return a loading indicator or nothing
 
           if (itemNumber == widget.messages.length) {
             return BlocBuilder<MessageBloc, MessageBlocState>(
@@ -101,24 +95,24 @@ class _ChatListState extends State<ChatList> {
                 if (state is EndMessageState || widget.messages.length < 19) {
                   return const SizedBox();
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             );
           }
-          // if there are messages, return a message card
+
           final Message oldMessage = widget.messages[itemNumber];
           Message? recentMessage;
           if (itemNumber > 0) {
             recentMessage = widget.messages[itemNumber - 1];
           }
           return MessageCard(
-              oldMessage: oldMessage,
-              recentMessage: recentMessage,
-              isMyMessage: oldMessage.sender == AuthRepository.userId,
-              client: widget.client);
+            key: ValueKey(recentMessage?.id),
+            oldMessage: oldMessage,
+            recentMessage: recentMessage,
+            isMyMessage: oldMessage.sender == AuthRepository.userId,
+            client: widget.client,
+          );
         },
       ),
     );

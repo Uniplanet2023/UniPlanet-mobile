@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
+import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/features/account/screens/account_settings_screen.dart';
+import 'package:uniplanet/features/account/screens/ad_statistic_screen.dart';
 import 'package:uniplanet/features/account/screens/help_screen.dart';
 import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/screens/liked_products_screen.dart';
@@ -11,7 +13,7 @@ import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
 import 'package:uniplanet/features/account/widgets/user_header.dart';
 import 'package:uniplanet/features/widgets/terms_and_policies.dart';
-import 'package:uniplanet/models/user.dart';
+import 'package:uniplanet/models/account.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -24,12 +26,15 @@ class _AccountScreen extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
+    if (context.read<AccountBloc>().state.account.type == "advertiser") {
+      context.read<AdvertiserBloc>().add(const GetAdvertiserInfoEvent());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    late final User currentUser;
-    currentUser = context.watch<AccountBloc>().state.account.user;
+    late final Account currentUser;
+    currentUser = context.watch<AccountBloc>().state.account;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 245, 252),
       appBar: AppBar(
@@ -52,14 +57,16 @@ class _AccountScreen extends State<AccountScreen> {
               child: Column(
                 children: [
                   MenuSection(
-                    title: 'My Listings',
+                    title: currentUser.type == "advertiser"
+                        ? "My Advertisements"
+                        : 'My Listings',
                     icon: Icons.inventory_sharp,
                     ontap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => InventoryProductsScreen(
-                            user: currentUser,
+                            user: currentUser.user,
                           ),
                         ),
                       );
@@ -70,14 +77,16 @@ class _AccountScreen extends State<AccountScreen> {
                     height: 5,
                   ),
                   MenuSection(
-                    title: 'Sold Products',
+                    title: currentUser.type == "advertiser"
+                        ? 'Closed Advertisements'
+                        : 'Sold Products',
                     icon: Icons.history,
                     ontap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SoldProductsScreen(
-                            user: currentUser,
+                            user: currentUser.user,
                           ),
                         ),
                       );
@@ -87,18 +96,32 @@ class _AccountScreen extends State<AccountScreen> {
                     thickness: 0.1,
                     height: 5,
                   ),
-                  MenuSection(
-                    title: 'Liked Products',
-                    icon: Icons.favorite_border_sharp,
-                    ontap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LikedProductsScreen(),
+                  currentUser.type == "advertiser"
+                      ? MenuSection(
+                          title: 'Ad Statistics',
+                          icon: Icons.stacked_bar_chart,
+                          ontap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AdStatisticsScreen()),
+                            );
+                          },
+                        )
+                      : MenuSection(
+                          title: 'Liked Products',
+                          icon: Icons.favorite_border_sharp,
+                          ontap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const LikedProductsScreen(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                   const Divider(
                     thickness: 0.1,
                     height: 5,

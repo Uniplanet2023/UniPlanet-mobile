@@ -6,11 +6,48 @@ import 'package:uniplanet/api/api_def/api_server_address.dart';
 import 'package:uniplanet/api/api_def/dio_client.dart';
 import 'package:uniplanet/api/api_def/display_error_messages.dart';
 import 'package:uniplanet/api/repository/account_repository/account_repo_interface.dart';
+import 'package:uniplanet/models/ad_stat.dart';
+import 'package:uniplanet/models/advertiser.dart';
 
 class AccountRepository implements IAccountRepository {
   final DioClient _dioClient;
 
   AccountRepository(this._dioClient);
+
+  Future<AdStat?> getAdStatistic() async {
+    try {
+      Response res = await _dioClient.dio
+          .get('$accountURI/ad-statistic', options: _dioClient.getDioOptions());
+
+      displayErrorMessages(res.toString());
+      AdStat adStat = AdStat.fromMap(res.data);
+      return adStat;
+    } catch (e) {
+      SnackbarGlobal.showSnackBar("Failed to get account info");
+
+      return null;
+    }
+  }
+
+  Future<Advertiser?> getAdvertiser() async {
+    try {
+      Response res = await _dioClient.dio.get('$accountURI/advertiser-info',
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        Advertiser advertiser = Advertiser.fromJson(res.data);
+        return advertiser;
+      } else {
+        throw Exception('Failed to get account info');
+      }
+    } catch (e) {
+      SnackbarGlobal.showSnackBar("Failed to get account info");
+
+      return null;
+    }
+  }
 
   Future<Account> getAccount() async {
     try {
@@ -27,6 +64,7 @@ class AccountRepository implements IAccountRepository {
         throw Exception('Failed to get account info');
       }
     } catch (e) {
+      SnackbarGlobal.showSnackBar("Failed to get account info");
       Account? account = await IsarService.instance.getAccount();
       if (account != null) {
         return account;

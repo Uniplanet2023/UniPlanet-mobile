@@ -6,10 +6,11 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/features/account/widgets/list_item.dart';
 import 'package:uniplanet/features/edit-product/edit_product.dart';
+import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/api/repository/index.dart';
 
@@ -215,6 +216,25 @@ class SlidableProduct extends StatelessWidget {
   final Product product;
   final int index;
 
+  void _markAsSold(int index, BuildContext context) {
+    // Delete from on sale and add to sold
+    context.read<OnSaleProductBloc>().add(
+          DeleteOnSaleProductEvent(
+            product: widget.productList[index],
+          ),
+        );
+    context.read<SoldProductBloc>().add(
+          AddSoldProductEvent(
+            product: widget.productList[index],
+          ),
+        );
+    widget.productList[index].status = 'Sold';
+
+    context
+        .read<ProductBloc>()
+        .add(UpdateProductEvent(product: widget.productList[index]));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
@@ -228,26 +248,12 @@ class SlidableProduct extends StatelessWidget {
         motion: const ScrollMotion(),
         dismissible: DismissiblePane(
           onDismissed: () {
-            context.read<OnSaleProductBloc>().add(
-                  DeleteOnSaleProductEvent(
-                    product: widget.productList[index],
-                  ),
-                );
-            context.read<SoldProductBloc>().add(
-                  AddSoldProductEvent(
-                    product: widget.productList[index],
-                  ),
-                );
-            widget.productList[index].status = 'Sold';
-
-            context
-                .read<ProductBloc>()
-                .add(UpdateProductEvent(product: widget.productList[index]));
+            _markAsSold(index, context);
           },
         ),
         children: [
           SlidableAction(
-            onPressed: (_) => {},
+            onPressed: (_) => {_markAsSold(index, context)},
             icon: Icons.done,
             label: 'Mark as Sold',
             backgroundColor: Colors.green,
@@ -288,7 +294,15 @@ class SlidableProduct extends StatelessWidget {
           ),
         ],
       ),
-      child: ListItem(product: product),
+      child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              AppRoutes.productDetailsPage,
+              arguments: product,
+            );
+          },
+          child: Item(product: product)),
     );
   }
 }

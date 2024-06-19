@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 import 'package:uniplanet/models/product.dart';
 
@@ -74,7 +75,18 @@ class _SearchedProductListState extends State<SearchedProductList> {
                     } else if (index == widget.products.length) {
                       return const SizedBox(height: 100);
                     }
-                    return Item(product: widget.products[index]);
+                    return InkWell(
+                        onTap: () {
+                          context.read<ProductBloc>().add(
+                              IncreaseClickProductEvent(
+                                  widget.products[index].id));
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.productDetailsPage,
+                            arguments: widget.products[index],
+                          );
+                        },
+                        child: Item(product: widget.products[index]));
                   },
                 ),
               );

@@ -32,28 +32,8 @@ const AccountModelSchema = CollectionSchema(
       name: r'isBlockedPost',
       type: IsarType.bool,
     ),
-    r'maximumClick': PropertySchema(
-      id: 3,
-      name: r'maximumClick',
-      type: IsarType.long,
-    ),
-    r'maximumPost': PropertySchema(
-      id: 4,
-      name: r'maximumPost',
-      type: IsarType.long,
-    ),
-    r'numberOfClick': PropertySchema(
-      id: 5,
-      name: r'numberOfClick',
-      type: IsarType.long,
-    ),
-    r'numberOfPost': PropertySchema(
-      id: 6,
-      name: r'numberOfPost',
-      type: IsarType.long,
-    ),
     r'type': PropertySchema(
-      id: 7,
+      id: 3,
       name: r'type',
       type: IsarType.string,
     )
@@ -98,11 +78,7 @@ void _accountModelSerialize(
   writer.writeBool(offsets[0], object.isBlocked);
   writer.writeBool(offsets[1], object.isBlockedChat);
   writer.writeBool(offsets[2], object.isBlockedPost);
-  writer.writeLong(offsets[3], object.maximumClick);
-  writer.writeLong(offsets[4], object.maximumPost);
-  writer.writeLong(offsets[5], object.numberOfClick);
-  writer.writeLong(offsets[6], object.numberOfPost);
-  writer.writeString(offsets[7], object.type);
+  writer.writeString(offsets[3], object.type);
 }
 
 AccountModel _accountModelDeserialize(
@@ -115,11 +91,7 @@ AccountModel _accountModelDeserialize(
     isBlocked: reader.readBool(offsets[0]),
     isBlockedChat: reader.readBool(offsets[1]),
     isBlockedPost: reader.readBool(offsets[2]),
-    maximumClick: reader.readLongOrNull(offsets[3]),
-    maximumPost: reader.readLongOrNull(offsets[4]),
-    numberOfClick: reader.readLong(offsets[5]),
-    numberOfPost: reader.readLong(offsets[6]),
-    type: reader.readString(offsets[7]),
+    type: reader.readString(offsets[3]),
   );
   object.isarId = id;
   return object;
@@ -139,14 +111,6 @@ P _accountModelDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
-    case 4:
-      return (reader.readLongOrNull(offset)) as P;
-    case 5:
-      return (reader.readLong(offset)) as P;
-    case 6:
-      return (reader.readLong(offset)) as P;
-    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -327,266 +291,6 @@ extension AccountModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'isarId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumClickIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'maximumClick',
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumClickIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'maximumClick',
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumClickEqualTo(int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'maximumClick',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumClickGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'maximumClick',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumClickLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'maximumClick',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumClickBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'maximumClick',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumPostIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'maximumPost',
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumPostIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'maximumPost',
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumPostEqualTo(int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'maximumPost',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumPostGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'maximumPost',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumPostLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'maximumPost',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      maximumPostBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'maximumPost',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfClickEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'numberOfClick',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfClickGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'numberOfClick',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfClickLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'numberOfClick',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfClickBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'numberOfClick',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfPostEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'numberOfPost',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfPostGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'numberOfPost',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfPostLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'numberOfPost',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition>
-      numberOfPostBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'numberOfPost',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -789,58 +493,6 @@ extension AccountModelQuerySortBy
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByMaximumClick() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumClick', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      sortByMaximumClickDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumClick', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByMaximumPost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumPost', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      sortByMaximumPostDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumPost', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByNumberOfClick() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfClick', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      sortByNumberOfClickDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfClick', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByNumberOfPost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfPost', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      sortByNumberOfPostDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfPost', Sort.desc);
-    });
-  }
-
   QueryBuilder<AccountModel, AccountModel, QAfterSortBy> sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -906,58 +558,6 @@ extension AccountModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByMaximumClick() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumClick', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      thenByMaximumClickDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumClick', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByMaximumPost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumPost', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      thenByMaximumPostDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'maximumPost', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByNumberOfClick() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfClick', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      thenByNumberOfClickDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfClick', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByNumberOfPost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfPost', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QAfterSortBy>
-      thenByNumberOfPostDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'numberOfPost', Sort.desc);
-    });
-  }
-
   QueryBuilder<AccountModel, AccountModel, QAfterSortBy> thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
@@ -993,31 +593,6 @@ extension AccountModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AccountModel, AccountModel, QDistinct> distinctByMaximumClick() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'maximumClick');
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QDistinct> distinctByMaximumPost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'maximumPost');
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QDistinct>
-      distinctByNumberOfClick() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'numberOfClick');
-    });
-  }
-
-  QueryBuilder<AccountModel, AccountModel, QDistinct> distinctByNumberOfPost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'numberOfPost');
-    });
-  }
-
   QueryBuilder<AccountModel, AccountModel, QDistinct> distinctByType(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1049,30 +624,6 @@ extension AccountModelQueryProperty
   QueryBuilder<AccountModel, bool, QQueryOperations> isBlockedPostProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isBlockedPost');
-    });
-  }
-
-  QueryBuilder<AccountModel, int?, QQueryOperations> maximumClickProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'maximumClick');
-    });
-  }
-
-  QueryBuilder<AccountModel, int?, QQueryOperations> maximumPostProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'maximumPost');
-    });
-  }
-
-  QueryBuilder<AccountModel, int, QQueryOperations> numberOfClickProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'numberOfClick');
-    });
-  }
-
-  QueryBuilder<AccountModel, int, QQueryOperations> numberOfPostProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'numberOfPost');
     });
   }
 

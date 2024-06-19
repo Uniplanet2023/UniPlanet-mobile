@@ -21,6 +21,7 @@ class AuthRepository implements IAuthRepository {
     required String password,
     required String name,
     required String school,
+    required bool isStudent,
   }) async {
     try {
       Response res = await _dioClient.dio.post('$authURI/signup',
@@ -28,7 +29,8 @@ class AuthRepository implements IAuthRepository {
             'name': name,
             'email': email,
             'password': password,
-            'school': school
+            'school': school,
+            'isStudent': isStudent
           },
           options: _dioClient.getDioOptions());
       String msg = displayErrorMessages(res.toString());
@@ -41,7 +43,8 @@ class AuthRepository implements IAuthRepository {
         return 'Failed';
       }
     } on DioException catch (e) {
-      return "Dio Error - $e";
+      log(e);
+      return "Failed";
     }
   }
 

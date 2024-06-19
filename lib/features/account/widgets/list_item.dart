@@ -43,7 +43,7 @@ class ListItem extends StatelessWidget {
                       child: product.images.isEmpty
                           ? const Icon(
                               Icons.image_not_supported,
-                              size: 135,
+                              size: 100,
                             )
                           : Container(
                               foregroundDecoration: const BoxDecoration(
@@ -56,7 +56,7 @@ class ListItem extends StatelessWidget {
                                 imageUrl: product.images[0],
                                 key: UniqueKey(),
                                 fit: BoxFit.cover,
-                                height: 135,
+                                height: 110,
                                 width: 135,
                                 placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator()),

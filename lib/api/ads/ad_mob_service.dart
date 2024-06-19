@@ -8,8 +8,8 @@ class AdMobService {
     if (Platform.isAndroid) {
       return 'ca-app-pub-9923099397206192/2555411269';
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/2934735716'; //Test ID
-      // return 'ca-app-pub-9923099397206192/8504321060';
+      // return 'ca-app-pub-3940256099942544/2934735716'; //Test ID
+      return 'ca-app-pub-9923099397206192/8504321060';
     }
     return null;
   }
@@ -18,8 +18,8 @@ class AdMobService {
     if (Platform.isAndroid) {
       return 'ca-app-pub-3940256099942544/9214589741';
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/9214589741'; //Test ID
-      // return 'ca-app-pub-9923099397206192/8504321060';
+      // return 'ca-app-pub-3940256099942544/9214589741'; //Test ID
+      return 'ca-app-pub-9923099397206192/8504321060';
     }
     return null;
   }

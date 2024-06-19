@@ -114,9 +114,12 @@ class SocketService {
           context
               .read<ChatBloc>()
               .add(UpdateChatRoomLastMessageEvent(receivedMessage));
+          // When the message is received, check if it's the current chat room
+          // If it is, read the message
           if (currentChatLocation == receivedMessage.chat &&
               receivedMessage.receiver == userId) {
             readAllMessages(currentChatLocation!);
+            // If the message is not the current chat room, update the unseen message count
           } else if (receivedMessage.receiver == userId) {
             context
                 .read<ChatBloc>()

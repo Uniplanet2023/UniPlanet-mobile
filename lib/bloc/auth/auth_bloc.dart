@@ -140,7 +140,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           email: event.email,
           password: event.password,
           name: event.name,
-          school: event.school);
+          school: event.school,
+          isStudent: event.isStudent);
       if (hash != 'Failed') {
         emit(SignupSuccessState(hash: hash));
       } else {

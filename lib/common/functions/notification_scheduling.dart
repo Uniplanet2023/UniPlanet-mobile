@@ -40,9 +40,9 @@ void notificationScheduling(List<Product> products, int id) async {
     DateTime scheduledTime = DateTime(
       now.year,
       now.month,
-      now.day, // Schedule for the next day
-      now.hour + 1 + index * 6, // Hour adjustment based on index
-      now.minute + 21 + index * 10, // Minute adjustment based on index
+      now.day + 1 + id % 10, // Schedule for the next day
+      now.hour, // Hour adjustment based on index
+      now.minute, // Minute adjustment based on index
     );
 
     // Ensure the scheduled time is valid

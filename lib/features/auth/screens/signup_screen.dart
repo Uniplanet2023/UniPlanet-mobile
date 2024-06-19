@@ -29,6 +29,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String? school = "";
   bool validPassword = false;
   bool isChecked = false;
+  bool isStudent = true;
 
   @override
   void dispose() {
@@ -121,6 +122,48 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                         ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: isStudent
+                                    ? GlobalVariables.secondaryColor
+                                    : Colors.grey[200],
+                              ),
+                              child: TextButton.icon(
+                                onPressed: () =>
+                                    setState(() => isStudent = true),
+                                icon: const Icon(Icons.school),
+                                label: const Text('Student'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      isStudent ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: !isStudent
+                                    ? GlobalVariables.secondaryColor
+                                    : Colors.grey[200],
+                              ),
+                              child: TextButton.icon(
+                                onPressed: () =>
+                                    setState(() => isStudent = false),
+                                icon: const Icon(Icons.campaign),
+                                label: const Text('Advertiser'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      !isStudent ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
                         CustomTextField(
                           controller: _nameController,
                           hintText: 'Name',
@@ -128,7 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(height: 10),
                         CustomTextField(
                           controller: _emailController,
-                          hintText: 'Email (.edu only)',
+                          hintText: isStudent ? 'Email (.edu only)' : 'Email',
                         ),
                         const SizedBox(height: 10),
                         DropdownSearch<String>(
@@ -139,11 +182,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 trackBorderColor: Colors.amber,
                               )),
                           items: universities,
-                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                          dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                              hintText: "Select School",
+                              hintText: isStudent
+                                  ? "Select School"
+                                  : "Select School Where You Want To Advertise",
                               focusColor: GlobalVariables.secondaryColor,
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.black38,
                                 ),
@@ -222,7 +267,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       school,
                                       validPassword,
                                       _passwordController.text,
-                                      isChecked);
+                                      isChecked,
+                                      isStudent);
                                 }
                               },
                             );

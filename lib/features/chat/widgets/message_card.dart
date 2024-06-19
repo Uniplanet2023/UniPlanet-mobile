@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -9,19 +8,22 @@ import 'package:uniplanet/common/widgets/full_image.dart';
 import 'package:uniplanet/common/widgets/selectable_text.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
+import 'package:uniplanet/features/chat/widgets/image_with_loading.dart';
+import 'package:uniplanet/features/chat/widgets/message_detail.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
 
 class MessageCard extends StatelessWidget {
   final Message oldMessage;
   final Message? recentMessage;
-  final bool isMyMessage; // Determines if the message is sent by the user
+  final bool isMyMessage;
   final User client;
+
   const MessageCard({
     super.key,
     required this.oldMessage,
     this.recentMessage,
-    required this.isMyMessage, // Add this to determine the message sender
+    required this.isMyMessage,
     required this.client,
   });
 
@@ -30,120 +32,110 @@ class MessageCard extends StatelessWidget {
     final DateFormat formatter = DateFormat('h:mm a');
     String formattedDate = formatter.format(oldMessage.createdAt.toLocal());
 
-    // Check for one-minute gap if not the first message and the same sender
     bool hidePreviousDate = false;
-    final difference =
-        recentMessage?.createdAt.difference(oldMessage.createdAt);
-
     if (recentMessage != null) {
       final bool isSameSender = oldMessage.sender == recentMessage!.sender;
-      if (isSameSender && difference!.inMinutes < 1) {
-        // Flag to hide date for the previous message
+      final difference =
+          recentMessage!.createdAt.difference(oldMessage.createdAt);
+      if (isSameSender && difference.inMinutes < 1) {
         hidePreviousDate = true;
       }
     }
 
-    List<Widget> messageComponents = [
-      // Date and Icon Row
-      Row(
-        children: [
-          Text(
-            !hidePreviousDate ? formattedDate : '',
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black54,
-            ),
-          ),
-          const SizedBox(width: 5),
-          oldMessage.status == MessageStatusEnum.sending.value
-              ? const SizedBox(
-                  height: 15,
-                  width: 15,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 4,
-                  ),
-                )
-              : oldMessage.status == MessageStatusEnum.received.value
-                  ? oldMessage.readDate == null
-                      ? const Text(
-                          'unseen',
-                          style: TextStyle(
-                              color: GlobalVariables.secondaryColor,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold),
-                        )
-                      : const SizedBox()
-                  : const Icon(
-                      Icons.error,
-                      size: 20,
-                      color: Colors.black54,
-                    )
-        ],
-      ),
-
-      // Message Card
-      MessageBox(isMyMessage: isMyMessage, oldMessage: oldMessage),
-
-      !hidePreviousDate && !isMyMessage
-          ? Container(
-              margin: const EdgeInsets.only(left: 15),
-              width: 30,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return UserProfileScreen(user: client);
-                    }),
-                  );
-                },
-                child: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(
-                    client.profileImage!,
-                    cacheManager: GlobalVariables.customCacheManager,
-                  ),
-                  radius: 18,
-                ),
-              ),
-            )
-          : !isMyMessage
-              ? const SizedBox(
-                  width: 48,
-                )
-              : const SizedBox()
-    ];
-
     return Column(
       children: [
-        // Show date and icon if not the first message
         Align(
           alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: isMyMessage
-                ? messageComponents
-                : messageComponents.reversed.toList(),
+                ? _buildMessageComponents(
+                    context, formattedDate, hidePreviousDate)
+                : _buildMessageComponents(
+                        context, formattedDate, hidePreviousDate)
+                    .reversed
+                    .toList(),
           ),
         ),
-        (recentMessage != null &&
-                oldMessage.createdAt.day < recentMessage!.createdAt.day)
-            ? Align(
-                alignment: Alignment.center,
-                child: Text(
-                  oldMessage.createdAt.day + 1 == DateTime.now().toLocal().day
-                      ? 'Yesterday'
-                      : oldMessage.createdAt.day + 1 <
-                              DateTime.now().toLocal().day
-                          ? DateFormat('d MMM').format(oldMessage.createdAt)
-                          : '',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.black54,
-                  ),
-                ),
-              )
-            : const SizedBox(),
+        if (recentMessage != null &&
+            oldMessage.createdAt.day < recentMessage!.createdAt.day)
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              oldMessage.createdAt.day + 1 == DateTime.now().toLocal().day
+                  ? 'Yesterday'
+                  : DateFormat('d MMM').format(oldMessage.createdAt),
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
+            ),
+          ),
       ],
+    );
+  }
+
+  List<Widget> _buildMessageComponents(
+      BuildContext context, String formattedDate, bool hidePreviousDate) {
+    return [
+      Row(
+        children: [
+          if (!hidePreviousDate)
+            Text(
+              formattedDate,
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
+            ),
+          const SizedBox(width: 5),
+          _buildMessageStatusIcon(),
+        ],
+      ),
+      MessageBox(isMyMessage: isMyMessage, oldMessage: oldMessage),
+      if (!hidePreviousDate && !isMyMessage)
+        _buildProfileAvatar(context)
+      else if (!isMyMessage)
+        const SizedBox(width: 48),
+    ];
+  }
+
+  Widget _buildMessageStatusIcon() {
+    if (oldMessage.status == MessageStatusEnum.sending.value) {
+      return const SizedBox(
+        height: 15,
+        width: 15,
+        child: CircularProgressIndicator(strokeWidth: 4),
+      );
+    } else if (oldMessage.status == MessageStatusEnum.received.value) {
+      return oldMessage.readDate == null
+          ? const Text(
+              'unseen',
+              style: TextStyle(
+                color: GlobalVariables.secondaryColor,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          : const SizedBox();
+    } else {
+      return const Icon(Icons.error, size: 20, color: Colors.black54);
+    }
+  }
+
+  Widget _buildProfileAvatar(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 15),
+      width: 30,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => UserProfileScreen(user: client),
+          ));
+        },
+        child: CircleAvatar(
+          backgroundImage: CachedNetworkImageProvider(
+            client.profileImage!,
+            cacheManager: GlobalVariables.customCacheManager,
+          ),
+          radius: 18,
+        ),
+      ),
     );
   }
 }
@@ -291,64 +283,5 @@ class MessageBox extends StatelessWidget {
             imagePath: oldMessage!.message,
             status: oldMessage!.status,
           );
-  }
-}
-
-class ImageWithLoadingIndicator extends StatelessWidget {
-  final String imagePath;
-  final String status;
-
-  const ImageWithLoadingIndicator({
-    super.key,
-    required this.imagePath,
-    required this.status,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        ClipRRect(
-          borderRadius:
-              BorderRadius.circular(12), // Rounded corners for the image
-          child: Image.file(File(imagePath), fit: BoxFit.cover), // Your image
-        ),
-        if (status == MessageStatusEnum.sending.value)
-          const SpinKitFadingCircle(color: Colors.blue, size: 50.0),
-        if (status == MessageStatusEnum.error.value)
-          const Icon(
-            Icons.error_sharp,
-            size: 100,
-            color: Colors.black54,
-          ),
-      ],
-    );
-  }
-}
-
-class MessageDetailScreen extends StatelessWidget {
-  final Message message;
-
-  const MessageDetailScreen({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Full Message"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: SizedBox(
-              width: double.infinity,
-              child: SelectableLinkText(
-                text: message.message,
-              )),
-        ),
-      ),
-    );
   }
 }

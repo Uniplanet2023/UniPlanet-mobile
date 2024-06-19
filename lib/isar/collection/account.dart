@@ -11,10 +11,6 @@ class AccountModel {
   late bool isBlocked;
   late bool isBlockedPost;
   late bool isBlockedChat;
-  late int? maximumPost; // this is for advertisement account
-  late int numberOfPost;
-  late int? maximumClick;
-  late int numberOfClick; // t
   final user = IsarLink<UserModel>();
 
   AccountModel({
@@ -22,10 +18,6 @@ class AccountModel {
     required this.isBlocked,
     required this.isBlockedPost,
     required this.isBlockedChat,
-    required this.maximumPost,
-    required this.numberOfPost,
-    required this.maximumClick,
-    required this.numberOfClick,
   });
 
   factory AccountModel.fromAccount(Account account) {
@@ -34,10 +26,6 @@ class AccountModel {
       isBlocked: account.isBlocked,
       isBlockedPost: account.isBlockedPost,
       isBlockedChat: account.isBlockedChat,
-      maximumPost: account.maximumPost,
-      numberOfPost: account.numberOfPost,
-      maximumClick: account.maximumClick,
-      numberOfClick: account.numberOfClick,
     );
   }
   Future<Account> toAccount() async {
@@ -47,10 +35,6 @@ class AccountModel {
       isBlocked: isBlocked,
       isBlockedPost: isBlockedPost,
       isBlockedChat: isBlockedChat,
-      maximumPost: maximumPost,
-      numberOfPost: numberOfPost,
-      maximumClick: maximumClick,
-      numberOfClick: numberOfClick,
       user: user.value!.toUser(),
     );
   }

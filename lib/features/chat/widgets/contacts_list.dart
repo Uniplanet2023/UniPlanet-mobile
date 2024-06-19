@@ -13,6 +13,7 @@ import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/features/report/screen/report_screen.dart';
+import 'package:uniplanet/global.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
@@ -69,6 +70,7 @@ class _ContactsListState extends State<ContactsList> {
       // ignore: constant_pattern_never_matches_value_type
       case ChatActions.delete:
         // Delete chat room
+        Global.socketService.readAllMessages(widget.list[index].id);
         context.read<ChatBloc>().add(DeleteChatRoomEvent(
             chatId: widget.list[index].id, clientId: client.id));
         setState(() {

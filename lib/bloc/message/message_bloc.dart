@@ -16,6 +16,7 @@ import 'package:uniplanet/models/message.dart';
 // Repository
 import 'package:uniplanet/api/repository/index.dart';
 import 'package:uniplanet/api/socket/socket_channel.dart';
+import 'package:uuid/uuid.dart';
 // Part of the bloc
 part 'message_bloc_event.dart';
 part 'message_bloc_state.dart';
@@ -331,7 +332,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   }
 
   _sendMessage(SendTextMessageEvent event, emit) async {
-    String uniqueId = UniqueKey().toString();
+    String uniqueId = const Uuid().v4();
     Message tempMessage = Message(
       id: uniqueId,
       chat: event.chatId,
