@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/isar/isar_service.dart';
@@ -8,25 +10,59 @@ import 'package:uniplanet/api/api_def/display_error_messages.dart';
 import 'package:uniplanet/api/repository/account_repository/account_repo_interface.dart';
 import 'package:uniplanet/models/ad_stat.dart';
 import 'package:uniplanet/models/advertiser.dart';
+import 'package:uniplanet/models/user_interaction.dart';
 
 class AccountRepository implements IAccountRepository {
   final DioClient _dioClient;
 
   AccountRepository(this._dioClient);
 
+  Future<List<UserInteraction>> getAdInteraction({int page = 1}) async {
+    List<UserInteraction> userInteractionList = [];
+    try {
+      Response res = await _dioClient.dio.get(
+          '$accountURI/ad-interaction/$page',
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+      if (msg == 'success') {
+        var dataList = jsonDecode(res.data);
+
+        if (dataList is List) {
+          for (var element in dataList) {
+            UserInteraction userInteraction = UserInteraction.fromMap(element);
+            userInteractionList.add(userInteraction);
+          }
+        } else {
+          log('Unexpected data format: $dataList');
+        }
+        return userInteractionList;
+      } else {
+        log('Error message: $msg');
+      }
+    } catch (e) {
+      log('Exception: $e');
+      SnackbarGlobal.showSnackBar("Failed to get account info");
+    }
+    return userInteractionList;
+  }
+
   Future<AdStat?> getAdStatistic() async {
     try {
       Response res = await _dioClient.dio
           .get('$accountURI/ad-statistic', options: _dioClient.getDioOptions());
 
-      displayErrorMessages(res.toString());
-      AdStat adStat = AdStat.fromMap(res.data);
-      return adStat;
+      String msg = displayErrorMessages(res.toString());
+      if (msg == "success") {
+        AdStat adStat = AdStat.fromMap(res.data);
+        return adStat;
+      }
     } catch (e) {
       SnackbarGlobal.showSnackBar("Failed to get account info");
 
       return null;
     }
+    return null;
   }
 
   Future<Advertiser?> getAdvertiser() async {

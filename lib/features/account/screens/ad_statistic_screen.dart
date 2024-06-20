@@ -9,6 +9,7 @@ import 'package:uniplanet/features/account/widgets/user_list.dart';
 import 'package:uniplanet/models/ad_stat.dart';
 import 'package:uniplanet/models/advertiser.dart';
 import 'package:uniplanet/models/click_count.dart';
+import 'package:uniplanet/models/user_interaction.dart';
 
 class AdStatisticsScreen extends StatefulWidget {
   const AdStatisticsScreen({super.key});
@@ -22,11 +23,14 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
   void initState() {
     super.initState();
     context.read<AdvertiserBloc>().add(const GetAdStatisticEvent());
+    context.read<AdvertiserBloc>().add(const GetUserInteractionEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     AdStat adStat = context.watch<AdvertiserBloc>().state.adStat;
+    List<UserInteraction> userInteraction =
+        context.watch<AdvertiserBloc>().state.userInteraction;
     List<ClickData> weeklySummary = adStat.recent7Days;
     Advertiser advertiser = context.read<AdvertiserBloc>().state.advertiser;
     return Scaffold(
@@ -109,7 +113,9 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
                         fontSize: 17)),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: UserList(), // No height restriction
+                  child: UserList(
+                      userInteractionList:
+                          userInteraction), // No height restriction
                 ),
               ],
             ),
