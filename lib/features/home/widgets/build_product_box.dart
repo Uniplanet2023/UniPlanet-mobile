@@ -79,7 +79,7 @@ class _ItemBoxState extends State<ItemBox> {
                 ? Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     child: SizedBox(
                       height: _bannerAd!.size.height.toDouble(),
                       width: _bannerAd!.size.width.toDouble(),
@@ -128,6 +128,7 @@ class Item extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
       child: Container(
         decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -209,7 +210,9 @@ class Item extends StatelessWidget {
                                               TextSpan(
                                                 text: '\$',
                                                 style: TextStyle(
-                                                    color: Colors.grey.shade800,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .tertiaryContainer,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
@@ -218,7 +221,9 @@ class Item extends StatelessWidget {
                                                     '${PriceFormatter(product.price).getDigit()}.',
                                                 style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.grey.shade800,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .tertiaryContainer,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -228,7 +233,9 @@ class Item extends StatelessWidget {
                                                     .getDecimal(),
                                                 style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.grey.shade800,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .tertiaryContainer,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -290,7 +297,9 @@ class Item extends StatelessWidget {
                             Text(
                               TimeAgoFormatter(product.updatedAt).format(),
                               style: TextStyle(
-                                color: Colors.grey.shade900,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .tertiaryContainer,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -331,16 +340,20 @@ class Item extends StatelessWidget {
                                                 color: Colors.red,
                                                 size: 18,
                                               )
-                                            : const Icon(Icons.favorite_border,
+                                            : Icon(Icons.favorite_border,
                                                 size: 18,
-                                                color: Colors.black38),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiaryContainer),
                                         product.likes == 0
                                             ? const SizedBox()
                                             : Text(
                                                 NumberFormatter(product.likes)
                                                     .format(),
-                                                style: const TextStyle(
-                                                    color: Colors.black38)),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .tertiaryContainer)),
                                       ],
                                     );
                                   },
@@ -350,18 +363,21 @@ class Item extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
-                                        Icons.chat_bubble_outline_rounded,
+                                    Icon(Icons.chat_bubble_outline_rounded,
                                         size: 17,
-                                        color: Colors.black38),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiaryContainer),
                                     product.numberOfChat == 0
                                         ? const SizedBox()
                                         : Text(
                                             NumberFormatter(
                                                     product.numberOfChat)
                                                 .format(),
-                                            style: const TextStyle(
-                                                color: Colors.black38))
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiaryContainer))
                                   ],
                                 ),
                               ],

@@ -24,7 +24,7 @@ class _HomeHeaderState extends State<HomeHeader> {
       pinned: false,
       snap: false,
       floating: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       toolbarHeight: Platform.isAndroid ? 122.h : 90.h,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
@@ -32,17 +32,17 @@ class _HomeHeaderState extends State<HomeHeader> {
             left: 10, top: Platform.isAndroid ? 40 : 50, bottom: 0),
         title: Column(
           children: [
-            const Row(
+            Row(
               children: [
-                SizedBox(width: 5),
-                Image(
+                const SizedBox(width: 5),
+                const Image(
                     image: AssetImage('assets/images/Logo_nbg.png'),
                     width: 30,
                     height: 30),
                 Text('UniPlanet',
                     style: TextStyle(
                       fontSize: 17,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.tertiary,
                       fontWeight: FontWeight.w600,
                     )
                     // style: GoogleFonts.satisfy(
@@ -70,7 +70,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       style: TextStyle(
                         color: widget.choiceCheapSelected == "All Items"
                             ? Colors.white
-                            : Colors.black,
+                            : Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
                     selected: widget.choiceCheapSelected == "All Items",
@@ -93,14 +93,14 @@ class _HomeHeaderState extends State<HomeHeader> {
                           size: 15,
                           color: widget.choiceCheapSelected == "Free Products"
                               ? Colors.white
-                              : Colors.black,
+                              : Theme.of(context).colorScheme.tertiary,
                         ),
                         Text(
                           ' Free Items',
                           style: TextStyle(
                             color: widget.choiceCheapSelected == "Free Products"
                                 ? Colors.white
-                                : Colors.black,
+                                : Theme.of(context).colorScheme.tertiary,
                           ),
                         ),
                       ],
@@ -128,14 +128,14 @@ class _HomeHeaderState extends State<HomeHeader> {
                           size: 15,
                           color: widget.choiceCheapSelected == "Hot Items"
                               ? Colors.white
-                              : Colors.black,
+                              : Theme.of(context).colorScheme.tertiary,
                         ),
                         Text(
                           ' Hot Items',
                           style: TextStyle(
                             color: widget.choiceCheapSelected == "Hot Items"
                                 ? Colors.white
-                                : Colors.black,
+                                : Theme.of(context).colorScheme.tertiary,
                           ),
                         ),
                       ],
@@ -161,14 +161,14 @@ class _HomeHeaderState extends State<HomeHeader> {
                           size: 15,
                           color: widget.choiceCheapSelected == "Buying"
                               ? Colors.white
-                              : Colors.black,
+                              : Theme.of(context).colorScheme.tertiary,
                         ),
                         Text(
                           ' Wanted to Buy',
                           style: TextStyle(
                             color: widget.choiceCheapSelected == "Buying"
                                 ? Colors.white
-                                : Colors.black,
+                                : Theme.of(context).colorScheme.tertiary,
                           ),
                         ),
                       ],

@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: choiceCheapSelected == "Free Products"
           ? freeItems(context)
           : choiceCheapSelected == "Hot Items"
@@ -175,49 +176,66 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return false;
         },
-        child: CustomScrollView(
-          controller: controller,
-          slivers: <Widget>[
-            HomeHeader(
-              choiceCheapSelected: choiceCheapSelected,
-              onChoiceChanged: _updateChoice,
-            ),
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: CustomScrollView(
+            controller: controller,
+            slivers: <Widget>[
+              HomeHeader(
+                choiceCheapSelected: choiceCheapSelected,
+                onChoiceChanged: _updateChoice,
+              ),
 
-            // Other slivers
-            if (_showLoadingIndicator)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50, top: 10),
-                  child: Center(child: CircularProgressIndicator()),
+              // Other slivers
+              if (_showLoadingIndicator)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ),
+              BlocBuilder<FreeProductBloc, FreeProductState>(
+                builder: (context, state) {
+                  if (state is LoadingFreeProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.productList,
+                    );
+                  }
+                },
               ),
-            BlocBuilder<FreeProductBloc, FreeProductState>(
-              builder: (context, state) {
-                if (state is LoadingFreeProductState) {
-                  return const SliverToBoxAdapter(
-                    child: Loader(),
-                  );
-                } else {
-                  return ItemBox(
-                    productList: state.productList,
-                  );
-                }
-              },
-            ),
-            if (_isFetchingMoreProducts)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100, top: 10),
-                  child: Center(child: CircularProgressIndicator()),
+
+              BlocBuilder<FreeProductBloc, FreeProductState>(
+                builder: (context, state) {
+                  if (state is LoadingFreeProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.productList,
+                    );
+                  }
+                },
+              ),
+              if (_isFetchingMoreProducts)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-            if (!_isFetchingMoreProducts)
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 200,
+              if (!_isFetchingMoreProducts)
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -250,49 +268,66 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return false;
         },
-        child: CustomScrollView(
-          controller: controller,
-          slivers: <Widget>[
-            HomeHeader(
-              choiceCheapSelected: choiceCheapSelected,
-              onChoiceChanged: _updateChoice,
-            ),
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: CustomScrollView(
+            controller: controller,
+            slivers: <Widget>[
+              HomeHeader(
+                choiceCheapSelected: choiceCheapSelected,
+                onChoiceChanged: _updateChoice,
+              ),
 
-            // Other slivers
-            if (_showLoadingIndicator)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50, top: 10),
-                  child: Center(child: CircularProgressIndicator()),
+              // Other slivers
+              if (_showLoadingIndicator)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ),
+              BlocBuilder<WantedProductBloc, WantedProductState>(
+                builder: (context, state) {
+                  if (state is LoadingFreeProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.productList,
+                    );
+                  }
+                },
               ),
-            BlocBuilder<WantedProductBloc, WantedProductState>(
-              builder: (context, state) {
-                if (state is LoadingFreeProductState) {
-                  return const SliverToBoxAdapter(
-                    child: Loader(),
-                  );
-                } else {
-                  return ItemBox(
-                    productList: state.productList,
-                  );
-                }
-              },
-            ),
-            if (_isFetchingMoreProducts)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100, top: 10),
-                  child: Center(child: CircularProgressIndicator()),
+
+              BlocBuilder<WantedProductBloc, WantedProductState>(
+                builder: (context, state) {
+                  if (state is LoadingFreeProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.productList,
+                    );
+                  }
+                },
+              ),
+              if (_isFetchingMoreProducts)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-            if (!_isFetchingMoreProducts)
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 200,
+              if (!_isFetchingMoreProducts)
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -322,49 +357,66 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return false;
         },
-        child: CustomScrollView(
-          controller: controller,
-          slivers: <Widget>[
-            HomeHeader(
-              choiceCheapSelected: choiceCheapSelected,
-              onChoiceChanged: _updateChoice,
-            ),
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: CustomScrollView(
+            controller: controller,
+            slivers: <Widget>[
+              HomeHeader(
+                choiceCheapSelected: choiceCheapSelected,
+                onChoiceChanged: _updateChoice,
+              ),
 
-            // Other slivers
-            if (_showLoadingIndicator)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50, top: 10),
-                  child: Center(child: CircularProgressIndicator()),
+              // Other slivers
+              if (_showLoadingIndicator)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ),
+              BlocBuilder<HotProductBloc, HotProductState>(
+                builder: (context, state) {
+                  if (state is LoadingHotProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.hotProducts,
+                    );
+                  }
+                },
               ),
-            BlocBuilder<HotProductBloc, HotProductState>(
-              builder: (context, state) {
-                if (state is LoadingHotProductState) {
-                  return const SliverToBoxAdapter(
-                    child: Loader(),
-                  );
-                } else {
-                  return ItemBox(
-                    productList: state.hotProducts,
-                  );
-                }
-              },
-            ),
-            if (_isFetchingMoreProducts)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100, top: 10),
-                  child: Center(child: CircularProgressIndicator()),
+
+              BlocBuilder<HotProductBloc, HotProductState>(
+                builder: (context, state) {
+                  if (state is LoadingHotProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.hotProducts,
+                    );
+                  }
+                },
+              ),
+              if (_isFetchingMoreProducts)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100, top: 10),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-            if (!_isFetchingMoreProducts)
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 200,
+              if (!_isFetchingMoreProducts)
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

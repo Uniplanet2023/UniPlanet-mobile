@@ -24,10 +24,12 @@ class ReportDetailPageState extends State<ReportDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Text(widget.reportType,
             maxLines: 2,
-            style: const TextStyle(color: Colors.black, fontSize: 18)),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.tertiary, fontSize: 18)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -66,9 +68,12 @@ class ReportDetailPageState extends State<ReportDetailPage> {
                   : null,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.blue,
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
-              child: const Text('Send to the Team'),
+              child: Text(
+                'Send to the Team',
+                style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+              ),
             ),
           ],
         ),

@@ -6,7 +6,6 @@ import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/auth/screens/forgotten_password_screen.dart';
 import 'package:uniplanet/features/auth/screens/signup_screen.dart';
 import 'package:uniplanet/features/auth/widgets/bezier_container.dart';
@@ -48,9 +47,9 @@ class _SigninScreenState extends State<SigninScreen> {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: const Icon(
+              child: Icon(
                 Icons.keyboard_arrow_left,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.tertiary,
                 size: 40,
               ),
             ),
@@ -72,6 +71,7 @@ class _SigninScreenState extends State<SigninScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixedDim,
         body: Stack(
           children: [
             Positioned(
@@ -147,11 +147,12 @@ class _SigninScreenState extends State<SigninScreen> {
                                               const SignupScreen()),
                                     );
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "Sign Up",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: GlobalVariables.secondaryColor,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                 ),
@@ -170,11 +171,12 @@ class _SigninScreenState extends State<SigninScreen> {
                                               const ResetPasswordPage()),
                                     );
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "Reset Password",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: GlobalVariables.secondaryColor,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                 ),

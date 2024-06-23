@@ -7,7 +7,6 @@ import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/auth/functions/signup.dart';
 import 'package:uniplanet/features/auth/widgets/bezier_container.dart';
 import 'package:uniplanet/features/auth/widgets/terms_and_conditions.dart';
@@ -50,9 +49,9 @@ class _SignupScreenState extends State<SignupScreen> {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: const Icon(
+              child: Icon(
                 Icons.keyboard_arrow_left,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.tertiary,
                 size: 40,
               ),
             ),
@@ -71,9 +70,9 @@ class _SignupScreenState extends State<SignupScreen> {
         WidgetState.focused,
       };
       if (states.any(interactiveStates.contains)) {
-        return Colors.white;
+        return Theme.of(context).colorScheme.secondaryFixedDim;
       }
-      return Colors.white;
+      return Theme.of(context).colorScheme.secondaryFixedDim;
     }
 
     return BlocListener<AuthBloc, AuthState>(
@@ -91,6 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.secondaryFixedDim,
         body: Stack(
           children: [
             Positioned(
@@ -128,8 +128,10 @@ class _SignupScreenState extends State<SignupScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: isStudent
-                                    ? GlobalVariables.secondaryColor
-                                    : Colors.grey[200],
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .secondaryFixedDim,
                               ),
                               child: TextButton.icon(
                                 onPressed: () =>
@@ -137,8 +139,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 icon: const Icon(Icons.school),
                                 label: const Text('Student'),
                                 style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      isStudent ? Colors.white : Colors.black,
+                                  foregroundColor: isStudent
+                                      ? Theme.of(context).colorScheme.surface
+                                      : Theme.of(context).colorScheme.tertiary,
                                 ),
                               ),
                             ),
@@ -147,8 +150,10 @@ class _SignupScreenState extends State<SignupScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: !isStudent
-                                    ? GlobalVariables.secondaryColor
-                                    : Colors.grey[200],
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .secondaryFixedDim,
                               ),
                               child: TextButton.icon(
                                 onPressed: () =>
@@ -156,8 +161,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 icon: const Icon(Icons.campaign),
                                 label: const Text('Advertiser'),
                                 style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      !isStudent ? Colors.white : Colors.black,
+                                  foregroundColor: !isStudent
+                                      ? Theme.of(context).colorScheme.surface
+                                      : Theme.of(context).colorScheme.tertiary,
                                 ),
                               ),
                             ),
@@ -187,12 +193,14 @@ class _SignupScreenState extends State<SignupScreen> {
                               hintText: isStudent
                                   ? "Select School"
                                   : "Select School Where You Want To Advertise",
-                              focusColor: GlobalVariables.secondaryColor,
-                              enabledBorder: const OutlineInputBorder(
+                              focusColor: Theme.of(context).colorScheme.primary,
+                              enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Colors.black38,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryFixedDim,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(4.0),
                                 ),
                               ),
@@ -235,7 +243,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              checkColor: GlobalVariables.secondaryColor,
+                              checkColor: Theme.of(context).colorScheme.primary,
                               fillColor:
                                   WidgetStateProperty.resolveWith(getColor),
                               value: isChecked,
@@ -284,11 +292,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: const Text(
+                                child: Text(
                                   "Sign In",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: GlobalVariables.secondaryColor,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                               ),

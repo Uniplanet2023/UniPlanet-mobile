@@ -48,6 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
     SearchProductState searchState = context.watch<SearchProductBloc>().state;
     SearchHistoryState historyState = context.watch<SearchHistoryBloc>().state;
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
@@ -84,13 +85,12 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                             child: Icon(
                               Icons.search,
-                              color: Colors.black,
                               size: 23,
                             ),
                           ),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Theme.of(context).colorScheme.secondary,
                         contentPadding: const EdgeInsets.only(top: 10),
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -98,12 +98,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           borderSide: BorderSide.none,
                         ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(7),
                           ),
                           borderSide: BorderSide(
-                            color: Colors.black38,
+                            color:
+                                Theme.of(context).colorScheme.tertiaryContainer,
                             width: 1,
                           ),
                         ),

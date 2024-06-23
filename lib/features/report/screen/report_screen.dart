@@ -11,11 +11,13 @@ class ReportUserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-          title: const Text(
+          title: Text(
         'Select a reason for reporting',
         maxLines: 2,
-        style: TextStyle(color: Colors.black, fontSize: 18),
+        style: TextStyle(
+            color: Theme.of(context).colorScheme.tertiary, fontSize: 18),
       )),
       body: ListView(
         children: [

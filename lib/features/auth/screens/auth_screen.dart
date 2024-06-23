@@ -2,7 +2,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/auth/screens/signin_screen.dart';
 import 'package:uniplanet/features/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           Positioned(
@@ -61,7 +60,7 @@ class AuthScreen extends StatelessWidget {
                         style: GoogleFonts.montserrat(
                           fontSize: 30,
                           fontWeight: FontWeight.w800,
-                          color: GlobalVariables.secondaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         atRestEffect: WidgetRestingEffects.wave(),
                       ),

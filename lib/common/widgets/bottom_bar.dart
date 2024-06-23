@@ -1,7 +1,6 @@
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/functions/streamer.dart';
 import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/account_screen.dart';
 import 'package:uniplanet/features/add-product/screens/add_product_screen.dart';
 import 'package:uniplanet/features/category/screens/category_layout_screen.dart';
@@ -98,7 +97,7 @@ class _BottomBarState extends State<BottomBar> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 padding: _isVisible
                     ? const EdgeInsets.fromLTRB(0, 8, 0, 10)
                     : const EdgeInsets.fromLTRB(0, 8, 0, 40),
@@ -119,24 +118,31 @@ class _BottomBarState extends State<BottomBar> {
                             child: Container(
                               padding: const EdgeInsets.only(left: 12),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                border:
-                                    Border.all(color: Colors.black38, width: 1),
+                                color: Theme.of(context).colorScheme.surface,
+                                border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryFixedDim,
+                                    width: 1),
                                 borderRadius: BorderRadius.circular(7),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Icon(
                                     Icons.search,
-                                    color: Colors.black54,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer,
                                     size: 20,
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
                                     'Search Items',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      color: Colors.black26,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiaryContainer,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -148,7 +154,7 @@ class _BottomBarState extends State<BottomBar> {
                       ),
                     ),
                     Container(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       height: 20,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       // child:
@@ -160,11 +166,11 @@ class _BottomBarState extends State<BottomBar> {
               BottomNavigationBar(
                 currentIndex: _page,
                 type: BottomNavigationBarType.fixed,
-                selectedItemColor: GlobalVariables.secondaryColor,
-                unselectedItemColor: GlobalVariables.unselectedNavBarColor,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                unselectedItemColor: Theme.of(context).colorScheme.tertiary,
                 selectedLabelStyle:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                backgroundColor: GlobalVariables.backgroundColor,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 enableFeedback: true,
                 iconSize: 20,
                 selectedIconTheme: const IconThemeData(size: 21),

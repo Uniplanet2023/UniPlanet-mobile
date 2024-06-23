@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/terms_and_policies.dart';
 
 class TermsAndConditions extends StatefulWidget {
@@ -19,15 +18,15 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
         text: TextSpan(
           text:
               'The person must agree to abide by the terms of services in order to continue: ',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
-            color: Colors.black87,
+            color: Theme.of(context).colorScheme.tertiary,
           ),
           children: <TextSpan>[
             TextSpan(
                 text: 'Terms and Conditions',
-                style: const TextStyle(
-                  color: GlobalVariables.secondaryColor,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline,
                 ),

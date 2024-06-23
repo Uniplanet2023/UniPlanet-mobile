@@ -11,6 +11,7 @@ import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
 import 'package:uniplanet/bloc/seller_sale_product/seller_sale_product_bloc.dart';
 import 'package:uniplanet/bloc/seller_sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/bloc/theme/theme_cubit.dart';
 import 'package:uniplanet/bloc/wanted_product/wanted_product_bloc.dart';
 import 'package:uniplanet/main.dart';
 import 'api/repository/index.dart';
@@ -94,7 +95,13 @@ class StateManagerProvider extends StatelessWidget {
               create: (context) =>
                   AdvertiserBloc(context.read<AccountRepository>())),
           BlocProvider(
-              create: (context) => AdminBloc(context.read<AccountRepository>()))
+              create: (context) =>
+                  AdminBloc(context.read<AccountRepository>())),
+          BlocProvider(
+            create: (context) =>
+                AdvertiserBloc(context.read<AccountRepository>()),
+          ),
+          BlocProvider(create: (context) => ThemeCubit()),
         ], child: const MyApp()));
   }
 }

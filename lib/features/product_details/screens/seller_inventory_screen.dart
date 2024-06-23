@@ -48,6 +48,7 @@ class _SellerProductsScreenState extends State<SellerProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text('Listings'),
       ),

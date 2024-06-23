@@ -22,6 +22,9 @@ class GlobalVariables {
     Color.fromRGBO(68, 108, 244, 1)
   ];
 
+  static const darkBackgroundColor = Colors.black;
+  static const darkSecondaryBackgroundColor = Colors.black54;
+
   // STATIC IMAGES
   static final customCacheManager = CacheManager(Config(
     'customCacheKey',
