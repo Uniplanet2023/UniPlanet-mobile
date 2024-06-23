@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/get_product/get_product_bloc.dart';
 import 'package:uniplanet/bloc/status/status_bloc.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/widgets/bottom_chat_bar.dart';
@@ -117,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: GlobalVariables.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           title: BlocBuilder<StatusBloc, StatusState>(
             builder: (context, state) {
               return Column(
@@ -298,9 +297,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 padding: const EdgeInsets.all(0),
                                 child: Text(
                                   '\$${state.product!.price}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 20,
-                                    color: Colors.black,
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -310,8 +310,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 label: const Text('Product Detail'),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor:
-                                      GlobalVariables.secondaryColor,
-                                  side: const BorderSide(color: Colors.black),
+                                      Theme.of(context).colorScheme.primary,
+                                  side: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiaryContainer),
                                 ),
                                 onPressed: () {
                                   // Review Product

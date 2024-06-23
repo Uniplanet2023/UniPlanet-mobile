@@ -36,9 +36,9 @@ class _AccountScreen extends State<AccountScreen> {
     late final Account currentUser;
     currentUser = context.watch<AccountBloc>().state.account;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 242, 245, 252),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 234, 239, 252),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         title: const Text('My Account'),
       ),
       body: SingleChildScrollView(
@@ -253,7 +253,7 @@ class _AccountScreen extends State<AccountScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Text("Version 1.0")
+            const Text("Version 1.3.3")
           ],
         ),
       ),

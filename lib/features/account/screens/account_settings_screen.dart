@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/theme/theme_cubit.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/screens/change_password_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
 import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
+
+import '../../../theme/theme.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -21,6 +23,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   bool validPassword = false;
   bool notify = false;
+  bool theme = false;
   @override
   void initState() {
     super.initState();
@@ -49,6 +52,16 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     },
   );
 
+  final WidgetStateProperty<Icon?> displayIcon =
+      WidgetStateProperty.resolveWith<Icon?>(
+    (Set<WidgetState> states) {
+      if (states.contains(WidgetState.selected)) {
+        return const Icon(Icons.dark_mode_outlined);
+      }
+      return const Icon(Icons.light_mode_outlined);
+    },
+  );
+
   void updateName(String newName) {
     context.read<AccountBloc>().add(UpdateNameEvent(name: newName));
   }
@@ -64,6 +77,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     setState(() {});
   }
 
+  void updateTheme(bool currentTheme) async {
+    final cubit = context.read<ThemeCubit>();
+
+    theme = !theme;
+
+    cubit.toggleTheme();
+  }
+
   @override
   void dispose() {
     _updateNameController.dispose();
@@ -74,9 +95,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.greyBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: GlobalVariables.greyBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Account Settings'),
       ),
       body: SingleChildScrollView(
@@ -171,13 +192,52 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                     transition: Switch(
                       thumbIcon: thumbIcon,
                       value: notify,
-                      activeColor: GlobalVariables.secondaryColor,
+                      activeColor: Theme.of(context).colorScheme.primary,
                       onChanged: (bool value) {
                         // This is called when the user toggles the switch.
                         updateNotification(value);
                       },
                     ),
                     ontap: () {},
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Container(
+              alignment: Alignment.bottomLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: const Text(
+                "Display Theme",
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Material(
+              elevation: 4,
+              borderRadius: BorderRadius.circular(20),
+              child: Column(
+                children: [
+                  BlocBuilder<ThemeCubit, ThemeData>(
+                    builder: (context, state) {
+                      bool isDarkMode = state == darkMode;
+                      return MenuSection(
+                        title: 'Appearance',
+                        icon: Icons.light_mode_outlined,
+                        transition: Switch(
+                          thumbIcon: displayIcon,
+                          value: isDarkMode,
+                          activeColor: Theme.of(context).colorScheme.primary,
+                          onChanged: (bool value) {
+                            updateTheme(value);
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

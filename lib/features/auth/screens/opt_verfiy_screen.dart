@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/auth/functions/opt_verification.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
@@ -39,7 +38,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         ),
         body: Container(
           padding: const EdgeInsets.all(8),
-          color: GlobalVariables.backgroundColor,
+          color: Theme.of(context).colorScheme.surface,
           child: Form(
             key: _otpFormKey,
             child: Column(
@@ -68,15 +67,17 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       controller: _otpController,
                       maxLength: 5,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                           hintText: 'Verification number',
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.black38,
+                            color:
+                                Theme.of(context).colorScheme.tertiaryContainer,
                           )),
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.black38,
+                            color:
+                                Theme.of(context).colorScheme.tertiaryContainer,
                           ))),
                       validator: (val) {
                         if (val == null || val.isEmpty) {
@@ -116,11 +117,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             .read<AuthBloc>()
                             .add(RequestOtpEvent(widget.email));
                       },
-                      child: const Text(
+                      child: Text(
                         "Resend Verification number",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: GlobalVariables.secondaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     );

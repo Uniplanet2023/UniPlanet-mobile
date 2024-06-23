@@ -3,7 +3,6 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/widgets/custom_button.dart';
 import 'package:uniplanet/common/widgets/custom_textfield.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -62,9 +61,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalVariables.greyBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: GlobalVariables.greyBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text('Change Password'),
       ),
       body: SingleChildScrollView(
@@ -101,26 +100,28 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   : null, // Apply green border if passwords match
             ),
             const SizedBox(height: 10),
-            FlutterPwValidator(
-                controller: _updatePasswordController,
-                minLength: 8,
-                uppercaseCharCount: 1,
-                lowercaseCharCount: 2,
-                numericCharCount: 1,
-                specialCharCount: 1,
-                width: 350,
-                height: 150,
-                defaultColor: Colors.black,
-                onSuccess: () {
-                  setState(() {
-                    validPassword = true;
-                  });
-                },
-                onFail: () {
-                  setState(() {
-                    validPassword = false;
-                  });
-                }),
+            Center(
+              child: FlutterPwValidator(
+                  controller: _updatePasswordController,
+                  minLength: 8,
+                  uppercaseCharCount: 1,
+                  lowercaseCharCount: 2,
+                  numericCharCount: 1,
+                  specialCharCount: 1,
+                  width: 350,
+                  height: 150,
+                  defaultColor: Theme.of(context).colorScheme.tertiary,
+                  onSuccess: () {
+                    setState(() {
+                      validPassword = true;
+                    });
+                  },
+                  onFail: () {
+                    setState(() {
+                      validPassword = false;
+                    });
+                  }),
+            ),
             const SizedBox(
               height: 30,
             ),

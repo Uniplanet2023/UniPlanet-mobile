@@ -148,6 +148,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -159,6 +160,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ? const SizedBox()
                     : Center(
                         child: DotsIndicator(
+                          decorator: DotsDecorator(
+                              activeColor:
+                                  Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.tertiary),
                           dotsCount: widget.product.images.length,
                           position: currentIndex,
                         ),
@@ -200,9 +205,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         SelectableText(
                           widget.product.seller.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
-                            color: Colors.black,
+                            color: Theme.of(context).colorScheme.tertiary,
                             fontWeight: FontWeight.bold,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -212,9 +217,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   ),
                 ),
-                const Divider(
+                Divider(
                   height: 4,
-                  color: Colors.black12,
+                  color: Theme.of(context).colorScheme.tertiaryFixedDim,
                   indent: 8,
                   endIndent: 8,
                 ),
@@ -222,9 +227,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: SelectableText(
                     widget.product.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.tertiary,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -264,9 +269,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: RichText(
                     text: TextSpan(
                         text: 'Where to meet: ',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.tertiary,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -283,13 +288,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ]),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
                   child: Text(
                     'Description:',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.tertiary,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -303,9 +309,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                const Divider(
+                Divider(
                   height: 4,
-                  color: Colors.black12,
+                  color: Theme.of(context).colorScheme.tertiaryFixedDim,
                   indent: 8,
                   endIndent: 8,
                 ),
@@ -320,7 +326,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         'Seller\'s Other Products',
                         style: TextStyle(
                           fontSize: 20,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.tertiary,
                           fontFamily: GoogleFonts.roboto().fontFamily,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
@@ -447,9 +453,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: RichText(
         text: TextSpan(
           text: 'Price: ',
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 16,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.tertiary,
               fontWeight: FontWeight.bold,
               overflow: TextOverflow.ellipsis),
           children: [
@@ -626,8 +632,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               productName: widget.product.name,
             ))
       },
-      style:
-          TextButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
+      style: TextButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary),
       child: state is CreatingChatRoomState
           ? const CircularProgressIndicator()
           : const Text('Chat', style: TextStyle(color: Colors.white)),

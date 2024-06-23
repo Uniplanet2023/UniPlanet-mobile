@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/chat/widgets/contacts_list.dart';
 import 'package:uniplanet/api/ads/ad_mob_service.dart';
 
@@ -67,17 +66,18 @@ class _ChatListState extends State<ChatList> {
     return BlocBuilder<ChatBloc, ChatBlocState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: AppBar(
               elevation: 0,
-              backgroundColor: GlobalVariables.backgroundColor,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               centerTitle: false,
-              title: const Text(
+              title: Text(
                 'Chats',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.tertiary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -90,15 +90,16 @@ class _ChatListState extends State<ChatList> {
                 child: Expanded(
                   child: Column(
                     children: [
-                      const TabBar(
-                        indicatorColor: GlobalVariables.secondaryColor,
+                      TabBar(
+                        indicatorColor: Theme.of(context).colorScheme.primary,
                         indicatorWeight: 4,
-                        labelColor: GlobalVariables.secondaryColor,
-                        unselectedLabelColor: Colors.grey,
-                        labelStyle: TextStyle(
+                        labelColor: Theme.of(context).colorScheme.primary,
+                        unselectedLabelColor:
+                            Theme.of(context).colorScheme.tertiaryContainer,
+                        labelStyle: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
-                        tabs: [
+                        tabs: const [
                           Tab(
                             text: 'By User',
                           ),

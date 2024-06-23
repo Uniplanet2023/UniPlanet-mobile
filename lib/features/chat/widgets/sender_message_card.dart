@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/models/message.dart';
 
 class SenderMessageCard extends StatelessWidget {
@@ -28,7 +27,7 @@ class SenderMessageCard extends StatelessWidget {
               elevation: 1,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              color: GlobalVariables.primaryColor,
+              color: Theme.of(context).colorScheme.primaryFixedDim,
               margin: const EdgeInsets.fromLTRB(15, 5, 5, 5),
               child: Padding(
                 padding: const EdgeInsets.only(

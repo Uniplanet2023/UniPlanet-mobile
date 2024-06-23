@@ -26,17 +26,18 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
         child: AppBar(
           elevation: 0,
-          backgroundColor: GlobalVariables.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           centerTitle: false,
-          title: const Text(
+          title: Text(
             'Categories',
             style: TextStyle(
               fontSize: 20,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.tertiary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -49,7 +50,9 @@ class _CategoryPageState extends State<CategoryPage> {
             Container(
               margin: const EdgeInsets.only(top: 0),
               height: 2, // Thickness of the line
-              color: Colors.grey[200], // Color of the line
+              color: Theme.of(context)
+                  .colorScheme
+                  .secondaryFixedDim, // Color of the line
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -75,7 +78,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
                         ],
@@ -120,7 +123,9 @@ class _CategoryPageState extends State<CategoryPage> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               height: 2, // Thickness of the line
-              color: Colors.grey[200], // Color of the line
+              color: Theme.of(context)
+                  .colorScheme
+                  .secondaryFixedDim, // Color of the line
             ),
 
             Padding(
@@ -159,7 +164,8 @@ class _CategoryPageState extends State<CategoryPage> {
                       children: <Widget>[
                         ClipOval(
                           child: Container(
-                            color: Colors.grey[200],
+                            color:
+                                Theme.of(context).colorScheme.secondaryFixedDim,
                             width: 55,
                             height: 55,
                             child: Image.asset(
@@ -183,7 +189,9 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             Container(
               height: 2, // Thickness of the line
-              color: Colors.grey[200], // Color of the line
+              color: Theme.of(context)
+                  .colorScheme
+                  .secondaryFixedDim, // Color of the line
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
@@ -216,24 +224,31 @@ class _CategoryPageState extends State<CategoryPage> {
                               child: Chip(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  side: const BorderSide(
-                                      color: Colors.black45, width: 1),
+                                  side: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiaryFixedDim,
+                                      width: 1),
                                 ),
                                 labelPadding: const EdgeInsets.symmetric(
                                     horizontal: 0, vertical: 0),
                                 label: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.search,
                                       size: 15,
-                                      color: Colors.black54,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiaryFixedDim,
                                     ),
                                     Text(
                                       text,
                                       style: GoogleFonts.roboto(
                                         fontSize: 15,
-                                        color: Colors.black54,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiaryFixedDim,
                                       ),
                                     ),
                                   ],

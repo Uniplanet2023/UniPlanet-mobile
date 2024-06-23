@@ -49,7 +49,9 @@ class SelectableLinkText extends StatelessWidget {
       text: text,
       minLines: minLines,
       maxLines: maxLines,
-      style: TextStyle(fontSize: fontSize ?? 16, color: Colors.black),
+      style: TextStyle(
+          fontSize: fontSize ?? 16,
+          color: Theme.of(context).colorScheme.tertiary),
       linkStyle: const TextStyle(
         color: Colors.blue,
         decoration: TextDecoration.underline,

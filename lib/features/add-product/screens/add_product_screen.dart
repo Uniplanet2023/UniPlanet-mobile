@@ -131,7 +131,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
           margin: const EdgeInsets.only(right: 8, bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(
+                color: Theme.of(context).colorScheme.secondaryFixedDim),
             borderRadius: BorderRadius.circular(12),
           ),
           child: ClipRRect(
@@ -161,6 +162,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBar(
@@ -200,8 +202,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               margin:
                                   const EdgeInsets.only(right: 8, bottom: 8),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                color: Colors.white,
+                                border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondaryFixedDim),
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -209,12 +214,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 children: [
                                   Icon(
                                     Icons.camera_alt,
-                                    color: Colors.grey[600],
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer,
                                     size: 20,
                                   ),
                                   Text('${images.length}/10',
                                       style: TextStyle(
-                                          color: Colors.grey[600],
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiaryContainer,
                                           fontSize: 12)),
                                 ],
                               ),
@@ -228,8 +237,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               margin:
                                   const EdgeInsets.only(right: 8, bottom: 8),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                color: Colors.white,
+                                border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondaryFixedDim),
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -237,12 +249,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 children: [
                                   Icon(
                                     Icons.photo,
-                                    color: Colors.grey[600],
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer,
                                     size: 20,
                                   ),
                                   Text('${images.length}/10',
                                       style: TextStyle(
-                                          color: Colors.grey[600],
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiaryContainer,
                                           fontSize: 12)),
                                 ],
                               ),
@@ -261,8 +277,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       child: ToggleButtons(
                         borderColor: Colors.transparent,
                         fillColor: Colors.transparent,
-                        selectedColor: Colors.white,
-                        color: Colors.white,
+                        selectedColor: Theme.of(context).colorScheme.tertiary,
+                        color: Theme.of(context).colorScheme.tertiary,
                         borderWidth: 0,
                         selectedBorderColor: Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
@@ -290,11 +306,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
                               color: type == 'For Sale'
-                                  ? Colors.black
-                                  : Colors.white,
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(30),
-                              border:
-                                  Border.all(width: 1, color: Colors.black45),
+                              border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryFixedDim),
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 5),
@@ -303,19 +322,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: type == 'For Sale'
-                                      ? Colors.white
-                                      : Colors.black),
+                                      ? Theme.of(context).colorScheme.surface
+                                      : Theme.of(context).colorScheme.tertiary),
                             ),
                           ),
                           Container(
                             margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
                               color: type == 'Free Item'
-                                  ? Colors.black
-                                  : Colors.white,
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(30),
-                              border:
-                                  Border.all(width: 1, color: Colors.black45),
+                              border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryFixedDim),
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 5),
@@ -324,18 +346,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: type == 'Free Item'
-                                      ? Colors.white
-                                      : Colors.black),
+                                      ? Theme.of(context).colorScheme.surface
+                                      : Theme.of(context).colorScheme.tertiary),
                             ),
                           ),
                           Container(
                             decoration: BoxDecoration(
                               color: type == 'Buying'
-                                  ? Colors.black
-                                  : Colors.white,
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(30),
-                              border:
-                                  Border.all(width: 1, color: Colors.black45),
+                              border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryFixedDim),
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 5),
@@ -344,8 +369,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: type == 'Buying'
-                                      ? Colors.white
-                                      : Colors.black),
+                                      ? Theme.of(context).colorScheme.surface
+                                      : Theme.of(context).colorScheme.tertiary),
                             ),
                           ),
                         ],
@@ -366,6 +391,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 4.0),
                                     child: ChoiceChip(
+                                      selectedColor: Theme.of(context)
+                                          .colorScheme
+                                          .primaryFixedDim,
                                       label: Text(category['name']),
                                       selected:
                                           selectedCategory == category['name'],
@@ -433,6 +461,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
                                   child: ChoiceChip(
+                                    selectedColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryFixedDim,
                                     label: Text(location),
                                     selected: selectedLocation == location,
                                     onSelected: (selected) {

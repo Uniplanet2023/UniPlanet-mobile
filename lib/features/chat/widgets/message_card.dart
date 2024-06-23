@@ -66,7 +66,9 @@ class MessageCard extends StatelessWidget {
               oldMessage.createdAt.day + 1 == DateTime.now().toLocal().day
                   ? 'Yesterday'
                   : DateFormat('d MMM').format(oldMessage.createdAt),
-              style: const TextStyle(fontSize: 13, color: Colors.black54),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.tertiaryContainer),
             ),
           ),
       ],
@@ -81,10 +83,12 @@ class MessageCard extends StatelessWidget {
           if (!hidePreviousDate)
             Text(
               formattedDate,
-              style: const TextStyle(fontSize: 13, color: Colors.black54),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.tertiaryContainer),
             ),
           const SizedBox(width: 5),
-          _buildMessageStatusIcon(),
+          _buildMessageStatusIcon(context),
         ],
       ),
       MessageBox(isMyMessage: isMyMessage, oldMessage: oldMessage),
@@ -95,7 +99,7 @@ class MessageCard extends StatelessWidget {
     ];
   }
 
-  Widget _buildMessageStatusIcon() {
+  Widget _buildMessageStatusIcon(BuildContext context) {
     if (oldMessage.status == MessageStatusEnum.sending.value) {
       return const SizedBox(
         height: 15,
@@ -104,17 +108,18 @@ class MessageCard extends StatelessWidget {
       );
     } else if (oldMessage.status == MessageStatusEnum.received.value) {
       return oldMessage.readDate == null
-          ? const Text(
+          ? Text(
               'unseen',
               style: TextStyle(
-                color: GlobalVariables.secondaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             )
           : const SizedBox();
     } else {
-      return const Icon(Icons.error, size: 20, color: Colors.black54);
+      return Icon(Icons.error,
+          size: 20, color: Theme.of(context).colorScheme.tertiaryContainer);
     }
   }
 
@@ -173,7 +178,7 @@ class MessageBox extends StatelessWidget {
           elevation: 1,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          color: getColorForCard(),
+          color: getColorForCard(context),
           margin: EdgeInsets.fromLTRB(
               isMyMessage ? 5 : 10, 5, isMyMessage ? 15 : 5, 5),
           child: Padding(
@@ -185,11 +190,13 @@ class MessageBox extends StatelessWidget {
     );
   }
 
-  Color getColorForCard() {
+  Color getColorForCard(BuildContext context) {
     if (oldMessage?.messageType == MessageEnum.image.value) {
       return Colors.transparent;
     } else {
-      return isMyMessage ? GlobalVariables.primaryColor : Colors.white;
+      return isMyMessage
+          ? Theme.of(context).colorScheme.primaryFixedDim
+          : Theme.of(context).colorScheme.secondaryFixedDim;
     }
   }
 

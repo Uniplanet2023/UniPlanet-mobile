@@ -132,7 +132,6 @@ class _UserHeaderState extends State<UserHeader> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: GlobalVariables.backgroundColor,
             borderRadius: BorderRadius.circular(16),
           ),
           padding: const EdgeInsets.all(16.0),

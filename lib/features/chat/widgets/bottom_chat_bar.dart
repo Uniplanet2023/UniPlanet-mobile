@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/constants/utils.dart';
 import 'package:uniplanet/global.dart';
 
@@ -129,7 +128,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: GlobalVariables.greyBackgroundColor,
+                    fillColor: Theme.of(context).colorScheme.secondary,
                     prefixIcon: SizedBox(
                       width: 30,
                       child: Row(
@@ -142,7 +141,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
                               sendImages([XFile(image.path)]);
                             },
                             padding: const EdgeInsets.all(0),
-                            color: GlobalVariables.primaryColor,
+                            color:
+                                Theme.of(context).colorScheme.primaryFixedDim,
                           ),
                         ],
                       ),
@@ -166,7 +166,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   List<XFile> imageList = await pickImagesFromGallery(context);
                   sendImages(imageList);
                 },
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.tertiary,
                 padding: const EdgeInsets.all(0),
               ),
               Padding(
@@ -178,7 +178,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                 child: !isShowSendButton
                     ? const SizedBox()
                     : CircleAvatar(
-                        backgroundColor: GlobalVariables.secondaryColor,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         radius: 15,
                         child: GestureDetector(
                             onTap: () => sendTextMessage(),

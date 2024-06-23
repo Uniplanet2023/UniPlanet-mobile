@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: choiceCheapSelected == "Free Products"
           ? freeItems(context)
           : choiceCheapSelected == "Hot Items"
@@ -184,49 +185,52 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return false;
         },
-        child: CustomScrollView(
-          controller: widget.controller,
-          slivers: <Widget>[
-            HomeHeader(
-              choiceCheapSelected: choiceCheapSelected,
-              onChoiceChanged: _updateChoice,
-            ),
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: CustomScrollView(
+            controller: widget.controller,
+            slivers: <Widget>[
+              HomeHeader(
+                choiceCheapSelected: choiceCheapSelected,
+                onChoiceChanged: _updateChoice,
+              ),
 
-            // Other slivers
-            if (_showLoadingIndicator)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+              // Other slivers
+              if (_showLoadingIndicator)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
                 ),
+              BlocBuilder<FreeProductBloc, FreeProductState>(
+                builder: (context, state) {
+                  if (state is LoadingFreeProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.productList,
+                    );
+                  }
+                },
               ),
-            BlocBuilder<FreeProductBloc, FreeProductState>(
-              builder: (context, state) {
-                if (state is LoadingFreeProductState) {
-                  return const SliverToBoxAdapter(
-                    child: Loader(),
-                  );
-                } else {
-                  return ItemBox(
-                    productList: state.productList,
-                  );
-                }
-              },
-            ),
-            if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+              if (_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-            if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 100.h,
+              if (!_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 100.h,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -259,49 +263,52 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return false;
         },
-        child: CustomScrollView(
-          controller: widget.controller,
-          slivers: <Widget>[
-            HomeHeader(
-              choiceCheapSelected: choiceCheapSelected,
-              onChoiceChanged: _updateChoice,
-            ),
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: CustomScrollView(
+            controller: widget.controller,
+            slivers: <Widget>[
+              HomeHeader(
+                choiceCheapSelected: choiceCheapSelected,
+                onChoiceChanged: _updateChoice,
+              ),
 
-            // Other slivers
-            if (_showLoadingIndicator)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+              // Other slivers
+              if (_showLoadingIndicator)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
                 ),
+              BlocBuilder<WantedProductBloc, WantedProductState>(
+                builder: (context, state) {
+                  if (state is LoadingFreeProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.productList,
+                    );
+                  }
+                },
               ),
-            BlocBuilder<WantedProductBloc, WantedProductState>(
-              builder: (context, state) {
-                if (state is LoadingFreeProductState) {
-                  return const SliverToBoxAdapter(
-                    child: Loader(),
-                  );
-                } else {
-                  return ItemBox(
-                    productList: state.productList,
-                  );
-                }
-              },
-            ),
-            if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+              if (_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-            if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 100.h,
+              if (!_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 100.h,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -331,49 +338,52 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return false;
         },
-        child: CustomScrollView(
-          controller: widget.controller,
-          slivers: <Widget>[
-            HomeHeader(
-              choiceCheapSelected: choiceCheapSelected,
-              onChoiceChanged: _updateChoice,
-            ),
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: CustomScrollView(
+            controller: widget.controller,
+            slivers: <Widget>[
+              HomeHeader(
+                choiceCheapSelected: choiceCheapSelected,
+                onChoiceChanged: _updateChoice,
+              ),
 
-            // Other slivers
-            if (_showLoadingIndicator)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+              // Other slivers
+              if (_showLoadingIndicator)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
                 ),
+              BlocBuilder<HotProductBloc, HotProductState>(
+                builder: (context, state) {
+                  if (state is LoadingHotProductState) {
+                    return const SliverToBoxAdapter(
+                      child: Loader(),
+                    );
+                  } else {
+                    return ItemBox(
+                      productList: state.hotProducts,
+                    );
+                  }
+                },
               ),
-            BlocBuilder<HotProductBloc, HotProductState>(
-              builder: (context, state) {
-                if (state is LoadingHotProductState) {
-                  return const SliverToBoxAdapter(
-                    child: Loader(),
-                  );
-                } else {
-                  return ItemBox(
-                    productList: state.hotProducts,
-                  );
-                }
-              },
-            ),
-            if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+              if (_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-              ),
-            if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 100.h,
+              if (!_isFetchingMoreProducts)
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 100.h,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

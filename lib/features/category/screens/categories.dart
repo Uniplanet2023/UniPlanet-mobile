@@ -77,6 +77,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: BlocListener<ProductBloc, ProductState>(
         listener: (context, state) {
           if (state is ProductUploadedState) {
