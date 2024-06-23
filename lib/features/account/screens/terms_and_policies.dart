@@ -93,6 +93,32 @@ class TermsAndPolicies extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
+                        subTitleText('REFUND POLICY'),
+                        secondarySubTitleText(
+                            'UniPlanet Ads Credit Refund Policy'),
+                        content(
+                            'At UniPlanet, we strive to provide the best advertising experience for our users. However, we understand that there may be situations where you need to request a refund for your unused Ads Credit. Please read our refund policy carefully to understand how refunds are processed.'),
+                        secondarySubTitleText('Refund Eligibility'),
+                        content(
+                            'Unused Credits: If you have purchased Ads Credit but have not used them for advertising, you may request a partial refund.'),
+                        content(
+                            'Partially Used Credits: If you have started using your Ads Credit but have not exhausted the full amount, you may still request a partial refund for the remaining balance.'),
+                        secondarySubTitleText('Refund Process'),
+                        content(
+                            '1. Request Submission: To request a refund, please contact our support team at uniplanet.info@gmail.com with your account details and the amount of Ads Credit you wish to refund.'),
+                        content(
+                            '2. Refund Calculation: A partial refund will be issued for the unused portion of your Ads Credit.'),
+                        content(
+                            'A transaction fee of approximately 3% to 5% will be deducted from the refundable amount to cover the cost of transaction processing.'),
+                        secondarySubTitleText('Refund Processing Time'),
+                        content(
+                            ' Refund requests are processed within 5 ~ 7 business days. The refunded amount will be credited back to your original payment method.'),
+                        secondarySubTitleText('Advertising Campaigns'),
+                        content(
+                            'If you have already initiated advertising campaigns and spent some portion of your Ads Credit, the refund will only apply to the remaining unused balance.'),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         subTitleText('APPSTORE\'S TERMS ALSO APPLY'),
                         content(
                             'The ways in which you use the App and Documentation may also be controlled by the AppStore if using an Apple device or Googleplay if using an android and their rules and policies will apply instead of these Terms where there are differences between the two.'),

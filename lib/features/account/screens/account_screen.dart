@@ -1,35 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
-import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
 import 'package:uniplanet/common/routes/names.dart';
 import 'package:uniplanet/features/account/screens/account_settings_screen.dart';
 import 'package:uniplanet/features/account/screens/ad_statistic_screen.dart';
+import 'package:uniplanet/features/account/screens/advertiser_control_panel.dart';
 import 'package:uniplanet/features/account/screens/help_screen.dart';
 import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/screens/liked_products_screen.dart';
 import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
 import 'package:uniplanet/features/account/widgets/user_header.dart';
-import 'package:uniplanet/features/widgets/terms_and_policies.dart';
+import 'package:uniplanet/features/account/screens/terms_and_policies.dart';
 import 'package:uniplanet/models/account.dart';
 
-class AccountScreen extends StatefulWidget {
+class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
-
-  @override
-  State<AccountScreen> createState() => _AccountScreen();
-}
-
-class _AccountScreen extends State<AccountScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (context.read<AccountBloc>().state.account.type == "advertiser") {
-      context.read<AdvertiserBloc>().add(const GetAdvertiserInfoEvent());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +44,8 @@ class _AccountScreen extends State<AccountScreen> {
               child: Column(
                 children: [
                   MenuSection(
-                    title: currentUser.type == "advertiser"
+                    title: currentUser.type == "advertiser" ||
+                            currentUser.type == "admin"
                         ? "My Advertisements"
                         : 'My Listings',
                     icon: Icons.inventory_sharp,
@@ -77,7 +65,8 @@ class _AccountScreen extends State<AccountScreen> {
                     height: 5,
                   ),
                   MenuSection(
-                    title: currentUser.type == "advertiser"
+                    title: currentUser.type == "advertiser" ||
+                            currentUser.type == "admin"
                         ? 'Closed Advertisements'
                         : 'Sold Products',
                     icon: Icons.history,
@@ -96,7 +85,8 @@ class _AccountScreen extends State<AccountScreen> {
                     thickness: 0.1,
                     height: 5,
                   ),
-                  currentUser.type == "advertiser"
+                  currentUser.type == "advertiser" ||
+                          currentUser.type == "admin"
                       ? MenuSection(
                           title: 'Ad Statistics',
                           icon: Icons.stacked_bar_chart,
@@ -122,6 +112,27 @@ class _AccountScreen extends State<AccountScreen> {
                             );
                           },
                         ),
+                  currentUser.type == "admin"
+                      ? const Divider(
+                          thickness: 0.1,
+                          height: 5,
+                        )
+                      : const SizedBox(),
+                  currentUser.type == "admin"
+                      ? MenuSection(
+                          title: 'Advertiser Control Panel',
+                          icon: Icons.content_paste_search_rounded,
+                          ontap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const AdvertiserControlPanelScreen(),
+                              ),
+                            );
+                          },
+                        )
+                      : const SizedBox(),
                   const Divider(
                     thickness: 0.1,
                     height: 5,

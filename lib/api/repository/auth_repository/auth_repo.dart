@@ -13,6 +13,7 @@ class AuthRepository implements IAuthRepository {
   static String? userId;
   static String? school;
   static String? email;
+  static String? type;
 
   AuthRepository(this._dioClient);
   @override
@@ -74,6 +75,7 @@ class AuthRepository implements IAuthRepository {
         userId = res.data['id'];
         school = res.data['school'];
         email = res.data['email'];
+        type = res.data['type'];
       }
       return msg;
     } on DioException catch (e) {
@@ -137,6 +139,7 @@ class AuthRepository implements IAuthRepository {
           userId = res.data['id'];
           school = res.data['school'];
           email = res.data['email'];
+          type = res.data['type'];
           return true;
         }
       } else {
@@ -144,6 +147,7 @@ class AuthRepository implements IAuthRepository {
         userId = userInfo['id'];
         school = userInfo['school'];
         email = userInfo['email'];
+        type = userInfo['type'];
         return true;
       }
       return false;

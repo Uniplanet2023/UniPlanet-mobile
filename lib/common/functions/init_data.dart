@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/bloc/admin/admin_bloc.dart';
+import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
@@ -33,4 +35,13 @@ Future<void> initData() async {
       .read<OnSaleProductBloc>()
       .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
   context.read<HotProductBloc>().add(const LoadHotProductsEvent());
+
+  if (AuthRepository.type == 'advertiser' || AuthRepository.type == 'admin') {
+    context.read<AdvertiserBloc>().add(const GetAdvertiserInfoEvent());
+    context.read<AdvertiserBloc>().add(const GetAdStatisticEvent());
+    context.read<AdvertiserBloc>().add(const GetUserInteractionEvent());
+  }
+  if (AuthRepository.type == 'admin') {
+    context.read<AdminBloc>().add(const GetAdvertiserListEvent());
+  }
 }

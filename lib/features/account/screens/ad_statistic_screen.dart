@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/api/repository/index.dart';
 import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/features/account/widgets/bar_chart.dart';
@@ -10,6 +11,7 @@ import 'package:uniplanet/models/ad_stat.dart';
 import 'package:uniplanet/models/advertiser.dart';
 import 'package:uniplanet/models/click_count.dart';
 import 'package:uniplanet/models/user_interaction.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdStatisticsScreen extends StatefulWidget {
   const AdStatisticsScreen({super.key});
@@ -19,11 +21,98 @@ class AdStatisticsScreen extends StatefulWidget {
 }
 
 class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
+  final ScrollController _controller = ScrollController();
+
   @override
   void initState() {
     super.initState();
-    context.read<AdvertiserBloc>().add(const GetAdStatisticEvent());
-    context.read<AdvertiserBloc>().add(const GetUserInteractionEvent());
+    _controller.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_controller.position.atEdge &&
+            context.read<AdvertiserBloc>().state
+                is! GettingUserInteractionState &&
+            context.read<AdvertiserBloc>().state is! EndUserInteractionState &&
+            context.read<AdvertiserBloc>().state is GotUserInteractionState ||
+        context.read<AdvertiserBloc>().state is GotMoreUserInteractionState) {
+      context.read<AdvertiserBloc>().add(const GetMoreUserInteractionEvent());
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onScroll);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _showRedirectDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please Read Carefully'),
+          content: RichText(
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                  text:
+                      '1. You are about to be redirected to an external website.\n\n2. You must be purchasing the in-app advertisement service from UniPlanet Shop with the ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: 'same Email Address.\n\n',
+                  style: TextStyle(color: Colors.red),
+                ),
+                TextSpan(
+                  text: '3. It takes about ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: '10 miniutes to 1 day.\n\n',
+                  style: TextStyle(color: Colors.red),
+                ),
+                TextSpan(
+                  text:
+                      '4. Please let me know if you\'re facing any issue by contacting me at ',
+                  style: TextStyle(color: Colors.black),
+                ),
+                TextSpan(
+                  text: 'uniplanet.info@gmail.com',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Proceed'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                Uri url = Uri(
+                    scheme: 'https',
+                    host: 'buy.stripe.com',
+                    path: 'eVa5mug0X9gn8368ww',
+                    query:
+                        'prefilled_email=${AuthRepository.email}&client_reference_id=${AuthRepository.userId}');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -33,6 +122,7 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
         context.watch<AdvertiserBloc>().state.userInteraction;
     List<ClickData> weeklySummary = adStat.recent7Days;
     Advertiser advertiser = context.read<AdvertiserBloc>().state.advertiser;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -49,6 +139,7 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
             ),
           ),
           SingleChildScrollView(
+            controller: _controller,
             child: Column(
               children: [
                 AppBar(
@@ -86,7 +177,7 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
                           amount: adStat.thisMonth.toString(),
                           color: Colors.orange),
                       StatCard(
-                          title: "This Year\n",
+                          title: "This Year",
                           amount: adStat.thisYear.toString(),
                           color: Colors.red),
                     ],
@@ -122,6 +213,14 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          _showRedirectDialog(context);
+        },
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add_card),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

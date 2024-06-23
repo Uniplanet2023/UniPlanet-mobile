@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
@@ -9,10 +8,8 @@ import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 import 'package:uniplanet/features/home/widgets/home_header.dart';
 
 class HomeScreen extends StatefulWidget {
-  final ScrollController controller;
   const HomeScreen({
     super.key,
-    required this.controller,
   });
 
   @override
@@ -23,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showLoadingIndicator = false;
   bool _isFetchingMoreProducts = false;
   String choiceCheapSelected = "All Items";
-
+  final ScrollController controller = ScrollController();
   void _updateChoice(String newChoice) {
     setState(() {
       choiceCheapSelected = newChoice; // Update the state on choice change
@@ -33,18 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_scrollListener); // Listen to scroll events
+    controller.addListener(_scrollListener); // Listen to scroll events
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_scrollListener); // Remove the listener
+    controller.removeListener(_scrollListener); // Remove the listener
+    controller.dispose();
     super.dispose();
   }
 
   void _scrollListener() {
-    if (widget.controller.position.pixels >=
-            widget.controller.position.maxScrollExtent &&
+    if (controller.position.pixels >= controller.position.maxScrollExtent &&
         !_isFetchingMoreProducts) {
       // User has reached the end, fetch more products
       setState(() => _isFetchingMoreProducts = true);
@@ -110,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: CustomScrollView(
-          controller: widget.controller,
+          controller: controller,
           slivers: <Widget>[
             HomeHeader(
               choiceCheapSelected: choiceCheapSelected,
@@ -119,10 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Other slivers
             if (_showLoadingIndicator)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 50, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             BlocBuilder<ProductBloc, ProductState>(
@@ -139,16 +136,16 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 100, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 100.h,
+                  height: 200,
                 ),
               ),
           ],
@@ -160,13 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
   BlocListener<FreeProductBloc, FreeProductState> freeItems(
       BuildContext context) {
     return BlocListener<FreeProductBloc, FreeProductState>(
-      listener: (context, state) {
-        // if (state is ProductUploadedState) {
-        //   setState(() => _showLoadingIndicator = true);
-        // } else if (state is ProductImageUploadedState) {
-        //   setState(() => _showLoadingIndicator = false);
-        // }
-      },
+      listener: (context, state) {},
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
@@ -185,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: CustomScrollView(
-          controller: widget.controller,
+          controller: controller,
           slivers: <Widget>[
             HomeHeader(
               choiceCheapSelected: choiceCheapSelected,
@@ -194,10 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Other slivers
             if (_showLoadingIndicator)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 50, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             BlocBuilder<FreeProductBloc, FreeProductState>(
@@ -214,16 +205,16 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 100, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 100.h,
+                  height: 200,
                 ),
               ),
           ],
@@ -260,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: CustomScrollView(
-          controller: widget.controller,
+          controller: controller,
           slivers: <Widget>[
             HomeHeader(
               choiceCheapSelected: choiceCheapSelected,
@@ -269,10 +260,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Other slivers
             if (_showLoadingIndicator)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 50, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             BlocBuilder<WantedProductBloc, WantedProductState>(
@@ -289,16 +280,16 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 100, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 100.h,
+                  height: 200,
                 ),
               ),
           ],
@@ -332,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: CustomScrollView(
-          controller: widget.controller,
+          controller: controller,
           slivers: <Widget>[
             HomeHeader(
               choiceCheapSelected: choiceCheapSelected,
@@ -341,10 +332,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Other slivers
             if (_showLoadingIndicator)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 50.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 50, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             BlocBuilder<HotProductBloc, HotProductState>(
@@ -361,16 +352,16 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             if (_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 100.h, top: 10.h),
-                  child: const Center(child: CircularProgressIndicator()),
+                  padding: EdgeInsets.only(bottom: 100, top: 10),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
               ),
             if (!_isFetchingMoreProducts)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 100.h,
+                  height: 200,
                 ),
               ),
           ],

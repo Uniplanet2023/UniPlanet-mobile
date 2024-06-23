@@ -43,9 +43,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AppRoutes.homePage:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => HomeScreen(
-          controller: ScrollController(),
-        ),
+        builder: (_) => const HomeScreen(),
       );
     case AppRoutes.bottomBarPage:
       return MaterialPageRoute(

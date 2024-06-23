@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/functions/streamer.dart';
 import 'package:uniplanet/common/routes/names.dart';
@@ -24,8 +23,7 @@ class _BottomBarState extends State<BottomBar> {
   int _page = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
-  ScrollController? _controller;
-  bool _isVisible = true;
+  final bool _isVisible = true;
   String? profileImage;
   final Streamer _streamer = Streamer();
 
@@ -49,26 +47,6 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.addChatListener(context);
     _streamer.addAccountListener(context);
     _streamer.addProductListener(context);
-
-    _controller = ScrollController();
-    _controller!.addListener(() {
-      if (_controller!.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if (_isVisible == true) {
-          setState(() {
-            _isVisible = false;
-          });
-        }
-      }
-      if (_controller!.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (_isVisible == false) {
-          setState(() {
-            _isVisible = true;
-          });
-        }
-      }
-    });
   }
 
   @override
@@ -77,7 +55,6 @@ class _BottomBarState extends State<BottomBar> {
     _streamer.disposeAccountListener();
     _streamer.disposeProductListener();
 
-    _controller!.dispose();
     super.dispose();
   }
 
@@ -94,7 +71,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      HomeScreen(controller: _controller!),
+      const HomeScreen(),
       Container(
         margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
         child: const CategoryPage(),

@@ -17,6 +17,36 @@ class AccountRepository implements IAccountRepository {
 
   AccountRepository(this._dioClient);
 
+  Future<List<Advertiser>> getAdvertiserList({int page = 1}) async {
+    List<Advertiser> advertiserList = [];
+    try {
+      Response res = await _dioClient.dio.get(
+          '$accountURI/advertiser-list/$page',
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+      if (msg == 'success') {
+        var dataList = jsonDecode(res.data);
+
+        if (dataList is List) {
+          for (var element in dataList) {
+            Advertiser advertiser = Advertiser.fromMap(element);
+            advertiserList.add(advertiser);
+          }
+        } else {
+          log('Unexpected data format: $dataList');
+        }
+        return advertiserList;
+      } else {
+        log('Error message: $msg');
+      }
+    } catch (e) {
+      log('Exception: $e');
+      SnackbarGlobal.showSnackBar("Failed to get account info");
+    }
+    return advertiserList;
+  }
+
   Future<List<UserInteraction>> getAdInteraction({int page = 1}) async {
     List<UserInteraction> userInteractionList = [];
     try {

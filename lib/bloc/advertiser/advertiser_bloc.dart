@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/api/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/ad_stat.dart';
 import 'package:uniplanet/models/advertiser.dart';
 import 'package:uniplanet/models/user_interaction.dart';
@@ -19,6 +19,9 @@ class AdvertiserBloc extends Bloc<AdvertiserEvent, AdvertiserState> {
     on<GetAdvertiserInfoEvent>((event, emit) async {
       await _getAdvertiserInfo(emit, event);
     });
+    on<GetMoreUserInteractionEvent>((event, emit) async {
+      await _getMoreUserInteractionInfo(emit, event);
+    });
     on<GetAdStatisticEvent>((event, emit) async {
       await _getAdStatistic(emit, event);
     });
@@ -26,6 +29,32 @@ class AdvertiserBloc extends Bloc<AdvertiserEvent, AdvertiserState> {
       await _getAdInteraction(emit, event);
     });
   }
+
+  _getMoreUserInteractionInfo(emit, event) async {
+    emit(GettingMoreUserInteractionState(
+        advertiser: state.advertiser,
+        adStat: state.adStat,
+        userInteraction: state.userInteraction,
+        interactionPage: state.interactionPage));
+    int page = state.interactionPage + 1;
+    List<UserInteraction> userInteraction =
+        await _accountRepository.getAdInteraction(page: page);
+    if (userInteraction.isEmpty) {
+      emit(EndUserInteractionState(
+          advertiser: state.advertiser,
+          adStat: state.adStat,
+          userInteraction: state.userInteraction,
+          interactionPage: state.interactionPage));
+      return;
+    } else {
+      emit(GotMoreUserInteractionState(
+          advertiser: state.advertiser,
+          adStat: state.adStat,
+          userInteraction: userInteraction,
+          interactionPage: page));
+    }
+  }
+
   _getAdInteraction(emit, GetUserInteractionEvent event) async {
     emit(GettingUserInteractionState(
         advertiser: state.advertiser,
@@ -34,7 +63,14 @@ class AdvertiserBloc extends Bloc<AdvertiserEvent, AdvertiserState> {
 
     List<UserInteraction> userInteraction =
         await _accountRepository.getAdInteraction(page: 1);
-
+    if (userInteraction.isEmpty) {
+      emit(EndUserInteractionState(
+          advertiser: state.advertiser,
+          adStat: state.adStat,
+          userInteraction: state.userInteraction,
+          interactionPage: state.interactionPage));
+      return;
+    }
     emit(GotUserInteractionState(
         advertiser: state.advertiser,
         adStat: state.adStat,

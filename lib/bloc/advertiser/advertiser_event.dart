@@ -9,6 +9,12 @@ sealed class AdvertiserEvent extends Equatable {
 
 class GetAdvertiserInfoEvent extends AdvertiserEvent {
   const GetAdvertiserInfoEvent();
+  @override
+  List<Object> get props => [];
+}
+
+class GetMoreUserInteractionEvent extends AdvertiserEvent {
+  const GetMoreUserInteractionEvent();
 
   @override
   List<Object> get props => [];

@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/product.dart';
 
 part 'wanted_product_event.dart';

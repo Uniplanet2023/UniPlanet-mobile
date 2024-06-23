@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/bloc/admin/admin_bloc.dart';
 import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/get_product/get_product_bloc.dart';
@@ -90,9 +91,10 @@ class StateManagerProvider extends StatelessWidget {
               create: (context) =>
                   ReportBloc(context.read<AccountRepository>())),
           BlocProvider(
-            create: (context) =>
-                AdvertiserBloc(context.read<AccountRepository>()),
-          )
+              create: (context) =>
+                  AdvertiserBloc(context.read<AccountRepository>())),
+          BlocProvider(
+              create: (context) => AdminBloc(context.read<AccountRepository>()))
         ], child: const MyApp()));
   }
 }

@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/api/repository/index.dart';
 

@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uniplanet/bloc/index.dart';
 
 part 'typing_event.dart';
 part 'typing_state.dart';
