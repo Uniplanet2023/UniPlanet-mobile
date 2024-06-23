@@ -207,20 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
-
-              BlocBuilder<FreeProductBloc, FreeProductState>(
-                builder: (context, state) {
-                  if (state is LoadingFreeProductState) {
-                    return const SliverToBoxAdapter(
-                      child: Loader(),
-                    );
-                  } else {
-                    return ItemBox(
-                      productList: state.productList,
-                    );
-                  }
-                },
-              ),
               if (_isFetchingMoreProducts)
                 const SliverToBoxAdapter(
                   child: Padding(
@@ -299,20 +285,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
-
-              BlocBuilder<WantedProductBloc, WantedProductState>(
-                builder: (context, state) {
-                  if (state is LoadingFreeProductState) {
-                    return const SliverToBoxAdapter(
-                      child: Loader(),
-                    );
-                  } else {
-                    return ItemBox(
-                      productList: state.productList,
-                    );
-                  }
-                },
-              ),
               if (_isFetchingMoreProducts)
                 const SliverToBoxAdapter(
                   child: Padding(
@@ -375,20 +347,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(child: CircularProgressIndicator()),
                   ),
                 ),
-              BlocBuilder<HotProductBloc, HotProductState>(
-                builder: (context, state) {
-                  if (state is LoadingHotProductState) {
-                    return const SliverToBoxAdapter(
-                      child: Loader(),
-                    );
-                  } else {
-                    return ItemBox(
-                      productList: state.hotProducts,
-                    );
-                  }
-                },
-              ),
-
               BlocBuilder<HotProductBloc, HotProductState>(
                 builder: (context, state) {
                   if (state is LoadingHotProductState) {
