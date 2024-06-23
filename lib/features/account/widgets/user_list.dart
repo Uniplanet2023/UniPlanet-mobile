@@ -2,31 +2,33 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet/models/user_interaction.dart';
 
 class UserProfile {
   final String imageUrl;
   final String username;
+  final String advertisement;
 
-  UserProfile({required this.imageUrl, required this.username});
+  UserProfile(
+      {required this.imageUrl,
+      required this.username,
+      required this.advertisement});
 }
 
 class UserList extends StatelessWidget {
-  UserList({
-    super.key,
-  });
+  final List<UserInteraction> userInteractionList;
 
-  final List<UserProfile> users = [
-    UserProfile(
-        imageUrl: 'https://via.placeholder.com/150', username: 'User 1'),
-    UserProfile(
-        imageUrl: 'https://via.placeholder.com/150', username: 'User 2'),
-    UserProfile(
-        imageUrl: 'https://via.placeholder.com/150', username: 'User 3'),
-    // Add more user profiles here
-  ];
+  const UserList({super.key, required this.userInteractionList});
 
   @override
   Widget build(BuildContext context) {
+    final List<UserProfile> users = userInteractionList
+        .map((userInteraction) => UserProfile(
+            imageUrl: userInteraction.user.profileImage!,
+            username: userInteraction.user.name,
+            advertisement: userInteraction.advertisement))
+        .toList();
+
     return Column(
       children: users.map((user) => GlassListItem(user: user)).toList(),
     );
@@ -64,6 +66,14 @@ class GlassListItem extends StatelessWidget {
                 const SizedBox(width: 16.0),
                 Text(
                   user.username,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "🌟${user.advertisement}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

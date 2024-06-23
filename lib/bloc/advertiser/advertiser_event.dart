@@ -20,3 +20,9 @@ class GetAdStatisticEvent extends AdvertiserEvent {
   @override
   List<Object> get props => [];
 }
+
+class GetUserInteractionEvent extends AdvertiserEvent {
+  const GetUserInteractionEvent();
+  @override
+  List<Object> get props => [];
+}
