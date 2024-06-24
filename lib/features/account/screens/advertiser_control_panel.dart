@@ -43,7 +43,10 @@ class _AdvertiserControlPanelScreenState
       body: BlocBuilder<AdminBloc, AdminState>(
         builder: (context, state) {
           if (state is GotAdvertiserListState ||
-              state is GotMoreAdvertiserListState) {
+              state is GotMoreAdvertiserListState ||
+              state is PostedBlockControlState ||
+              state is IncreasedCreditState ||
+              state is EndAdvertiserListState) {
             return SingleChildScrollView(
               controller: _scrollController,
               child: Column(
