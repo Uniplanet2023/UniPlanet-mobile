@@ -10,10 +10,10 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pieChartData = ChartData(
-      budget: advertiser.budget,
-      givenCredit: advertiser.givenCredit,
-      usedCredit: advertiser.usedCredit,
-      spent: advertiser.spent,
+      credit: advertiser.credit,
+      freeCredit: advertiser.freeCredit,
+      freeCreditUsed: advertiser.freeCreditUsed,
+      creditUsed: advertiser.creditUsed,
     );
 
     return SizedBox(
@@ -34,7 +34,7 @@ class Chart extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Text(
-                  "${(advertiser.budget + advertiser.givenCredit - advertiser.usedCredit - advertiser.spent).toStringAsFixed(2)}\$",
+                  "${(advertiser.credit + advertiser.freeCredit - advertiser.freeCreditUsed - advertiser.creditUsed).toStringAsFixed(2)}\$",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -42,17 +42,11 @@ class Chart extends StatelessWidget {
                       ),
                 ),
                 const SizedBox(height: 8),
-                advertiser.givenCredit <= 0
-                    ? Text("of ${advertiser.budget}\$ Budget",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600))
-                    : Text("of ${advertiser.givenCredit}\$ Credit",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600)),
+                Text("of ${advertiser.freeCredit + advertiser.credit}\$ Credit",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600)),
               ],
             ),
           ),

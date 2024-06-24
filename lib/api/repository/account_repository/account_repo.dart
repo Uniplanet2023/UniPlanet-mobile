@@ -17,6 +17,64 @@ class AccountRepository implements IAccountRepository {
 
   AccountRepository(this._dioClient);
 
+  Future<Advertiser?> blockControl(
+      {required String accountId,
+      bool? isPostBlock,
+      bool? isChatBlock,
+      bool? isBlock}) async {
+    try {
+      Response res = await _dioClient.dio.post('$accountURI/block-control',
+          data: {
+            'accountId': accountId,
+            'isPostBlock': isPostBlock,
+            'isChatBlock': isChatBlock,
+            'isBlock': isBlock
+          },
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        SnackbarGlobal.showSnackBar("Block status updated successfully");
+        Advertiser advertiser = Advertiser.fromJson(res.data);
+        return advertiser;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      SnackbarGlobal.showSnackBar("Failed to update block status");
+      return null;
+    }
+  }
+
+  Future<Advertiser?> increaseCredit(
+      {required advertiserAccountId,
+      required freeCredit,
+      required credit}) async {
+    try {
+      Response res = await _dioClient.dio.post('$accountURI/increase-credit',
+          data: {
+            'accountId': advertiserAccountId,
+            'freeCredit': freeCredit,
+            'credit': credit
+          },
+          options: _dioClient.getDioOptions());
+
+      String msg = displayErrorMessages(res.toString());
+
+      if (msg == "success") {
+        SnackbarGlobal.showSnackBar("Credit increased successfully");
+        Advertiser advertiser = Advertiser.fromJson(res.data);
+        return advertiser;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      SnackbarGlobal.showSnackBar("Failed to increase credit");
+      return null;
+    }
+  }
+
   Future<List<Advertiser>> getAdvertiserList({int page = 1}) async {
     List<Advertiser> advertiserList = [];
     try {

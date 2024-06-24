@@ -131,7 +131,7 @@ class TermsAndPolicies extends StatelessWidget {
                             ' Refund requests are processed within 5 ~ 7 business days. The refunded amount will be credited back to your original payment method.'),
                         secondarySubTitleText('Advertising Campaigns'),
                         content(
-                            'If you have already initiated advertising campaigns and spent some portion of your Ads Credit, the refund will only apply to the remaining unused balance.'),
+                            'If you have already initiated advertising campaigns and usedCredit some portion of your Ads Credit, the refund will only apply to the remaining unused balance.'),
                         const SizedBox(
                           height: 20,
                         ),

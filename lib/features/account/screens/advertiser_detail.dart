@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet/bloc/admin/admin_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/constants/global_variables.dart';
 import 'package:uniplanet/models/advertiser.dart';
 
@@ -47,32 +49,39 @@ class AdvertiserDetail extends StatelessWidget {
                 "Blocked",
                 advertiser.account.isBlocked.toString(),
                 isBlocButton: true,
+                context: context,
+                type: "block",
               ),
               _buildInfoRow(
                 "Post Blocked",
                 advertiser.account.isBlockedPost.toString(),
                 isBlocButton: true,
+                context: context,
+                type: "post",
               ),
               _buildInfoRow(
                 "Chat Blocked",
                 advertiser.account.isBlockedChat.toString(),
                 isBlocButton: true,
+                context: context,
+                type: "chat",
               ),
               Divider(color: Colors.grey[400]),
               _buildInfoRow(
                 "Total Credit",
-                "\$${advertiser.budget + advertiser.givenCredit - advertiser.usedCredit - advertiser.spent}",
+                "\$${advertiser.credit + advertiser.freeCredit - advertiser.freeCreditUsed - advertiser.creditUsed}",
               ),
               _buildInfoRow(
                 "Free Credit Left",
-                "\$${advertiser.givenCredit - advertiser.usedCredit}",
+                "\$${advertiser.freeCredit - advertiser.freeCreditUsed}",
               ),
-              _buildInfoRow("Given Credit", "\$${advertiser.givenCredit}",
-                  isEditCreditButton: true, context: context),
-              _buildInfoRow("Used Credit", "\$${advertiser.usedCredit}"),
-              _buildInfoRow("Deposit", "\$${advertiser.budget}",
-                  isEditCreditButton: true, context: context),
-              _buildInfoRow("Spent", "\$${advertiser.spent}"),
+              _buildInfoRow("Free Credit", "\$${advertiser.freeCredit}",
+                  isEditCreditButton: true, context: context, type: "free"),
+              _buildInfoRow(
+                  "Free Credit Used", "\$${advertiser.freeCreditUsed}"),
+              _buildInfoRow("Credit", "\$${advertiser.credit}",
+                  isEditCreditButton: true, context: context, type: "paid"),
+              _buildInfoRow("Credit Used", "\$${advertiser.creditUsed}"),
               _buildInfoRow("CPC", "\$${advertiser.costPerClick}"),
               Divider(color: Colors.grey[400]),
               _buildInfoRow("Maximum Post", advertiser.maximumPost.toString()),
@@ -89,7 +98,8 @@ class AdvertiserDetail extends StatelessWidget {
   Widget _buildInfoRow(String label, String value,
       {bool isBlocButton = false,
       bool isEditCreditButton = false,
-      BuildContext? context}) {
+      BuildContext? context,
+      String? type}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -114,7 +124,25 @@ class AdvertiserDetail extends StatelessWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    // Add your block functionality here
+                    if (type == "post") {
+                      if (context!.mounted) {
+                        context.read<AdminBloc>().add(BlockControlEvent(
+                            accountId: advertiser.account.user.id,
+                            isPostBlock: true));
+                      }
+                    } else if (type == "chat") {
+                      if (context!.mounted) {
+                        context.read<AdminBloc>().add(BlockControlEvent(
+                            accountId: advertiser.account.user.id,
+                            isChatBlock: true));
+                      }
+                    } else if (type == "block") {
+                      if (context!.mounted) {
+                        context.read<AdminBloc>().add(BlockControlEvent(
+                            accountId: advertiser.account.user.id,
+                            isBlock: true));
+                      }
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.red,
@@ -127,6 +155,25 @@ class AdvertiserDetail extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () {
                     // Add your unblock functionality here
+                    if (type == "post") {
+                      if (context!.mounted) {
+                        context.read<AdminBloc>().add(BlockControlEvent(
+                            accountId: advertiser.account.user.id,
+                            isPostBlock: false));
+                      }
+                    } else if (type == "chat") {
+                      if (context!.mounted) {
+                        context.read<AdminBloc>().add(BlockControlEvent(
+                            accountId: advertiser.account.user.id,
+                            isChatBlock: false));
+                      }
+                    } else if (type == "block") {
+                      if (context!.mounted) {
+                        context.read<AdminBloc>().add(BlockControlEvent(
+                            accountId: advertiser.account.user.id,
+                            isBlock: false));
+                      }
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.green,
@@ -137,10 +184,10 @@ class AdvertiserDetail extends StatelessWidget {
                 ),
               ],
             ),
-          if (isEditCreditButton && context != null)
+          if (isEditCreditButton && context != null && type != null)
             OutlinedButton(
               onPressed: () {
-                _showEditCreditDialog(context);
+                _showEditCreditDialog(context, type);
               },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.all(8),
@@ -153,7 +200,7 @@ class AdvertiserDetail extends StatelessWidget {
     );
   }
 
-  void _showEditCreditDialog(BuildContext context) {
+  void _showEditCreditDialog(BuildContext context, String type) {
     final TextEditingController creditController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -194,6 +241,17 @@ class AdvertiserDetail extends StatelessWidget {
               onPressed: () {
                 if (formKey.currentState?.validate() == true) {
                   final double newCredit = double.parse(creditController.text);
+                  if (type == "free") {
+                    context.read<AdminBloc>().add(IncreaseCreditEvent(
+                        accountId: advertiser.account.user.id,
+                        credit: 0,
+                        freeCredit: newCredit));
+                  } else if (type == "paid") {
+                    context.read<AdminBloc>().add(IncreaseCreditEvent(
+                        accountId: advertiser.account.user.id,
+                        credit: newCredit,
+                        freeCredit: 0));
+                  }
                   // Process the newCredit value as needed
                   Navigator.of(context).pop();
                 }

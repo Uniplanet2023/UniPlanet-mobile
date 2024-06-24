@@ -223,7 +223,7 @@ class _UserHeaderState extends State<UserHeader> {
                       ),
                       widget.currentUser.type == "advertiser"
                           ? Text(
-                              "My Credits: ${(advertiser!.givenCredit - advertiser.usedCredit + advertiser.budget - advertiser.spent).toStringAsFixed(2)}\$ ",
+                              "My Credits: ${(advertiser!.freeCredit + advertiser.credit - advertiser.freeCreditUsed - advertiser.creditUsed).toStringAsFixed(2)}\$ ",
                               style: const TextStyle(
                                 color: GlobalVariables.secondaryColor,
                                 fontWeight: FontWeight.bold,

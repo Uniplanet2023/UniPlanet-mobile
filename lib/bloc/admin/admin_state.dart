@@ -69,3 +69,57 @@ final class EndAdvertiserListState extends AdminState {
   @override
   List<Object> get props => [advertiserList, page];
 }
+
+final class IncreasingCreditState extends AdminState {
+  const IncreasingCreditState(
+      {required super.advertiserList, required super.page});
+  @override
+  List<Object> get props => [advertiserList, page];
+}
+
+final class IncreasedCreditState extends AdminState {
+  final Advertiser advertiser;
+  const IncreasedCreditState(
+      {required this.advertiser,
+      required super.advertiserList,
+      required super.page});
+  @override
+  List<Object> get props => [advertiser, advertiserList, page];
+}
+
+final class FailedToIncreaseCreditState extends AdminState {
+  final String message;
+  const FailedToIncreaseCreditState(
+      {required this.message,
+      required super.advertiserList,
+      required super.page});
+  @override
+  List<Object> get props => [message, advertiserList, page];
+}
+
+final class PostingBlockControlState extends AdminState {
+  const PostingBlockControlState(
+      {required super.advertiserList, required super.page});
+  @override
+  List<Object> get props => [advertiserList, page];
+}
+
+final class PostedBlockControlState extends AdminState {
+  final Advertiser advertiser;
+  const PostedBlockControlState(
+      {required this.advertiser,
+      required super.advertiserList,
+      required super.page});
+  @override
+  List<Object> get props => [advertiser, advertiserList, page];
+}
+
+final class FailedToPostBlockControlState extends AdminState {
+  final String message;
+  const FailedToPostBlockControlState(
+      {required this.message,
+      required super.advertiserList,
+      required super.page});
+  @override
+  List<Object> get props => [message, advertiserList, page];
+}

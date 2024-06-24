@@ -59,7 +59,6 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
                 TextSpan(
                   text:
                       '1. You are about to be redirected to an external website.\n\n2. You must be purchasing the in-app advertisement service from UniPlanet Shop with the ',
-                  style: TextStyle(color: Colors.black),
                 ),
                 TextSpan(
                   text: 'same Email Address.\n\n',
@@ -67,7 +66,6 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
                 ),
                 TextSpan(
                   text: '3. It takes about ',
-                  style: TextStyle(color: Colors.black),
                 ),
                 TextSpan(
                   text: '10 miniutes to 1 day.\n\n',
@@ -76,7 +74,6 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
                 TextSpan(
                   text:
                       '4. Please let me know if you\'re facing any issue by contacting me at ',
-                  style: TextStyle(color: Colors.black),
                 ),
                 TextSpan(
                   text: 'uniplanet.info@gmail.com',
@@ -124,6 +121,7 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
     Advertiser advertiser = context.read<AdvertiserBloc>().state.advertiser;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           Container(

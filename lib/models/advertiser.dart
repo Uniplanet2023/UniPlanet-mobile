@@ -6,20 +6,20 @@ class Advertiser {
   int maximumPost;
   int numberOfPost;
   double costPerClick;
-  double usedCredit;
-  double givenCredit;
-  double budget;
-  double spent;
+  double freeCreditUsed;
+  double freeCredit;
+  double credit;
+  double creditUsed;
 
   Advertiser({
     required this.account,
     this.maximumPost = 0,
     this.numberOfPost = 0,
     this.costPerClick = 0.4,
-    this.usedCredit = 0,
-    this.givenCredit = 0,
-    this.budget = 0,
-    this.spent = 0,
+    this.freeCreditUsed = 0,
+    this.freeCredit = 0,
+    this.credit = 0,
+    this.creditUsed = 0,
   });
 
   static initialAdtertiser() {
@@ -28,10 +28,10 @@ class Advertiser {
       maximumPost: 0,
       numberOfPost: 0,
       costPerClick: 0.4,
-      usedCredit: 0,
-      givenCredit: 0,
-      budget: 0,
-      spent: 0,
+      freeCreditUsed: 0,
+      freeCredit: 0,
+      credit: 0,
+      creditUsed: 0,
     );
   }
 
@@ -41,10 +41,10 @@ class Advertiser {
       'maximumPost': maximumPost,
       'numberOfPost': numberOfPost,
       'costPerClick': costPerClick,
-      'usedCredit': usedCredit,
-      'givenCredit': givenCredit,
-      'budget': budget,
-      'spent': spent,
+      'freeCreditUsed': freeCreditUsed,
+      'freeCredit': freeCredit,
+      'credit': credit,
+      'creditUsed': creditUsed,
     };
   }
 
@@ -54,10 +54,10 @@ class Advertiser {
       maximumPost: map['maximumPost'] as int,
       numberOfPost: map['numberOfPost'] as int,
       costPerClick: (map['costPerClick'] as num).toDouble(),
-      usedCredit: (map['usedCredit'] as num).toDouble(),
-      givenCredit: (map['givenCredit'] as num).toDouble(),
-      budget: (map['budget'] as num).toDouble(),
-      spent: (map['spent'] as num).toDouble(),
+      freeCreditUsed: (map['freeCreditUsed'] as num).toDouble(),
+      freeCredit: (map['freeCredit'] as num).toDouble(),
+      credit: (map['credit'] as num).toDouble(),
+      creditUsed: (map['creditUsed'] as num).toDouble(),
     );
   }
 

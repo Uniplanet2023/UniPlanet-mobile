@@ -16,7 +16,55 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     on<GetMoreAdvertiserListEvent>((event, emit) async {
       await _getMoreAdvertiserList(emit, event);
     });
+    on<IncreaseCreditEvent>((event, emit) async {
+      await _increaseCredit(emit, event);
+    });
+    on<BlockControlEvent>((event, emit) async {
+      await _blockControl(emit, event);
+    });
   }
+  //postBlockControl
+  _blockControl(emit, BlockControlEvent event) async {
+    emit(PostingBlockControlState(
+        advertiserList: state.advertiserList, page: state.page));
+
+    Advertiser? advertiser = await _accountRepository.blockControl(
+      accountId: event.accountId,
+      isPostBlock: event.isPostBlock,
+      isChatBlock: event.isChatBlock,
+      isBlock: event.isBlock,
+    );
+
+    if (advertiser != null) {
+      emit(PostedBlockControlState(
+          advertiser: advertiser,
+          advertiserList: state.advertiserList,
+          page: state.page));
+    } else {
+      emit(FailedToPostBlockControlState(
+          message: "Failed to update block status",
+          advertiserList: state.advertiserList,
+          page: state.page));
+    }
+  }
+
+  _increaseCredit(emit, IncreaseCreditEvent event) async {
+    emit(IncreasingCreditState(
+        advertiserList: state.advertiserList, page: state.page));
+
+    Advertiser? advertiser = await _accountRepository.increaseCredit(
+        advertiserAccountId: event.accountId,
+        freeCredit: event.freeCredit,
+        credit: event.credit);
+
+    if (advertiser != null) {
+      emit(IncreasedCreditState(
+          advertiser: advertiser,
+          advertiserList: state.advertiserList,
+          page: state.page));
+    }
+  }
+
   _getAdvertiserList(emit, event) async {
     emit(GettingAdvertiserListState(
         advertiserList: state.advertiserList, page: 1));

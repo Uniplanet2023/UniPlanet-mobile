@@ -3,29 +3,29 @@ import 'package:flutter/material.dart';
 
 class ChartData {
   final List<PieChartSectionData> pieChartSelectionDatas;
-  final double budget;
-  final double givenCredit;
-  final double usedCredit;
-  final double spent;
+  final double credit;
+  final double freeCredit;
+  final double freeCreditUsed;
+  final double creditUsed;
 
   // Constructor with initializer list
   ChartData(
-      {required this.budget,
-      required this.givenCredit,
-      required this.spent,
-      required this.usedCredit})
+      {required this.credit,
+      required this.freeCredit,
+      required this.freeCreditUsed,
+      required this.creditUsed})
       : pieChartSelectionDatas = [
-          // Section representing the spent amount
+          // Section representing the creditUsed amount
           PieChartSectionData(
             color: Colors.blueAccent,
-            value: spent + usedCredit,
+            value: freeCreditUsed + creditUsed,
             showTitle: false,
             radius: 25,
           ),
           // Section representing the remaining budget + myCredit
           PieChartSectionData(
             color: Colors.blueAccent.withOpacity(0.2),
-            value: (budget + givenCredit - spent - usedCredit)
+            value: (credit + freeCredit - freeCreditUsed - creditUsed)
                 .clamp(0, double.infinity), // Ensure non-negative values
             showTitle: false,
             radius: 13,

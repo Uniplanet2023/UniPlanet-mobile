@@ -13,12 +13,13 @@ class SummaryDetails extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          buildDetails('Credit Used', advertiser.usedCredit.toStringAsFixed(2)),
+          buildDetails(
+              'Free Credit Used', advertiser.freeCreditUsed.toStringAsFixed(2)),
           // buildDetails('Cost Per Click', '${advertiser.costPerClick}\$'),
-          buildDetails('My Credit',
-              "${(advertiser.givenCredit - advertiser.usedCredit).toStringAsFixed(2)}\$"),
-          buildDetails('Cost', "${advertiser.spent}\$"),
-          buildDetails('My Buget', "${advertiser.budget}\$"),
+          buildDetails('Free Credit',
+              "${(advertiser.freeCredit - advertiser.freeCreditUsed).toStringAsFixed(2)}\$"),
+          buildDetails('Credit Used', "${advertiser.creditUsed}\$"),
+          buildDetails('My Credit', "${advertiser.credit}\$"),
         ],
       ),
     );
