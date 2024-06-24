@@ -29,6 +29,7 @@ class AdMobService {
       return 'ca-app-pub-9923099397206192/2990525534';
     } else if (Platform.isIOS) {
       return 'ca-app-pub-9923099397206192/9910237232';
+      // return 'ca-app-pub-3940256099942544/5135589807'; //Test ID
     }
     return null;
   }

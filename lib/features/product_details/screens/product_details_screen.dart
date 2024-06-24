@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:uniplanet/api/ads/ad_mob_service.dart';
 import 'package:uniplanet/common/widgets/selectable_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -31,6 +33,8 @@ import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/api/repository/index.dart';
 
+import '../../../constants/utils.dart';
+
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
   const ProductDetailScreen({super.key, required this.product});
@@ -41,12 +45,13 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late User currentUser;
-
+  InterstitialAd? _interstitialAd;
   int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _createInterstitialAd();
     currentUser = context.read<AccountBloc>().state.account.user;
     context
         .read<SellerSaleProductBloc>()
@@ -54,6 +59,47 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     context
         .read<SellerSoldProductBloc>()
         .add(LoadSellerSoldProductEvent(userId: widget.product.seller.id));
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd?.dispose();
+    super.dispose();
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdMobService.interstitialAdUnitId!,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('InterstitialAd failed to load: $error');
+          _interstitialAd = null;
+        },
+      ),
+    );
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          log('Ad dismissed');
+          ad.dispose();
+          _createInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+          log('Ad failed to show: $error');
+          ad.dispose();
+          _createInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+      _interstitialAd = null;
+    }
   }
 
   void shareProduct(
@@ -625,6 +671,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ChatBlocState state, Product product, BuildContext context) {
     return TextButton(
       onPressed: () => {
+        if (product.type == 'Free Item' || product.price == 0)
+          _showInterstitialAd(),
         context.read<ChatBloc>().add(CreateChatRoomEvent(
               buyer: context.read<AccountBloc>().state.account.user,
               seller: widget.product.seller,
