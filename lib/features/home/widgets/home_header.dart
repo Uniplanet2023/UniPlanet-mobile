@@ -25,23 +25,23 @@ class _HomeHeaderState extends State<HomeHeader> {
       snap: false,
       floating: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      toolbarHeight: Platform.isAndroid ? 122.h : 90.h,
+      toolbarHeight: Platform.isAndroid ? 122.h : 100.h,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: EdgeInsets.only(
-            left: 10, top: Platform.isAndroid ? 40 : 50, bottom: 0),
+            left: 10, top: Platform.isAndroid ? 40.h : 40.h, bottom: 0),
         title: Column(
           children: [
             Row(
               children: [
                 const SizedBox(width: 5),
-                const Image(
-                    image: AssetImage('assets/images/Logo_nbg.png'),
+                Image(
+                    image: const AssetImage('assets/images/Logo_nbg.png'),
                     width: 30,
-                    height: 30),
+                    height: 30.h),
                 Text('UniPlanet',
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 17.sp,
                       color: Theme.of(context).colorScheme.tertiary,
                       fontWeight: FontWeight.w600,
                     )
@@ -53,7 +53,7 @@ class _HomeHeaderState extends State<HomeHeader> {
               ],
             ),
             SizedBox(
-              height: 60,
+              height: 60.h,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [

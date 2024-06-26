@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:uniplanet/api/image_handling/image_upload_function.dart';
+import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/common/enums/message_enum.dart';
 import 'package:uniplanet/common/enums/message_status_enum.dart';
@@ -100,9 +102,10 @@ class SocketService {
           context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
         }
       });
-      socket.on('message received', (newMessageReceived) {
-        var msg = jsonDecode(newMessageReceived);
-        Message receivedMessage = Message.fromMap(msg);
+      socket.on('message received', (data) {
+        Message receivedMessage =
+            Message.fromMap(jsonDecode(data['messageJson']));
+        User sender = User.fromMap(jsonDecode(data['senderJson']));
         receivedMessage.status = MessageStatusEnum.received.value;
         if (context.mounted) {
           if (receivedMessage.sender != userId) {
@@ -121,6 +124,11 @@ class SocketService {
             readAllMessages(currentChatLocation!);
             // If the message is not the current chat room, update the unseen message count
           } else if (receivedMessage.receiver == userId) {
+            LocalNotificationController.showNotification(
+                title: sender.name,
+                body: receivedMessage.message,
+                bigPicture: sender.profileImage,
+                notificationLayout: NotificationLayout.MessagingGroup);
             context
                 .read<ChatBloc>()
                 .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
@@ -333,13 +341,14 @@ class SocketService {
         .future; // This will return a Future<bool> that completes when the callback is called
   }
 
-  Future<Message> sendMessage(
-      {required String id,
-      required String message,
-      required String chatId,
-      required String messageType,
-      required String receiver,
-      required BuildContext context}) async {
+  Future<Message> sendMessage({
+    required String id,
+    required String message,
+    required String chatId,
+    required String messageType,
+    required String receiver,
+    required BuildContext context,
+  }) async {
     // Create a Completer
     final Completer<Message> completer = Completer<Message>();
 
@@ -355,11 +364,19 @@ class SocketService {
     );
     User sender = context.read<AccountBloc>().state.account.user;
     sendStopTypingEvent(chatId, context);
+
+    // Convert Message and User to JSON strings
+    String messageJson = jsonEncode(msg.toMap());
+    String senderJson = jsonEncode(sender.toMap());
+
     socket.emitWithAck(
-        'new message', {"messageJson": msg, "senderJson": sender}, ack: (data) {
-      msg.status = MessageStatusEnum.received.value;
-      return completer.complete(msg);
-    });
+      'new message',
+      {"messageJson": messageJson, "senderJson": senderJson},
+      ack: (data) {
+        msg.status = MessageStatusEnum.received.value;
+        completer.complete(msg);
+      },
+    );
 
     return completer.future;
   }

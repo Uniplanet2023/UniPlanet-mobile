@@ -51,7 +51,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _createInterstitialAd();
+    // _createInterstitialAd();
     currentUser = context.read<AccountBloc>().state.account.user;
     context
         .read<SellerSaleProductBloc>()

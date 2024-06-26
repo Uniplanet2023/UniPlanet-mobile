@@ -238,7 +238,7 @@ class _ContactsListState extends State<ContactsList> {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
                                           return UserProfileScreen(
-                                              user: widget.list[index].seller);
+                                              user: client);
                                         }),
                                       );
                                     },

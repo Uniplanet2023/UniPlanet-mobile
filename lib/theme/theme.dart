@@ -10,7 +10,7 @@ ThemeData lightMode = ThemeData(
     primary: GlobalVariables.secondaryColor,
     primaryFixedDim: GlobalVariables.selectedNavBarColor,
     secondary: Color.fromARGB(255, 234, 239, 252),
-    secondaryFixedDim: Color.fromRGBO(238, 238, 238, 1),
+    secondaryFixedDim: Colors.white,
     tertiary: Colors.black,
     tertiaryFixedDim: Colors.black26,
     tertiaryContainer: Colors.black87,

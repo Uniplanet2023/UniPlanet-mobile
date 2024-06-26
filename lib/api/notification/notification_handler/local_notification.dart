@@ -48,7 +48,7 @@ class LocalNotificationController {
             NotificationChannel(
               channelKey: 'chats',
               channelName: 'Messages',
-              channelDescription: 'Notification tests as chats',
+              channelDescription: 'Notification for messages',
               playSound: true,
               enableVibration: true,
               enableLights: true,

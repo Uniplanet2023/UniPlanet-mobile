@@ -29,7 +29,7 @@ class _ItemBoxState extends State<ItemBox> {
   void initState() {
     super.initState();
     // _createNativeAd();
-    _createBannerAd();
+    // _createBannerAd();
   }
 
   @override

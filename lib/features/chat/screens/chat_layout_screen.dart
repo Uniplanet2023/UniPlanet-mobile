@@ -20,7 +20,7 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
+    // _createBannerAd();
     // _createNativeAd();
   }
 

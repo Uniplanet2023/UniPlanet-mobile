@@ -5,6 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/api/api_def/dio_client.dart';
 import 'package:uniplanet/api/notification/firebase_options.dart';
 import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
+import 'package:uniplanet/api/notification/notification_handler/remote_notification_controller.dart';
 import 'package:uniplanet/api/socket/socket_channel.dart';
 
 class Global {
@@ -20,6 +21,7 @@ class Global {
     // Notification initialization
     await LocalNotificationController.init(debug: true);
     await LocalNotificationController.getInitialNotificationAction();
+    await NotificationController.requestFirebaseToken();
 
     // Dio initialization (API client)
     await DioClient.instance.initCookie();
