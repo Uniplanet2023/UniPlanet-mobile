@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:uniplanet/common/enums/message_status_enum.dart';
+import 'package:uniplanet/config/enums/message_status_enum.dart';
 
 class ImageWithLoadingIndicator extends StatelessWidget {
   final String imagePath;

@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:uniplanet/common/functions/open_gallery.dart';
+import 'package:uniplanet/core/utils/open_gallery.dart';
 import 'package:uniplanet/features/account/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/screens/sold_products_screen.dart';
-import 'package:uniplanet/features/product_details/screens/seller_inventory_screen.dart';
-import 'package:uniplanet/features/product_details/screens/seller_sold_products_screen.dart';
+import 'package:uniplanet/features/product_details/presentation/pages/seller_inventory_screen.dart';
+import 'package:uniplanet/features/product_details/presentation/pages/seller_sold_products_screen.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/models/user.dart';
-import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/core/network/repository/auth_repository/auth_repo.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final User user;
@@ -36,15 +36,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _checkFirstTimeUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    hasSeenTutorial = prefs.getBool('hasSeenProfileTutorial') ?? false;
+    final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+    hasSeenTutorial = prefsHelper.getBool('hasSeenProfileTutorial') ?? false;
     if (!hasSeenTutorial) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(const Duration(milliseconds: 100), () {
           _showTutorial();
         });
       });
-      prefs.setBool('hasSeenProfileTutorial', true);
+      prefsHelper.saveBool('hasSeenProfileTutorial', true);
     }
   }
 

@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
+import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/bloc/wanted_product/wanted_product_bloc.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 
 class HomeHeader extends StatefulWidget {
   final String choiceCheapSelected;
@@ -18,42 +22,110 @@ class HomeHeader extends StatefulWidget {
 }
 
 class _HomeHeaderState extends State<HomeHeader> {
+  final SharedPreferencesHelper _prefsHelper = SharedPreferencesHelper();
+  String selectedSchool = 'All School'; // Default selected value
+
+  @override
+  void initState() {
+    super.initState();
+    bool? isMySchool = _prefsHelper.getBool('isMySchool');
+    selectedSchool =
+        (isMySchool == null || !isMySchool) ? 'All School' : 'My School';
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    bool isSmallDevice =
+        screenHeight < 800; // Threshold for small devices like iPhone SE
+
+    double textSize =
+        isSmallDevice ? 15 : 20; // Adjust text size for small devices
+    double imageHeight = Platform.isAndroid
+        ? 100.0
+        : (screenHeight > 1000
+            ? 130.0
+            : isSmallDevice
+                ? 100.0
+                : 85.0); // Adjust for iPad and iPhone SE
+    double titlePaddingTop = Platform.isAndroid
+        ? 40.0
+        : isSmallDevice
+            ? 20.0
+            : 45.0;
+    double imageWidth = isSmallDevice
+        ? 20.0
+        : (screenWidth > 600
+            ? 40.0
+            : 30.0); // Adjust the image width for small devices and screen width
+
     return SliverAppBar(
       pinned: false,
       snap: false,
       floating: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      toolbarHeight: Platform.isAndroid ? 122.h : 100.h,
+      toolbarHeight: imageHeight,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: EdgeInsets.only(
-            left: 10, top: Platform.isAndroid ? 40.h : 40.h, bottom: 0),
+            left: 10, top: titlePaddingTop, bottom: 0, right: 10),
         title: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(width: 5),
-                Image(
-                    image: const AssetImage('assets/images/Logo_nbg.png'),
-                    width: 30,
-                    height: 30.h),
-                Text('UniPlanet',
-                    style: TextStyle(
-                      fontSize: 17.sp,
-                      color: Theme.of(context).colorScheme.tertiary,
-                      fontWeight: FontWeight.w600,
-                    )
-                    // style: GoogleFonts.satisfy(
-                    //     fontSize: 17,
-                    //     color: Colors.black,
-                    //     fontWeight: FontWeight.w600),
+                Row(
+                  children: [
+                    const SizedBox(width: 5),
+                    Image(
+                      image: const AssetImage('assets/images/Logo_nbg.png'),
+                      width: imageWidth,
+                      height: imageWidth,
                     ),
+                    Text('UniPlanet',
+                        style: TextStyle(
+                          fontSize: textSize, // Use the adjusted font size
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.w600,
+                        )),
+                  ],
+                ),
+                DropdownButton<String>(
+                  value: selectedSchool,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontSize: isSmallDevice ? 12 : 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  items: <String>['All School', 'My School']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    bool isMySchool = newValue == 'My School';
+                    context.read<ProductBloc>().add(const LoadProductEvent());
+                    context.read<FreeProductBloc>().add(
+                        const LoadFreeProductEvent(category: 'Free Products'));
+                    context
+                        .read<HotProductBloc>()
+                        .add(const LoadHotProductsEvent());
+                    context
+                        .read<WantedProductBloc>()
+                        .add(const LoadWantedProductEvent());
+                    _prefsHelper.saveBool('isMySchool', isMySchool);
+                    setState(() {
+                      selectedSchool = newValue!;
+                    });
+                  },
+                ),
               ],
             ),
             SizedBox(
-              height: 60.h,
+              height: 38.0,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -68,6 +140,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                     label: Text(
                       'All Items',
                       style: TextStyle(
+                        fontSize: isSmallDevice ? 12 : 15,
                         color: widget.choiceCheapSelected == "All Items"
                             ? Colors.white
                             : Theme.of(context).colorScheme.tertiary,
@@ -90,7 +163,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       children: [
                         FaIcon(
                           FontAwesomeIcons.squareYoutube,
-                          size: 15,
+                          size: isSmallDevice ? 12 : 15,
                           color: widget.choiceCheapSelected == "Free Products"
                               ? Colors.white
                               : Theme.of(context).colorScheme.tertiary,
@@ -98,6 +171,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                         Text(
                           ' Free Items',
                           style: TextStyle(
+                            fontSize: isSmallDevice ? 12 : 15,
                             color: widget.choiceCheapSelected == "Free Products"
                                 ? Colors.white
                                 : Theme.of(context).colorScheme.tertiary,
@@ -109,8 +183,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                     selected: widget.choiceCheapSelected == "Free Products",
                     onSelected: (selected) {
                       widget.onChoiceChanged("Free Products");
-                      // Navigator.pushNamed(context, AppRoutes.category,
-                      //     arguments: 'Free Products');
                     },
                   ),
                   const SizedBox(width: 10),
@@ -125,7 +197,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       children: [
                         FaIcon(
                           FontAwesomeIcons.fire,
-                          size: 15,
+                          size: isSmallDevice ? 12 : 15,
                           color: widget.choiceCheapSelected == "Hot Items"
                               ? Colors.white
                               : Theme.of(context).colorScheme.tertiary,
@@ -133,6 +205,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                         Text(
                           ' Hot Items',
                           style: TextStyle(
+                            fontSize: isSmallDevice ? 12 : 15,
                             color: widget.choiceCheapSelected == "Hot Items"
                                 ? Colors.white
                                 : Theme.of(context).colorScheme.tertiary,
@@ -158,7 +231,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       children: [
                         FaIcon(
                           FontAwesomeIcons.moneyBill1,
-                          size: 15,
+                          size: isSmallDevice ? 12 : 15,
                           color: widget.choiceCheapSelected == "Buying"
                               ? Colors.white
                               : Theme.of(context).colorScheme.tertiary,
@@ -166,6 +239,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                         Text(
                           ' Wanted to Buy',
                           style: TextStyle(
+                            fontSize: isSmallDevice ? 12 : 15,
                             color: widget.choiceCheapSelected == "Buying"
                                 ? Colors.white
                                 : Theme.of(context).colorScheme.tertiary,

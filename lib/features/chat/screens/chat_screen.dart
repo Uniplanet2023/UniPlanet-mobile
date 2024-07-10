@@ -2,23 +2,23 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/get_product/get_product_bloc.dart';
 import 'package:uniplanet/bloc/status/status_bloc.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet/features/chat/widgets/chat_list.dart';
-import 'package:uniplanet/features/product_details/screens/product_details_screen.dart';
+import 'package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart';
 import 'package:uniplanet/features/report/screen/report_screen.dart';
-import 'package:uniplanet/global.dart';
+import 'package:uniplanet/core/initialization/init.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/bloc/message/message_bloc.dart';
-import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
-import 'package:uniplanet/api/socket/socket_channel.dart';
+import 'package:uniplanet/core/network/notification/local_notification.dart';
+import 'package:uniplanet/core/network/socket/socket_channel.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatRoom chatRoom;
@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         .read<GetProductBloc>()
         .add(GetProductLoadEvent(productId: widget.chatRoom.productId));
     SocketService.currentChatLocation = widget.chatRoom.id;
-    Global.socketService.readAllMessages(widget.chatRoom.id);
+    Initialization.socketService.readAllMessages(widget.chatRoom.id);
 
     var currentBadgeCount =
         await AwesomeNotifications().getGlobalBadgeCounter() -
@@ -59,8 +59,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     } else {
       AwesomeNotifications().setGlobalBadgeCounter(0);
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isAllowed = prefs.getBool('isNotificationAllowed') ?? false;
+    final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+
+    bool isAllowed = prefsHelper.getBool('isNotificationAllowed') ?? false;
     isNotificationAllowed = isAllowed;
   }
 
@@ -91,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       Future.delayed(const Duration(milliseconds: 1000), () {
         context.read<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
-        Global.socketService.readAllMessages(widget.chatRoom.id);
+        Initialization.socketService.readAllMessages(widget.chatRoom.id);
       });
     }
   }
@@ -216,7 +217,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         TextButton(
                           onPressed: () {
                             // Proceed with deletion after confirmation
-                            Global.socketService
+                            Initialization.socketService
                                 .readAllMessages(widget.chatRoom.id);
                             context.read<ChatBloc>().add(DeleteChatRoomEvent(
                                 chatId: widget.chatRoom.id,

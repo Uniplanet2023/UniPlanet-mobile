@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet/common/functions/init_data.dart';
-import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/global.dart';
-import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/core/initialization/init_data.dart';
+import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/core/initialization/init.dart';
+import 'package:uniplanet/core/network/repository/auth_repository/auth_repo.dart';
 
 part 'auth_bloc_event.dart';
 part 'auth_state/basic_state.dart';
@@ -62,7 +62,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         var clientId = element.buyer.id == AuthRepository.userId
             ? element.seller.id
             : element.buyer.id;
-        Global.socketService.sendDeleteChatRoomEvent(element.id, clientId);
+        Initialization.socketService
+            .sendDeleteChatRoomEvent(element.id, clientId);
       });
     }
     if (isSuccess) {
@@ -174,7 +175,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const LogOutState());
     String message = await _authRepository.logOut();
     if (message == 'Logged Out Successfully') {
-      Global.socketService.disconnect();
+      Initialization.socketService.disconnect();
       emit(const LogOutCompleteState());
     } else {
       emit(const LogOutFailedState());

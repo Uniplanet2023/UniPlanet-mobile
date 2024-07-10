@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/on_boarding/screens/first_page.dart';
 import 'package:uniplanet/features/on_boarding/screens/second_page.dart';
 import 'package:uniplanet/features/on_boarding/screens/third_page.dart';

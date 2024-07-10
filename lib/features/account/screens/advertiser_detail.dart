@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet/bloc/admin/admin_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/models/advertiser.dart';
 
 class AdvertiserDetail extends StatelessWidget {

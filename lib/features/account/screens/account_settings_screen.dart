@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/theme/theme_cubit.dart';
-import 'package:uniplanet/common/widgets/custom_textfield.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'package:uniplanet/features/account/screens/change_password_screen.dart';
-import 'package:uniplanet/api/notification/notification_handler/local_notification.dart';
+import 'package:uniplanet/core/network/notification/local_notification.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 
-import '../../../theme/theme.dart';
+import '../../../config/theme/theme.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -31,10 +31,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   void checkNotification() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    bool? isNotificationAllowed = pref.getBool('isNotificationAllowed');
+    final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+    bool? isNotificationAllowed = prefsHelper.getBool('isNotificationAllowed');
     if (isNotificationAllowed == null) {
-      pref.setBool('isNotificationAllowed', false);
+      prefsHelper.saveBool('isNotificationAllowed', false);
       isNotificationAllowed = false;
     }
     notify = isNotificationAllowed;

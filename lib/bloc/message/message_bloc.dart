@@ -3,18 +3,18 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uniplanet/api/image_handling/image_upload_function.dart';
+import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/enums/message_enum.dart';
-import 'package:uniplanet/common/enums/message_status_enum.dart';
-import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/global.dart';
+import 'package:uniplanet/config/enums/message_enum.dart';
+import 'package:uniplanet/config/enums/message_status_enum.dart';
+import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/models/image_message.dart';
 // Models
 import 'package:uniplanet/models/message.dart';
 // Repository
-import 'package:uniplanet/api/repository/index.dart';
-import 'package:uniplanet/api/socket/socket_channel.dart';
+import 'package:uniplanet/core/network/repository/index.dart';
+import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uuid/uuid.dart';
 // Part of the bloc
 part 'message_bloc_event.dart';
@@ -179,7 +179,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   Future<Message> _uploadMessage(Message message) async {
     try {
       BuildContext context = SnackbarGlobal.key.currentContext!;
-      Message sentMessage = await Global.socketService
+      Message sentMessage = await Initialization.socketService
           .sendMessage(
         id: message.id,
         message: message.message,
@@ -355,7 +355,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
         pendingMessages: state.pendingMessages));
 
     try {
-      Message sentMessage = await Global.socketService
+      Message sentMessage = await Initialization.socketService
           .sendMessage(
         id: uniqueId,
         message: event.message,

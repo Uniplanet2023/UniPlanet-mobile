@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/api/repository/index.dart';
+import 'package:uniplanet/core/network/repository/index.dart';
 
 class SoldInventoryProductBox extends StatefulWidget {
   final List<Product> productList;
@@ -57,8 +57,9 @@ class _SoldInventoryProductBoxState extends State<SoldInventoryProductBox>
       return;
     }
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    hasSeenMyListingTutorial = prefs.getBool('hasSeenSoldTutorial') ?? false;
+    final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+    hasSeenMyListingTutorial =
+        prefsHelper.getBool('hasSeenSoldTutorial') ?? false;
 
     if (!hasSeenMyListingTutorial) {
       setState(() {
@@ -72,7 +73,7 @@ class _SoldInventoryProductBoxState extends State<SoldInventoryProductBox>
           });
         });
       });
-      prefs.setBool('hasSeenSoldTutorial', true);
+      prefsHelper.saveBool('hasSeenSoldTutorial', true);
     }
   }
 

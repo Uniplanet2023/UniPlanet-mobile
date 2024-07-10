@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet/api/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/advertiser.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/common/widgets/selectable_text.dart';
+import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:uniplanet/models/message.dart';
 
 class MessageDetailScreen extends StatelessWidget {

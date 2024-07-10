@@ -1,4 +1,0 @@
-const stripeTestPublishableKey =
-    'pk_test_51PRNjiCWNFZrh8eIhgiCqEkUz9efXY4ppBCusr3fzosyO17zne7rP6WH1ct38zRkHzK5gq1rbA97VYOZH6ZTahEm00mIn0yZxQ';
-const stripeTestSecretKey =
-    'sk_test_51PRNjiCWNFZrh8eILLa5LLmbbpLaxgY6OsMMwSPqYkuZxfZIPR15UhFgZEXse0mnm0LfPcGbCTqrlBQhjcyfWCHi00gyhDdb3p';

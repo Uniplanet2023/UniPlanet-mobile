@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/functions/notification_scheduling.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/core/network/notification/notification_scheduling.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 // Repositories
-import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/core/network/repository/product_repository/product_repo.dart';
 // Models
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/models/user.dart';

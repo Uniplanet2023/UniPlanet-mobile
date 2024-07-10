@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/global_variables.dart';
-import 'package:uniplanet/constants/number_formatter.dart';
-import 'package:uniplanet/constants/price_formatter.dart';
-import 'package:uniplanet/constants/time_formatter.dart';
+import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
+import 'package:uniplanet/core/utils/number_formatter.dart';
+import 'package:uniplanet/core/utils/price_formatter.dart';
+import 'package:uniplanet/core/utils/time_formatter.dart';
 import 'package:uniplanet/models/product.dart';
 
 class ListItem extends StatelessWidget {

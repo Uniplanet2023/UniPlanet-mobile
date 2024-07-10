@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet/api/image_handling/image_upload_function.dart';
-import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/core/network/storage/image_upload_service.dart';
+import 'package:uniplanet/core/network/repository/auth_repository/auth_repo.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/account.dart';
-import 'package:uniplanet/api/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
 
-import '../../constants/utils.dart';
+import '../../core/utils/utils.dart';
 
 part 'account_event.dart';
 part 'account_state.dart';

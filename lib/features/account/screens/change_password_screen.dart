@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/widgets/custom_button.dart';
-import 'package:uniplanet/common/widgets/custom_textfield.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});

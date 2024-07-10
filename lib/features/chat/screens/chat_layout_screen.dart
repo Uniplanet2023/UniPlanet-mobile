@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
+import 'package:uniplanet/features/ads/presentation/bloc/ads_bloc.dart';
 import 'package:uniplanet/features/chat/widgets/contacts_list.dart';
-import 'package:uniplanet/api/ads/ad_mob_service.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({super.key});
@@ -14,51 +14,16 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   BannerAd? _bannerAd;
-  NativeAd? _nativeAd;
   bool _isAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    // _createBannerAd();
-    // _createNativeAd();
-  }
-
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: AdMobService.bannerAdUnitId!,
-      listener: AdMobService.createBannerListener(() {
-        setState(() {
-          _isAdLoaded = true;
-        });
-      }),
-      request: const AdRequest(),
-    )..load();
-  }
-
-  // void _createNativeAd() {
-  //   _nativeAd = NativeAd(
-  //     adUnitId: AdMobService.nativeAdUnitId!,
-  //     factoryId: 'listTile',
-  //     listener: AdMobService.createNativeAdListener(() {
-  //       setState(() {
-  //         _isAdLoaded = true;
-  //       });
-  //     }),
-  //     request: const AdRequest(),
-  //     nativeTemplateStyle: NativeTemplateStyle(
-  //       templateType: TemplateType.small,
-  //       mainBackgroundColor: Colors.white,
-  //     ),
-  //   )..load();
-  // }
-
-  @override
-  void dispose() {
-    _nativeAd?.dispose();
-    _bannerAd?.dispose();
-    super.dispose();
+    context.read<AdsBloc>().add(LoadBannerAdEvent(() {
+      setState(() {
+        _isAdLoaded = true;
+      });
+    }));
   }
 
   @override

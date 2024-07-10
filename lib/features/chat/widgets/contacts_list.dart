@@ -6,18 +6,18 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uniplanet/bloc/chat/chat_bloc.dart';
 import 'package:uniplanet/bloc/status/status_bloc.dart';
 import 'package:uniplanet/bloc/typing/typing_bloc.dart';
-import 'package:uniplanet/common/enums/chat_enum.dart';
-import 'package:uniplanet/common/enums/message_enum.dart';
-import 'package:uniplanet/constants/global_variables.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/config/enums/chat_enum.dart';
+import 'package:uniplanet/config/enums/message_enum.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
 import 'package:uniplanet/features/report/screen/report_screen.dart';
-import 'package:uniplanet/global.dart';
+import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
-import 'package:uniplanet/api/repository/auth_repository/auth_repo.dart';
+import 'package:uniplanet/core/network/repository/auth_repository/auth_repo.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;
@@ -70,7 +70,7 @@ class _ContactsListState extends State<ContactsList> {
       // ignore: constant_pattern_never_matches_value_type
       case ChatActions.delete:
         // Delete chat room
-        Global.socketService.readAllMessages(widget.list[index].id);
+        Initialization.socketService.readAllMessages(widget.list[index].id);
         context.read<ChatBloc>().add(DeleteChatRoomEvent(
             chatId: widget.list[index].id, clientId: client.id));
         setState(() {
@@ -224,13 +224,17 @@ class _ContactsListState extends State<ContactsList> {
                         leading: Stack(
                           children: [
                             client.profileImage == null
-                                ? const CircleAvatar(
-                                    backgroundColor: Colors.grey,
-                                    radius: 25,
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                      size: 40,
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: Container(
+                                      color: Colors.grey,
+                                      width: 50,
+                                      height: 50,
+                                      child: const Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
                                     ),
                                   )
                                 : GestureDetector(
@@ -242,14 +246,16 @@ class _ContactsListState extends State<ContactsList> {
                                         }),
                                       );
                                     },
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
-                                        client.profileImage!,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: client.profileImage!,
                                         cacheManager:
                                             GlobalVariables.customCacheManager,
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
                                       ),
-                                      radius: 25,
                                     ),
                                   ),
                             BlocBuilder<StatusBloc, StatusState>(

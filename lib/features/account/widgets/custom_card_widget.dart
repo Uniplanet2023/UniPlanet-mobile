@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget child;

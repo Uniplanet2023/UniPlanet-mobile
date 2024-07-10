@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/api/repository/index.dart';
+import 'package:uniplanet/core/network/repository/index.dart';
 
 part 'free_product_event.dart';
 part 'free_product_state.dart';

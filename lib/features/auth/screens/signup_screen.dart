@@ -1,16 +1,20 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/common/widgets/custom_button.dart';
-import 'package:uniplanet/common/widgets/custom_textfield.dart';
+import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'package:uniplanet/features/auth/functions/signup.dart';
+import 'package:uniplanet/features/auth/screens/phone_opt_verify_screen.dart';
 import 'package:uniplanet/features/auth/widgets/bezier_container.dart';
 import 'package:uniplanet/features/auth/widgets/terms_and_conditions.dart';
-import 'package:uniplanet/constants/university_list.dart';
+import 'package:uniplanet/core/utils/constant/university_list.dart';
+import 'package:uniplanet/features/auth/widgets/us_number_format.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -24,11 +28,18 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
 
   String? school = "";
   bool validPassword = false;
   bool isChecked = false;
   bool isStudent = true;
+  bool isPhoneVerified = false;
+  bool isOtpSent = false;
+
+  String selectedCountryCode = '+1';
+  String verificationId = "";
 
   @override
   void dispose() {
@@ -36,6 +47,56 @@ class _SignupScreenState extends State<SignupScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _phoneController.dispose();
+    _otpController.dispose();
+  }
+
+  Future<void> verifyPhoneNumber() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String phoneNumber =
+        '$selectedCountryCode${_phoneController.text.replaceAll('-', '')}';
+    await auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+        setState(() {
+          isPhoneVerified = true;
+        });
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? "Verification failed")),
+        );
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        setState(() {
+          this.verificationId = verificationId;
+          isOtpSent = true;
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        setState(() {
+          this.verificationId = verificationId;
+        });
+      },
+    );
+  }
+
+  Future<bool> verifyOtp(String otpCode) async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otpCode,
+      );
+      await auth.signInWithCredential(credential);
+      setState(() {
+        isPhoneVerified = true;
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Widget _backButton() {
@@ -172,12 +233,104 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(height: 10),
                         CustomTextField(
                           controller: _nameController,
-                          hintText: 'Name',
+                          hintText: isStudent ? 'Name' : "Company Name",
                         ),
                         const SizedBox(height: 10),
                         CustomTextField(
                           controller: _emailController,
                           hintText: isStudent ? 'Email (.edu only)' : 'Email',
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: DropdownButton<String>(
+                                value: selectedCountryCode,
+                                items: <String>['+1']
+                                    .map((code) => DropdownMenuItem<String>(
+                                          value: code,
+                                          child: Text(code),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedCountryCode = value!;
+                                  });
+                                },
+                                underline: Container(),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextField(
+                                controller: _phoneController,
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  UsNumberTextInputFormatter(),
+                                ],
+                                enabled:
+                                    !isPhoneVerified, // Disable the TextField when phone is verified
+                                decoration: InputDecoration(
+                                  labelText: 'Phone Number',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            isPhoneVerified
+                                ? const Icon(Icons.verified,
+                                    color: Colors.green)
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      // Remove any non-digit characters from the phone number
+                                      String cleanPhoneNumber = _phoneController
+                                          .text
+                                          .replaceAll(RegExp(r'\D'), '');
+
+                                      if (cleanPhoneNumber.length == 10) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PhoneOTPVerifyScreen(
+                                                      onVerification:
+                                                          verifyPhoneNumber,
+                                                      onVerificationComplete:
+                                                          verifyOtp)),
+                                        );
+                                        // Your verify phone number logic here
+                                        verifyPhoneNumber();
+                                      } else {
+                                        // Show an error message if the phone number is not 10 digits
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Please enter a valid 10-digit phone number.'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 30.0, vertical: 12.0),
+                                    ),
+                                    child: const Text('Verify'),
+                                  ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         DropdownSearch<String>(
@@ -267,7 +420,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             return CustomButton(
                               text: 'Sign Up',
                               onTap: () {
-                                if (_signUpFormKey.currentState!.validate()) {
+                                if (_signUpFormKey.currentState!.validate() &&
+                                    isPhoneVerified) {
                                   signUpUser(
                                       context,
                                       _emailController.text,
@@ -277,6 +431,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                       _passwordController.text,
                                       isChecked,
                                       isStudent);
+                                } else if (!isPhoneVerified) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Phone not verified.')),
+                                  );
                                 }
                               },
                             );
@@ -293,7 +452,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   Navigator.pop(context);
                                 },
                                 child: Text(
-                                  "Sign In",
+                                  'Sign In',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color:

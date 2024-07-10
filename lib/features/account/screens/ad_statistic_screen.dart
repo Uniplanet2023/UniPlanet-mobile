@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/api/repository/index.dart';
 import 'package:uniplanet/bloc/advertiser/advertiser_bloc.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/features/account/widgets/bar_chart.dart';
 import 'package:uniplanet/features/account/widgets/stat_card.dart';
 import 'package:uniplanet/features/account/widgets/summary_widget.dart';
@@ -47,70 +46,48 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
     super.dispose();
   }
 
-  void _showRedirectDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Please Read Carefully'),
-          content: RichText(
-            text: const TextSpan(
-              children: [
-                TextSpan(
-                  text:
-                      '1. You are about to be redirected to an external website.\n\n2. You must be purchasing the in-app advertisement service from UniPlanet Shop with the ',
-                ),
-                TextSpan(
-                  text: 'same Email Address.\n\n',
-                  style: TextStyle(color: Colors.red),
-                ),
-                TextSpan(
-                  text: '3. It takes about ',
-                ),
-                TextSpan(
-                  text: '10 miniutes to 1 day.\n\n',
-                  style: TextStyle(color: Colors.red),
-                ),
-                TextSpan(
-                  text:
-                      '4. Please let me know if you\'re facing any issue by contacting me at ',
-                ),
-                TextSpan(
-                  text: 'uniplanet.info@gmail.com',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
-              },
-            ),
-            TextButton(
-              child: const Text('Proceed'),
-              onPressed: () async {
-                Navigator.of(context).pop();
-                Uri url = Uri(
-                    scheme: 'https',
-                    host: 'buy.stripe.com',
-                    path: 'eVa5mug0X9gn8368ww',
-                    query:
-                        'prefilled_email=${AuthRepository.email}&client_reference_id=${AuthRepository.userId}');
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showRedirectDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('Notice'),
+  //         content: RichText(
+  //           text: const TextSpan(
+  //             children: [
+  //               TextSpan(
+  //                 text:
+  //                     '1. You are about to be redirected to an external website.\n\n',
+  //               ),
+  //               TextSpan(
+  //                 text:
+  //                     '2. Please let me know if you\'re facing any issue by contacting me at ',
+  //               ),
+  //               TextSpan(
+  //                 text: 'uniplanet.info@gmail.com',
+  //                 style: TextStyle(color: Colors.red),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text('Cancel'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Dismiss the dialog
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: const Text('Proceed'),
+  //             onPressed: () async {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +190,16 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          _showRedirectDialog(context);
+          Uri url = Uri(
+            scheme: 'https',
+            host: 'payment.uniplanet-back.autos',
+            path: 'login',
+          );
+          if (await canLaunchUrl(url)) {
+            await launchUrl(url);
+          } else {
+            throw 'Could not launch $url';
+          }
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add_card),

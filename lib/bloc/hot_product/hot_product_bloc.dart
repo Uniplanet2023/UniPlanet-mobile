@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/functions/notification_scheduling.dart';
+import 'package:uniplanet/core/network/notification/notification_scheduling.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/core/network/repository/product_repository/product_repo.dart';
 
 part 'hot_product_event.dart';
 part 'hot_product_state.dart';
@@ -24,7 +24,7 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
     int nextPage = state.hotProductPage + 1;
     List<Product> result = [];
     try {
-      result = await _productRepository.getHotProducts(nextPage: nextPage);
+      result = await _productRepository.getHotProducts(page: nextPage);
     } catch (e) {
       emit(ErrorHotProductState(message: e.toString()));
     }
@@ -48,7 +48,7 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
     ));
     List<Product> result = [];
     try {
-      result = await _productRepository.getHotProducts(nextPage: 1);
+      result = await _productRepository.getHotProducts(page: 1);
       if (result.isEmpty) {
         emit(const EndHotProductState(hotProducts: [], hotProductPage: 1));
         return;

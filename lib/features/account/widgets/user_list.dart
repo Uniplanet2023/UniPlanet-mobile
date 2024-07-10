@@ -9,10 +9,11 @@ class UserProfile {
   final String username;
   final String advertisement;
 
-  UserProfile(
-      {required this.imageUrl,
-      required this.username,
-      required this.advertisement});
+  UserProfile({
+    required this.imageUrl,
+    required this.username,
+    required this.advertisement,
+  });
 }
 
 class UserList extends StatelessWidget {
@@ -24,9 +25,10 @@ class UserList extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<UserProfile> users = userInteractionList
         .map((userInteraction) => UserProfile(
-            imageUrl: userInteraction.user.profileImage!,
-            username: userInteraction.user.name,
-            advertisement: userInteraction.advertisement))
+              imageUrl: userInteraction.user.profileImage!,
+              username: userInteraction.user.name,
+              advertisement: userInteraction.advertisement,
+            ))
         .toList();
 
     return Column(
@@ -64,20 +66,30 @@ class GlassListItem extends StatelessWidget {
                   backgroundImage: CachedNetworkImageProvider(user.imageUrl),
                 ),
                 const SizedBox(width: 16.0),
-                Text(
-                  user.username,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "🌟${user.advertisement}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.username,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis, // handle overflow
+                      ),
+                      const SizedBox(height: 4.0), // add space between texts
+                      Text(
+                        "🌟${user.advertisement}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis, // handle overflow
+                      ),
+                    ],
                   ),
                 ),
               ],

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/bloc/like/like_bloc.dart';
 import 'package:uniplanet/bloc/product/product_bloc.dart';
-import 'package:uniplanet/constants/number_formatter.dart';
-import 'package:uniplanet/constants/price_formatter.dart';
-import 'package:uniplanet/constants/time_formatter.dart';
-import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/core/utils/number_formatter.dart';
+import 'package:uniplanet/core/utils/price_formatter.dart';
+import 'package:uniplanet/core/utils/time_formatter.dart';
+import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:uniplanet/api/ads/ad_mob_service.dart';
 
 class ItemBox extends StatefulWidget {
   final List<Product> productList;
@@ -21,77 +19,12 @@ class ItemBox extends StatefulWidget {
 }
 
 class _ItemBoxState extends State<ItemBox> {
-  NativeAd? _nativeAd;
-  BannerAd? _bannerAd;
-
-  bool _isAdLoaded = false;
-  @override
-  void initState() {
-    super.initState();
-    // _createNativeAd();
-    // _createBannerAd();
-  }
-
-  @override
-  void dispose() {
-    _nativeAd?.dispose();
-    _bannerAd?.dispose();
-    super.dispose();
-  }
-
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.leaderboard,
-      adUnitId: AdMobService.bannerAdUnitId!,
-      listener: AdMobService.createBannerListener(() {
-        setState(() {
-          _isAdLoaded = true;
-        });
-      }),
-      request: const AdRequest(),
-    )..load();
-  }
-
-  // void _createNativeAd() {
-  //   _nativeAd = NativeAd(
-  //     adUnitId: AdMobService.nativeAdUnitId!,
-  //     listener: AdMobService.createNativeAdListener(() {
-  //       setState(() {
-  //         _isAdLoaded = true;
-  //       });
-  //     }),
-  //     request: const AdRequest(),
-  //     nativeTemplateStyle: NativeTemplateStyle(
-  //       templateType: TemplateType.small,
-  //       mainBackgroundColor: Colors.white,
-  //     ),
-  //   )..load();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          if (index % 16 == 15) {
-            // Return the banner ad every 15 products (index 10, 21, 32, ...)
-            return _isAdLoaded
-                ? Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    color: Theme.of(context).colorScheme.surface,
-                    child: SizedBox(
-                      height: _bannerAd!.size.height.toDouble(),
-                      width: _bannerAd!.size.width.toDouble(),
-                      child: AdWidget(ad: _bannerAd!),
-                    ),
-                  )
-                : Container();
-
-            // return _isAdLoaded ? AdWidget(ad: _nativeAd!) : Container();
-          }
-
-          final productIndex = index - (index ~/ 16);
+          final productIndex = index;
           final product = widget.productList[productIndex];
           return InkWell(
               onTap: () {
@@ -107,8 +40,7 @@ class _ItemBoxState extends State<ItemBox> {
               child: Item(product: product));
         },
         // 40 list items
-        childCount: widget.productList.length +
-            (widget.productList.length / 15).floor(),
+        childCount: widget.productList.length,
       ),
     );
   }

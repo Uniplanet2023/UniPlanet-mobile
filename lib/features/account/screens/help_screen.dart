@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/widgets/menu_section.dart';
-import 'package:uniplanet/constants/text_size_formats.dart';
+import 'package:uniplanet/core/utils/text_size_formats.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});

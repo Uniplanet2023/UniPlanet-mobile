@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/common/widgets/custom_button.dart';
-import 'package:uniplanet/common/widgets/custom_textfield.dart';
-import 'package:uniplanet/constants/global_variables.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/models/product.dart';
 
 class EditProductScreen extends StatefulWidget {

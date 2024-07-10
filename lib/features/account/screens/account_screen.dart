@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
 import 'package:uniplanet/bloc/auth/auth_bloc.dart';
-import 'package:uniplanet/common/routes/names.dart';
+import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/screens/account_settings_screen.dart';
 import 'package:uniplanet/features/account/screens/ad_statistic_screen.dart';
 import 'package:uniplanet/features/account/screens/advertiser_control_panel.dart';

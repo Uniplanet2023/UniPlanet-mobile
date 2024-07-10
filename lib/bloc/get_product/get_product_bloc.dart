@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/api/repository/product_repository/product_repo.dart';
+import 'package:uniplanet/core/network/repository/product_repository/product_repo.dart';
 
 part 'get_product_event.dart';
 part 'get_product_state.dart';

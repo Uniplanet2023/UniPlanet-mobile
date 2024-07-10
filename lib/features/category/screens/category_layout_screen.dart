@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
-import 'package:uniplanet/common/routes/names.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/api/repository/index.dart';
+import 'package:uniplanet/core/network/repository/index.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -25,6 +25,11 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = (screenWidth / 100).round(); // Number of columns
+    double childAspectRatio =
+        (screenWidth / crossAxisCount) / 150; // Adjust ratio
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
@@ -47,12 +52,124 @@ class _CategoryPageState extends State<CategoryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  top: 10,
+                  bottom: 10,
+                ),
+                child: Text(
+                  '✨ Browse by Category',
+                  style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.tertiaryContainer),
+                )),
             Container(
-              margin: const EdgeInsets.only(top: 0),
-              height: 2, // Thickness of the line
-              color: Theme.of(context)
-                  .colorScheme
-                  .secondaryFixedDim, // Color of the line
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  childAspectRatio: childAspectRatio,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                ),
+                itemCount: GlobalVariables.categories.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, AppRoutes.category,
+                        arguments: GlobalVariables.categories[index]['name']),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                              15.0), // Adjust the radius as needed
+                          child: SizedBox(
+                            width: 55,
+                            height: 55,
+                            child: Image.asset(
+                              GlobalVariables.categories[index]['image'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Expanded(
+                          child: Text(
+                            GlobalVariables.categories[index]['name'],
+                            style: const TextStyle(fontSize: 13),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  top: 10,
+                  bottom: 10,
+                ),
+                child: Text(
+                  '✨ Local Stores Near You',
+                  style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.tertiaryContainer),
+                )),
+            Container(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  childAspectRatio: childAspectRatio,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                ),
+                itemCount: GlobalVariables.localstore.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, AppRoutes.category,
+                        arguments: GlobalVariables.localstore[index]['name']),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                              15.0), // Adjust the radius as needed
+                          child: SizedBox(
+                            width: 55,
+                            height: 55,
+                            child: Image.asset(
+                              GlobalVariables.localstore[index]['image'],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            GlobalVariables.localstore[index]['name'],
+                            style: const TextStyle(fontSize: 13),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -68,9 +185,11 @@ class _CategoryPageState extends State<CategoryPage> {
                           TextSpan(
                             text: '🔥Hot items in ',
                             style: GoogleFonts.roboto(
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: GlobalVariables.secondaryColor,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
                             ),
                           ),
                           TextSpan(
@@ -78,7 +197,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.tertiary,
+                              color: GlobalVariables.secondaryColor,
                             ),
                           ),
                         ],
@@ -120,90 +239,15 @@ class _CategoryPageState extends State<CategoryPage> {
                 return const SizedBox();
               },
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              height: 2, // Thickness of the line
-              color: Theme.of(context)
-                  .colorScheme
-                  .secondaryFixedDim, // Color of the line
-            ),
-
-            Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  top: 10,
-                  bottom: 10,
-                ),
-                child: Text(
-                  '✨ Browse By Category',
-                  style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: GlobalVariables.secondaryColor),
-                )),
-            // Search bar here
-            Container(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 10 / 10,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: GlobalVariables.categories.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, AppRoutes.category,
-                        arguments: GlobalVariables.categories[index]['name']),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ClipOval(
-                          child: Container(
-                            color:
-                                Theme.of(context).colorScheme.secondaryFixedDim,
-                            width: 55,
-                            height: 55,
-                            child: Image.asset(
-                                GlobalVariables.categories[index]['image'],
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            GlobalVariables.categories[index]['name'],
-                            style: const TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              height: 2, // Thickness of the line
-              color: Theme.of(context)
-                  .colorScheme
-                  .secondaryFixedDim, // Color of the line
-            ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
                 child: Text(
                   '🔍 Based on your interests',
                   style: GoogleFonts.roboto(
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: GlobalVariables.secondaryColor),
+                      color: Theme.of(context).colorScheme.tertiaryContainer),
                 )),
-            // Interests section here
-            // Interests section here
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
@@ -272,7 +316,7 @@ Widget buildProductContent(
         {required BuildContext context, required Product product}) =>
     GestureDetector(
       onTap: () {
-        context.read<ProductBloc>().add(IncreaseClickProductEvent(product.id));
+        context.read().add(IncreaseClickProductEvent(product.id));
         Navigator.pushNamed(
           context,
           AppRoutes.productDetailsPage,
@@ -286,7 +330,6 @@ Widget buildProductContent(
         child: Column(
           crossAxisAlignment:
               CrossAxisAlignment.start, // Align text to the start
-
           children: [
             // Fixed size container for the image
             Container(

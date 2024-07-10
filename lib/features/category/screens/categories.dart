@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/widgets/loader.dart';
+import 'package:uniplanet/features/common/presentation/widgets/loader.dart';
 import 'package:uniplanet/features/category/widget/category_header.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 

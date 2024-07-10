@@ -1,16 +1,16 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/common/functions/check_blocked.dart';
-import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/global.dart';
+import 'package:uniplanet/core/utils/check_blocked.dart';
+import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 // Repositories
 // Models
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
-import 'package:uniplanet/api/repository/index.dart';
+import 'package:uniplanet/core/network/repository/index.dart';
 
 // Bloc Events, States
 part 'chat_bloc_event.dart';
@@ -88,7 +88,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       if (msg == 'success') {
         state.chatRooms.removeWhere((element) => element.id == event.chatId);
 
-        Global.socketService
+        Initialization.socketService
             .sendDeleteChatRoomEvent(event.chatId, event.clientId);
         emit(DeletedChatRoomState(
           deletedChatRoomId: event.chatId,
@@ -247,7 +247,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         } else {
           clientId = chatRoom.buyer.id;
         }
-        bool isTargetUserOnline = await Global.socketService
+        bool isTargetUserOnline = await Initialization.socketService
             .joinChatAndCheckUserExist(
                 chatId: chatRoom.id, targetUserId: clientId);
         if (isTargetUserOnline) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniplanet/common/widgets/custom_button.dart';
-import 'package:uniplanet/constants/global_variables.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/features/auth/screens/auth_screen.dart';
 import 'package:uniplanet/features/on_boarding/widgets/height_spacer.dart';
 

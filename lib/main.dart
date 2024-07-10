@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/theme/theme_cubit.dart';
-import 'package:uniplanet/common/widgets/bottom_bar.dart';
-import 'package:uniplanet/common/widgets/error_screen.dart';
-import 'package:uniplanet/constants/utils.dart';
+import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
+import 'package:uniplanet/features/common/presentation/widgets/error_screen.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/screens/signup_screen.dart';
 import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
-import 'package:uniplanet/global.dart';
-import 'package:uniplanet/common/routes/router.dart';
+import 'package:uniplanet/core/initialization/init.dart';
+import 'package:uniplanet/core/router/router.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/statemanager_provider.dart';
 
 void main() async {
-  await Global.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Initialization.init();
   ErrorWidget.builder = (FlutterErrorDetails details) {
     bool inDebug = false;
     assert(() {
@@ -47,39 +49,43 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    log('dispose  called main.dart');
-    Global.socketService.disconnect();
+    log('dispose called main.dart');
+    Initialization.socketService.disconnect();
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  // This is the callback that is called when the system puts the app in the background
-  // Resume : inactivity -> resume
-  // Pause : inactivity -> pause
-  // Detached : inactivity -> detached
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      log('resumed');
-      if (Global.socketService.socket.disconnected) {
-        Global.socketService.connect();
+      SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+      var userData = prefsHelper.getString('userData');
+      if (userData != null) {
+        if (Initialization.socketService.socket.disconnected) {
+          Initialization.socketService.connect();
+        }
+        SnackbarGlobal.key.currentState!.context
+            .read<ChatBloc>()
+            .add(const LoadChatRoomEvent());
       }
-      SnackbarGlobal.key.currentState!.context
-          .read<ChatBloc>()
-          .add(const LoadChatRoomEvent());
     } else if (state == AppLifecycleState.paused) {
       log('paused');
-      // App is paused (sent to background)
-      if (Global.socketService.socket.connected) {
-        Global.socketService.disconnect();
+      SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+      var userData = prefsHelper.getString('userData');
+      if (userData != null) {
+        if (Initialization.socketService.socket.connected) {
+          Initialization.socketService.disconnect();
+        }
       }
     } else if (state == AppLifecycleState.inactive) {
       log('inactive');
-      // App is inactive (terminated)
     } else if (state == AppLifecycleState.detached) {
       log('detached');
-      // App is detached (app suspended in the background)
-      if (Global.socketService.socket.connected) {
-        Global.socketService.disconnect();
+      SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+      var userData = prefsHelper.getString('userData');
+      if (userData != null) {
+        if (Initialization.socketService.socket.connected) {
+          Initialization.socketService.disconnect();
+        }
       }
     }
   }
@@ -87,7 +93,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // 360, 780
+      designSize: const Size(375, 812),
       builder: (context, child) => BlocBuilder<ThemeCubit, ThemeData>(
         builder: (context, state) {
           return MaterialApp(

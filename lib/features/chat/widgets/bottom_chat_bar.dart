@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/constants/utils.dart';
-import 'package:uniplanet/global.dart';
+import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/core/initialization/init.dart';
 
 class BottomChatField extends StatefulWidget {
   final String chatRoomId;
@@ -110,7 +110,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   maxLines: 4, // No limit on the number of lines
                   onChanged: (val) {
                     if (val.isNotEmpty) {
-                      Global.socketService
+                      Initialization.socketService
                           .sendTypingEvent(widget.chatRoomId, context);
                       setState(() {
                         isShowSendButton = true;
@@ -123,7 +123,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                   },
                   onEditingComplete: () => sendTextMessage(),
                   onTapOutside: (_) {
-                    Global.socketService
+                    Initialization.socketService
                         .sendStopTypingEvent(widget.chatRoomId, context);
                   },
                   decoration: InputDecoration(
