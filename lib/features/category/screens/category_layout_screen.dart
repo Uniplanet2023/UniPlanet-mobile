@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
+import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/models/product.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/features/report/widget/build_list.dart';
+import 'package:uniplanet/features/report/presentation/widget/build_list.dart';
 import 'package:uniplanet/models/user.dart';
 
 class ReportUserPage extends StatelessWidget {

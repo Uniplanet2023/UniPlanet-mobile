@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
-import 'package:uniplanet/bloc/search_product/search_product_bloc.dart';
+import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
+import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/loader.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet/features/search/widget/search_history_list.dart';
-import 'package:uniplanet/features/search/widget/searched_product_list.dart';
+import 'package:uniplanet/features/search/presentation/widget/search_history_list.dart';
+import 'package:uniplanet/features/search/presentation/widget/searched_product_list.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({

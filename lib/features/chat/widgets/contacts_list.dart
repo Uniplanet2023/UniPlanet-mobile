@@ -12,7 +12,7 @@ import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/screens/chat_screen.dart';
-import 'package:uniplanet/features/report/screen/report_screen.dart';
+import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';

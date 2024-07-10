@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/search_history/search_history_bloc.dart';
+import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
 
 class SearchHistory extends StatefulWidget {
   final List<String> recentSearches;

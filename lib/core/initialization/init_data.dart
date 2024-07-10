@@ -6,7 +6,7 @@ import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
-import 'package:uniplanet/bloc/wanted_product/wanted_product_bloc.dart';
+import 'package:uniplanet/features/home/bloc/wanted_product_bloc.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';

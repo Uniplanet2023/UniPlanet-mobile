@@ -10,7 +10,7 @@ import 'package:uniplanet/features/account/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/widgets/bottom_chat_bar.dart';
 import 'package:uniplanet/features/chat/widgets/chat_list.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart';
-import 'package:uniplanet/features/report/screen/report_screen.dart';
+import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/models/chat_room.dart';

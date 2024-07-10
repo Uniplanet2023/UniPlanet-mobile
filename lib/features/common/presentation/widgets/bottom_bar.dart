@@ -2,13 +2,13 @@ import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/core/utils/streamer.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/screens/account_screen.dart';
-import 'package:uniplanet/features/add-product/screens/add_product_screen.dart';
+import 'package:uniplanet/features/add-product/presentation/screens/add_product_screen.dart';
 import 'package:uniplanet/features/category/screens/category_layout_screen.dart';
 import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
 import 'package:uniplanet/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:uniplanet/features/search/screens/search_screen.dart';
+import 'package:uniplanet/features/search/presentation/screens/search_screen.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 
 class BottomBar extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/features/report/screen/report_detail_screen.dart';
-import 'package:uniplanet/features/report/screen/report_other_screen.dart';
-import 'package:uniplanet/features/report/widget/show_dialog.dart';
+import 'package:uniplanet/features/report/presentation/screen/report_detail_screen.dart';
+import 'package:uniplanet/features/report/presentation/screen/report_other_screen.dart';
+import 'package:uniplanet/features/report/presentation/widget/show_dialog.dart';
 import 'package:uniplanet/models/user.dart';
 
 Widget buildListItem(

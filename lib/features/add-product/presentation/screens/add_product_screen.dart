@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/bloc/account/account_bloc.dart';
-import 'package:uniplanet/bloc/product/product_bloc.dart';
+import 'package:uniplanet/features/common/presentation/product/product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';

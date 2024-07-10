@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/bloc/report/report_bloc.dart';
+import 'package:uniplanet/features/report/presentation/bloc/report_bloc.dart';
 import 'package:uniplanet/models/user.dart';
 
 class ReportDetailPage extends StatefulWidget {

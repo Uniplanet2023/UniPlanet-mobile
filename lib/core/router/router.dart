@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:uniplanet/core/router/names.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
-import 'package:uniplanet/features/add-product/screens/add_product_screen.dart';
+import 'package:uniplanet/features/add-product/presentation/screens/add_product_screen.dart';
 import "package:uniplanet/features/auth/screens/auth_screen.dart";
 import "package:uniplanet/features/auth/screens/opt_verify_screen.dart";
 import 'package:uniplanet/features/auth/screens/signin_screen.dart';
@@ -11,7 +11,7 @@ import "package:uniplanet/features/chat/screens/chat_layout_screen.dart";
 import "package:uniplanet/features/chat/screens/chat_screen.dart";
 import "package:uniplanet/features/home/screens/home_screen.dart";
 import "package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart";
-import "package:uniplanet/features/search/screens/search_screen.dart";
+import "package:uniplanet/features/search/presentation/screens/search_screen.dart";
 import "package:uniplanet/models/chat_room.dart";
 import "package:uniplanet/models/product.dart";
 import "package:uniplanet/models/user.dart";
