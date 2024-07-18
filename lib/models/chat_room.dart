@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:uniplanet/features/auth/data/models/user_model.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/user.dart';
 
@@ -26,8 +28,8 @@ class ChatRoom {
   static initChatRoom() {
     return ChatRoom(
       id: "",
-      seller: User.initialUser(),
-      buyer: User.initialUser(),
+      seller: UserModel.initialUser(),
+      buyer: UserModel.initialUser(),
       productId: "",
       productName: "",
       lastMessage: null,
@@ -63,8 +65,8 @@ class ChatRoom {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'seller': seller.toMap(),
-      'buyer': buyer.toMap(),
+      'seller': seller,
+      'buyer': buyer,
       'productId': productId,
       'lastMessage': lastMessage?.toMap(),
       'unseenMessageCount': unseenMessageCount,
@@ -76,11 +78,11 @@ class ChatRoom {
     return ChatRoom(
       id: map['id'],
       seller: map['seller'] is Map
-          ? User.fromMap(map['seller'])
-          : User.fromJson(map['seller']),
+          ? UserModel.fromMap(map['seller'])
+          : UserModel.fromJson(map['seller']),
       buyer: map['buyer'] is Map
-          ? User.fromMap(map['buyer'])
-          : User.fromJson(map['buyer']),
+          ? UserModel.fromMap(map['buyer'])
+          : UserModel.fromJson(map['buyer']),
       productId: map['productId'],
       productName: map['productName'] ?? "",
       lastMessage: map['lastMessage'] != null

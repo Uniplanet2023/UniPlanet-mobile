@@ -1,20 +1,20 @@
 import "package:flutter/material.dart";
 import "package:uniplanet/core/router/names.dart";
+import "package:uniplanet/features/auth/domain/entities/user.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
 import 'package:uniplanet/features/add-product/presentation/screens/add_product_screen.dart';
-import "package:uniplanet/features/auth/screens/auth_screen.dart";
-import "package:uniplanet/features/auth/screens/opt_verify_screen.dart";
-import 'package:uniplanet/features/auth/screens/signin_screen.dart';
-import 'package:uniplanet/features/auth/screens/signup_screen.dart';
-import "package:uniplanet/features/category/screens/categories.dart";
-import "package:uniplanet/features/chat/screens/chat_layout_screen.dart";
-import "package:uniplanet/features/chat/screens/chat_screen.dart";
+import "package:uniplanet/features/auth/presention/screens/auth_screen.dart";
+import "package:uniplanet/features/auth/presention/screens/opt_verify_screen.dart";
+import 'package:uniplanet/features/auth/presention/screens/signin_screen.dart';
+import 'package:uniplanet/features/auth/presention/screens/signup_screen.dart';
+import "package:uniplanet/features/category/presentation/screens/categories.dart";
+import "package:uniplanet/features/chat/presentation/screens/chat_layout_screen.dart";
+import "package:uniplanet/features/chat/presentation/screens/chat_screen.dart";
 import "package:uniplanet/features/home/screens/home_screen.dart";
 import "package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart";
 import "package:uniplanet/features/search/presentation/screens/search_screen.dart";
 import "package:uniplanet/models/chat_room.dart";
 import "package:uniplanet/models/product.dart";
-import "package:uniplanet/models/user.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -41,9 +41,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const SigninScreen(),
       );
     case AppRoutes.homePage:
+      final scroller = routeSettings.arguments as ScrollController;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const HomeScreen(),
+        builder: (_) => HomeScreen(
+          controller: scroller,
+        ),
       );
     case AppRoutes.bottomBarPage:
       return MaterialPageRoute(
@@ -90,9 +93,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         ),
       );
     case AppRoutes.chatLayoutPage:
+      final scroller = routeSettings.arguments as ScrollController;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const ChatList(),
+        builder: (_) => ChatListPage(controller: scroller),
       );
     default:
       return MaterialPageRoute(

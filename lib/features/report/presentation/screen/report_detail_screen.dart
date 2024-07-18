@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
 import 'package:uniplanet/features/report/presentation/bloc/report_bloc.dart';
-import 'package:uniplanet/models/user.dart';
 
 class ReportDetailPage extends StatefulWidget {
   final String reportType;
@@ -57,12 +57,12 @@ class ReportDetailPageState extends State<ReportDetailPage> {
             ElevatedButton(
               onPressed: _currentLength > 0
                   ? () {
-                      context.read<ReportBloc>().add(ReportUserEvent(
-                            description: _controller.text,
-                            reportedUserId: widget.client.id,
-                            reportType: widget.reportType,
-                            productId: widget.productId,
-                          ));
+                      getIt<ReportBloc>().add(ReportUserEvent(
+                        description: _controller.text,
+                        reportedUserId: widget.client.id,
+                        reportType: widget.reportType,
+                        productId: widget.productId,
+                      ));
                       Navigator.of(context).pop();
                     }
                   : null,

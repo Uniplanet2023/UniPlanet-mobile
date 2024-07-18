@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/bloc/like/like_bloc.dart';
-import 'package:uniplanet/features/common/presentation/product/product_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/core/utils/number_formatter.dart';
 import 'package:uniplanet/core/utils/price_formatter.dart';
 import 'package:uniplanet/core/utils/time_formatter.dart';

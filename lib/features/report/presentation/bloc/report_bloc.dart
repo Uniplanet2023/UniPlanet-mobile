@@ -1,6 +1,6 @@
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
-import 'package:uniplanet/bloc/index.dart';
 
 part 'report_event.dart';
 part 'report_state.dart';

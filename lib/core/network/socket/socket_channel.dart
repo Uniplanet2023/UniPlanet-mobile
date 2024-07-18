@@ -2,18 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/widgets.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
-import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
 import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
+import 'package:uniplanet/features/auth/data/models/user_model.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/typing/typing_bloc.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/image_message.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 
@@ -39,7 +44,6 @@ class SocketService {
   Timer? _typingTimer; // Added to keep track of the typing event timer
 
   void connect() {
-    BuildContext context = SnackbarGlobal.key.currentContext!;
     socket.onConnect((_) async {
       socket.clearListeners();
       removeListeners();
@@ -57,82 +61,63 @@ class SocketService {
           chatFormat['seller'] = jsonEncode(chat['seller']);
           chatFormat['buyer'] = jsonEncode(chat['buyer']);
           ChatRoom chatRoom = ChatRoom.fromMap(chatFormat);
-          if (context.mounted) {
-            context.read<ChatBloc>().add(AddChatRoomEvent(chatRoom));
-          }
+          getIt<ChatBloc>().add(AddChatRoomEvent(chatRoom));
         }
 
         if (isUserOnline) {
-          if (context.mounted) {
-            context
-                .read<StatusBloc>()
-                .add(ConnectedEvent(userId: chat['seller']['id']));
-          }
+          getIt<StatusBloc>().add(ConnectedEvent(userId: chat['seller']['id']));
         }
       });
       socket.on('chat room deleted', (data) {
         var chat = data['chatRoom'];
         var clientId =
             data['clientId']; // Ensure you have this data passed correctly
-        context
-            .read<ChatBloc>()
+        getIt<ChatBloc>()
             .add(DeletedChatByClient(chatId: chat, clientId: clientId));
       });
       socket.on('online user', (userId) {
-        if (context.mounted) {
-          context.read<StatusBloc>().add(ConnectedEvent(userId: userId));
-        }
+        getIt<StatusBloc>().add(ConnectedEvent(userId: userId));
       });
 
       socket.on('offline user', (userId) {
-        if (context.mounted) {
-          context.read<StatusBloc>().add(DisconnectEvent(userId: userId));
-        }
+        getIt<StatusBloc>().add(DisconnectEvent(userId: userId));
       });
 
       socket.on('typing', (data) {
         String chatId = data[0];
         String senderId = data[1];
-        if (context.mounted && senderId != userId) {
-          context.read<TypingBloc>().add(TypingStartEvent(chatId: chatId));
+        if (senderId != userId) {
+          getIt<TypingBloc>().add(TypingStartEvent(chatId: chatId));
         }
       });
       socket.on('stop typing', (chatId) {
-        if (context.mounted) {
-          context.read<TypingBloc>().add(TypingStopEvent(chatId: chatId));
-        }
+        getIt<TypingBloc>().add(TypingStopEvent(chatId: chatId));
       });
       socket.on('message received', (data) {
         Message receivedMessage =
             Message.fromMap(jsonDecode(data['messageJson']));
-        User sender = User.fromMap(jsonDecode(data['senderJson']));
+        User sender = UserModel.fromMap(jsonDecode(data['senderJson']));
         receivedMessage.status = MessageStatusEnum.received.value;
-        if (context.mounted) {
-          if (receivedMessage.sender != userId) {
-            context
-                .read<MessageBloc>()
-                .add(ReceiveMessageEvent(receivedMessage));
-          }
 
-          context
-              .read<ChatBloc>()
-              .add(UpdateChatRoomLastMessageEvent(receivedMessage));
-          // When the message is received, check if it's the current chat room
-          // If it is, read the message
-          if (currentChatLocation == receivedMessage.chat &&
-              receivedMessage.receiver == userId) {
-            readAllMessages(currentChatLocation!);
-            // If the message is not the current chat room, update the unseen message count
-          } else if (receivedMessage.receiver == userId) {
-            LocalNotificationController.showNotification(
-                title: sender.name,
-                body: receivedMessage.message,
-                bigPicture: sender.profileImage,
-                notificationLayout: NotificationLayout.MessagingGroup);
-            context
-                .read<ChatBloc>()
-                .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
-          }
+        if (receivedMessage.sender != userId) {
+          getIt<MessageBloc>().add(ReceiveMessageEvent(receivedMessage));
+        }
+
+        getIt<ChatBloc>().add(UpdateChatRoomLastMessageEvent(receivedMessage));
+        // When the message is received, check if it's the current chat room
+        // If it is, read the message
+        if (currentChatLocation == receivedMessage.chat &&
+            receivedMessage.receiver == userId) {
+          readAllMessages(currentChatLocation!);
+          // If the message is not the current chat room, update the unseen message count
+        } else if (receivedMessage.receiver == userId) {
+          LocalNotificationController.showNotification(
+              title: sender.name,
+              body: receivedMessage.message,
+              bigPicture: sender.profileImage,
+              notificationLayout: NotificationLayout.MessagingGroup);
+          getIt<ChatBloc>()
+              .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
         }
       });
       socket.on('read all message', (data) {
@@ -140,13 +125,10 @@ class SocketService {
         String chatId = data['chatId'];
         // Message msg;
         // if MessageBloc state is receivedMessage, then readAllmessage triggered
-        if (context.mounted) {
-          context.read<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
-          if (data['sender'] == userId) {
-            context
-                .read<ChatBloc>()
-                .add(EmptyUnseenMessageEvent(chatId: chatId));
-          }
+
+        getIt<MessageBloc>().add(ReadAllMessages(chatId, seenTime));
+        if (data['sender'] == userId) {
+          getIt<ChatBloc>().add(EmptyUnseenMessageEvent(chatId: chatId));
         }
       });
       if (imageMessagesToRetry.isNotEmpty) {
@@ -203,7 +185,6 @@ class SocketService {
           chatId: imageMessage.message.chat,
           messageType: MessageEnum.image.value,
           receiver: imageMessage.message.receiver,
-          context: SnackbarGlobal.key.currentContext!,
         ).timeout(
           const Duration(seconds: 10),
           onTimeout: () {
@@ -218,9 +199,7 @@ class SocketService {
       }
     }
 
-    SnackbarGlobal.key.currentContext!
-        .read<MessageBloc>()
-        .add(RetrySendMessagesEvent(imageMessagesToRetried));
+    getIt<MessageBloc>().add(RetrySendMessagesEvent(imageMessagesToRetried));
     imageMessagesToRetry.clear();
   }
 
@@ -240,7 +219,6 @@ class SocketService {
           chatId: message.chat,
           messageType: message.messageType,
           receiver: message.receiver,
-          context: SnackbarGlobal.key.currentContext!,
         ).timeout(
           const Duration(seconds: 10),
           onTimeout: () {
@@ -261,15 +239,13 @@ class SocketService {
         messagesToRetried.add(msg);
       }
     }
-    SnackbarGlobal.key.currentContext!
-        .read<MessageBloc>()
-        .add(RetrySendMessagesEvent(messagesToRetried));
+    getIt<MessageBloc>().add(RetrySendMessagesEvent(messagesToRetried));
     // Clear the list once done
     messagesToRetry.clear();
   }
 
   // message not sent, check instant reading message
-  void sendTypingEvent(String chatId, BuildContext context) {
+  void sendTypingEvent(String chatId) {
     if (_typingTimer?.isActive ?? false) {
       _typingTimer?.cancel(); // Cancel the existing timer if it's active
     }
@@ -277,11 +253,11 @@ class SocketService {
 
     // Set a new timer
     _typingTimer = Timer(const Duration(seconds: 1), () {
-      sendStopTypingEvent(chatId, context);
+      sendStopTypingEvent(chatId);
     });
   }
 
-  void sendStopTypingEvent(String chatId, BuildContext context) {
+  void sendStopTypingEvent(String chatId) {
     socket.emit('stop typing', chatId);
   }
 
@@ -305,8 +281,8 @@ class SocketService {
   Future<bool> chatRoomCreateAndCheckUserExist(
       {required ChatRoom chat, required bool existingChat}) async {
     final Completer<bool> completer = Completer();
-
-    socket.emitWithAck("chat room created", [chat.toJson(), existingChat],
+    final chatData = chat.toJson();
+    socket.emitWithAck("chat room created", [chatData, existingChat],
         ack: (data) {
       bool userExist = data;
       if (userExist) {
@@ -347,7 +323,6 @@ class SocketService {
     required String chatId,
     required String messageType,
     required String receiver,
-    required BuildContext context,
   }) async {
     // Create a Completer
     final Completer<Message> completer = Completer<Message>();
@@ -362,8 +337,8 @@ class SocketService {
       receiver: receiver,
       createdAt: DateTime.now().toUtc(),
     );
-    User sender = context.read<AccountBloc>().state.account.user;
-    sendStopTypingEvent(chatId, context);
+    User sender = getIt<AccountBloc>().state.account.user;
+    sendStopTypingEvent(chatId);
 
     // Convert Message and User to JSON strings
     String messageJson = jsonEncode(msg.toMap());
@@ -381,13 +356,13 @@ class SocketService {
     return completer.future;
   }
 
-  Future<Message> retrySendMessage(
-      {required String id,
-      required String content,
-      required String chatId,
-      required String messageType,
-      required String receiver,
-      required BuildContext context}) async {
+  Future<Message> retrySendMessage({
+    required String id,
+    required String content,
+    required String chatId,
+    required String messageType,
+    required String receiver,
+  }) async {
     // Create a Completer
     final Completer<Message> completer = Completer<Message>();
 
@@ -401,7 +376,7 @@ class SocketService {
       receiver: receiver,
       createdAt: DateTime.now().toUtc(),
     );
-    User sender = context.read<AccountBloc>().state.account.user;
+    User sender = getIt<AccountBloc>().state.account.user;
     socket.emitWithAck(
         'new message', {"messageJson": message, "senderJson": sender},
         ack: (data) {
@@ -428,10 +403,6 @@ class SocketService {
     }
     socket.disconnect();
     socket.close();
-    if (SnackbarGlobal.key.currentContext != null) {
-      SnackbarGlobal.key.currentContext!
-          .read<StatusBloc>()
-          .add(DisconnectEvent(userId: userId));
-    }
+    getIt<StatusBloc>().add(DisconnectEvent(userId: userId));
   }
 }

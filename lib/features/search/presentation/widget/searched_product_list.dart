@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/bloc/index.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
+import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 import 'package:uniplanet/models/product.dart';
 
 class SearchedProductList extends StatefulWidget {
@@ -32,8 +35,7 @@ class _SearchedProductListState extends State<SearchedProductList> {
         _scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
       // Trigger your bloc event here to load more products
-      context
-          .read<SearchProductBloc>()
+      getIt<SearchProductBloc>()
           .add(LoadMoreSearchProductEvent(productName: widget.query));
     }
   }
@@ -77,9 +79,8 @@ class _SearchedProductListState extends State<SearchedProductList> {
                     }
                     return InkWell(
                         onTap: () {
-                          context.read<ProductBloc>().add(
-                              IncreaseClickProductEvent(
-                                  widget.products[index].id));
+                          getIt<ProductBloc>().add(IncreaseClickProductEvent(
+                              widget.products[index].id));
                           Navigator.pushNamed(
                             context,
                             AppRoutes.productDetailsPage,

@@ -103,7 +103,7 @@ const ProductModelSchema = CollectionSchema(
     r'seller': LinkSchema(
       id: -3137632922142761298,
       name: r'seller',
-      target: r'UserModel',
+      target: r'UserLocalModel',
       single: true,
     )
   },
@@ -240,7 +240,8 @@ List<IsarLinkBase<dynamic>> _productModelGetLinks(ProductModel object) {
 void _productModelAttach(
     IsarCollection<dynamic> col, Id id, ProductModel object) {
   object.isarId = id;
-  object.seller.attach(col, col.isar.collection<UserModel>(), r'seller', id);
+  object.seller
+      .attach(col, col.isar.collection<UserLocalModel>(), r'seller', id);
 }
 
 extension ProductModelQueryWhereSort
@@ -1860,7 +1861,7 @@ extension ProductModelQueryObject
 extension ProductModelQueryLinks
     on QueryBuilder<ProductModel, ProductModel, QFilterCondition> {
   QueryBuilder<ProductModel, ProductModel, QAfterFilterCondition> seller(
-      FilterQuery<UserModel> q) {
+      FilterQuery<UserLocalModel> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'seller');
     });

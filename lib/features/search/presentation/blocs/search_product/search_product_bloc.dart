@@ -1,5 +1,5 @@
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uniplanet/bloc/index.dart';
 import 'package:uniplanet/core/network/notification/notification_scheduling.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/models/product.dart';

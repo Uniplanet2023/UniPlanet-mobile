@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
@@ -186,13 +188,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
         type: type,
         isNegotiable: isOpenToOffers,
       );
-      context
-          .read<OnSaleProductBloc>()
+      getIt<OnSaleProductBloc>()
           .add(UpdateOnSaleProductEvent(product: newProduct));
-      context.read<ProductBloc>().add(UpdateProductEvent(
-            product: newProduct,
-            images: images,
-          ));
+      getIt<ProductBloc>().add(UpdateProductEvent(
+        product: newProduct,
+        images: images,
+      ));
     }
   }
 

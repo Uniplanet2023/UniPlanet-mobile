@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
+import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 
 class SearchHistory extends StatefulWidget {
   final List<String> recentSearches;
@@ -22,7 +24,7 @@ class SearchHistoryList extends State<SearchHistory> {
   }
 
   void _deleteAllSearches() {
-    context.read<SearchHistoryBloc>().add(const ClearSearchHistoryEvent());
+    getIt<SearchHistoryBloc>().add(const ClearSearchHistoryEvent());
     setState(() {
       widget.recentSearches.clear();
     });
@@ -30,8 +32,7 @@ class SearchHistoryList extends State<SearchHistory> {
 
   void navigateToSearchScreen(String query) {
     if (query.isNotEmpty) {
-      context
-          .read<SearchProductBloc>()
+      getIt<SearchProductBloc>()
           .add(LoadSearchProductEvent(productName: query));
     }
   }

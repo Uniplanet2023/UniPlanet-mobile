@@ -53,13 +53,13 @@ const ChatRoomModelSchema = CollectionSchema(
     r'seller': LinkSchema(
       id: -8337312534231958315,
       name: r'seller',
-      target: r'UserModel',
+      target: r'UserLocalModel',
       single: true,
     ),
     r'buyer': LinkSchema(
       id: 2379247996670799538,
       name: r'buyer',
-      target: r'UserModel',
+      target: r'UserLocalModel',
       single: true,
     ),
     r'lastMessage': LinkSchema(
@@ -157,8 +157,9 @@ List<IsarLinkBase<dynamic>> _chatRoomModelGetLinks(ChatRoomModel object) {
 void _chatRoomModelAttach(
     IsarCollection<dynamic> col, Id id, ChatRoomModel object) {
   object.isarId = id;
-  object.seller.attach(col, col.isar.collection<UserModel>(), r'seller', id);
-  object.buyer.attach(col, col.isar.collection<UserModel>(), r'buyer', id);
+  object.seller
+      .attach(col, col.isar.collection<UserLocalModel>(), r'seller', id);
+  object.buyer.attach(col, col.isar.collection<UserLocalModel>(), r'buyer', id);
   object.lastMessage
       .attach(col, col.isar.collection<MessageModel>(), r'lastMessage', id);
 }
@@ -924,7 +925,7 @@ extension ChatRoomModelQueryObject
 extension ChatRoomModelQueryLinks
     on QueryBuilder<ChatRoomModel, ChatRoomModel, QFilterCondition> {
   QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition> seller(
-      FilterQuery<UserModel> q) {
+      FilterQuery<UserLocalModel> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'seller');
     });
@@ -938,7 +939,7 @@ extension ChatRoomModelQueryLinks
   }
 
   QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition> buyer(
-      FilterQuery<UserModel> q) {
+      FilterQuery<UserLocalModel> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'buyer');
     });

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_detail_screen.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_other_screen.dart';
 import 'package:uniplanet/features/report/presentation/widget/show_dialog.dart';
-import 'package:uniplanet/models/user.dart';
 
 Widget buildListItem(
     BuildContext context, String reportType, User client, String productId) {

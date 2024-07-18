@@ -1,10 +1,14 @@
-import 'package:uniplanet/bloc/index.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/core/utils/streamer.dart';
 import 'package:uniplanet/core/router/names.dart';
-import 'package:uniplanet/features/account/screens/account_screen.dart';
+import 'package:uniplanet/features/account/presentation/screens/account_screen.dart';
 import 'package:uniplanet/features/add-product/presentation/screens/add_product_screen.dart';
-import 'package:uniplanet/features/category/screens/category_layout_screen.dart';
-import 'package:uniplanet/features/chat/screens/chat_layout_screen.dart';
+import 'package:uniplanet/features/category/presentation/screens/category_layout_screen.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/screens/chat_layout_screen.dart';
+import 'package:uniplanet/features/chat/presentation/screens/chat_screen.dart';
+import 'package:uniplanet/features/chat/presentation/widgets/chat_list.dart';
 import 'package:uniplanet/features/home/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
@@ -22,9 +26,47 @@ class _BottomBarState extends State<BottomBar> {
   int _page = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
-  final bool _isVisible = true;
+  bool _isVisible = true; // State variable to control visibility
   String? profileImage;
   final Streamer _streamer = Streamer();
+  final ScrollController _scrollController =
+      ScrollController(); // Add ScrollController
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationController().addListener(() => setState(() {}));
+    _streamer.addChatListener();
+    _streamer.addAccountListener();
+    _streamer.addProductListener();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (_isVisible) {
+          setState(() {
+            _isVisible = false;
+          });
+        }
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (!_isVisible) {
+          setState(() {
+            _isVisible = true;
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _streamer.disposeChatListener();
+    _streamer.disposeAccountListener();
+    _streamer.disposeProductListener();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void navigateToAddProduct() {
     Navigator.pushNamed(context, AppRoutes.addProductPage);
@@ -37,24 +79,6 @@ class _BottomBarState extends State<BottomBar> {
         builder: (context) => const SearchScreen(),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    NotificationController().addListener(() => setState(() {}));
-    _streamer.addChatListener(context);
-    _streamer.addAccountListener(context);
-    _streamer.addProductListener(context);
-  }
-
-  @override
-  void dispose() {
-    _streamer.disposeChatListener();
-    _streamer.disposeAccountListener();
-    _streamer.disposeProductListener();
-
-    super.dispose();
   }
 
   void updatePage(int page) {
@@ -70,15 +94,18 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      const HomeScreen(),
+      HomeScreen(controller: _scrollController),
       Container(
         margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
-        child: const CategoryPage(),
+        child: CategoryPage(controller: _scrollController),
       ),
       const AddProductScreen(),
-      const Padding(
-          padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
-          child: ChatList()),
+      Padding(
+        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
+        child: ChatListPage(
+          controller: _scrollController,
+        ),
+      ),
       const Padding(
         padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
         child: AccountScreen(),
@@ -112,9 +139,7 @@ class _BottomBarState extends State<BottomBar> {
                           borderRadius: BorderRadius.circular(7),
                           elevation: 1,
                           child: InkWell(
-                            // Use InkWell to capture the tap event
-                            onTap: () =>
-                                navigateToSearchScreen(), // Navigate to search screen on tap
+                            onTap: () => navigateToSearchScreen(),
                             child: Container(
                               padding: const EdgeInsets.only(left: 12),
                               decoration: BoxDecoration(
@@ -157,8 +182,6 @@ class _BottomBarState extends State<BottomBar> {
                       color: Theme.of(context).colorScheme.surface,
                       height: 20,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
-                      // child:
-                      //     const Icon(Icons.mic, color: Colors.black, size: 25),
                     ),
                   ],
                 ),

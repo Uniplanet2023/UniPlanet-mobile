@@ -4,7 +4,7 @@ class SharedPreferencesHelper {
   static final SharedPreferencesHelper _instance =
       SharedPreferencesHelper._internal();
   SharedPreferences? _preferences;
-
+  static SharedPreferencesHelper get instance => _instance;
   factory SharedPreferencesHelper() {
     return _instance;
   }

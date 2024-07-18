@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:uniplanet/models/user.dart';
+import 'package:uniplanet/features/auth/data/models/user_model.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
 
 class Product {
   final String id;
@@ -36,26 +37,6 @@ class Product {
     this.isNegotiable = false,
     required this.type,
   });
-  static initProduct() {
-    return Product(
-      seller: User.initialUser(),
-      id: "",
-      name: "",
-      status: "",
-      description: "",
-      likes: 0,
-      numberOfChat: 0,
-      images: [""],
-      category: "",
-      price: 0,
-      location: "",
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      isAdvertisement: false,
-      type: "",
-      isNegotiable: false,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -80,7 +61,7 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      seller: User.fromMap(map['seller']),
+      seller: UserModel.fromMap(map['seller']),
       id: map['id'],
       name: map['productName'] as String,
       status: map['status'] as String,

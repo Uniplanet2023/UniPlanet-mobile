@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/bloc/seller_sold_product/sold_product_bloc.dart';
-import 'package:uniplanet/features/account/widgets/inventory_screen_product_box.dart';
-import 'package:uniplanet/models/user.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/features/product_details/presentation/blocs/seller_sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/features/account/presentation/widgets/inventory_screen_product_box.dart';
 
 class SellerSoldProductsScreen extends StatefulWidget {
   final User user;
@@ -36,8 +37,7 @@ class _SellerSoldProductsScreenState extends State<SellerSoldProductsScreen> {
       setState(() {
         _isLoadingMore = true;
       });
-      context
-          .read<SellerSoldProductBloc>()
+      getIt<SellerSoldProductBloc>()
           .add(LoadMoreSellerSoldProductEvent(userId: widget.user.id));
       // Simulate a delay to load more items
     }

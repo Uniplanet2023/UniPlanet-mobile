@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/loader.dart';
@@ -22,10 +23,10 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
-    context.read<SearchProductBloc>().add(
-          InitalSearchProductEvent(),
-        );
+    getIt<SearchHistoryBloc>().add(const GetSearchHistoryEvent());
+    getIt<SearchProductBloc>().add(
+      InitalSearchProductEvent(),
+    );
   }
 
   @override
@@ -37,8 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void navigateToSearchScreen(String query) {
     if (query.isNotEmpty) {
-      context
-          .read<SearchProductBloc>()
+      getIt<SearchProductBloc>()
           .add(LoadSearchProductEvent(productName: query));
     }
   }
@@ -75,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: InputDecoration(
                         prefixIcon: InkWell(
                           onTap: () {
-                            context.read<SearchProductBloc>().add(
+                            getIt<SearchProductBloc>().add(
                                 LoadSearchProductEvent(
                                     productName: _searchController.text));
                           },

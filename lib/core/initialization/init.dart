@@ -8,7 +8,7 @@ import 'package:uniplanet/core/network/notification/local_notification.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
-import 'package:uniplanet/statemanager_provider.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 
 class Initialization {
   static late SocketService socketService;
@@ -37,5 +37,6 @@ class Initialization {
     //setup block
     setup();
     setupAds();
+    setupAuth();
   }
 }

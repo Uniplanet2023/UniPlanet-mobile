@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -11,26 +13,25 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:uniplanet/bloc/account/account_bloc.dart';
-import 'package:uniplanet/bloc/chat/chat_bloc.dart';
-import 'package:uniplanet/bloc/like/like_bloc.dart';
-import 'package:uniplanet/bloc/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/features/common/presentation/product/product_bloc.dart';
-import 'package:uniplanet/bloc/seller_sale_product/seller_sale_product_bloc.dart';
-import 'package:uniplanet/bloc/seller_sold_product/sold_product_bloc.dart';
-import 'package:uniplanet/bloc/sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
+import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/product_details/presentation/blocs/seller_sale_product/seller_sale_product_bloc.dart';
+import 'package:uniplanet/features/product_details/presentation/blocs/seller_sold_product/sold_product_bloc.dart';
+import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/common/presentation/widgets/full_image_gallery.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
-import 'package:uniplanet/features/account/screens/user_profile.dart';
-import 'package:uniplanet/features/account/widgets/remove_product_dialog.dart';
+import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
+import 'package:uniplanet/features/account/presentation/widgets/remove_product_dialog.dart';
 import 'package:uniplanet/features/ads/presentation/bloc/ads_bloc.dart';
 import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/presentation/widgets/seller_other_list.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -49,8 +50,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AdsBloc>().add(LoadInterstitialAdEvent());
-    currentUser = context.read<AccountBloc>().state.account.user;
+    // getIt<AdsBloc>().add(LoadInterstitialAdEvent());
+    currentUser = getIt<AccountBloc>().state.account.user;
     context
         .read<SellerSaleProductBloc>()
         .add(LoadSellerSaleProductEvent(userId: widget.product.seller.id));
@@ -537,21 +538,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       'Confirm Deletion',
                                       'Are you sure you want to delete this product?',
                                       Icons.delete_forever_outlined, () {
-                                    context.read<ProductBloc>().add(
-                                        DeleteProductEvent(
-                                            productId: widget.product.id));
+                                    getIt<ProductBloc>().add(DeleteProductEvent(
+                                        productId: widget.product.id));
                                     if (widget.product.status == 'Sold') {
-                                      context.read<SoldProductBloc>().add(
-                                            DeleteSoldProductEvent(
-                                              product: widget.product,
-                                            ),
-                                          );
+                                      getIt<SoldProductBloc>().add(
+                                        DeleteSoldProductEvent(
+                                          product: widget.product,
+                                        ),
+                                      );
                                     } else {
-                                      context.read<OnSaleProductBloc>().add(
-                                            DeleteOnSaleProductEvent(
-                                              product: widget.product,
-                                            ),
-                                          );
+                                      getIt<OnSaleProductBloc>().add(
+                                        DeleteOnSaleProductEvent(
+                                          product: widget.product,
+                                        ),
+                                      );
                                     }
                                     Navigator.pop(context);
                                   }),
@@ -570,9 +570,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       'Confirm Deletion',
                                       'Are you sure you want to delete this product?',
                                       Icons.delete_forever_outlined, () {
-                                    context.read<ProductBloc>().add(
-                                        DeleteProductEvent(
-                                            productId: widget.product.id));
+                                    getIt<ProductBloc>().add(DeleteProductEvent(
+                                        productId: widget.product.id));
                                     Navigator.pop(context);
                                   }),
                                   icon: const Icon(
@@ -616,17 +615,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               {
                 if (isLikeProduct)
                   {
-                    context.read<LikeBloc>().add(RemoveLikeEvent(
-                          product: widget.product,
-                          user: context.read<AccountBloc>().state.account.user,
-                        )),
+                    getIt<LikeBloc>().add(RemoveLikeEvent(
+                      product: widget.product,
+                      user: getIt<AccountBloc>().state.account.user,
+                    )),
                   }
                 else
                   {
-                    context.read<LikeBloc>().add(AddLikeEvent(
-                          product: widget.product,
-                          user: context.read<AccountBloc>().state.account.user,
-                        ))
+                    getIt<LikeBloc>().add(AddLikeEvent(
+                      product: widget.product,
+                      user: getIt<AccountBloc>().state.account.user,
+                    ))
                   }
               }
           },
@@ -640,13 +639,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return TextButton(
       onPressed: () => {
         if (product.type == 'Free Item' || product.price == 0)
-          context.read<AdsBloc>().add(ShowInterstitialAdEvent()),
-        context.read<ChatBloc>().add(CreateChatRoomEvent(
-              buyer: context.read<AccountBloc>().state.account.user,
-              seller: widget.product.seller,
-              productId: widget.product.id,
-              productName: widget.product.name,
-            ))
+          getIt<AdsBloc>().add(ShowInterstitialAdEvent()),
+        getIt<ChatBloc>().add(CreateChatRoomEvent(
+          buyer: getIt<AccountBloc>().state.account.user,
+          seller: widget.product.seller,
+          productId: widget.product.id,
+          productName: widget.product.name,
+        ))
       },
       style: TextButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary),

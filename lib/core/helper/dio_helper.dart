@@ -53,8 +53,8 @@ class DioHelper {
       ignoreExpires: true,
     );
 
-    List<Cookie> cookies = await cookieJar
-        .loadForRequest(Uri.parse("http://auth.uniplanet-back.autos"));
+    List<Cookie> cookies =
+        await cookieJar.loadForRequest(Uri.parse("http://auth.uniplanet.shop"));
     String? sessionToken;
 
     for (var cookie in cookies) {

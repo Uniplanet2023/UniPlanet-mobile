@@ -5,14 +5,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uniplanet/core/utils/cloudinary_image.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/features/chat/screens/chat_screen.dart';
+import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/features/chat/presentation/screens/chat_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/main.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/core/utils/show_dialog.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
-import 'package:uniplanet/core/network/repository/auth_repository/auth_repo.dart';
 
 class LocalNotificationController {
   static final LocalNotificationController _instance =

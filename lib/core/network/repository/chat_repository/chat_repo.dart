@@ -1,22 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:uniplanet/bloc/index.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/chat_room.dart';
-import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 
 class ChatRepository {
-  final DioHelper _dioClient;
-
-  ChatRepository(this._dioClient);
+  ChatRepository();
 
   Future<ChatRoom> creatingChatRoom(
       {required String productId,
@@ -25,9 +24,9 @@ class ChatRepository {
       required User buyer}) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
     try {
-      Response res = await _dioClient.dio.post(
+      Response res = await DioHelper.instance.dio.post(
         '$chatURI/create-chat',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
         data: {
           'productId': productId,
           'productName': productName,
@@ -43,10 +42,8 @@ class ChatRepository {
               chat: chatRoom, existingChat: res.data['msg'] == 'existing chat');
       if (userOnline) {
         // Check if the widget is still mounted before proceeding
-        if (!SnackbarGlobal.key.currentContext!.mounted) return chatRoom;
-        SnackbarGlobal.key.currentContext!
-            .read<StatusBloc>()
-            .add(ConnectedEvent(userId: chatRoom.seller.id));
+
+        getIt<StatusBloc>().add(ConnectedEvent(userId: chatRoom.seller.id));
       }
     } on DioException catch (e) {
       _handleDioException(e);
@@ -58,9 +55,9 @@ class ChatRepository {
       {required String chatId, required int page}) async {
     try {
       List<Message> messages = [];
-      Response res = await _dioClient.dio.get(
+      Response res = await DioHelper.instance.dio.get(
         '$chatURI/get-messages',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
         queryParameters: {'chatId': chatId, 'page': page},
       );
       String msg = displayErrorMessages(res.toString());
@@ -85,9 +82,9 @@ class ChatRepository {
   Future<GetChatRooms> getChatRooms({required int page}) async {
     List<ChatRoom> chatRoomList = [];
     try {
-      Response res = await _dioClient.dio.get(
+      Response res = await DioHelper.instance.dio.get(
         '$chatURI/get-chat-list',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
         queryParameters: {'page': page},
       );
       if (res.data.length == 0) {
@@ -113,9 +110,9 @@ class ChatRepository {
 
   Future<String> deleteChatRoom({required String chatId}) async {
     try {
-      Response res = await _dioClient.dio.delete(
+      Response res = await DioHelper.instance.dio.delete(
         '$chatURI/delete-chat/$chatId',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {

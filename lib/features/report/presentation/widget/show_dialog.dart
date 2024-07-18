@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
 import 'package:uniplanet/features/report/presentation/bloc/report_bloc.dart';
-import 'package:uniplanet/models/user.dart';
 
 void showReportDialog(
     {required BuildContext context,
@@ -25,7 +25,7 @@ void showReportDialog(
           TextButton(
             child: const Text('Report'),
             onPressed: () {
-              context.read<ReportBloc>().add(ReportUserEvent(
+              getIt<ReportBloc>().add(ReportUserEvent(
                   description: reportType,
                   reportedUserId: client.id,
                   productId: productId,

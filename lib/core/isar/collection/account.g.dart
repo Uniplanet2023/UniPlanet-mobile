@@ -48,7 +48,7 @@ const AccountModelSchema = CollectionSchema(
     r'user': LinkSchema(
       id: 6480756853110184183,
       name: r'user',
-      target: r'UserModel',
+      target: r'UserLocalModel',
       single: true,
     )
   },
@@ -128,7 +128,7 @@ List<IsarLinkBase<dynamic>> _accountModelGetLinks(AccountModel object) {
 void _accountModelAttach(
     IsarCollection<dynamic> col, Id id, AccountModel object) {
   object.isarId = id;
-  object.user.attach(col, col.isar.collection<UserModel>(), r'user', id);
+  object.user.attach(col, col.isar.collection<UserLocalModel>(), r'user', id);
 }
 
 extension AccountModelQueryWhereSort
@@ -440,7 +440,7 @@ extension AccountModelQueryObject
 extension AccountModelQueryLinks
     on QueryBuilder<AccountModel, AccountModel, QFilterCondition> {
   QueryBuilder<AccountModel, AccountModel, QAfterFilterCondition> user(
-      FilterQuery<UserModel> q) {
+      FilterQuery<UserLocalModel> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'user');
     });

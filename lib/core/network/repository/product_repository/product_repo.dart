@@ -7,21 +7,21 @@ import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/features/auth/data/models/user_model.dart';
+import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 
 class ProductRepository {
-  final DioHelper _dioClient;
-
-  ProductRepository(this._dioClient);
+  ProductRepository();
 
   Future<Product?> getProduct({required String productId}) async {
     try {
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/get-product/$productId',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -35,9 +35,9 @@ class ProductRepository {
 
   Future<String> deleteProduct({required String productId}) async {
     try {
-      final response = await _dioClient.dio.delete(
+      final response = await DioHelper.instance.dio.delete(
         '$productURI/delete-product/$productId',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -54,13 +54,13 @@ class ProductRepository {
     try {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       bool? isMySchool = prefsHelper.getBool('isMySchool');
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/search-product/$productName',
         queryParameters: {
           'page': page,
           'isMySchool': isMySchool ?? false,
         },
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -82,14 +82,14 @@ class ProductRepository {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       bool? isMySchool = prefsHelper.getBool('isMySchool');
 
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/get-products',
         queryParameters: {
           'category': category,
           'page': page,
           'isMySchool': isMySchool ?? false,
         },
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -112,14 +112,14 @@ class ProductRepository {
     try {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       bool? isMySchool = prefsHelper.getBool('isMySchool');
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/get-wanted-products',
         queryParameters: {
           'category': category,
           'page': page,
           'isMySchool': isMySchool ?? false,
         },
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -143,21 +143,21 @@ class ProductRepository {
       if (category == 'Free Products') {
         category = null;
       }
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/get-free-products',
         queryParameters: {
           'category': category,
           'page': page,
           'isMySchool': isMySchool ?? false,
         },
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
         final obj = jsonDecode(response.data);
         for (int i = 0; i < obj.length; i++) {
           Product product = Product.fromMap(obj[i]);
-          User user = User.fromMap(obj[i]['seller']);
+          User user = UserModel.fromMap(obj[i]['seller']);
           product.seller = user;
           productList.add(Product.fromMap(obj[i]));
         }
@@ -171,7 +171,7 @@ class ProductRepository {
 
   Future<Product?> updateProduct({required Product product}) async {
     try {
-      final response = await _dioClient.dio.put(
+      final response = await DioHelper.instance.dio.put(
         '$productURI/update-product/${product.id}',
         data: {
           'productName': product.name,
@@ -184,7 +184,7 @@ class ProductRepository {
           'type': product.type,
           'isNegotiable': product.isNegotiable,
         },
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -209,7 +209,7 @@ class ProductRepository {
     required User seller,
   }) async {
     try {
-      final response = await _dioClient.dio.post(
+      final response = await DioHelper.instance.dio.post(
         '$productURI/upload-product',
         data: {
           'productName': productName,
@@ -222,7 +222,7 @@ class ProductRepository {
           'isNegotiable': isNegotiable,
           'type': type,
         },
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -285,9 +285,9 @@ class ProductRepository {
   Future<bool> likeProduct(
       {required String productId, required User user}) async {
     try {
-      final response = await _dioClient.dio.post(
+      final response = await DioHelper.instance.dio.post(
         '$productURI/like-product',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
         data: {
           'productId': productId,
           'user': user,
@@ -308,9 +308,9 @@ class ProductRepository {
   Future<bool> unlikeProduct(
       {required String productId, required User user}) async {
     try {
-      final response = await _dioClient.dio.post(
+      final response = await DioHelper.instance.dio.post(
         '$productURI/unlike-product',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
         data: {
           'productId': productId,
           'user': user,
@@ -331,10 +331,10 @@ class ProductRepository {
   Future<List<Product>> getProductLikes({required int page}) async {
     final productList = <Product>[];
     try {
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/get-like-product',
         queryParameters: {'page': page},
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       final msg = displayErrorMessages(response.toString());
       if (msg == "success") {
@@ -354,9 +354,9 @@ class ProductRepository {
     try {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       bool? isMySchool = prefsHelper.getBool('isMySchool');
-      final response = await _dioClient.dio.get(
+      final response = await DioHelper.instance.dio.get(
         '$productURI/get-hot-products',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
         queryParameters: {
           'page': page,
           'isMySchool': isMySchool ?? false,
@@ -383,10 +383,10 @@ class ProductRepository {
       required String userId}) async {
     var productList = <Product>[];
     try {
-      var response = await _dioClient.dio.get(
+      var response = await DioHelper.instance.dio.get(
         '$productURI/get-my-products/$status',
         queryParameters: {'page': page, 'userId': userId},
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
 
       var productDataObj = jsonDecode(response.data);
@@ -402,9 +402,9 @@ class ProductRepository {
 
   void clickProduct(String productId) async {
     try {
-      var response = await _dioClient.dio.get(
+      var response = await DioHelper.instance.dio.get(
         '$productURI/increase-click/$productId',
-        options: _dioClient.getDioOptions(),
+        options: DioHelper.instance.getDioOptions(),
       );
       log(response.data);
     } on DioException catch (e) {

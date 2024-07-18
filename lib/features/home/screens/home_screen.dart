@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
-import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/features/home/bloc/wanted_product_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
+import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_product_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/loader.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 import 'package:uniplanet/features/home/widgets/home_header.dart';
 
 class HomeScreen extends StatefulWidget {
+  final ScrollController controller; // Accept ScrollController
   const HomeScreen({
     super.key,
+    required this.controller,
   });
 
   @override
@@ -20,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showLoadingIndicator = false;
   bool _isFetchingMoreProducts = false;
   String choiceCheapSelected = "All Items";
-  final ScrollController controller = ScrollController();
   void _updateChoice(String newChoice) {
     setState(() {
       choiceCheapSelected = newChoice; // Update the state on choice change
@@ -30,30 +33,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    controller.addListener(_scrollListener); // Listen to scroll events
+    widget.controller.addListener(_scrollListener); // Listen to scroll events
   }
 
   @override
   void dispose() {
-    controller.removeListener(_scrollListener); // Remove the listener
-    controller.dispose();
+    widget.controller.removeListener(_scrollListener); // Remove the listener
     super.dispose();
   }
 
   void _scrollListener() {
-    if (controller.position.pixels >= controller.position.maxScrollExtent &&
+    if (widget.controller.position.pixels >=
+            widget.controller.position.maxScrollExtent &&
         !_isFetchingMoreProducts) {
       // User has reached the end, fetch more products
       setState(() => _isFetchingMoreProducts = true);
       // Simulate fetching more products with a delay
       if (choiceCheapSelected == "All Items") {
-        context.read<ProductBloc>().add(const LoadMoreProductEvent());
+        getIt<ProductBloc>().add(const LoadMoreProductEvent());
       } else if (choiceCheapSelected == "Free Products") {
         context
             .read<FreeProductBloc>()
             .add(const LoadMoreFreeProductEvent(category: "Free Products"));
       } else if (choiceCheapSelected == "Hot Items") {
-        context.read<HotProductBloc>().add(const LoadMoreHotProductsEvent());
+        getIt<HotProductBloc>().add(const LoadMoreHotProductsEvent());
       } else if (choiceCheapSelected == "Buying") {
         context
             .read<WantedProductBloc>()
@@ -96,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
             setState(() => _showLoadingIndicator = true);
-            context.read<ProductBloc>().add(const LoadProductEvent());
+            getIt<ProductBloc>().add(const LoadProductEvent());
 
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) {
@@ -108,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return false;
         },
         child: CustomScrollView(
-          controller: controller,
+          controller: widget.controller,
           slivers: <Widget>[
             HomeHeader(
               choiceCheapSelected: choiceCheapSelected,
@@ -179,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           child: CustomScrollView(
-            controller: controller,
+            controller: widget.controller,
             slivers: <Widget>[
               HomeHeader(
                 choiceCheapSelected: choiceCheapSelected,
@@ -257,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           child: CustomScrollView(
-            controller: controller,
+            controller: widget.controller,
             slivers: <Widget>[
               HomeHeader(
                 choiceCheapSelected: choiceCheapSelected,
@@ -318,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
             setState(() => _showLoadingIndicator = true);
-            context.read<HotProductBloc>().add(const LoadHotProductsEvent());
+            getIt<HotProductBloc>().add(const LoadHotProductsEvent());
 
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) {
@@ -332,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           child: CustomScrollView(
-            controller: controller,
+            controller: widget.controller,
             slivers: <Widget>[
               HomeHeader(
                 choiceCheapSelected: choiceCheapSelected,

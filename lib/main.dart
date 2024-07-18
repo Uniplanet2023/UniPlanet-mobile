@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/bloc/theme/theme_cubit.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/theme/theme_cubit.dart';
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
 import 'package:uniplanet/features/common/presentation/widgets/error_screen.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/features/auth/screens/signup_screen.dart';
+import 'package:uniplanet/features/auth/presention/screens/signup_screen.dart';
 import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/router/router.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
-import 'package:uniplanet/statemanager_provider.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    context.read<AuthBloc>().add(const TokenValidationEvent());
+    getIt<AuthBloc>().add(const TokenValidationEvent());
   }
 
   @override
@@ -63,9 +65,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         if (Initialization.socketService.socket.disconnected) {
           Initialization.socketService.connect();
         }
-        SnackbarGlobal.key.currentState!.context
-            .read<ChatBloc>()
-            .add(const LoadChatRoomEvent());
+        getIt<ChatBloc>().add(const LoadChatRoomEvent());
       }
     } else if (state == AppLifecycleState.paused) {
       log('paused');
@@ -103,17 +103,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             title: 'UniPlanet Marketplace',
             theme: state,
             onGenerateRoute: (settings) => generateRoute(settings),
-            home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-              if (state is Authorized) {
-                return const BottomBar();
-              } else if (state is AuthenticationDeny ||
-                  state is ValidationFailedState) {
-                return const OnBoardingScreen();
-              } else if (state is UserNotVerifiedState) {
-                return const SignupScreen();
-              }
-              return const OnBoardingScreen();
-            }),
+            home: BlocBuilder<AuthBloc, AuthState>(
+                bloc: getIt<AuthBloc>(),
+                builder: (context, state) {
+                  if (state is Authorized) {
+                    return const BottomBar();
+                  } else if (state is AuthenticationDeny ||
+                      state is ValidationFailedState) {
+                    return const OnBoardingScreen();
+                  } else if (state is UserNotVerifiedState) {
+                    return const SignupScreen();
+                  }
+                  return const OnBoardingScreen();
+                }),
           );
         },
       ),

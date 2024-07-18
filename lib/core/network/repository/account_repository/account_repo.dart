@@ -13,9 +13,7 @@ import 'package:uniplanet/models/advertiser.dart';
 import 'package:uniplanet/models/user_interaction.dart';
 
 class AccountRepository implements IAccountRepository {
-  final DioHelper _dioClient;
-
-  AccountRepository(this._dioClient);
+  AccountRepository();
 
   Future<Advertiser?> blockControl(
       {required String accountId,
@@ -23,14 +21,15 @@ class AccountRepository implements IAccountRepository {
       bool? isChatBlock,
       bool? isBlock}) async {
     try {
-      Response res = await _dioClient.dio.post('$accountURI/block-control',
-          data: {
-            'accountId': accountId,
-            'isPostBlock': isPostBlock,
-            'isChatBlock': isChatBlock,
-            'isBlock': isBlock
-          },
-          options: _dioClient.getDioOptions());
+      Response res =
+          await DioHelper.instance.dio.post('$accountURI/block-control',
+              data: {
+                'accountId': accountId,
+                'isPostBlock': isPostBlock,
+                'isChatBlock': isChatBlock,
+                'isBlock': isBlock
+              },
+              options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -52,13 +51,14 @@ class AccountRepository implements IAccountRepository {
       required freeCredit,
       required credit}) async {
     try {
-      Response res = await _dioClient.dio.post('$accountURI/increase-credit',
+      Response res = await DioHelper.instance.dio.post(
+          '$accountURI/increase-credit',
           data: {
             'accountId': advertiserAccountId,
             'freeCredit': freeCredit,
             'credit': credit
           },
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -78,9 +78,9 @@ class AccountRepository implements IAccountRepository {
   Future<List<Advertiser>> getAdvertiserList({int page = 1}) async {
     List<Advertiser> advertiserList = [];
     try {
-      Response res = await _dioClient.dio.get(
+      Response res = await DioHelper.instance.dio.get(
           '$accountURI/advertiser-list/$page',
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
       if (msg == 'success') {
@@ -108,9 +108,9 @@ class AccountRepository implements IAccountRepository {
   Future<List<UserInteraction>> getAdInteraction({int page = 1}) async {
     List<UserInteraction> userInteractionList = [];
     try {
-      Response res = await _dioClient.dio.get(
+      Response res = await DioHelper.instance.dio.get(
           '$accountURI/ad-interaction/$page',
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
       if (msg == 'success') {
@@ -137,8 +137,9 @@ class AccountRepository implements IAccountRepository {
 
   Future<AdStat?> getAdStatistic() async {
     try {
-      Response res = await _dioClient.dio
-          .get('$accountURI/ad-statistic', options: _dioClient.getDioOptions());
+      Response res = await DioHelper.instance.dio.get(
+          '$accountURI/ad-statistic',
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
       if (msg == "success") {
@@ -155,8 +156,9 @@ class AccountRepository implements IAccountRepository {
 
   Future<Advertiser?> getAdvertiser() async {
     try {
-      Response res = await _dioClient.dio.get('$accountURI/advertiser-info',
-          options: _dioClient.getDioOptions());
+      Response res = await DioHelper.instance.dio.get(
+          '$accountURI/advertiser-info',
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -175,8 +177,8 @@ class AccountRepository implements IAccountRepository {
 
   Future<Account> getAccount() async {
     try {
-      Response res = await _dioClient.dio
-          .get('$accountURI/myinfo', options: _dioClient.getDioOptions());
+      Response res = await DioHelper.instance.dio.get('$accountURI/myinfo',
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -199,8 +201,8 @@ class AccountRepository implements IAccountRepository {
 
   Future<Account?> updateName({required String name}) async {
     try {
-      Response res = await _dioClient.dio.put('$accountURI/update-name',
-          data: {'name': name}, options: _dioClient.getDioOptions());
+      Response res = await DioHelper.instance.dio.put('$accountURI/update-name',
+          data: {'name': name}, options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -220,9 +222,10 @@ class AccountRepository implements IAccountRepository {
 
   Future<Account?> updateProfileImage({required String profileImage}) async {
     try {
-      Response res = await _dioClient.dio.put('$accountURI/update-profile',
+      Response res = await DioHelper.instance.dio.put(
+          '$accountURI/update-profile',
           data: {'profileImage': profileImage},
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -247,14 +250,15 @@ class AccountRepository implements IAccountRepository {
     required String productId,
   }) async {
     try {
-      Response res = await _dioClient.dio.post('$accountURI/report-user',
-          data: {
-            'reportedUserId': reportedUserId,
-            'description': description,
-            'reportType': reportType,
-            'productId': productId,
-          },
-          options: _dioClient.getDioOptions());
+      Response res =
+          await DioHelper.instance.dio.post('$accountURI/report-user',
+              data: {
+                'reportedUserId': reportedUserId,
+                'description': description,
+                'reportType': reportType,
+                'productId': productId,
+              },
+              options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -273,9 +277,9 @@ class AccountRepository implements IAccountRepository {
 
   Future<List<String>?> getSearchHistory({required page}) async {
     try {
-      Response res = await _dioClient.dio.get(
+      Response res = await DioHelper.instance.dio.get(
           '$accountURI/search-history/$page',
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -292,9 +296,9 @@ class AccountRepository implements IAccountRepository {
 
   Future<bool> removeSearchHistory({required String query}) async {
     try {
-      Response res = await _dioClient.dio.delete(
+      Response res = await DioHelper.instance.dio.delete(
           '$accountURI/delete-search-history/$query',
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -310,9 +314,9 @@ class AccountRepository implements IAccountRepository {
 
   Future<bool> clearSearchHistory() async {
     try {
-      Response res = await _dioClient.dio.delete(
+      Response res = await DioHelper.instance.dio.delete(
           '$accountURI/delete-all-search-history',
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 
@@ -328,9 +332,10 @@ class AccountRepository implements IAccountRepository {
 
   Future<bool> updateNotification({required bool isAllow}) async {
     try {
-      Response res = await _dioClient.dio.put('$accountURI/update-notification',
+      Response res = await DioHelper.instance.dio.put(
+          '$accountURI/update-notification',
           queryParameters: {'isAllow': isAllow},
-          options: _dioClient.getDioOptions());
+          options: DioHelper.instance.getDioOptions());
 
       String msg = displayErrorMessages(res.toString());
 

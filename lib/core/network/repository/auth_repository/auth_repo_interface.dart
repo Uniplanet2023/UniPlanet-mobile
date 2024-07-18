@@ -4,7 +4,7 @@ abstract class IAuthRepository {
     required String password,
     required String name,
     required String school,
-    required bool isStudent,
+    required String userType,
   });
 
   Future<bool> tokenValidation();

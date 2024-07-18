@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:uniplanet/bloc/free_product/free_product_bloc.dart';
-import 'package:uniplanet/bloc/hot_product/hot_product_bloc.dart';
-import 'package:uniplanet/bloc/index.dart';
-import 'package:uniplanet/features/home/bloc/wanted_product_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
+import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
+import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_product_bloc.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 
 class HomeHeader extends StatefulWidget {
   final String choiceCheapSelected;
@@ -107,8 +109,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     bool isMySchool = newValue == 'My School';
-                    context.read<ProductBloc>().add(const LoadProductEvent());
-                    context.read<FreeProductBloc>().add(
+                    getIt<ProductBloc>().add(const LoadProductEvent());
+                    getIt<FreeProductBloc>().add(
                         const LoadFreeProductEvent(category: 'Free Products'));
                     context
                         .read<HotProductBloc>()

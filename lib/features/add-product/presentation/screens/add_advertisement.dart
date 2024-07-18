@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/bloc/account/account_bloc.dart';
-import 'package:uniplanet/features/common/presentation/product/product_bloc.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
@@ -73,7 +74,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
 
     if (_addProductFormKey.currentState!.validate()) {
-      context.read<ProductBloc>().add(UploadProductEvent(
+      getIt<ProductBloc>().add(UploadProductEvent(
           productName: productNameController.text,
           description: descriptionController.text,
           price: type == 'Advertisement'
@@ -88,7 +89,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           location: selectedLocation == 'Custom'
               ? meetingLocationController.text
               : selectedLocation,
-          seller: context.read<AccountBloc>().state.account.user));
+          seller: getIt<AccountBloc>().state.account.user));
     }
   }
 

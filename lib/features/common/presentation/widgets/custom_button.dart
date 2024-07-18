@@ -4,6 +4,7 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final Color? color;
+
   const CustomButton({
     super.key,
     required this.text,
@@ -21,7 +22,19 @@ class CustomButton extends StatelessWidget {
         ),
         minimumSize: const Size(double.infinity, 60),
         backgroundColor: color ?? Theme.of(context).colorScheme.primary,
-        foregroundColor: color ?? Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        shadowColor: Colors.black.withOpacity(0.2),
+        elevation: 5,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+      ).copyWith(
+        overlayColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.pressed)) {
+              return Colors.black.withOpacity(0.1);
+            }
+            return null; // Defer to the widget's default.
+          },
+        ),
       ),
       child: Text(
         text,
