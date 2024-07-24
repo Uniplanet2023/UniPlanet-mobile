@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
       listener: (context, state) {
         if (state is ProductUploadedState) {
           setState(() => _showLoadingIndicator = true);
-        } else if (state is ProductImageUploadedState) {
+        } else if (state is ProductUploadSuccessState) {
           setState(() => _showLoadingIndicator = false);
         }
       },

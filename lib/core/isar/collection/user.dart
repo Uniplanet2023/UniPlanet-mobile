@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 
 part 'user.g.dart';
 

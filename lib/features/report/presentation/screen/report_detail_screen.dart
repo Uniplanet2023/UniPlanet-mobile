@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/report/presentation/bloc/report_bloc.dart';
 
 class ReportDetailPage extends StatefulWidget {

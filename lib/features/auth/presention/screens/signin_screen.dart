@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
+
 import 'package:uniplanet/core/router/names.dart';
+
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
+
+import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/auth/presention/screens/forgotten_password_screen.dart';
 import 'package:uniplanet/features/auth/presention/screens/signup_screen.dart';
 import 'package:uniplanet/features/auth/presention/widgets/bezier_container.dart';

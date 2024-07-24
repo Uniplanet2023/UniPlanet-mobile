@@ -1,8 +1,9 @@
 import "package:flutter/material.dart";
 import "package:uniplanet/core/router/names.dart";
-import "package:uniplanet/features/auth/domain/entities/user.dart";
+import "package:uniplanet/core/entities/user.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
-import 'package:uniplanet/features/add-product/presentation/screens/add_product_screen.dart';
+import "package:uniplanet/features/housing/presentation/screens/housing_page.dart";
+import 'package:uniplanet/features/upload/presentation/screens/add_product_screen.dart';
 import "package:uniplanet/features/auth/presention/screens/auth_screen.dart";
 import "package:uniplanet/features/auth/presention/screens/opt_verify_screen.dart";
 import 'package:uniplanet/features/auth/presention/screens/signin_screen.dart';
@@ -22,6 +23,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AuthScreen(),
+      );
+    case AppRoutes.housingPage:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => HousingListPage(),
       );
     case AppRoutes.signupPage:
       return MaterialPageRoute(

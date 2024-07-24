@@ -10,8 +10,8 @@ import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
-import 'package:uniplanet/features/auth/data/models/user_model.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
@@ -96,7 +96,7 @@ class SocketService {
       socket.on('message received', (data) {
         Message receivedMessage =
             Message.fromMap(jsonDecode(data['messageJson']));
-        User sender = UserModel.fromMap(jsonDecode(data['senderJson']));
+        User sender = User.fromMap(jsonDecode(data['senderJson']));
         receivedMessage.status = MessageStatusEnum.received.value;
 
         if (receivedMessage.sender != userId) {

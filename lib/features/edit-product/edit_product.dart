@@ -48,6 +48,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _editProductFormKey = GlobalKey<FormState>();
   int selectedIndex = 0; // Index of the selected category
   String selectedLocation = 'Custom';
+
   @override
   void initState() {
     super.initState();
@@ -128,7 +129,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void selectImageFromCamera() async {
     File? image = await openCamera(context);
     if (image != null) {
-      if (images.length + 1 <= maxImages) {
+      if (widget.product.images.length + images.length + 1 <= maxImages) {
         setState(() {
           images.add(image);
         });
@@ -165,15 +166,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
       SnackbarGlobal.showSnackBar('Please enter a custom location');
       return;
     }
+    if (type != 'Free Items' && priceController.text == "") {
+      SnackbarGlobal.showSnackBar('Please enter a price');
+      return;
+    }
+    double price = 0;
+    if (type != 'Free Items' &&
+        priceController.text.isNotEmpty &&
+        priceController.text != "") {
+      price =
+          double.parse(double.parse(priceController.text).toStringAsFixed(2));
+    }
     if (_editProductFormKey.currentState!.validate()) {
       Product newProduct = Product(
         id: widget.product.id,
         name: productNameController.text,
         description: descriptionController.text,
-        price: type != 'Free Items'
-            ? double.parse(
-                double.parse(priceController.text).toStringAsFixed(2))
-            : 0,
+        price: price,
         category: selectedCategory,
         status: 'On Sale',
         images: originalImages,
@@ -271,7 +280,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                         .tertiaryContainer,
                                     size: 20,
                                   ),
-                                  Text('${images.length}/10',
+                                  Text(
+                                      '${widget.product.images.length + images.length}/10',
                                       style: TextStyle(
                                           color: Theme.of(context)
                                               .colorScheme
@@ -307,7 +317,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                     size: 20,
                                   ),
                                   Text(
-                                    '${images.length}/10',
+                                    '${widget.product.images.length + images.length}/10',
                                     style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme

@@ -3,18 +3,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/get_product/get_product_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/bottom_chat_bar.dart';
+import 'package:uniplanet/features/chat/presentation/widgets/chat_expansion_housing.dart';
+import 'package:uniplanet/features/chat/presentation/widgets/chat_expansion_product.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/chat_list.dart';
+import 'package:uniplanet/features/housing/presentation/housing/housing_bloc.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/bloc/housing_bloc.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
@@ -46,9 +50,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void _initChat() async {
     getIt<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
-    context
-        .read<GetProductBloc>()
-        .add(GetProductLoadEvent(productId: widget.chatRoom.productId));
+    if (widget.chatRoom.type == 'product') {
+      getIt<GetProductBloc>()
+          .add(GetProductLoadEvent(productId: widget.chatRoom.productId));
+    } else if (widget.chatRoom.type == 'housing') {
+      getIt<GetHousingBloc>()
+          .add(FetchHousingPostEvent(housingId: widget.chatRoom.productId));
+    }
     SocketService.currentChatLocation = widget.chatRoom.id;
     Initialization.socketService.readAllMessages(widget.chatRoom.id);
 
@@ -258,87 +266,39 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           },
           child: Column(
             children: [
-              BlocBuilder<GetProductBloc, GetProductState>(
-                builder: (context, state) {
-                  if (state is GetProductLoading) {
-                    return const CircularProgressIndicator();
-                  } else if (state is GetProductLoaded) {
-                    return ExpansionPanelList(
-                      expansionCallback: (int index, bool isExpanded) {
-                        setState(() {
-                          this.isExpanded = isExpanded;
-                        });
+              widget.chatRoom.type == 'product'
+                  ? BlocBuilder<GetProductBloc, GetProductState>(
+                      builder: (context, state) {
+                        if (state is GetProductLoading) {
+                          return const CircularProgressIndicator();
+                        } else if (state is GetProductLoaded) {
+                          return chatExpansionPanel(state, context, isExpanded,
+                              (bool isExpanded) {
+                            setState(() {
+                              this.isExpanded = !isExpanded;
+                            });
+                          });
+                        } else {
+                          return const SizedBox();
+                        }
                       },
-                      children: [
-                        ExpansionPanel(
-                          headerBuilder:
-                              (BuildContext context, bool isExpanded) {
-                            return ListTile(
-                              title: Text(state.product!.name),
-                            );
-                          },
-                          body: Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductDetailScreen(
-                                                  product: state.product!)));
-                                },
-                                child: CachedNetworkImage(
-                                  imageUrl: state.product!.images[0],
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 150, // Adjust the size as needed
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(0),
-                                child: Text(
-                                  '\$${state.product!.price}',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              OutlinedButton.icon(
-                                icon: const Icon(Icons.shopping_cart_outlined),
-                                label: const Text('Product Detail'),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  side: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .tertiaryContainer),
-                                ),
-                                onPressed: () {
-                                  // Review Product
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductDetailScreen(
-                                                  product: state.product!)));
-                                },
-                              ),
-                            ],
-                          ),
-                          isExpanded: isExpanded,
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
+                    )
+                  : BlocBuilder<GetHousingBloc, GetHousingState>(
+                      builder: (context, state) {
+                        if (state is FetchingHousingPost) {
+                          return const CircularProgressIndicator();
+                        } else if (state is FetchedHousingPost) {
+                          return chatExpansionPanelHousing(
+                              state, context, isExpanded, (bool isExpanded) {
+                            setState(() {
+                              this.isExpanded = !isExpanded;
+                            });
+                          });
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
               Expanded(
                   child: ChatList(
                 scrollController: _scrollController,

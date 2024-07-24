@@ -5,16 +5,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
-import 'package:uniplanet/features/auth/domain/entities/user_type.dart';
-import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
+//core
+import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/router/names.dart';
+import 'package:uniplanet/core/utils/constant/university_list.dart';
+//common
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
+//auth feature
+import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/auth/functions/signup.dart';
 import 'package:uniplanet/features/auth/presention/screens/phone_opt_verify_screen.dart';
 import 'package:uniplanet/features/auth/presention/widgets/bezier_container.dart';
 import 'package:uniplanet/features/auth/presention/widgets/terms_and_conditions.dart';
-import 'package:uniplanet/core/utils/constant/university_list.dart';
 import 'package:uniplanet/features/auth/presention/widgets/us_number_format.dart';
 
 class SignupScreen extends StatefulWidget {

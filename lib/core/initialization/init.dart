@@ -2,6 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:uniplanet/core/dependency_injection/ads.dart';
+import 'package:uniplanet/core/dependency_injection/auth.dart';
+import 'package:uniplanet/core/dependency_injection/get_housing.dart';
+import 'package:uniplanet/core/dependency_injection/housing.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/config/firebase_options.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
@@ -38,5 +42,7 @@ class Initialization {
     setup();
     setupAds();
     setupAuth();
+    setupHousing();
+    initGetHouse();
   }
 }

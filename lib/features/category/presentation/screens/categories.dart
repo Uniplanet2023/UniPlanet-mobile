@@ -83,7 +83,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         listener: (context, state) {
           if (state is ProductUploadedState) {
             setState(() => showLoadingIndicator = true);
-          } else if (state is ProductImageUploadedState) {
+          } else if (state is ProductUploadSuccessState) {
             setState(() => showLoadingIndicator = false);
           }
         },

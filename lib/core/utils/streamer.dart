@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
@@ -43,8 +42,7 @@ class Streamer {
 
   void addProductListener() {
     _productStreamSubscription = getIt<ProductBloc>().stream.listen((state) {
-      if (state is ProductImageUploadedState) {
-        log('called');
+      if (state is ProductUploadSuccessState) {
         getIt<OnSaleProductBloc>()
             .add(AddOnSaleProductEvent(product: state.uploadedProduct));
       }

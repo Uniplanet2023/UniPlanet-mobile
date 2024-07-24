@@ -4,10 +4,9 @@ import 'package:uniplanet/core/network/notification/notification_scheduling.dart
 import 'package:uniplanet/core/utils/utils.dart';
 // Repositories
 import 'package:uniplanet/core/network/repository/product_repository/product_repo.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 // Models
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user.dart';
 // Parts of the bloc
 part 'like_event.dart';
 part 'like_state.dart';

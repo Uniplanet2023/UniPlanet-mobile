@@ -5,8 +5,8 @@ import 'package:dartz/dartz.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
-import 'package:uniplanet/features/auth/domain/entities/user_type.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {

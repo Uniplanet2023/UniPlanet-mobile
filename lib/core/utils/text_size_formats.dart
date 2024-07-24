@@ -33,9 +33,12 @@ Widget secondarySubTitleText(String title,
 }
 
 Widget content(String title,
-    {Color color = Colors.black, TextAlign textAlign = TextAlign.start}) {
+    {Color color = Colors.black,
+    TextAlign textAlign = TextAlign.start,
+    Color? linkColor}) {
   return SelectableLinkText(
     text: title,
     fontSize: 14,
+    linkColor: linkColor,
   );
 }

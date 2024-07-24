@@ -1,12 +1,12 @@
 import 'dart:io';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/core/helper/image_upload_helper.dart';
 import 'package:uniplanet/core/utils/check_blocked.dart';
-import 'package:uniplanet/core/isar/isar_service.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 // Models
 import 'package:uniplanet/models/product.dart';
-import 'package:uniplanet/models/user.dart';
 // Repository
 import 'package:uniplanet/core/network/repository/product_repository/product_repo.dart';
 // Parts
@@ -58,22 +58,31 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   _updateProduct(UpdateProductEvent event, emit) async {
     emit(
         ProductUpdatingState(productList: state.productList, page: state.page));
-    Product? updatedProduct =
-        await _productRepository.uploadImagesAndUpdateProduct(
-            images: event.images, product: event.product);
-    if (updatedProduct == null) {
-      emit(ErrorProductUploadState("Error updating product",
-          productList: state.productList, page: state.page));
-    } else {
-      List<Product> productList = state.productList;
-      int index =
-          productList.indexWhere((element) => element.id == updatedProduct.id);
-
-      if (index != -1) {
-        productList[index] = updatedProduct;
-      }
-      emit(ProductUpdatedState(productList: productList, page: state.page));
+    Product product = event.product;
+    if (event.images != null && event.images!.isNotEmpty) {
+      List<String> imageList = await ImageUploadHelper.instance
+          .uploadImages(images: event.images!, post: Left(event.product));
+      product.copyWith(images: imageList);
     }
+
+    // After all uploads, update the product with the collected image URLs
+    final updatedProduct = await _productRepository.updateProduct(
+      product: product,
+    );
+
+    if (updatedProduct == null) {
+      return emit(ErrorProductUploadState("Error updating product",
+          productList: state.productList, page: state.page));
+    }
+    // Update the product in the list
+    List<Product> productList = state.productList;
+    int index =
+        productList.indexWhere((element) => element.id == updatedProduct.id);
+
+    if (index != -1) {
+      productList[index] = updatedProduct;
+    }
+    emit(ProductUpdatedState(productList: productList, page: state.page));
   }
 
   _increaseClickProduct(IncreaseClickProductEvent event, emit) async {
@@ -81,15 +90,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   _uploadProduct(UploadProductEvent event, emit) async {
+    bool isBloced = checkBlockedAccount(blockType: "Post");
+    if (isBloced) {
+      emit(ErrorProductUploadState("Error uploading product",
+          productList: state.productList, page: state.page));
+      return;
+    }
     emit(ProductUploadingState(
         productList: state.productList, page: state.page));
     try {
-      bool isBloced = checkBlockedAccount(blockType: "Post");
-      if (isBloced) {
-        emit(ErrorProductUploadState("Error uploading product",
-            productList: state.productList, page: state.page));
-        return;
-      }
+      // product upload
       Product? productData = await _productRepository.uploadProduct(
         productName: event.productName,
         category: event.category,
@@ -101,29 +111,38 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         type: event.type,
         isNegotiable: event.isNegotiable,
       );
-
-      if (productData != null) {
-        emit(ProductUploadedState(
-            productList: state.productList, page: state.page));
-        Product? product =
-            await _productRepository.uploadImagesAndUpdateProduct(
-                images: event.images, product: productData);
-
-        if (product != null) {
-          List<Product> productList = state.productList;
-          productList.insert(0, product);
-          emit(ProductImageUploadedState(
-              productList: productList,
-              page: state.page,
-              uploadedProduct: product));
-        } else {
-          emit(ErrorProductUploadState("Error uploading product",
-              productList: state.productList, page: state.page));
-        }
-      } else {
+      if (productData == null) {
         emit(ErrorProductUploadState("Error uploading product",
             productList: state.productList, page: state.page));
+        return;
       }
+      emit(ProductUploadedState(
+          productList: state.productList, page: state.page));
+      // product Image upload
+      List<String> imageList = await ImageUploadHelper.instance
+          .uploadImages(images: event.images, post: Left(productData));
+      Product product = productData.copyWith(images: imageList);
+      emit(ProductImageUploadedState(
+          productList: state.productList,
+          page: state.page,
+          uploadedProduct: product));
+
+      //Update product with images
+      Product? updatedProduct =
+          await _productRepository.updateProduct(product: product);
+      if (updatedProduct == null) {
+        emit(ErrorProductUploadState("Error updating product",
+            productList: state.productList, page: state.page));
+        return;
+      }
+
+      List<Product> productList = state.productList;
+      productList.insert(0, product);
+
+      emit(ProductUploadSuccessState(
+          productList: productList,
+          page: state.page,
+          uploadedProduct: product));
     } on Exception catch (e) {
       emit(ErrorProductUploadState(e.toString(),
           productList: state.productList, page: state.page));

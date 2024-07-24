@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:uniplanet/features/auth/data/models/user_model.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 
 class Product {
   final String id;
@@ -61,7 +60,7 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      seller: UserModel.fromMap(map['seller']),
+      seller: User.fromMap(map['seller']),
       id: map['id'],
       name: map['productName'] as String,
       status: map['status'] as String,
@@ -84,4 +83,42 @@ class Product {
 
   factory Product.fromJson(String source) =>
       Product.fromMap(json.decode(source));
+  //copy with
+  Product copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? status,
+    List<String>? images,
+    int? likes,
+    int? numberOfChat,
+    String? category,
+    double? price,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? location,
+    bool? isAdvertisement,
+    bool? isNegotiable,
+    String? type,
+    User? seller,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      images: images ?? this.images,
+      likes: likes ?? this.likes,
+      numberOfChat: numberOfChat ?? this.numberOfChat,
+      category: category ?? this.category,
+      price: price ?? this.price,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      location: location ?? this.location,
+      isAdvertisement: isAdvertisement ?? this.isAdvertisement,
+      isNegotiable: isNegotiable ?? this.isNegotiable,
+      type: type ?? this.type,
+      seller: seller ?? this.seller,
+    );
+  }
 }

@@ -13,6 +13,7 @@ import 'package:uniplanet/features/account/presentation/screens/sold_products_sc
 import 'package:uniplanet/features/account/presentation/widgets/menu_section.dart';
 import 'package:uniplanet/features/account/presentation/widgets/user_header.dart';
 import 'package:uniplanet/features/account/presentation/screens/terms_and_policies.dart';
+import 'package:uniplanet/features/housing/presentation/screens/housing_list_screen.dart';
 import 'package:uniplanet/models/account.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -47,7 +48,7 @@ class AccountScreen extends StatelessWidget {
                     title: currentUser.type == "advertiser" ||
                             currentUser.type == "admin"
                         ? "My Advertisements"
-                        : 'My Listings',
+                        : 'My Products List',
                     icon: Icons.inventory_sharp,
                     ontap: () {
                       Navigator.push(
@@ -112,6 +113,22 @@ class AccountScreen extends StatelessWidget {
                             );
                           },
                         ),
+                  const Divider(
+                    thickness: 0.1,
+                    height: 5,
+                  ),
+                  MenuSection(
+                    title: 'My Housing List',
+                    icon: Icons.home_outlined,
+                    ontap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HousingList(),
+                        ),
+                      );
+                    },
+                  ),
                   currentUser.type == "admin"
                       ? const Divider(
                           thickness: 0.1,

@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:uniplanet/features/auth/data/models/user_model.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 
 class Account {
   User user;
@@ -18,7 +17,7 @@ class Account {
 
   static initialAccount() {
     return Account(
-      user: UserModel.initialUser(),
+      user: User.initialUser(),
       type: 'user',
       isBlocked: false,
       isBlockedPost: false,
@@ -38,7 +37,7 @@ class Account {
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
-      user: UserModel.fromMap(map),
+      user: User.fromMap(map),
       type: map['type'] ?? 'student',
       isBlocked: map['isBlocked'] as bool,
       isBlockedPost: map['isBlockedPost'] as bool,

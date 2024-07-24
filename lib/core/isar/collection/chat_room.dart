@@ -12,6 +12,7 @@ class ChatRoomModel {
   late String id;
   late int unseenMessageCount;
   late String? deletedFrom;
+  late String type;
   final seller = IsarLink<UserLocalModel>();
   final buyer = IsarLink<UserLocalModel>();
   final lastMessage = IsarLink<MessageModel>();
@@ -22,6 +23,7 @@ class ChatRoomModel {
     required this.id,
     required this.unseenMessageCount,
     required this.deletedFrom,
+    required this.type,
   });
 
   factory ChatRoomModel.fromChatRoom(ChatRoom chatRoom) {
@@ -31,6 +33,7 @@ class ChatRoomModel {
       id: chatRoom.id,
       unseenMessageCount: chatRoom.unseenMessageCount,
       deletedFrom: chatRoom.deletedFrom,
+      type: chatRoom.type,
     );
   }
   Future<ChatRoom> toChatRoom() async {
@@ -46,6 +49,7 @@ class ChatRoomModel {
       seller: seller.value!.toUser(),
       buyer: buyer.value!.toUser(),
       lastMessage: lastMessage.value?.toMessage(),
+      type: type,
     );
   }
 }

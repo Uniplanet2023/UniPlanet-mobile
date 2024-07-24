@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/auth/functions/opt_verification.dart';
 
 class OtpVerifyScreen extends StatefulWidget {

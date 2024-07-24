@@ -6,6 +6,7 @@ import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/category/presentation/widget/catetory_list.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
@@ -32,7 +33,7 @@ class _CategoryPageState extends State<CategoryPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     int crossAxisCount = (screenWidth / 100).round(); // Number of columns
     double childAspectRatio =
-        (screenWidth / crossAxisCount) / 150; // Adjust ratio
+        (screenWidth / crossAxisCount) / 110; // Adjust ratio
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -64,118 +65,110 @@ class _CategoryPageState extends State<CategoryPage> {
                   bottom: 10,
                 ),
                 child: Text(
-                  '✨ Browse by Category',
+                  'Browse by Category',
                   style: GoogleFonts.roboto(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.tertiaryContainer),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
                 )),
-            Container(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  childAspectRatio: childAspectRatio,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                ),
-                itemCount: GlobalVariables.categories.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, AppRoutes.category,
-                        arguments: GlobalVariables.categories[index]['name']),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              15.0), // Adjust the radius as needed
-                          child: SizedBox(
-                            width: 55,
-                            height: 55,
-                            child: Image.asset(
-                              GlobalVariables.categories[index]['image'],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Expanded(
-                          child: Text(
-                            GlobalVariables.categories[index]['name'],
-                            style: const TextStyle(fontSize: 13),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
             Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  top: 10,
-                  bottom: 10,
-                ),
-                child: Text(
-                  '✨ Local Stores Near You',
-                  style: GoogleFonts.roboto(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.tertiaryContainer),
-                )),
-            Container(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  childAspectRatio: childAspectRatio,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                ),
-                itemCount: GlobalVariables.localstore.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, AppRoutes.category,
-                        arguments: GlobalVariables.localstore[index]['name']),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              15.0), // Adjust the radius as needed
-                          child: SizedBox(
-                            width: 55,
-                            height: 55,
-                            child: Image.asset(
-                              GlobalVariables.localstore[index]['image'],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            GlobalVariables.localstore[index]['name'],
-                            style: const TextStyle(fontSize: 13),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ),
-                      ],
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  color: Colors.grey.shade100,
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      childAspectRatio: childAspectRatio,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
                     ),
-                  );
-                },
+                    itemCount: GlobalVariables.categories.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () => {
+                          if (GlobalVariables.categories[index]['name'] ==
+                              'Rental Housing')
+                            {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.housingPage),
+                            }
+                          else
+                            {
+                              Navigator.pushNamed(context, AppRoutes.category,
+                                  arguments: GlobalVariables.categories[index]
+                                      ['name'])
+                            }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    15.0), // Adjust the radius as needed
+                                child: Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surface, // Set the background color
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // Adjust the radius as needed
+                                  ),
+                                  width: 60,
+                                  height: 60,
+                                  child: Image.asset(
+                                    GlobalVariables.categories[index]['image'],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: Text(
+                                  GlobalVariables.categories[index]['name'],
+                                  style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w900),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
+            // Padding(
+            //     padding: const EdgeInsets.only(
+            //       left: 16,
+            //       top: 20,
+            //       bottom: 10,
+            //     ),
+            //     child: Text(
+            //       'Local Stores Near You',
+            //       style: GoogleFonts.roboto(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.w600,
+            //         color: Colors.black87,
+            //       ),
+            //     )),
+            // CategoryList(
+            //     crossAxisCount: crossAxisCount,
+            //     childAspectRatio: childAspectRatio,
+            //     list: GlobalVariables.localstore),
             Padding(
               padding: const EdgeInsets.only(
                 left: 16,
@@ -188,21 +181,19 @@ class _CategoryPageState extends State<CategoryPage> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: '🔥Hot items in ',
+                            text: 'Hot items in ',
                             style: GoogleFonts.roboto(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .tertiaryContainer,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
                             ),
                           ),
                           TextSpan(
                             text: '${AuthRepository.school}',
                             style: GoogleFonts.roboto(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: GlobalVariables.secondaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
                             ),
                           ),
                         ],

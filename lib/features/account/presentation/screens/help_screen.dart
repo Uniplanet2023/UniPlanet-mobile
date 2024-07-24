@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
-import 'package:uniplanet/features/account/presentation/widgets/menu_section.dart';
 import 'package:uniplanet/core/utils/text_size_formats.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 
@@ -32,8 +31,7 @@ class HelpScreen extends StatelessWidget {
                   'Contact us\n'),
               content(
                   'Should you have any inquiries regarding the uniplanet Marketplace app, or should you encounter any technical difficulties or bugs, please do not hesitate to reach out to us via website: '),
-              content('https://uniplanet.shop/pages/contact-us.',
-                  color: Colors.blue),
+              content('https://uniplanet.shop/contact-us.', color: Colors.blue),
               content(
                   'We are committed to providing you with the best possible experience and appreciate your feedback.'),
               const Divider(
@@ -114,9 +112,14 @@ class HelpScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.tertiary,
                   '\nDelete Account'),
               content(
+                  linkColor: Colors.black,
                   'To permanently remove all your data from our system, you may proceed with deleting your account. Please be advised that this action is irreversible. \n'
                   'To initiate the account deletion process, kindly click on the URL below. \n'
-                  'https://uniplanet.shop/pages/contact-us\n'
+                  '1. Visit the Privacy Policy (https://uniplanet.shop/privacy-policy).\n'
+                  '2. Navigate to the "USER DATA DELETION" section and click the "Delete Account" link.\n'
+                  '3. Click "Continue" to proceed.\n'
+                  '4. Log in to your account if prompted.\n'
+                  '5. Click "Confirm" to finalize the deletion of your account.\n'
                   'Your data will be permanently removed 7 days later. If you sign in before this period ends, the deletion request will be cancelled, and your data will remain in our system.\n'),
               // Material(
               //   elevation: 0.2,

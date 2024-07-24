@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/auth/domain/entities/user_type.dart';
-import 'package:uniplanet/features/auth/domain/usecases/sign_up_user.dart';
+import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 
 void signUpUser(BuildContext context, email, name, school, validPassword,

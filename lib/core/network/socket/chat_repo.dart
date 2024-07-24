@@ -5,7 +5,7 @@ import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/message.dart';

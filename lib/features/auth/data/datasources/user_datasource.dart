@@ -1,4 +1,4 @@
-import 'package:uniplanet/features/auth/domain/entities/user_type.dart';
+import 'package:uniplanet/core/entities/user_type.dart';
 
 abstract class AuthRemoteDataSource {
   Future<String> signUpUser({

@@ -1,4 +1,4 @@
-const amazon_affiliates_links = [
+const amazonAffiliatesLinks = [
   'https://amzn.to/3zYkvrm',
   'https://amzn.to/4f4qsmN',
   'https://amzn.to/3Lq71r8',

@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:uniplanet/features/auth/data/models/user_model.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user.dart';
 
 class ChatRoom {
   final String productId;
@@ -13,6 +11,7 @@ class ChatRoom {
   Message? lastMessage;
   int unseenMessageCount;
   String? deletedFrom;
+  String type;
 
   ChatRoom({
     required this.id,
@@ -23,18 +22,20 @@ class ChatRoom {
     this.lastMessage,
     this.unseenMessageCount = 0,
     this.deletedFrom,
+    required this.type,
   });
 
   static initChatRoom() {
     return ChatRoom(
       id: "",
-      seller: UserModel.initialUser(),
-      buyer: UserModel.initialUser(),
+      seller: User.initialUser(),
+      buyer: User.initialUser(),
       productId: "",
       productName: "",
       lastMessage: null,
       unseenMessageCount: 0,
       deletedFrom: "",
+      type: "",
     );
   }
 
@@ -48,6 +49,7 @@ class ChatRoom {
     Message? lastMessage,
     int? unseenMessageCount,
     String? deletedFrom,
+    String? type,
   }) {
     return ChatRoom(
       id: id ?? this.id,
@@ -58,6 +60,7 @@ class ChatRoom {
       lastMessage: lastMessage ?? this.lastMessage,
       unseenMessageCount: unseenMessageCount ?? this.unseenMessageCount,
       deletedFrom: deletedFrom ?? this.deletedFrom,
+      type: type ?? this.type,
     );
   }
 
@@ -71,6 +74,7 @@ class ChatRoom {
       'lastMessage': lastMessage?.toMap(),
       'unseenMessageCount': unseenMessageCount,
       'deletedFrom': deletedFrom ?? '',
+      'type': type,
     };
   }
 
@@ -78,11 +82,11 @@ class ChatRoom {
     return ChatRoom(
       id: map['id'],
       seller: map['seller'] is Map
-          ? UserModel.fromMap(map['seller'])
-          : UserModel.fromJson(map['seller']),
+          ? User.fromMap(map['seller'])
+          : User.fromJson(map['seller']),
       buyer: map['buyer'] is Map
-          ? UserModel.fromMap(map['buyer'])
-          : UserModel.fromJson(map['buyer']),
+          ? User.fromMap(map['buyer'])
+          : User.fromJson(map['buyer']),
       productId: map['productId'],
       productName: map['productName'] ?? "",
       lastMessage: map['lastMessage'] != null
@@ -96,6 +100,7 @@ class ChatRoom {
       deletedFrom: map['deletedFrom'] == null || map['deletedFrom'] == ""
           ? null
           : map['deletedFrom'],
+      type: map['type'],
     );
   }
 

@@ -14,4 +14,5 @@ class AppRoutes {
   static const String categoryPage = '/categories-screen';
   static const String productDetailsPage = '/product-details-screen';
   static const String searchScreenPage = '/search-screen';
+  static const String housingPage = '/housing-screen';
 }

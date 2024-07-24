@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:uniplanet/features/auth/data/models/user_model.dart';
+import 'package:uniplanet/core/entities/user.dart';
 
 class UserInteraction {
-  final UserModel user;
+  final User user;
   final String advertisement;
 
   UserInteraction({
@@ -12,14 +12,14 @@ class UserInteraction {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'user': user.toUser(),
+      'user': user.toMap(),
       'advertisement': advertisement,
     };
   }
 
   factory UserInteraction.fromMap(Map<String, dynamic> map) {
     return UserInteraction(
-      user: UserModel.fromMap(map['account']),
+      user: User.fromMap(map['account']),
       advertisement: map['advertisement'] ?? '',
     );
   }

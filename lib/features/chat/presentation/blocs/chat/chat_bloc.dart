@@ -6,7 +6,7 @@ import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/utils/check_blocked.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
@@ -14,7 +14,6 @@ import 'package:uniplanet/models/get_chat_room.dart';
 // Models
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
-import 'package:uniplanet/models/user.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 
 // Bloc Events, States
@@ -274,8 +273,8 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   }
 
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
-    bool isBloced = checkBlockedAccount(blockType: "Chat");
-    if (isBloced) {
+    bool isBlocked = checkBlockedAccount(blockType: "Chat");
+    if (isBlocked) {
       emit(ErrorChatState('You are blocked from chatting',
           page: state.page,
           chatRooms: state.chatRooms,
@@ -293,6 +292,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         buyer: event.buyer,
         productId: event.productId,
         productName: event.productName,
+        type: event.type,
       );
       bool isChatRoomExist = false;
       for (var chat in state.chatRooms) {

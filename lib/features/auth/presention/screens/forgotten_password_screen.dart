@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
-import 'package:uniplanet/core/utils/utils.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});

@@ -7,8 +7,7 @@ import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
-import 'package:uniplanet/features/auth/data/models/user_model.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/config/api/server_address.dart';
@@ -157,7 +156,7 @@ class ProductRepository {
         final obj = jsonDecode(response.data);
         for (int i = 0; i < obj.length; i++) {
           Product product = Product.fromMap(obj[i]);
-          User user = UserModel.fromMap(obj[i]['seller']);
+          User user = User.fromMap(obj[i]['seller']);
           product.seller = user;
           productList.add(Product.fromMap(obj[i]));
         }
@@ -290,7 +289,7 @@ class ProductRepository {
         options: DioHelper.instance.getDioOptions(),
         data: {
           'productId': productId,
-          'user': user,
+          'user': user.toJson(),
         },
       );
       final msg = displayErrorMessages(response.toString());

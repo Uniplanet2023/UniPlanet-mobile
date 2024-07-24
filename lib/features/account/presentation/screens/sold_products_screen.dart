@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/features/account/presentation/widgets/sold_inventory_product_box.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 
 class SoldProductsScreen extends StatefulWidget {
   final User user;

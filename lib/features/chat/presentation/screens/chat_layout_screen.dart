@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
-import 'package:uniplanet/features/ads/presentation/bloc/ads_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/contacts_list.dart';
 
 class ChatListPage extends StatefulWidget {

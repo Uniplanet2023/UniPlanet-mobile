@@ -37,8 +37,13 @@ const ChatRoomModelSchema = CollectionSchema(
       name: r'productName',
       type: IsarType.string,
     ),
-    r'unseenMessageCount': PropertySchema(
+    r'type': PropertySchema(
       id: 4,
+      name: r'type',
+      type: IsarType.string,
+    ),
+    r'unseenMessageCount': PropertySchema(
+      id: 5,
       name: r'unseenMessageCount',
       type: IsarType.long,
     )
@@ -91,6 +96,7 @@ int _chatRoomModelEstimateSize(
   bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.productId.length * 3;
   bytesCount += 3 + object.productName.length * 3;
+  bytesCount += 3 + object.type.length * 3;
   return bytesCount;
 }
 
@@ -104,7 +110,8 @@ void _chatRoomModelSerialize(
   writer.writeString(offsets[1], object.id);
   writer.writeString(offsets[2], object.productId);
   writer.writeString(offsets[3], object.productName);
-  writer.writeLong(offsets[4], object.unseenMessageCount);
+  writer.writeString(offsets[4], object.type);
+  writer.writeLong(offsets[5], object.unseenMessageCount);
 }
 
 ChatRoomModel _chatRoomModelDeserialize(
@@ -118,7 +125,8 @@ ChatRoomModel _chatRoomModelDeserialize(
     id: reader.readString(offsets[1]),
     productId: reader.readString(offsets[2]),
     productName: reader.readString(offsets[3]),
-    unseenMessageCount: reader.readLong(offsets[4]),
+    type: reader.readString(offsets[4]),
+    unseenMessageCount: reader.readLong(offsets[5]),
   );
   object.isarId = id;
   return object;
@@ -140,6 +148,8 @@ P _chatRoomModelDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -862,6 +872,141 @@ extension ChatRoomModelQueryFilter
     });
   }
 
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition> typeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition> typeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'type',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition> typeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'type',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
+      typeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterFilterCondition>
       unseenMessageCountEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -1020,6 +1165,18 @@ extension ChatRoomModelQuerySortBy
     });
   }
 
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterSortBy> sortByType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterSortBy> sortByTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.desc);
+    });
+  }
+
   QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterSortBy>
       sortByUnseenMessageCount() {
     return QueryBuilder.apply(this, (query) {
@@ -1100,6 +1257,18 @@ extension ChatRoomModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterSortBy> thenByType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterSortBy> thenByTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.desc);
+    });
+  }
+
   QueryBuilder<ChatRoomModel, ChatRoomModel, QAfterSortBy>
       thenByUnseenMessageCount() {
     return QueryBuilder.apply(this, (query) {
@@ -1145,6 +1314,13 @@ extension ChatRoomModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ChatRoomModel, ChatRoomModel, QDistinct> distinctByType(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<ChatRoomModel, ChatRoomModel, QDistinct>
       distinctByUnseenMessageCount() {
     return QueryBuilder.apply(this, (query) {
@@ -1182,6 +1358,12 @@ extension ChatRoomModelQueryProperty
   QueryBuilder<ChatRoomModel, String, QQueryOperations> productNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'productName');
+    });
+  }
+
+  QueryBuilder<ChatRoomModel, String, QQueryOperations> typeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'type');
     });
   }
 

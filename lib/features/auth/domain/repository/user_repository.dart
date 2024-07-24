@@ -2,7 +2,7 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:uniplanet/core/error/failures.dart';
-import 'package:uniplanet/features/auth/domain/entities/user_type.dart';
+import 'package:uniplanet/core/entities/user_type.dart';
 
 abstract class AuthRepository {
   static String? userId;

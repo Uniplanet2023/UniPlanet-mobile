@@ -9,11 +9,13 @@ class CreateChatRoomEvent extends ChatBlocEvent {
   final User buyer;
   final String productId;
   final String productName;
+  final String type;
   const CreateChatRoomEvent({
     required this.seller,
     required this.buyer,
     required this.productId,
     required this.productName,
+    required this.type,
   });
   @override
   List<Object> get props => [seller, buyer, productId];

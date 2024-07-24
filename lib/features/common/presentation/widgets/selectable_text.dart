@@ -11,13 +11,16 @@ class SelectableLinkText extends StatelessWidget {
     this.maxLines,
     this.minLines,
     this.fontSize,
+    this.linkColor, // Add the linkColor parameter
   });
+
   final int? maxLines;
   final int? minLines;
   final String text;
   final VoidCallback? onTap;
   final TextStyle? style;
   final double? fontSize;
+  final Color? linkColor; // Define the linkColor parameter
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +55,11 @@ class SelectableLinkText extends StatelessWidget {
       style: TextStyle(
           fontSize: fontSize ?? 16,
           color: Theme.of(context).colorScheme.tertiary),
-      linkStyle: const TextStyle(
-        color: Colors.blue,
+      linkStyle: TextStyle(
+        color: linkColor ??
+            Colors.blue, // Use the provided link color or default to blue
         decoration: TextDecoration.underline,
-        decorationColor: Colors.blue, // Set underline color
+        decorationColor: linkColor ?? Colors.blue, // Set underline color
         decorationStyle: TextDecorationStyle.solid,
       ),
     );

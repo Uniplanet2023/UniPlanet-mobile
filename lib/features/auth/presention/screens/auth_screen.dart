@@ -1,11 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
+
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+
 import 'package:uniplanet/features/auth/presention/screens/signin_screen.dart';
 import 'package:uniplanet/features/auth/presention/screens/signup_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:uniplanet/features/auth/presention/widgets/bezier_container.dart';
+
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class AuthScreen extends StatelessWidget {

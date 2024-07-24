@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -493,12 +493,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: BlocConsumer<ChatBloc, ChatBlocState>(
         listener: (context, state) {
           if (state is CreatedChatRoomState) {
+            // buyer perspective
             CreatedChatRoomState createdState = state;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
               "seller": createdState.chatRoomCreated.seller,
               "chatRoom": createdState.chatRoomCreated
             });
           } else if (state is AddedChatRoomState) {
+            //seller perspective
             AddedChatRoomState addedChatRoomState = state;
             Navigator.pushNamed(context, AppRoutes.chatPage, arguments: {
               "seller": addedChatRoomState.chatRoomCreated.buyer,
@@ -645,6 +647,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           seller: widget.product.seller,
           productId: widget.product.id,
           productName: widget.product.name,
+          type: 'product',
         ))
       },
       style: TextButton.styleFrom(

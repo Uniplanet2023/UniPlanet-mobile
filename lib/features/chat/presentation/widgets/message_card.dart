@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/common/presentation/widgets/full_image.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';

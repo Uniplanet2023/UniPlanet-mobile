@@ -6,7 +6,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/core/utils/open_gallery.dart';
 import 'package:uniplanet/features/account/presentation/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/presentation/screens/sold_products_screen.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_sold_products_screen.dart';

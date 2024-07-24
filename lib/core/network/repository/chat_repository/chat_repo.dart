@@ -5,7 +5,7 @@ import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
-import 'package:uniplanet/features/auth/domain/entities/user.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 import 'package:uniplanet/models/message.dart';
@@ -17,11 +17,13 @@ import 'package:uniplanet/core/utils/display_error_messages.dart';
 class ChatRepository {
   ChatRepository();
 
-  Future<ChatRoom> creatingChatRoom(
-      {required String productId,
-      required String productName,
-      required User seller,
-      required User buyer}) async {
+  Future<ChatRoom> creatingChatRoom({
+    required String productId,
+    required String productName,
+    required User seller,
+    required User buyer,
+    required String type,
+  }) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
     try {
       Response res = await DioHelper.instance.dio.post(
@@ -32,6 +34,7 @@ class ChatRepository {
           'productName': productName,
           'seller': seller,
           'buyer': buyer,
+          'type': type,
         },
       );
 

@@ -23,6 +23,7 @@ ThemeData lightMode = ThemeData(
     ),
   ),
   useMaterial3: true,
+  cardColor: Colors.white,
 );
 
 ThemeData darkMode = ThemeData(
@@ -46,4 +47,5 @@ ThemeData darkMode = ThemeData(
     ),
   ),
   useMaterial3: true,
+  cardColor: Colors.white12,
 );

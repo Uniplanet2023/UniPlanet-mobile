@@ -7,7 +7,7 @@ import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/initialization/init_data.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/features/auth/domain/entities/user_type.dart';
+import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/domain/usecases/index.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
