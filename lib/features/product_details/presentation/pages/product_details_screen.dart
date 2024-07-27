@@ -18,6 +18,7 @@ import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
 import 'package:uniplanet/features/product_details/presentation/blocs/seller_sale_product/seller_sale_product_bloc.dart';
 import 'package:uniplanet/features/product_details/presentation/blocs/seller_sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
@@ -107,7 +108,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 builder: (BuildContext context) {
                   String image = entry.value; // Access image URL
                   return GestureDetector(
-                    onTap: () => _openGallery(context, entry.key),
+                    onTap: () => {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => FullScreenImagePage(
+                            imageUrls: widget.product.images,
+                            initialIndex: entry.key,
+                          ),
+                        ),
+                      )
+                    },
                     child: Hero(
                       tag: "product-picture-${widget.product.id}",
                       child: CachedNetworkImage(
@@ -141,21 +151,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             });
           }
         },
-      ),
-    );
-  }
-
-  void _openGallery(BuildContext context, int initialIndex) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => GalleryPhotoViewWrapper(
-          galleryItems: widget.product.images,
-          backgroundDecoration: const BoxDecoration(
-            color: Colors.black,
-          ),
-          initialIndex: initialIndex,
-          scrollDirection: Axis.horizontal,
-        ),
       ),
     );
   }

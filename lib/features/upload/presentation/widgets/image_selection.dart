@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-import 'package:uniplanet/core/utils/utils.dart';
-
 class ImageSelection extends StatelessWidget {
   final List<File> images;
   final int maxImages;
+  final Function selectImages;
+  final Function selectImageFromCamera;
+  final Function({required int selectedIndex}) removeImage;
 
   const ImageSelection({
     super.key,
     required this.images,
     required this.maxImages,
+    required this.selectImages,
+    required this.selectImageFromCamera,
+    required this.removeImage,
   });
 
-  void selectImages(BuildContext context) async {
-    // Your logic to pick more images and add to the list, make sure it does not exceed maxImages
-    var res =
-        await pickImages(context); // Implement pickImages to return List<File>
-
-    if ((images.length + res.length) <= maxImages) {
-      // setState is required here in the original widget, not in this stateless widget.
-    } else {
-      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
-    }
-  }
-
-  void selectImageFromCamera(BuildContext context) async {
-    File? image = await openCamera(context);
-    if (image != null) {
-      if (images.length + 1 <= maxImages) {
-        // setState is required here in the original widget, not in this stateless widget.
-      } else {
-        SnackbarGlobal.showSnackBar(
-            'You can only add up to $maxImages images.');
-      }
-    }
-  }
-
-  Widget imageContainer(File image, BuildContext context) {
+  Widget imageContainer(File image, int index, BuildContext context) {
+    // Added index parameter
     return Stack(
       alignment: Alignment.topRight,
       children: [
@@ -59,7 +40,7 @@ class ImageSelection extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.cancel, color: Colors.red),
           onPressed: () {
-            // setState is required here in the original widget, not in this stateless widget.
+            removeImage(selectedIndex: index);
           },
         ),
       ],
@@ -126,7 +107,11 @@ class ImageSelection extends StatelessWidget {
               ),
             ),
           ),
-          for (File image in images) imageContainer(image, context),
+          for (int i = 0;
+              i < images.length;
+              i++) // Use index to iterate over images
+            imageContainer(
+                images[i], i, context), // Pass the index to imageContainer
         ],
       ),
     );

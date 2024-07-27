@@ -12,10 +12,10 @@ class FullScreenImagePage extends StatefulWidget {
   });
 
   @override
-  _FullScreenImagePageState createState() => _FullScreenImagePageState();
+  FullScreenImagePageState createState() => FullScreenImagePageState();
 }
 
-class _FullScreenImagePageState extends State<FullScreenImagePage> {
+class FullScreenImagePageState extends State<FullScreenImagePage> {
   late PageController _pageController;
   int _currentIndex = 0;
 

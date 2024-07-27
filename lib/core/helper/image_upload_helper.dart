@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/upload/domain/entities/housing_post.dart';
 import 'package:uniplanet/models/product.dart';
@@ -25,36 +26,48 @@ class ImageUploadHelper {
           List<Future<void>>.generate(images.length, (index) async {
         final image = images[index];
         String secureUrl;
-        if (post.isLeft()) {
-          final product =
-              post.fold((product) => product, (housingPost) => null);
-          secureUrl = await ImageUploadService()
-              .uploadImage(
-            image,
-            'product-images/${AuthRepository.school}/${product!.id}',
-          )
-              .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () {
-              throw TimeoutException('Image uploading timed out');
-            },
-          );
-          imageUrls[index] = secureUrl;
-        } else {
-          final housingPost =
-              post.fold((product) => null, (housingPost) => housingPost);
-          secureUrl = await ImageUploadService()
-              .uploadImage(
-            image,
-            'housing-images/${AuthRepository.school}/${housingPost!.id}',
-          )
-              .timeout(
-            const Duration(seconds: 30),
-            onTimeout: () {
-              throw TimeoutException('Image uploading timed out');
-            },
-          );
-          imageUrls[index] = secureUrl;
+
+        try {
+          if (post.isLeft()) {
+            final product =
+                post.fold((product) => product, (housingPost) => null);
+            if (product == null) {
+              throw Exception('Product is null');
+            }
+            secureUrl = await ImageUploadService()
+                .uploadImage(
+              image,
+              'product-images/${AuthRepository.school}/${product.id}',
+            )
+                .timeout(
+              const Duration(seconds: 30),
+              onTimeout: () {
+                throw TimeoutException('Image uploading timed out');
+              },
+            );
+            imageUrls[index] = secureUrl;
+          } else {
+            final housingPost =
+                post.fold((product) => null, (housingPost) => housingPost);
+            if (housingPost == null) {
+              throw Exception('Housing post is null');
+            }
+            secureUrl = await ImageUploadService()
+                .uploadImage(
+              image,
+              'housing-images/${AuthRepository.school}/${housingPost.id}',
+            )
+                .timeout(
+              const Duration(seconds: 30),
+              onTimeout: () {
+                throw TimeoutException('Image uploading timed out');
+              },
+            );
+            imageUrls[index] = secureUrl;
+          }
+        } catch (e) {
+          log('Error uploading image at index $index: $e');
+          throw Exception('Failed to upload image at index $index');
         }
       });
 
@@ -75,7 +88,8 @@ class ImageUploadHelper {
         return validUrls;
       }
     } catch (e) {
-      rethrow;
+      log('Image upload failed: $e');
+      throw Exception('Image upload failed: $e');
     }
   }
 }

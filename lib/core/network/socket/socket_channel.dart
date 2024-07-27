@@ -51,21 +51,20 @@ class SocketService {
       socket.on('chat room created', (data) async {
         log('chat room created');
         var chat = jsonDecode(data[0]);
+        var seller = jsonDecode(chat['seller']);
         bool isUserOnline = await joinChatAndCheckUserExist(
-            chatId: chat['id'], targetUserId: chat['seller']['id']);
+            chatId: chat['id'], targetUserId: seller['id']);
         bool existingChat = data[1];
 
-        if (chat['seller']['id'] == userId && !existingChat) {
+        if (seller['id'] == userId && !existingChat) {
           // Perform a deep copy of chat
-          var chatFormat = jsonDecode(jsonEncode(chat));
-          chatFormat['seller'] = jsonEncode(chat['seller']);
-          chatFormat['buyer'] = jsonEncode(chat['buyer']);
-          ChatRoom chatRoom = ChatRoom.fromMap(chatFormat);
+
+          ChatRoom chatRoom = ChatRoom.fromMap(chat);
           getIt<ChatBloc>().add(AddChatRoomEvent(chatRoom));
         }
 
         if (isUserOnline) {
-          getIt<StatusBloc>().add(ConnectedEvent(userId: chat['seller']['id']));
+          getIt<StatusBloc>().add(ConnectedEvent(userId: seller['id']));
         }
       });
       socket.on('chat room deleted', (data) {
@@ -114,6 +113,7 @@ class SocketService {
           LocalNotificationController.showNotification(
               title: sender.name,
               body: receivedMessage.message,
+              channelKey: 'inapp_notification',
               bigPicture: sender.profileImage,
               notificationLayout: NotificationLayout.MessagingGroup);
           getIt<ChatBloc>()

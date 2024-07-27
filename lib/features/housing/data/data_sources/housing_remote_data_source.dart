@@ -19,13 +19,13 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
   Future<List<HousingPostModel>> getHousingPosts(
       {required int pageNumber}) async {
     try {
-      final response = await DioHelper.instance.dio.get(
-        '$productURI/get-recent-housing',
-        queryParameters: {
-          'limit': 10,
-          'pageNumber': pageNumber,
-        },
-      );
+      final response =
+          await DioHelper.instance.dio.get('$productURI/get-recent-housing',
+              queryParameters: {
+                'limit': 10,
+                'pageNumber': pageNumber,
+              },
+              options: DioHelper.instance.getDioOptions());
       if (response.statusCode == 200) {
         final List data = response.data['posts'];
         final List<HousingPostModel> housingPostList =
@@ -44,13 +44,13 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
   Future<List<HousingPostModel>> fetchMyHousingPosts(
       {required int pageNumber, required String status}) async {
     try {
-      final response = await DioHelper.instance.dio.get(
-        '$productURI/get-my-housing/$status',
-        queryParameters: {
-          'limit': 10,
-          'pageNumber': pageNumber,
-        },
-      );
+      final response =
+          await DioHelper.instance.dio.get('$productURI/get-my-housing/$status',
+              queryParameters: {
+                'limit': 10,
+                'pageNumber': pageNumber,
+              },
+              options: DioHelper.instance.getDioOptions());
       if (response.statusCode == 200) {
         final List data = response.data['posts'];
         final List<HousingPostModel> housingPostList =
@@ -69,8 +69,8 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
   Future<void> deleteHousingPost(String id) async {
     try {
       final response = await DioHelper.instance.dio.delete(
-        '$productURI/delete-housing/$id',
-      );
+          '$productURI/delete-housing/$id',
+          options: DioHelper.instance.getDioOptions());
       if (response.statusCode != 200) {
         throw Exception('Failed to delete housing post');
       }
@@ -84,8 +84,8 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
   Future<HousingPostModel> fetchHousingPost(String housingId) async {
     try {
       final response = await DioHelper.instance.dio.get(
-        '$productURI/get-housing/$housingId',
-      );
+          '$productURI/get-housing/$housingId',
+          options: DioHelper.instance.getDioOptions());
       if (response.statusCode == 201) {
         return HousingPostModel.fromJson(response.data);
       } else {

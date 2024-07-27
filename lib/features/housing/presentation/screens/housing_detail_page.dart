@@ -283,6 +283,7 @@ class HousingDetailPage extends StatelessWidget {
                               fontSize: 16,
                             ),
                           ),
+                          const SizedBox(height: 50),
                         ],
                       ),
                     ),

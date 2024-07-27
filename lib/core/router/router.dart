@@ -27,7 +27,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AppRoutes.housingPage:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => HousingListPage(),
+        builder: (_) => const HousingListPage(),
       );
     case AppRoutes.signupPage:
       return MaterialPageRoute(

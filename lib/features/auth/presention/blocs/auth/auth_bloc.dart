@@ -234,6 +234,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   emit(const Authorized()),
                   await initData(),
                 }
+              else
+                {
+                  emit(const SigninFailedState()),
+                }
             });
   }
 

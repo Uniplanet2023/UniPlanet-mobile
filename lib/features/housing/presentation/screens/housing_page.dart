@@ -22,7 +22,7 @@ class _HousingListPageState extends State<HousingListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Housing List'),
+        title: const Text('Available Properties'),
       ),
       body: BlocBuilder<GetHousingBloc, GetHousingState>(
         builder: (context, state) {
@@ -40,7 +40,9 @@ class _HousingListPageState extends State<HousingListPage> {
               },
             );
           }
-          return const SizedBox();
+          return const SizedBox(
+            height: 50,
+          );
         },
       ),
     );

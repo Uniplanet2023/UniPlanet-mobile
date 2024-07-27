@@ -73,7 +73,7 @@ class _SigninScreenState extends State<SigninScreen> {
               context, AppRoutes.bottomBarPage, (route) => false);
         } else if (state is UserNotVerifiedState) {
           Navigator.pushNamed(context, AppRoutes.signupPage);
-        }
+        } else if (state is SigninFailedState) {}
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.secondaryFixedDim,

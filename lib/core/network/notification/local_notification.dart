@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:uniplanet/core/utils/cloudinary_image.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
@@ -57,6 +56,19 @@ class LocalNotificationController {
               defaultColor: GlobalVariables.secondaryColor,
               ledColor: GlobalVariables.secondaryColor,
               soundSource: 'resource://raw/res_custom_notification',
+            ),
+            NotificationChannel(
+              channelKey: 'inapp_notification',
+              channelName: 'Messages',
+              channelDescription: 'Notification for messages',
+              playSound: false,
+              enableVibration: true,
+              enableLights: true,
+              defaultRingtoneType: DefaultRingtoneType.Notification,
+              importance: NotificationImportance.Max,
+              defaultPrivacy: NotificationPrivacy.Private,
+              defaultColor: GlobalVariables.secondaryColor,
+              ledColor: GlobalVariables.secondaryColor,
             )
           ],
           debug: true);
@@ -131,6 +143,7 @@ class LocalNotificationController {
     final String? largeIcon,
     final String? icon,
     final int? badgeCount,
+    final bool silent = false,
   }) async {
     assert(
       scheduled == false || calendar != null,
@@ -144,10 +157,10 @@ class LocalNotificationController {
     // Check if body starts with the specific URL and replace it
     String modifiedBody = body.startsWith("https://") ? "image" : body;
     var resizedBigPicture = bigPicture;
-    if (bigPicture != null) {
-      resizedBigPicture =
-          cloudinaryTransformImage(bigPicture, width: 150, height: 150);
-    }
+    // if (bigPicture != null) {
+    //   resizedBigPicture =
+    //       cloudinaryTransformImage(bigPicture, width: 150, height: 150);
+    // }
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(

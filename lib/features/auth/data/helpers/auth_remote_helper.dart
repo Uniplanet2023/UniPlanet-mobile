@@ -5,15 +5,18 @@ import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 
 Future<Response> postRequest(String url, Map<String, dynamic> data) async {
-  return await DioHelper.instance.dio.post(url, data: data);
+  return await DioHelper.instance.dio
+      .post(url, data: data, options: DioHelper.instance.getDioOptions());
 }
 
 Future<Response> putRequest(String url, Map<String, dynamic> data) async {
-  return await DioHelper.instance.dio.put(url, data: data);
+  return await DioHelper.instance.dio
+      .put(url, data: data, options: DioHelper.instance.getDioOptions());
 }
 
 Future<Response> deleteRequest(String url) async {
-  return await DioHelper.instance.dio.delete(url);
+  return await DioHelper.instance.dio
+      .delete(url, options: DioHelper.instance.getDioOptions());
 }
 
 void saveUserData(Map<String, dynamic> data) {

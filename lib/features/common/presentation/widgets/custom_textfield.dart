@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import the services package
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -7,7 +8,8 @@ class CustomTextField extends StatefulWidget {
   final int maxLines;
   final bool enabled;
   final TextInputType keyboardType;
-  final dynamic inputFormatters;
+  final List<TextInputFormatter>?
+      inputFormatters; // Updated type to List<TextInputFormatter>
   final String prefixText;
   final bool obscureText;
   final bool validatorEnabled;
@@ -57,7 +59,11 @@ class CustomTextFieldState extends State<CustomTextField> {
       controller: widget.controller,
       enabled: widget.enabled,
       keyboardType: widget.keyboardType,
-      inputFormatters: widget.inputFormatters,
+      inputFormatters: widget.keyboardType == TextInputType.number
+          ? [
+              FilteringTextInputFormatter.digitsOnly
+            ] // Apply digit-only filter for number input
+          : widget.inputFormatters, // Use provided inputFormatters if available
       obscureText: _obscureText, // Use the state variable here
       autocorrect: false,
       enableSuggestions: false,
@@ -68,13 +74,15 @@ class CustomTextFieldState extends State<CustomTextField> {
             const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-              color: widget.borderColor ??
-                  Theme.of(context).colorScheme.tertiaryFixedDim),
+            color: widget.borderColor ??
+                Theme.of(context).colorScheme.tertiaryFixedDim,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-              color: widget.borderColor ??
-                  Theme.of(context).colorScheme.tertiaryFixedDim),
+            color: widget.borderColor ??
+                Theme.of(context).colorScheme.tertiaryFixedDim,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(

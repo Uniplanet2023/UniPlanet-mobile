@@ -71,6 +71,7 @@ class ChatRoom {
       'seller': seller,
       'buyer': buyer,
       'productId': productId,
+      'productName': productName,
       'lastMessage': lastMessage?.toMap(),
       'unseenMessageCount': unseenMessageCount,
       'deletedFrom': deletedFrom ?? '',

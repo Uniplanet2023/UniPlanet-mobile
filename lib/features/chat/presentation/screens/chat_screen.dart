@@ -1,5 +1,4 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
@@ -14,11 +13,9 @@ import 'package:uniplanet/features/chat/presentation/widgets/chat_expansion_hous
 import 'package:uniplanet/features/chat/presentation/widgets/chat_expansion_product.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/chat_list.dart';
 import 'package:uniplanet/features/housing/presentation/housing/housing_bloc.dart';
-import 'package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
-import 'package:uniplanet/features/upload/presentation/blocs/bloc/housing_bloc.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';

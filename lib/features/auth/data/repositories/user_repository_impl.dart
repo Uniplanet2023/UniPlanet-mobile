@@ -6,6 +6,7 @@ import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 
@@ -25,9 +26,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       final result = await remoteDataSource.signUpUser(
+        name: name,
         email: email,
         password: password,
-        name: name,
         school: school,
         userType: userType,
         phoneNumber: phoneNumber,
@@ -38,6 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(result);
       }
     } catch (e) {
+      log(e);
       return Left(ServerFailure());
     }
   }
@@ -98,8 +100,8 @@ class AuthRepositoryImpl implements AuthRepository {
       var userRecord = jsonDecode(userData.toString());
       var token = await DioHelper.instance.getSessionToken();
       if (token == null || userRecord == null) {
-        await remoteDataSource.tokenValidation();
-        return const Right(true);
+        final result = await remoteDataSource.tokenValidation();
+        return Right(result);
       } else {
         var userInfo = jsonDecode(userData!);
         AuthRepository.userId = userInfo['id'];

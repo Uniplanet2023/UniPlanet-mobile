@@ -59,7 +59,7 @@ class HousingDetails extends StatelessWidget {
             controller: securityDepositController,
             hintText: "Security Deposit",
             enabled: true,
-            maxLength: 5,
+            maxLength: 8,
             keyboardType: const TextInputType.numberWithOptions(
                 signed: false, decimal: true),
             prefixText: '\$',

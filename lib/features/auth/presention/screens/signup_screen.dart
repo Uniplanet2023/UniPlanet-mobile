@@ -286,7 +286,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               child: DropdownButton<String>(
                                 value: selectedCountryCode,
-                                items: <String>['+1']
+                                items: <String>['+1', '+82']
                                     .map((code) => DropdownMenuItem<String>(
                                           value: code,
                                           child: Text(code),
@@ -307,7 +307,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                 keyboardType: TextInputType.phone,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
-                                  UsNumberTextInputFormatter(),
+                                  NumberTextInputFormatter(
+                                      countryCode: selectedCountryCode),
                                 ],
                                 enabled:
                                     !isPhoneVerified, // Disable the TextField when phone is verified
@@ -329,7 +330,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       String cleanPhoneNumber = _phoneController
                                           .text
                                           .replaceAll(RegExp(r'\D'), '');
-                                      if (cleanPhoneNumber.length == 10) {
+                                      if (cleanPhoneNumber.length >= 10) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -348,7 +349,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                             .showSnackBar(
                                           const SnackBar(
                                             content: Text(
-                                                'Please enter a valid 10-digit phone number.'),
+                                                'Please enter a valid 10-digit or 11-digit phone number.'),
                                             backgroundColor: Colors.red,
                                           ),
                                         );

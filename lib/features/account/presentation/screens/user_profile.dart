@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:uniplanet/core/utils/open_gallery.dart';
 import 'package:uniplanet/features/account/presentation/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/presentation/screens/sold_products_screen.dart';
 import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_sold_products_screen.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
@@ -139,7 +139,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          openGallery(context, 1, [widget.user.profileImage!]);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImagePage(
+                                imageUrls: [widget.user.profileImage!],
+                                initialIndex: 1,
+                              ),
+                            ),
+                          );
                         },
                         child: Hero(
                           tag: 'user-pfp',

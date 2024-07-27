@@ -16,21 +16,21 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
   @override
   Future<HousingPostModel?> uploadHousingPost(HousingPostForm post) async {
     try {
-      final response = await DioHelper.instance.dio.post(
-        '$productURI/post-housing',
-        data: {
-          'title': post.title,
-          'category': post.category,
-          'monthlyPayment': post.monthlyPayment,
-          'isUtilityIncluded': post.isUtilityIncluded,
-          'securityDeposit': post.securityDeposit,
-          'gender': post.gender,
-          'housingConditions': post.housingConditions,
-          'location': post.location,
-          'description': post.description,
-          'seller': post.seller,
-        },
-      );
+      final response =
+          await DioHelper.instance.dio.post('$productURI/post-housing',
+              data: {
+                'title': post.title,
+                'category': post.category,
+                'monthlyPayment': post.monthlyPayment,
+                'isUtilityIncluded': post.isUtilityIncluded,
+                'securityDeposit': post.securityDeposit,
+                'gender': post.gender,
+                'housingConditions': post.housingConditions,
+                'location': post.location,
+                'description': post.description,
+                'seller': post.seller,
+              },
+              options: DioHelper.instance.getDioOptions());
       if (response.statusCode == 201) {
         return HousingPostModel.fromJson(response.data);
       } else {
@@ -45,21 +45,21 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
   @override
   Future<HousingPost?> updateHousingPost(HousingPostModel post) async {
     try {
-      final response = await DioHelper.instance.dio.put(
-        '$productURI/update-housing/${post.id}',
-        data: {
-          'images': post.images,
-          'title': post.title,
-          'category': post.category,
-          'monthlyPayment': post.monthlyPayment,
-          'isUtilityIncluded': post.isUtilityIncluded,
-          'securityDeposit': post.securityDeposit,
-          'gender': post.gender,
-          'housingConditions': post.housingConditions,
-          'location': post.location,
-          'description': post.description,
-        },
-      );
+      final response = await DioHelper.instance.dio
+          .put('$productURI/update-housing/${post.id}',
+              data: {
+                'images': post.images,
+                'title': post.title,
+                'category': post.category,
+                'monthlyPayment': post.monthlyPayment,
+                'isUtilityIncluded': post.isUtilityIncluded,
+                'securityDeposit': post.securityDeposit,
+                'gender': post.gender,
+                'housingConditions': post.housingConditions,
+                'location': post.location,
+                'description': post.description,
+              },
+              options: DioHelper.instance.getDioOptions());
       if (response.statusCode == 201) {
         return HousingPostModel.fromJson(response.data);
       }

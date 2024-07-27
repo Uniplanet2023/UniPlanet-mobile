@@ -50,6 +50,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _addProductFormKey = GlobalKey<FormState>();
   int selectedIndex = 0; // Index of the selected category
 
+  void selectImages(BuildContext context) async {
+    var pickedImage = await pickImages(context);
+    if ((images.length + pickedImage.length) <= maxImages) {
+      images = [...images, ...pickedImage];
+      setState(() => {});
+    } else {
+      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
+    }
+  }
+
+  void selectImageFromCamera(BuildContext context) async {
+    File? image = await openCamera(context);
+    if (image != null) {
+      if (images.length + 1 <= maxImages) {
+        // setState is required here in the original widget, not in this stateless widget.
+        images.add(image);
+        setState(() => {});
+      } else {
+        SnackbarGlobal.showSnackBar(
+            'You can only add up to $maxImages images.');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +130,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
         seller: getIt<AccountBloc>().state.account.user,
       ));
     }
+  }
+
+  void removeImage({required int selectedIndex}) {
+    images.removeAt(selectedIndex);
+    setState(() => {});
   }
 
   void postHousing() {
@@ -167,7 +196,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ),
         BlocListener<HousingBloc, HousingState>(
           listener: (context, state) {
-            if (state is HousingPostSuccess) {
+            if (state is HousingPostUploaded) {
               Navigator.pushNamedAndRemoveUntil(
                   context, AppRoutes.bottomBarPage, (route) => false);
             }
@@ -202,7 +231,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    ImageSelection(images: images, maxImages: maxImages),
+                    ImageSelection(
+                        images: images,
+                        maxImages: maxImages,
+                        selectImages: selectImages,
+                        selectImageFromCamera: selectImageFromCamera,
+                        removeImage: removeImage),
                     const SizedBox(height: 30),
                     ProductTypeToggle(
                       type: type,
@@ -242,7 +276,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             hintText:
                                 type == 'Housing' ? "Monthly Payment" : 'Price',
                             enabled: true,
-                            maxLength: 5,
+                            maxLength: 8,
                             keyboardType: const TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
                             prefixText: type != 'Free Item' ? '\$' : '',
@@ -298,7 +332,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         hintText: type == 'Housing'
                             ? 'Location'
                             : 'Enter custom meeting location',
-                        maxLength: 30,
+                        maxLength: 60,
                       ),
                     if (showLocationToggle)
                       LocationSelection(
@@ -315,7 +349,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       controller: descriptionController,
                       hintText: 'Description',
                       maxLines: 7,
-                      maxLength: 800,
+                      maxLength: 1000,
                       keyboardType: TextInputType.multiline,
                     ),
                     const SizedBox(height: 10),
