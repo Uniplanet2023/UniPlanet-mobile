@@ -32,7 +32,7 @@ dependencies:
   badges: 3.1.2
   bloc: 8.1.4
   bloc_concurrency: 0.2.5
-  cached_network_image: 3.3.1
+  cached_network_image: 3.4.0
   carousel_slider: 4.2.1
   cloudinary_public: 0.23.1
   cupertino_icons: 1.0.8
