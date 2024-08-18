@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/text_size_formats.dart';
+import 'package:uniplanet/features/account/presentation/widgets/menu_section.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
@@ -112,88 +114,103 @@ class HelpScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.tertiary,
                   '\nDelete Account'),
               content(
-                  linkColor: Colors.black,
+                  linkColor: Colors.blue,
                   'To permanently remove all your data from our system, you may proceed with deleting your account. Please be advised that this action is irreversible. \n'
                   'To initiate the account deletion process, kindly click on the URL below. \n'
-                  '1. Visit the Privacy Policy (https://uniplanet.shop/privacy-policy).\n'
+                  '1. Visit the Privacy Policy ( https://uniplanet.shop/privacy-policy ).\n'
                   '2. Navigate to the "USER DATA DELETION" section and click the "Delete Account" link.\n'
                   '3. Click "Continue" to proceed.\n'
                   '4. Log in to your account if prompted.\n'
                   '5. Click "Confirm" to finalize the deletion of your account.\n'
                   'Your data will be permanently removed 7 days later. If you sign in before this period ends, the deletion request will be cancelled, and your data will remain in our system.\n'),
-              // Material(
-              //   elevation: 0.2,
-              //   borderRadius: BorderRadius.circular(20),
-              //   child: Column(
-              //     children: [
-              //       MenuSection(
-              //         title: 'Delete Account',
-              //         icon: Icons.delete_forever_outlined,
-              //         color: Colors.red,
-              //         ontap: () {
-              //           showDialog(
-              //             context: context,
-              //             builder: (BuildContext context) {
-              //               return AlertDialog(
-              //                 title: const Icon(
-              //                   Icons.warning_amber,
-              //                   color: Colors.red,
-              //                   size: 50,
-              //                 ),
-              //                 content: const Column(
-              //                   mainAxisSize: MainAxisSize.min,
-              //                   mainAxisAlignment: MainAxisAlignment.start,
-              //                   crossAxisAlignment: CrossAxisAlignment.center,
-              //                   children: [
-              //                     Text(
-              //                       'Are you sure?',
-              //                       style: TextStyle(
-              //                           fontWeight: FontWeight.bold,
-              //                           fontSize: 20),
-              //                     ),
-              //                     SizedBox(height: 10),
-              //                     Text(
-              //                       'Do you want really to delete your account? You will not be able to undo this action.',
-              //                       style: TextStyle(
-              //                           overflow: TextOverflow.visible),
-              //                     ),
-              //                   ],
-              //                 ),
-              //                 actions: <Widget>[
-              //                   TextButton(
-              //                     style: TextButton.styleFrom(
-              //                       textStyle:
-              //                           Theme.of(context).textTheme.labelLarge,
-              //                     ),
-              //                     child: const Text('cancel'),
-              //                     onPressed: () {
-              //                       Navigator.of(context).pop();
-              //                     },
-              //                   ),
-              //                   TextButton(
-              //                     style: TextButton.styleFrom(
-              //                       textStyle:
-              //                           Theme.of(context).textTheme.labelLarge,
-              //                     ),
-              //                     child: const Text(
-              //                       'Yes',
-              //                       style: TextStyle(color: Colors.red),
-              //                     ),
-              //                     onPressed: () {
-              //                       context
-              //                           .read<AuthBloc>()
-              //                           .add(const DeleteUserEvent());
-              //                     },
-              //                   ),
-              //                 ],
-              //               );
-              //             },
-              //           );
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              Material(
+                elevation: 0.2,
+                borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  children: [
+                    MenuSection(
+                      title: 'Delete Account',
+                      icon: Icons.delete_forever_outlined,
+                      color: Colors.red,
+                      ontap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Icon(
+                                Icons.warning_amber,
+                                color: Colors.red,
+                                size: 50,
+                              ),
+                              content: const Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Are you sure?',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Do you want really to delete your account? You will not be able to undo this action.',
+                                    style: TextStyle(
+                                        overflow: TextOverflow.visible),
+                                  ),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle:
+                                        Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: const Text('cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle:
+                                        Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: const Text(
+                                    'Yes',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () async {
+                                    const url =
+                                        'https://uniplanet.shop/delete-account';
+                                    if (await canLaunchUrl(Uri(
+                                      scheme: 'https',
+                                      host: 'uniplanet.shop',
+                                      path: 'delete-account',
+                                    ))) {
+                                      await launchUrl(Uri(
+                                        scheme: 'https',
+                                        host: 'uniplanet.shop',
+                                        path: 'delete-account',
+                                      ));
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                    // context
+                                    //     .read<AuthBloc>()
+                                    //     .add(const DeleteUserEvent());
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

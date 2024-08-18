@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/ads/ads_repository_impl.dart';
 import 'package:uniplanet/core/entities/user.dart';
+import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -23,13 +25,11 @@ import 'package:uniplanet/features/product_details/presentation/blocs/seller_sal
 import 'package:uniplanet/features/product_details/presentation/blocs/seller_sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
-import 'package:uniplanet/features/common/presentation/widgets/full_image_gallery.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
 import 'package:uniplanet/features/account/presentation/widgets/remove_product_dialog.dart';
-import 'package:uniplanet/features/ads/presentation/bloc/ads_bloc.dart';
-import 'package:uniplanet/features/edit-product/edit_product.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_inventory_screen.dart';
+import 'package:uniplanet/features/product_details/presentation/widgets/chat_button.dart';
 import 'package:uniplanet/features/product_details/presentation/widgets/seller_other_list.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/models/product.dart';
@@ -47,11 +47,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late User currentUser;
   InterstitialAd? _interstitialAd;
   int currentIndex = 0;
+  int availableFreeItems = 0;
 
   @override
   void initState() {
     super.initState();
-    // getIt<AdsBloc>().add(LoadInterstitialAdEvent());
+    if (widget.product.type == 'Free Item' || widget.product.price == 0) {
+      AdsRepositoryImpl().createRewardedAd();
+    }
     currentUser = getIt<AccountBloc>().state.account.user;
     context
         .read<SellerSaleProductBloc>()
@@ -191,38 +194,68 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       );
                     },
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        widget.product.seller.profileImage == null
-                            ? const CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                radius: 20,
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              )
-                            : CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  widget.product.seller.profileImage!,
-                                ),
-                                radius: 20,
-                                backgroundColor:
-                                    Colors.grey, // Placeholder color
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              radius: 20,
+                              backgroundImage:
+                                  widget.product.seller.profileImage != null
+                                      ? NetworkImage(
+                                          widget.product.seller.profileImage!,
+                                        )
+                                      : null,
+                              child: widget.product.seller.profileImage == null
+                                  ? const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                      size: 30,
+                                    )
+                                  : const SizedBox(),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SelectableText(
+                              widget.product.seller.name,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                        const SizedBox(
-                          width: 10,
+                              maxLines: 1,
+                            ),
+                          ],
                         ),
-                        SelectableText(
-                          widget.product.seller.name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).colorScheme.tertiary,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          maxLines: 1,
-                        )
+                        Row(
+                          children: [
+                            Text(
+                              widget.product.seller.school,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            widget.product.seller.type ==
+                                    getUserType(UserType.student)
+                                ? Icon(
+                                    Icons.verified,
+                                    size: 18,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  )
+                                : Icon(
+                                    Icons.warning_amber_rounded,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  )
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -287,7 +320,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         children: [
                           TextSpan(
-                            text: widget.product.location,
+                            text: widget.product.location == 'Custom'
+                                ? '${widget.product.address}, ${widget.product.city}, ${widget.product.stateAddress}, ${widget.product.zipCode}'
+                                : widget.product.location,
                             style: const TextStyle(
                               fontSize: 16,
                               color: GlobalVariables.secondaryColor,
@@ -517,12 +552,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ? Row(
                               children: [
                                 IconButton(
-                                  onPressed: () => Navigator.push(
+                                  onPressed: () => Navigator.pushNamed(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditProductScreen(
-                                          product: widget.product),
-                                    ),
+                                    AppRoutes.editProductPage,
+                                    arguments: widget.product,
                                   ),
                                   icon: const Icon(
                                     Icons.edit_note_sharp,
@@ -579,8 +612,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ],
                             ),
                     )
-                  : _buildChatAndFavoriteButtons(
-                      state, widget.product, context),
+                  : chatButton(
+                      state, widget.product, context, availableFreeItems),
             ],
           );
         },
@@ -628,28 +661,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildChatAndFavoriteButtons(
-      ChatBlocState state, Product product, BuildContext context) {
-    return TextButton(
-      onPressed: () => {
-        if (product.type == 'Free Item' || product.price == 0)
-          getIt<AdsBloc>().add(ShowInterstitialAdEvent()),
-        getIt<ChatBloc>().add(CreateChatRoomEvent(
-          buyer: getIt<AccountBloc>().state.account.user,
-          seller: widget.product.seller,
-          productId: widget.product.id,
-          productName: widget.product.name,
-          type: 'product',
-        ))
-      },
-      style: TextButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary),
-      child: state is CreatingChatRoomState
-          ? const CircularProgressIndicator()
-          : const Text('Chat', style: TextStyle(color: Colors.white)),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:uniplanet/core/ads/ads_repository_impl.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/contacts_list.dart';
 
@@ -14,16 +15,16 @@ class ChatListPage extends StatefulWidget {
 
 class _ChatListState extends State<ChatListPage> {
   BannerAd? _bannerAd;
-  final bool _isAdLoaded = false;
+  bool _isAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    // getIt<AdsBloc>().add(LoadBannerAdEvent(() {
-    //   setState(() {
-    //     _isAdLoaded = true;
-    //   });
-    // }));
+    _bannerAd = AdsRepositoryImpl().createBannerAd(() {
+      setState(() {
+        _isAdLoaded = true;
+      });
+    });
   }
 
   @override

@@ -21,9 +21,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _showUploadIndicator = false;
   bool _showLoadingIndicator = false;
   bool _isFetchingMoreProducts = false;
   String choiceCheapSelected = "All Items";
+
   void _updateChoice(String newChoice) {
     setState(() {
       choiceCheapSelected = newChoice; // Update the state on choice change
@@ -33,6 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    if (getIt<ProductBloc>().state is ProductUploadingState ||
+        getIt<ProductBloc>().state is ProductUploadedState) {
+      _showUploadIndicator = true;
+    }
     widget.controller.addListener(_scrollListener); // Listen to scroll events
   }
 
@@ -90,9 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<ProductBloc, ProductState>(
       listener: (context, state) {
         if (state is ProductUploadedState) {
-          setState(() => _showLoadingIndicator = true);
+          setState(() => _showUploadIndicator = true);
         } else if (state is ProductUploadSuccessState) {
-          setState(() => _showLoadingIndicator = false);
+          setState(() => _showUploadIndicator = false);
         }
       },
       child: NotificationListener<ScrollNotification>(
@@ -117,6 +123,15 @@ class _HomeScreenState extends State<HomeScreen> {
               choiceCheapSelected: choiceCheapSelected,
               onChoiceChanged: _updateChoice,
             ),
+
+            // Show LinearProgressIndicator at the top of the ItemBox
+            if (_showUploadIndicator)
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: LinearProgressIndicator(),
+                ),
+              ),
 
             // Other slivers
             if (_showLoadingIndicator)
@@ -311,18 +326,17 @@ class _HomeScreenState extends State<HomeScreen> {
   BlocListener<HotProductBloc, HotProductState> hotItems(BuildContext context) {
     return BlocListener<HotProductBloc, HotProductState>(
       listener: (context, state) {
-        // if (state is ProductUploadedState) {
-        //   setState(() => _showLoadingIndicator = true);
-        // } else if (state is ProductImageUploadedState) {
-        //   setState(() => _showLoadingIndicator = false);
-        // }
+// if (state is ProductUploadedState) {
+//   setState(() => _showLoadingIndicator = true);
+// } else if (state is ProductImageUploadedState) {
+//   setState(() => _showLoadingIndicator = false);
+// }
       },
-      child: NotificationListener<ScrollNotification>(
+      child: NotificationListener(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels < -100 && !_showLoadingIndicator) {
             setState(() => _showLoadingIndicator = true);
             getIt<HotProductBloc>().add(const LoadHotProductsEvent());
-
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) {
                 setState(() => _showLoadingIndicator = false);

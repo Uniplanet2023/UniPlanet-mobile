@@ -17,6 +17,7 @@ import 'package:uniplanet/features/upload/presentation/widgets/housing_detail.da
 import 'package:uniplanet/features/upload/presentation/widgets/image_selection.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/location_selection.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/product_type_toggle.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/state_address.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -31,24 +32,41 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController securityDepositController =
       TextEditingController();
-  final TextEditingController meetingLocationController =
-      TextEditingController();
-  final int maxImages = 10; // Set the maximum number of images allowed
+  String? stateAddress;
+  String? city;
+  String? address;
+  String? zipCode;
+
+  void setAddress({
+    required String state,
+    required String city,
+    required String address,
+    required String zipCode,
+  }) {
+    setState(() {
+      stateAddress = state;
+      this.city = city;
+      this.address = address;
+      this.zipCode = zipCode;
+    });
+  }
+
+  final int maxImages = 10;
   bool isOpenToOffers = false;
   bool isUtilityIncluded = false;
   bool isSecurityDeposit = false;
   bool showLocationToggle = true;
-  bool showCategoryToggles = false; // New variable to control visibility
+  bool showCategoryToggles = false;
   bool showCustomLocation = false;
   String type = 'For Sale';
   String category = 'Electronics & Appliances';
-  String selectedCategory = 'Electronics & Appliances'; // Initial category
+  String selectedCategory = 'Electronics & Appliances';
   String selectedLocation = 'On Campus';
   List<String> selectedHousingConditions = [];
-  String selectedGender = 'N/A'; // Initial gender selection
+  String selectedGender = 'N/A';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
-  int selectedIndex = 0; // Index of the selected category
+  int selectedIndex = 0;
 
   void selectImages(BuildContext context) async {
     var pickedImage = await pickImages(context);
@@ -64,7 +82,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     File? image = await openCamera(context);
     if (image != null) {
       if (images.length + 1 <= maxImages) {
-        // setState is required here in the original widget, not in this stateless widget.
         images.add(image);
         setState(() => {});
       } else {
@@ -77,10 +94,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-    // Add listener to productNameController
+
     productNameController.addListener(() {
       final bool shouldShowToggles = productNameController.text.isNotEmpty;
-      // Update showCategoryToggles only if the value changes
       if (showCategoryToggles != shouldShowToggles) {
         setState(() {
           showCategoryToggles = shouldShowToggles;
@@ -94,7 +110,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     productNameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-    meetingLocationController.dispose();
     securityDepositController.dispose();
     super.dispose();
   }
@@ -106,7 +121,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
     if (selectedLocation == 'Custom' &&
-        meetingLocationController.text.isEmpty) {
+        stateAddress == null &&
+        city == null &&
+        address == null &&
+        zipCode == null) {
       SnackbarGlobal.showSnackBar('Please enter a custom location');
       return;
     }
@@ -124,9 +142,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
         type: type,
         isNegotiable: isOpenToOffers,
         images: images,
-        location: selectedLocation == 'Custom'
-            ? meetingLocationController.text
-            : selectedLocation,
+        location: selectedLocation,
+        stateAddress: stateAddress,
+        city: city,
+        address: address,
+        zipCode: zipCode,
         seller: getIt<AccountBloc>().state.account.user,
       ));
     }
@@ -144,7 +164,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
     if (selectedLocation == 'Custom' &&
-        meetingLocationController.text.isEmpty) {
+        (stateAddress == null ||
+            city == null ||
+            address == null ||
+            zipCode == null)) {
       SnackbarGlobal.showSnackBar('Please enter a custom location');
       return;
     }
@@ -169,7 +192,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
             : 0.0,
         gender: selectedGender,
         housingConditions: selectedHousingConditions,
-        location: meetingLocationController.text,
+        location: selectedLocation,
+        stateAddress: stateAddress!,
+        city: city!,
+        address: address!,
+        zipCode: zipCode!,
         category: selectedCategory,
         description: descriptionController.text,
         seller: getIt<AccountBloc>().state.account.user,
@@ -189,16 +216,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
         BlocListener<ProductBloc, ProductState>(
           listener: (context, state) {
             if (state is ProductUploadedState) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, AppRoutes.bottomBarPage, (route) => false);
+              Navigator.pop(context, AppRoutes.bottomBarPage);
             }
           },
         ),
         BlocListener<HousingBloc, HousingState>(
           listener: (context, state) {
             if (state is HousingPostUploaded) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, AppRoutes.bottomBarPage, (route) => false);
+              Navigator.pop(context, AppRoutes.bottomBarPage);
             }
           },
         ),
@@ -255,7 +280,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     const SizedBox(height: 10),
                     CustomTextField(
                       controller: productNameController,
-                      hintText: 'Product Name',
+                      hintText: 'Title',
                       maxLength: 100,
                     ),
                     if (showCategoryToggles)
@@ -274,7 +299,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           CustomTextField(
                             controller: priceController,
                             hintText:
-                                type == 'Housing' ? "Monthly Payment" : 'Price',
+                                type == 'Housing' ? 'Monthly Payment' : 'Price',
                             enabled: true,
                             maxLength: 8,
                             keyboardType: const TextInputType.numberWithOptions(
@@ -327,13 +352,50 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ],
                       ),
                     if (showCustomLocation)
-                      CustomTextField(
-                        controller: meetingLocationController,
-                        hintText: type == 'Housing'
-                            ? 'Location'
-                            : 'Enter custom meeting location',
-                        maxLength: 60,
-                      ),
+                      GestureDetector(
+                          onTap: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StateSelectionPage(
+                                      rootFrom: AppRoutes.addProductPage,
+                                      setAddress: setAddress,
+                                    ),
+                                  ),
+                                )
+                              },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    city == null
+                                        ? 'Address'
+                                        : '$address, $city, $stateAddress, $zipCode',
+                                    style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                          )),
                     if (showLocationToggle)
                       LocationSelection(
                         selectedLocation: selectedLocation,

@@ -210,7 +210,9 @@ class Item extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                product.location,
+                                product.city != null
+                                    ? product.city!
+                                    : product.location,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: const TextStyle(

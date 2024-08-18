@@ -182,6 +182,10 @@ class ProductRepository {
           'images': product.images,
           'type': product.type,
           'isNegotiable': product.isNegotiable,
+          'stateAddress': product.stateAddress,
+          'city': product.city,
+          'address': product.address,
+          'zipCode': product.zipCode,
         },
         options: DioHelper.instance.getDioOptions(),
       );
@@ -206,6 +210,10 @@ class ProductRepository {
     required bool isNegotiable,
     required String type,
     required User seller,
+    String? stateAddress,
+    String? city,
+    String? address,
+    String? zipCode,
   }) async {
     try {
       final response = await DioHelper.instance.dio.post(
@@ -220,6 +228,10 @@ class ProductRepository {
           'seller': seller,
           'isNegotiable': isNegotiable,
           'type': type,
+          'stateAddress': stateAddress,
+          'city': city,
+          'address': address,
+          'zipCode': zipCode,
         },
         options: DioHelper.instance.getDioOptions(),
       );

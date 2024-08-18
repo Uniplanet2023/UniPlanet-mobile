@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/entities/user.dart';
+import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/get_product/get_product_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
@@ -35,14 +36,36 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   List<Message> messages = [];
   bool isExpanded = false;
-  bool isNotificationAllowed = false;
+  bool? isNotificationAllowed;
   bool isChatRoomDeleted = false;
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkFirstTimeVisit();
+    });
+
     isChatRoomDeleted = widget.chatRoom.deletedFrom != null ? true : false;
     _initChat();
-    super.initState();
+  }
+
+  void _checkFirstTimeVisit() {
+    bool? firstTimeVisit =
+        SharedPreferencesHelper.instance.getBool('firstTimeChatScreenVisited');
+    bool? isNotificationAllowed =
+        SharedPreferencesHelper.instance.getBool('isNotificationAllowed');
+
+    if ((firstTimeVisit == null && isNotificationAllowed == null) ||
+        (firstTimeVisit == null && isNotificationAllowed == false)) {
+      SharedPreferencesHelper.instance
+          .saveBool('firstTimeChatScreenVisited', true);
+      Navigator.pushNamed(
+        context,
+        AppRoutes.notificationPage,
+      );
+    }
   }
 
   void _initChat() async {
@@ -180,19 +203,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   );
                 },
                 icon: const Icon(Icons.report_gmailerrorred)),
-            isNotificationAllowed
+            isNotificationAllowed == null || isNotificationAllowed == false
                 ? IconButton(
-                    onPressed: () async {
-                      await LocalNotificationController.notificationRationale(
-                          false);
-                      if (mounted) {
-                        setState(() {
-                          isNotificationAllowed = false;
-                        });
-                      }
-                    },
-                    icon: const Icon(Icons.notifications_active_outlined))
-                : IconButton(
                     onPressed: () async {
                       await LocalNotificationController.notificationRationale(
                           true);
@@ -202,7 +214,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         });
                       }
                     },
-                    icon: const Icon(Icons.notifications_off_outlined)),
+                    icon: const Icon(Icons.notifications_off_outlined))
+                : IconButton(
+                    onPressed: () async {
+                      await LocalNotificationController.notificationRationale(
+                          false);
+                      if (mounted) {
+                        setState(() {
+                          isNotificationAllowed = false;
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.notifications_active_outlined)),
             IconButton(
               onPressed: () {
                 showDialog(

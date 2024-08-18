@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:uniplanet/core/router/names.dart";
 import "package:uniplanet/core/entities/user.dart";
+import "package:uniplanet/features/auth/presention/screens/notification_page.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
+import "package:uniplanet/features/edit-product/edit_product.dart";
 import "package:uniplanet/features/housing/presentation/screens/housing_page.dart";
 import 'package:uniplanet/features/upload/presentation/screens/add_product_screen.dart';
 import "package:uniplanet/features/auth/presention/screens/auth_screen.dart";
@@ -34,7 +36,6 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const SignupScreen(),
       );
-
     case AppRoutes.otpVerifyPage:
       var email = routeSettings.arguments as String;
       return MaterialPageRoute(
@@ -63,6 +64,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const AddProductScreen(),
+      );
+    case AppRoutes.editProductPage:
+      var product = routeSettings.arguments as Product;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => EditProductScreen(product: product),
       );
     case AppRoutes.category:
       var category = routeSettings.arguments as String;
@@ -103,6 +110,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => ChatListPage(controller: scroller),
+      );
+    case AppRoutes.notificationPage:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const NotificationScreen(),
       );
     default:
       return MaterialPageRoute(

@@ -22,11 +22,16 @@ class UploadProductEvent extends ProductEvent {
   final String description;
   final double price;
   final String category;
+  final String? stateAddress;
+  final String? city;
+  final String? address;
+  final String? zipCode;
   final String location;
   final String type;
   final bool isNegotiable;
   final List<File> images;
   final User seller;
+
   const UploadProductEvent({
     required this.productName,
     required this.status,
@@ -38,6 +43,10 @@ class UploadProductEvent extends ProductEvent {
     required this.location,
     required this.type,
     required this.isNegotiable,
+    this.stateAddress,
+    this.city,
+    this.address,
+    this.zipCode,
   });
   @override
   List<Object?> get props => [

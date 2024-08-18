@@ -25,8 +25,6 @@ import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_
 import 'package:uniplanet/features/auth/presention/blocs/theme/theme_cubit.dart';
 import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_product_bloc.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
-
-import 'package:uniplanet/features/ads/presentation/bloc/ads_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 import 'package:uniplanet/features/upload/presentation/blocs/bloc/housing_bloc.dart';
 import 'package:uniplanet/main.dart';
@@ -80,7 +78,6 @@ class StateManagerProvider extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<GetHousingBloc>()),
         BlocProvider(create: (context) => getIt<HousingBloc>()),
-        BlocProvider(create: (context) => getIt<AdsBloc>()),
         BlocProvider(create: (context) => getIt<AuthBloc>()),
         BlocProvider(create: (context) => getIt<ProductBloc>()),
         BlocProvider(create: (context) => getIt<CategoryBloc>()),

@@ -100,7 +100,7 @@ class AccountRepository implements IAccountRepository {
       }
     } catch (e) {
       log('Exception: $e');
-      SnackbarGlobal.showSnackBar("Failed to get account info");
+      SnackbarGlobal.showSnackBar("Failed to get advertiser list");
     }
     return advertiserList;
   }

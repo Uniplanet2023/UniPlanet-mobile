@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/state_address.dart';
 import 'package:uniplanet/models/product.dart';
 
 class EditProductScreen extends StatefulWidget {
@@ -30,8 +32,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
       TextEditingController(text: widget.product.description);
   late final TextEditingController priceController =
       TextEditingController(text: widget.product.price.toString());
-  late final TextEditingController meetingLocationController =
-      TextEditingController(text: widget.product.location);
 
   final int maxImages = 10; // Set the maximum number of images allowed
 
@@ -48,6 +48,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _editProductFormKey = GlobalKey<FormState>();
   int selectedIndex = 0; // Index of the selected category
   String selectedLocation = 'Custom';
+  String? stateAddress;
+  String? city;
+  String? address;
+  String? zipCode;
 
   @override
   void initState() {
@@ -56,7 +60,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     type = widget.product.type;
     isOpenToOffers = widget.product.isNegotiable;
     originalImages = widget.product.images;
-    // Add listener to productNameController
+    stateAddress = widget.product.stateAddress;
+    city = widget.product.city;
+    address = widget.product.address;
+    zipCode = widget.product.zipCode;
 
     if (widget.product.location != 'On Campus' &&
         widget.product.location != 'Off Campus') {
@@ -83,7 +90,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
     productNameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-    meetingLocationController.dispose();
   }
 
   Widget imageContainer({File? image, String? originalImage}) {
@@ -126,6 +132,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
     );
   }
 
+  void setAddress({
+    required String state,
+    required String city,
+    required String address,
+    required String zipCode,
+  }) {
+    setState(() {
+      stateAddress = state;
+      this.city = city;
+      this.address = address;
+      this.zipCode = zipCode;
+    });
+  }
+
   void selectImageFromCamera() async {
     File? image = await openCamera(context);
     if (image != null) {
@@ -162,7 +182,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     if (selectedLocation == 'Custom' &&
-        meetingLocationController.text.isEmpty) {
+        (city == null ||
+            stateAddress == null ||
+            address == null ||
+            zipCode == null)) {
       SnackbarGlobal.showSnackBar('Please enter a custom location');
       return;
     }
@@ -186,9 +209,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         category: selectedCategory,
         status: 'On Sale',
         images: originalImages,
-        location: selectedLocation == 'Custom'
-            ? meetingLocationController.text
-            : selectedLocation,
+        location: selectedLocation,
         seller: widget.product.seller,
         createdAt: widget.product.createdAt,
         updatedAt: widget.product.updatedAt,
@@ -196,6 +217,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
         numberOfChat: widget.product.numberOfChat,
         type: type,
         isNegotiable: isOpenToOffers,
+        stateAddress: stateAddress,
+        city: city,
+        address: address,
+        zipCode: zipCode,
       );
       getIt<OnSaleProductBloc>()
           .add(UpdateOnSaleProductEvent(product: newProduct));
@@ -328,7 +353,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               ),
                             ),
                           ),
-
                           // Displaying existing images
                           for (String image in originalImages)
                             imageContainer(originalImage: image),
@@ -477,7 +501,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     const SizedBox(height: 10),
                     CustomTextField(
                       controller: productNameController,
-                      hintText: 'Product Name',
+                      hintText: 'Title',
                       maxLength: 100,
                     ),
                     if (showCategoryToggles)
@@ -519,9 +543,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                 signed: false,
                                 decimal:
                                     true), // Set the keyboard type to number
-                            inputFormatters: <TextInputFormatter>[
+                            inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,9}')),
+                                  RegExp(r'^\d+.?\d{0,9}')),
                             ],
                             prefixText: '\$',
                             validatorEnabled: false,
@@ -541,14 +565,52 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           ),
                         ],
                       ),
-
                     const SizedBox(height: 10),
                     if (showCustomLocation)
-                      CustomTextField(
-                        controller: meetingLocationController,
-                        hintText: 'Enter custom meeting location',
-                        maxLength: 30,
-                      ),
+                      GestureDetector(
+                          onTap: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StateSelectionPage(
+                                      rootFrom: AppRoutes.editProductPage,
+                                      setAddress: setAddress,
+                                    ),
+                                  ),
+                                )
+                              },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    city == null
+                                        ? 'Address'
+                                        : '$address, $city, $stateAddress, $zipCode',
+                                    style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                          )),
 
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,

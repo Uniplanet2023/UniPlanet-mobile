@@ -14,6 +14,10 @@ class HousingPost {
   final String description;
   final User seller;
   final String premiumLevel;
+  final String stateAddress;
+  final String city;
+  final String address;
+  final String zipCode;
 
   HousingPost({
     this.id,
@@ -29,6 +33,10 @@ class HousingPost {
     required this.description,
     required this.seller,
     required this.premiumLevel,
+    required this.stateAddress,
+    required this.city,
+    required this.address,
+    required this.zipCode,
   });
 
   // Add a fromJson constructor if necessary
@@ -48,6 +56,10 @@ class HousingPost {
       seller: User.fromJson(
           json['seller']), // Assuming User has a fromJson constructor
       premiumLevel: json['premiumLevel'],
+      stateAddress: json['stateAddress'],
+      city: json['city'],
+      address: json['address'],
+      zipCode: json['zipCode'],
     );
   }
 }

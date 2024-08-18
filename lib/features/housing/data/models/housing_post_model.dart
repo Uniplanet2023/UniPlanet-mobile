@@ -16,6 +16,10 @@ class HousingPostModel extends HousingPost {
     required super.description,
     required super.seller,
     required super.premiumLevel,
+    required super.stateAddress,
+    required super.city,
+    required super.address,
+    required super.zipCode,
   });
 
   factory HousingPostModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +37,10 @@ class HousingPostModel extends HousingPost {
       description: json['description'],
       seller: User.fromMap(json['seller']),
       premiumLevel: json['premiumLevel'],
+      stateAddress: json['stateAddress'],
+      city: json['city'],
+      address: json['address'],
+      zipCode: json['zipCode'],
     );
   }
 

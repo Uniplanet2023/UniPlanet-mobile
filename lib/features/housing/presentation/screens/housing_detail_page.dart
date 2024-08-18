@@ -12,6 +12,7 @@ import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:uniplanet/features/housing/domain/entities/housing_post.dart';
 import 'package:uniplanet/features/housing/presentation/housing/housing_bloc.dart';
 import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
@@ -102,7 +103,7 @@ class HousingDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          SelectableText(
                             '\$${housing.monthlyPayment.toString()}/mo',
                             style: const TextStyle(
                               fontSize: 24,
@@ -110,14 +111,10 @@ class HousingDetailPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Text(housing.title),
-                            ],
-                          ),
+                          SelectableText(housing.title),
                           const SizedBox(height: 8),
-                          Text(
-                            housing.location,
+                          SelectableText(
+                            '${housing.address}, ${housing.city}, ${housing.stateAddress}, ${housing.zipCode}',
                             style: const TextStyle(color: Colors.black54),
                           ),
                           const SizedBox(height: 16),
@@ -179,7 +176,7 @@ class HousingDetailPage extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: "${housing.gender} Only",
+                                text: housing.gender,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
@@ -277,8 +274,8 @@ class HousingDetailPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            housing.description,
+                          SelectableLinkText(
+                            text: housing.description,
                             style: const TextStyle(
                               fontSize: 16,
                             ),
@@ -331,7 +328,7 @@ class HousingDetailPage extends StatelessWidget {
                         const url = 'https://uniplanet.shop/';
                         final text = 'Check out this housing post:\n\n'
                             'Title: ${housing.title}\n'
-                            'Location: ${housing.location}\n'
+                            'Location: ${housing.address}, ${housing.city}, ${housing.stateAddress}, ${housing.zipCode} \n'
                             'Monthly Payment: \$${housing.monthlyPayment}/mo\n'
                             'Category: ${housing.category}\n'
                             'Description: ${housing.description}\n\n'

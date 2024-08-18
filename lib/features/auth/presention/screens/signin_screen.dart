@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
 
 import 'package:uniplanet/core/router/names.dart';
 
@@ -69,8 +70,16 @@ class _SigninScreenState extends State<SigninScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authorized) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.bottomBarPage, (route) => false);
+          final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+          bool? isNotificationAllowed =
+              prefsHelper.getBool('isNotificationAllowed');
+          if (isNotificationAllowed == null || isNotificationAllowed == false) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.notificationPage, (route) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.bottomBarPage, (route) => false);
+          }
         } else if (state is UserNotVerifiedState) {
           Navigator.pushNamed(context, AppRoutes.signupPage);
         } else if (state is SigninFailedState) {}

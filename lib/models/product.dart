@@ -18,6 +18,10 @@ class Product {
   bool isNegotiable;
   final String type;
   User seller;
+  final String? stateAddress;
+  final String? city;
+  final String? address;
+  final String? zipCode;
   Product({
     required this.seller,
     required this.id,
@@ -35,6 +39,10 @@ class Product {
     this.isAdvertisement = false,
     this.isNegotiable = false,
     required this.type,
+    this.stateAddress,
+    this.city,
+    this.address,
+    this.zipCode,
   });
 
   Map<String, dynamic> toMap() {
@@ -55,6 +63,10 @@ class Product {
       'isAdvertisement': isAdvertisement,
       'isNegotiable': isNegotiable,
       'type': type,
+      'stateAddress': stateAddress,
+      'city': city,
+      'address': address,
+      'zipCode': zipCode,
     };
   }
 
@@ -76,6 +88,10 @@ class Product {
       isAdvertisement: map['isAdvertisement'] ?? false,
       isNegotiable: map['isNegotiable'] ?? false,
       type: map['type'],
+      stateAddress: map['stateAddress'],
+      city: map['city'],
+      address: map['address'],
+      zipCode: map['zipCode'],
     );
   }
 
@@ -101,6 +117,10 @@ class Product {
     bool? isNegotiable,
     String? type,
     User? seller,
+    String? stateAddress,
+    String? city,
+    String? address,
+    String? zipCode,
   }) {
     return Product(
       id: id ?? this.id,
@@ -119,6 +139,10 @@ class Product {
       isNegotiable: isNegotiable ?? this.isNegotiable,
       type: type ?? this.type,
       seller: seller ?? this.seller,
+      stateAddress: stateAddress ?? this.stateAddress,
+      city: city ?? this.city,
+      address: address ?? this.address,
+      zipCode: zipCode ?? this.zipCode,
     );
   }
 }

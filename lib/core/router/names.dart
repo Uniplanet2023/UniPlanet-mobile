@@ -8,6 +8,7 @@ class AppRoutes {
   static const String homePage = '/home-screen';
   static const String bottomBarPage = '/bottom-bar';
   static const String addProductPage = '/add-product-screen';
+  static const String editProductPage = '/edit-product-screen';
   static const String chatLayoutPage = '/chat-layout-screen';
   static const String chatPage = '/chat-screen';
   static const String category = '/category-screen';
@@ -15,4 +16,5 @@ class AppRoutes {
   static const String productDetailsPage = '/product-details-screen';
   static const String searchScreenPage = '/search-screen';
   static const String housingPage = '/housing-screen';
+  static const String notificationPage = '/notification-screen';
 }

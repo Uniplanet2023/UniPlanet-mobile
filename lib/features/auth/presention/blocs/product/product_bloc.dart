@@ -110,6 +110,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         location: event.location,
         type: event.type,
         isNegotiable: event.isNegotiable,
+        stateAddress: event.stateAddress,
+        city: event.city,
+        address: event.address,
+        zipCode: event.zipCode,
       );
       if (productData == null) {
         emit(ErrorProductUploadState("Error uploading product",

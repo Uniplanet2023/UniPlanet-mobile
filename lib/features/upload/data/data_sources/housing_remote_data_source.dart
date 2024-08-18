@@ -29,6 +29,10 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
                 'location': post.location,
                 'description': post.description,
                 'seller': post.seller,
+                'stateAddress': post.stateAddress,
+                'city': post.city,
+                'address': post.address,
+                'zipCode': post.zipCode,
               },
               options: DioHelper.instance.getDioOptions());
       if (response.statusCode == 201) {

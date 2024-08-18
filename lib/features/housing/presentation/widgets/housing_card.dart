@@ -72,7 +72,7 @@ class HousingPostCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            housing.location,
+                            '${housing.address}, ${housing.city}, ${housing.stateAddress}, ${housing.zipCode}',
                             style: const TextStyle(),
                           ),
                         ),
