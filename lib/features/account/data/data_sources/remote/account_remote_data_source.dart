@@ -10,12 +10,14 @@ import 'package:uniplanet/core/utils/display_error_messages.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
+import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 
 abstract interface class AccountRemoteDataSource {
   Future<AccountDBModel> getAccountInfo();
   Future<AccountDBModel> updateName(String name);
-  Future<AccountDBModel> updateProfilePicture(File image, String userId);
+  Future<AccountDBModel> updateProfilePicture(
+      UpdateProfilePictureParams params);
 }
 
 class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
@@ -65,13 +67,14 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
   }
 
   @override
-  Future<AccountDBModel> updateProfilePicture(File image, String userId) async {
+  Future<AccountDBModel> updateProfilePicture(
+      UpdateProfilePictureParams params) async {
     try {
       // Upload image to firebase storage
-      File imageFile = File(image.path);
+      File imageFile = File(params.image.path);
       String profileImage = await ImageUploadService()
-          .uploadImage(
-              imageFile, 'profile-image/${AuthRepository.school}/$userId')
+          .uploadImage(imageFile,
+              'profile-image/${AuthRepository.school}/${params.userId}')
           .timeout(
         const Duration(seconds: 30),
         onTimeout: () {

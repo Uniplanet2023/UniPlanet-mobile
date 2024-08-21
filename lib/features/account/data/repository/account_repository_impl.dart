@@ -5,6 +5,7 @@ import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/features/account/data/data_sources/remote/account_remote_data_source.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/repository/account_repository.dart';
+import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   final AccountRemoteDataSource remoteDataSource;
@@ -32,10 +33,9 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<Either<Failure, AccountEntity>> updateProfilePicture(
-      File image, String userId) async {
+      UpdateProfilePictureParams params) async {
     try {
-      final account =
-          await remoteDataSource.updateProfilePicture(image, userId);
+      final account = await remoteDataSource.updateProfilePicture(params);
       return right(account);
     } on ServerFailure catch (e) {
       return left(e);

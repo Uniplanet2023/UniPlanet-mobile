@@ -34,6 +34,7 @@ class ImageUploadHelper {
             if (product == null) {
               throw Exception('Product is null');
             }
+
             secureUrl = await ImageUploadService()
                 .uploadImage(
               image,
