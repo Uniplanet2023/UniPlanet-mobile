@@ -10,7 +10,7 @@ import 'package:uniplanet/features/account/presentation/blocs/advertiser/adverti
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
-import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/features/account/data/models/account_model.dart';
 import 'package:uniplanet/models/advertiser.dart';
 
 class UserHeader extends StatefulWidget {

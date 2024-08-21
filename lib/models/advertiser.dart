@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/features/account/data/models/account_model.dart';
 
 class Advertiser {
   Account account;

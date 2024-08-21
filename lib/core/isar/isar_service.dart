@@ -5,7 +5,7 @@ import 'package:uniplanet/core/isar/collection/chat_room.dart';
 import 'package:uniplanet/core/isar/collection/message.dart';
 import 'package:uniplanet/core/isar/collection/product.dart';
 import 'package:uniplanet/core/isar/collection/user.dart';
-import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/features/account/data/models/account_model.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/product.dart';

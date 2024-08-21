@@ -14,7 +14,7 @@ import 'package:uniplanet/features/account/presentation/widgets/menu_section.dar
 import 'package:uniplanet/features/account/presentation/widgets/user_header.dart';
 import 'package:uniplanet/features/account/presentation/screens/terms_and_policies.dart';
 import 'package:uniplanet/features/housing/presentation/screens/housing_list_screen.dart';
-import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/features/account/data/models/account_model.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
