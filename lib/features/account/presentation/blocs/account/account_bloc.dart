@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
-import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/features/account/data/models/account_model.dart';
 import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
 
 import '../../../../../core/utils/utils.dart';
@@ -26,9 +26,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       await _updateProfileImage(event, emit);
     });
   }
-
+  
+  //TODO: input a file, return either a AccountEntity or Failure
   _updateProfileImage(
-      UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
+      UpdateProfileImageEvent event, Emitter<AccountState> emit) async { 
     emit(UpdatingProfileImageState(account: state.account));
     File imageFile = File(event.image.path);
     String secureUrl = await ImageUploadService()

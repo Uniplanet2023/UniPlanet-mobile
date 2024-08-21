@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
-import 'package:uniplanet/models/account.dart';
+import 'package:uniplanet/features/account/data/models/account_model.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
