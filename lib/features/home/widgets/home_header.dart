@@ -7,7 +7,7 @@ import 'package:uniplanet/features/category/presentation/blocs/free_product/free
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_product_bloc.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 
 class HomeHeader extends StatefulWidget {

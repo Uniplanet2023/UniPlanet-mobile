@@ -5,7 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/typing/typing_bloc.dart';
@@ -36,6 +36,7 @@ class ContactsList extends StatefulWidget {
 
 class _ContactsListState extends State<ContactsList> {
   bool _isLoading = false;
+  User user = LocalStorage().getUserData();
   @override
   void dispose() {
     super.dispose();
@@ -115,10 +116,9 @@ class _ContactsListState extends State<ContactsList> {
               return const Center(child: CircularProgressIndicator());
             }
             return Builder(builder: (BuildContext innerContext) {
-              User client =
-                  widget.list[index].seller.id == AuthRepository.userId
-                      ? widget.list[index].buyer
-                      : widget.list[index].seller;
+              User client = widget.list[index].seller.id == user.id
+                  ? widget.list[index].buyer
+                  : widget.list[index].seller;
 
               // Determine if the user is typing f    or this chat room.
               Message last;
@@ -212,8 +212,7 @@ class _ContactsListState extends State<ContactsList> {
                                             : last.message,
                                         style: TextStyle(
                                           fontSize: 14,
-                                          fontWeight: last.sender !=
-                                                      AuthRepository.userId &&
+                                          fontWeight: last.sender != user.id &&
                                                   last.readDate == null
                                               ? FontWeight.bold
                                               : FontWeight.normal,

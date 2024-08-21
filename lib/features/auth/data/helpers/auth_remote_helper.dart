@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 
 Future<Response> postRequest(String url, Map<String, dynamic> data) async {
   return await DioHelper.instance.dio
@@ -21,8 +20,4 @@ Future<Response> deleteRequest(String url) async {
 
 void saveUserData(Map<String, dynamic> data) {
   SharedPreferencesHelper.instance.saveString('userData', jsonEncode(data));
-  AuthRepository.userId = data['id'];
-  AuthRepository.school = data['school'];
-  AuthRepository.email = data['email'];
-  AuthRepository.type = data['type'];
 }

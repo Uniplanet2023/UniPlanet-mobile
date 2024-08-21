@@ -8,7 +8,7 @@ import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.
 import 'package:uniplanet/features/account/presentation/screens/change_password_screen.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
 import 'package:uniplanet/features/account/presentation/widgets/menu_section.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 
 import '../../../../config/theme/theme.dart';
 

@@ -1,4 +1,5 @@
 import 'package:uniplanet/config/api/server_address.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
@@ -36,7 +37,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> signInUser({
+  Future<User> signInUser({
     required String email,
     required String password,
   }) async {
@@ -51,9 +52,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         SnackbarGlobal.showSnackBar("Account restored Successfully!");
       }
       saveUserData(response.data);
+      return User.fromMap(response.data);
     }
-
-    return msg;
+    throw Exception("User not found");
   }
 
   @override
@@ -77,15 +78,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> tokenValidation() async {
+  Future<User> tokenValidation() async {
     final response = await postRequest('$authURI/token-login', {});
 
     if (response.data['id'] != null) {
       saveUserData(response.data);
-      return true;
+      User user = User.fromJson(response.data);
+      return user;
     }
-
-    return false;
+    throw Exception("User not found");
   }
 
   @override
@@ -122,7 +123,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> otpValidation({
+  Future<User> otpValidation({
     required String email,
     required String hash,
     required String otpCode,
@@ -139,9 +140,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         SnackbarGlobal.showSnackBar("Account restored Successfully!");
       }
       saveUserData(response.data);
+      return User.fromJson(response.data);
     }
 
-    return msg == "success";
+    throw Exception("User not found");
   }
 
   @override

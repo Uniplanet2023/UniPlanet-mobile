@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
@@ -11,7 +12,7 @@ import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/home/widgets/build_product_box.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/models/product.dart';
 
 class InventoryProductBox extends StatefulWidget {
@@ -240,7 +241,8 @@ class SlidableProduct extends StatelessWidget {
     return Slidable(
       controller:
           index == 0 && !hasSeenMyListingTutorial ? slidableController : null,
-      enabled: widget.productList[index].seller.id == AuthRepository.userId,
+      enabled: widget.productList[index].seller.id ==
+          LocalStorage().getUserData().id,
       key: index == 0 && !hasSeenMyListingTutorial
           ? inventoryKey
           : ValueKey("${product.id}_${product.status}_$index"),

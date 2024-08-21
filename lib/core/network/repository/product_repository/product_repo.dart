@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
@@ -250,6 +250,7 @@ class ProductRepository {
     required Product product,
   }) async {
     try {
+      User user = LocalStorage().getUserData();
       final imageUrls =
           List<String?>.filled(images?.length ?? 0, null, growable: false);
       log(product.id);
@@ -261,7 +262,7 @@ class ProductRepository {
           final secureUrl = await ImageUploadService()
               .uploadImage(
             image,
-            'product-images/${AuthRepository.school}/${product.id}',
+            'product-images/${user.school}/${product.id}',
           )
               .timeout(
             const Duration(seconds: 30),

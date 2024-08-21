@@ -2,14 +2,17 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/initialization/init_data.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/domain/usecases/index.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 
 part 'auth_bloc_event.dart';
@@ -82,7 +85,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (r) => emit({const DeleteUserCompleteState()}));
 
     for (var element in getIt<ChatBloc>().state.chatRooms) {
-      var clientId = element.buyer.id == AuthRepository.userId
+      var clientId = element.buyer.id == LocalStorage().getUserData().id
           ? element.seller.id
           : element.buyer.id;
       Initialization.socketService
@@ -153,32 +156,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _tokenValidationFunction(TokenValidationEvent event, emit) async {
     emit(const TokenValidatingState());
-    Either<Failure, bool> result = await tokenValidation(NoParams());
+    Either<Failure, User> result = await tokenValidation(NoParams());
     result.fold(
-        (l) => {
+        (failure) => {
               emit(const AuthenticationDeny()),
             },
-        (r) async => {
-              if (r)
-                {
-                  emit(const Authorized()),
-                  await initData(),
-                }
-              else
-                {emit(const AuthenticationDeny())}
+        (user) async => {
+              emit(Authorized(user)),
+              await initData(user),
             });
   }
 
   _otpValidationFunction(OtpValidationEvent event, emit) async {
     emit(const OtpValidatingState());
-    Either<Failure, bool> result = await otpValidation(OtpValidationParams(
+    Either<Failure, User> result = await otpValidation(OtpValidationParams(
         email: event.email, hash: event.otpHash, otpCode: event.otpCode));
 
     result.fold(
         (l) => emit(OtpValidationFailedState(hash: event.otpHash)),
-        (r) async => {
-              emit(const Authorized()),
-              await initData(),
+        (user) async => {
+              emit(Authorized(user)),
+              await initData(user),
               SnackbarGlobal.showSnackBar(
                 "OTP Verified Successfully",
               ),
@@ -220,24 +218,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _signInFunction(SignInEvent event, emit) async {
     emit(const SigninState());
-    Either<Failure, String> msg = await signIn(
+    Either<Failure, User> msg = await signIn(
         SignInParams(email: event.email, password: event.password));
     msg.fold(
         (l) => {
               emit(const SigninFailedState()),
             },
-        (r) async => {
-              if (r == 'Verification required')
-                emit(const UserNotVerifiedState()),
-              if (r == 'success')
-                {
-                  emit(const Authorized()),
-                  await initData(),
-                }
-              else
-                {
-                  emit(const SigninFailedState()),
-                }
+        (user) async => {
+              // if (r == 'Verification required')
+              // emit(const UserNotVerifiedState()),
+
+              emit(Authorized(user)),
+              await initData(user),
             });
   }
 

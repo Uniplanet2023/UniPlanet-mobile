@@ -4,12 +4,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/models/image_message.dart';
 // Models
 import 'package:uniplanet/models/message.dart';
@@ -129,7 +129,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
         message: imagePath,
         status: MessageStatusEnum.sending.value,
         messageType: MessageEnum.image.value,
-        sender: AuthRepository.userId!,
+        sender: LocalStorage().getUserData().id,
         receiver: event.receiverId,
         createdAt: DateTime.now(),
       );
@@ -337,7 +337,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
       message: event.message,
       status: MessageStatusEnum.sending.value,
       messageType: MessageEnum.text.value,
-      sender: AuthRepository.userId!,
+      sender: LocalStorage().getUserData().id,
       receiver: event.receiverId,
       readDate: null,
       createdAt: DateTime.now(),

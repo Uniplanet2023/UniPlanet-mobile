@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/config/theme/theme.dart';
 
 class ThemeCubit extends Cubit<ThemeData> {
