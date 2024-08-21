@@ -1,4 +1,5 @@
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/admin/admin_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
@@ -15,10 +16,10 @@ import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 
-Future<void> initData() async {
+Future<void> initData(User user) async {
   await NotificationController.initializeRemoteNotifications(debug: true);
 
-  Initialization.socketService = SocketService(AuthRepository.userId!);
+  Initialization.socketService = SocketService(user.id);
   Initialization.socketService.connect();
 
   getIt<ProductBloc>().add(const LoadProductEvent());
@@ -28,18 +29,16 @@ Future<void> initData() async {
   getIt<WantedProductBloc>().add(const LoadWantedProductEvent());
   getIt<FreeProductBloc>()
       .add(const LoadFreeProductEvent(category: "Free Products"));
-  getIt<SoldProductBloc>()
-      .add(LoadSoldProductEvent(userId: AuthRepository.userId!));
-  getIt<OnSaleProductBloc>()
-      .add(LoadOnSaleProductEvent(userId: AuthRepository.userId!));
+  getIt<SoldProductBloc>().add(LoadSoldProductEvent(userId: user.id));
+  getIt<OnSaleProductBloc>().add(LoadOnSaleProductEvent(userId: user.id));
   getIt<HotProductBloc>().add(const LoadHotProductsEvent());
 
-  if (AuthRepository.type == 'advertiser' || AuthRepository.type == 'admin') {
+  if (user.type == 'advertiser' || user.type == 'admin') {
     getIt<AdvertiserBloc>().add(const GetAdvertiserInfoEvent());
     getIt<AdvertiserBloc>().add(const GetAdStatisticEvent());
     getIt<AdvertiserBloc>().add(const GetUserInteractionEvent());
   }
-  if (AuthRepository.type == 'admin') {
+  if (user.type == 'admin') {
     getIt<AdminBloc>().add(const GetAdvertiserListEvent());
   }
 }

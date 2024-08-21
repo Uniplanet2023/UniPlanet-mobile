@@ -16,7 +16,7 @@ import 'package:uniplanet/features/chat/presentation/widgets/chat_list.dart';
 import 'package:uniplanet/features/housing/presentation/housing/housing_bloc.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';

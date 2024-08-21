@@ -1,14 +1,15 @@
 // lib/features/auth/domain/repositories/auth_repository.dart
 
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
+import 'package:uniplanet/core/usecases/usecase.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
 
 abstract class AuthRepository {
   static String? userId;
-  static String? school;
-  static String? email;
-  static String? type;
 
   Future<Either<Failure, String>> signUpUser({
     required String email,
@@ -19,16 +20,15 @@ abstract class AuthRepository {
     required String phoneNumber,
   });
 
-  Future<Either<Failure, String>> signInUser({
-    required String email,
-    required String password,
+  Future<Either<Failure, User>> signInUser({
+    required SignInParams params,
   });
 
   Future<Either<Failure, bool>> logOut();
 
   Future<Either<Failure, String>> otpRequest({required String email});
 
-  Future<Either<Failure, bool>> tokenValidation();
+  Future<Either<Failure, User>> tokenValidation(NoParams params);
 
   Future<Either<Failure, bool>> resetPassword({required String email});
 
@@ -37,10 +37,8 @@ abstract class AuthRepository {
     required String newPassword,
   });
 
-  Future<Either<Failure, bool>> otpValidation({
-    required String email,
-    required String hash,
-    required String otpCode,
+  Future<Either<Failure, User>> otpValidation({
+    required OtpValidationParams params,
   });
 
   Future<Either<Failure, bool>> deleteUser();

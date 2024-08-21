@@ -1,31 +1,19 @@
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
 
-class OtpValidation implements UseCase<bool, OtpValidationParams> {
+class OtpValidation implements UseCase<User, OtpValidationParams> {
   final AuthRepository repository;
 
   OtpValidation(this.repository);
 
   @override
-  Future<Either<Failure, bool>> call(OtpValidationParams params) async {
+  Future<Either<Failure, User>> call(OtpValidationParams params) async {
     return await repository.otpValidation(
-      email: params.email,
-      hash: params.hash,
-      otpCode: params.otpCode,
+      params: params,
     );
   }
-}
-
-class OtpValidationParams {
-  final String email;
-  final String hash;
-  final String otpCode;
-
-  OtpValidationParams({
-    required this.email,
-    required this.hash,
-    required this.otpCode,
-  });
 }

@@ -2,13 +2,17 @@
 
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
+import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -45,14 +49,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> signInUser({
-    required String email,
-    required String password,
-  }) async {
+  Future<Either<Failure, User>> signInUser(
+      {required SignInParams params}) async {
     try {
       final result = await remoteDataSource.signInUser(
-        email: email,
-        password: password,
+        email: params.email,
+        password: params.password,
       );
 
       return Right(result);
@@ -93,22 +95,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> tokenValidation() async {
+  Future<Either<Failure, User>> tokenValidation(NoParams params) async {
     try {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       var userData = prefsHelper.getString('userData');
       var userRecord = jsonDecode(userData.toString());
       var token = await DioHelper.instance.getSessionToken();
       if (token == null || userRecord == null) {
-        final result = await remoteDataSource.tokenValidation();
-        return Right(result);
+        final user = await remoteDataSource.tokenValidation();
+        return Right(user);
       } else {
-        var userInfo = jsonDecode(userData!);
-        AuthRepository.userId = userInfo['id'];
-        AuthRepository.school = userInfo['school'];
-        AuthRepository.email = userInfo['email'];
-        AuthRepository.type = userInfo['type'];
-        return const Right(true);
+        User user = User.fromMap(userRecord);
+        return Right(user);
       }
     } catch (e) {
       return Left(Failure(e.toString()));
@@ -146,22 +144,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> otpValidation({
-    required String email,
-    required String hash,
-    required String otpCode,
+  Future<Either<Failure, User>> otpValidation({
+    required OtpValidationParams params,
   }) async {
     try {
       final result = await remoteDataSource.otpValidation(
-        email: email,
-        hash: hash,
-        otpCode: otpCode,
+        email: params.email,
+        hash: params.hash,
+        otpCode: params.otpCode,
       );
-      if (result) {
-        return Right(result);
-      } else {
-        return Left(Failure());
-      }
+      return Right(result);
     } catch (e) {
       return Left(Failure(e.toString()));
     }

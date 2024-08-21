@@ -2,12 +2,13 @@ import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/chat/presentation/screens/chat_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/main.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/core/utils/show_dialog.dart';
@@ -225,7 +226,7 @@ class LocalNotificationController {
           MaterialPageRoute(
             builder: (context) => ChatScreen(
               chatRoom: chatRoom!,
-              client: AuthRepository.userId == chatRoom.seller.id
+              client: LocalStorage().getUserData().id == chatRoom.seller.id
                   ? chatRoom.buyer
                   : chatRoom.seller,
             ),

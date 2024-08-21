@@ -10,7 +10,7 @@ import 'package:uniplanet/features/auth/presention/screens/signup_screen.dart';
 import 'package:uniplanet/features/on_boarding/screens/on_boarding_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/router/router.dart';
-import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
+import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 
 void main() async {

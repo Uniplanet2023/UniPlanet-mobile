@@ -1,28 +1,17 @@
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
 
-class SignInUser implements UseCase<String, SignInParams> {
+class SignInUser implements UseCase<User, SignInParams> {
   final AuthRepository repository;
 
   SignInUser(this.repository);
 
   @override
-  Future<Either<Failure, String>> call(SignInParams params) async {
-    return await repository.signInUser(
-      email: params.email,
-      password: params.password,
-    );
+  Future<Either<Failure, User>> call(SignInParams params) async {
+    return await repository.signInUser(params: params);
   }
-}
-
-class SignInParams {
-  final String email;
-  final String password;
-
-  SignInParams({
-    required this.email,
-    required this.password,
-  });
 }

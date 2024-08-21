@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
+import 'package:uniplanet/core/entities/user.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
@@ -21,6 +22,7 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  User user = LocalStorage().getUserData();
   @override
   void initState() {
     super.initState();
@@ -188,7 +190,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             ),
                           ),
                           TextSpan(
-                            text: '${AuthRepository.school}',
+                            text: user.school,
                             style: GoogleFonts.roboto(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

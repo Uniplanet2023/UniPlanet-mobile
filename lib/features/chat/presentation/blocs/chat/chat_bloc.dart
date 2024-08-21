@@ -2,12 +2,12 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 
 import 'package:uniplanet/core/utils/check_blocked.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/models/get_chat_room.dart';
 // Repositories
@@ -246,7 +246,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
       for (var chatRoom in getChatRooms.chatRooms) {
         String clientId;
-        if (chatRoom.buyer.id == AuthRepository.userId) {
+        if (chatRoom.buyer.id == LocalStorage().getUserData().id) {
           clientId = chatRoom.seller.id;
         } else {
           clientId = chatRoom.buyer.id;

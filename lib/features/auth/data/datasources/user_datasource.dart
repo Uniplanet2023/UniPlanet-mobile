@@ -1,3 +1,4 @@
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
 
 abstract class AuthRemoteDataSource {
@@ -10,7 +11,7 @@ abstract class AuthRemoteDataSource {
     required String phoneNumber,
   });
 
-  Future<String> signInUser({
+  Future<User> signInUser({
     required String email,
     required String password,
   });
@@ -19,7 +20,7 @@ abstract class AuthRemoteDataSource {
 
   Future<String> otpRequest({required String email});
 
-  Future<bool> tokenValidation();
+  Future<User> tokenValidation();
 
   Future<bool> resetPassword({required String email});
 
@@ -28,7 +29,7 @@ abstract class AuthRemoteDataSource {
     required String newPassword,
   });
 
-  Future<bool> otpValidation({
+  Future<User> otpValidation({
     required String email,
     required String hash,
     required String otpCode,

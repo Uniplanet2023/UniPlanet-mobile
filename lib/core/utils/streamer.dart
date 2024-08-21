@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/core/initialization/init.dart';
@@ -17,9 +18,10 @@ class Streamer {
     _chatStreamSubscription = getIt<ChatBloc>().stream.listen((state) async {
       if (state is LoadedChatRoomState) {
         for (var chatRoom in state.chatRooms) {
-          var targetUserId = chatRoom.seller.id == AuthRepository.userId
-              ? chatRoom.buyer.id
-              : chatRoom.seller.id;
+          var targetUserId =
+              chatRoom.seller.id == LocalStorage().getUserData().id
+                  ? chatRoom.buyer.id
+                  : chatRoom.seller.id;
           bool isTargetUserOnline = await Initialization.socketService
               .joinChatAndCheckUserExist(
                   chatId: chatRoom.id, targetUserId: targetUserId);

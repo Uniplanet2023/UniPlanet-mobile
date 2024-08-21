@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/entities/user.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
@@ -18,6 +20,7 @@ class ImageUploadHelper {
     required Either<Product, HousingPost> post,
   }) async {
     try {
+      User user = LocalStorage().getUserData();
       final imageUrls =
           List<String?>.filled(images.length, null, growable: false);
 
@@ -38,7 +41,7 @@ class ImageUploadHelper {
             secureUrl = await ImageUploadService()
                 .uploadImage(
               image,
-              'product-images/${AuthRepository.school}/${product.id}',
+              'product-images/${user.school}/${product.id}',
             )
                 .timeout(
               const Duration(seconds: 30),
@@ -56,7 +59,7 @@ class ImageUploadHelper {
             secureUrl = await ImageUploadService()
                 .uploadImage(
               image,
-              'housing-images/${AuthRepository.school}/${housingPost.id}',
+              'housing-images/${user.school}/${housingPost.id}',
             )
                 .timeout(
               const Duration(seconds: 30),
