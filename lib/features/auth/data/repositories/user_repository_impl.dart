@@ -34,13 +34,13 @@ class AuthRepositoryImpl implements AuthRepository {
         phoneNumber: phoneNumber,
       );
       if (result == 'Failed') {
-        return Left(ServerFailure());
+        return Left(Failure(result));
       } else {
         return Right(result);
       }
     } catch (e) {
       log(e);
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -57,7 +57,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -71,10 +71,10 @@ class AuthRepositoryImpl implements AuthRepository {
       if (isSuccess) {
         return Right(isSuccess);
       } else {
-        return Left(ServerFailure());
+        return Left(Failure());
       }
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -83,12 +83,12 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final result = await remoteDataSource.otpRequest(email: email);
       if (result == 'Failed') {
-        return Left(ServerFailure());
+        return Left(Failure(result));
       } else {
         return Right(result);
       }
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -111,7 +111,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return const Right(true);
       }
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -122,10 +122,10 @@ class AuthRepositoryImpl implements AuthRepository {
       if (result) {
         return Right(result);
       } else {
-        return Left(ServerFailure());
+        return Left(Failure());
       }
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -141,7 +141,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -160,10 +160,10 @@ class AuthRepositoryImpl implements AuthRepository {
       if (result) {
         return Right(result);
       } else {
-        return Left(ServerFailure());
+        return Left(Failure());
       }
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -174,10 +174,10 @@ class AuthRepositoryImpl implements AuthRepository {
       if (result) {
         return Right(result);
       } else {
-        return Left(ServerFailure());
+        return Left(Failure());
       }
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(Failure(e.toString()));
     }
   }
 }

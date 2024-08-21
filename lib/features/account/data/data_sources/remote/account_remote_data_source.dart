@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:uniplanet/config/api/server_address.dart';
+import 'package:uniplanet/core/error/exceptions.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
-import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
@@ -33,14 +33,14 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         IsarService.instance.saveAccount(account);
         return account;
       } else {
-        throw Exception('Failed to get account info');
+        throw const ServerException('Failed to get account info');
       }
     } catch (e) {
       AccountEntity? account = await IsarService.instance.getAccount();
       if (account != null) {
         return AccountDBModel.fromDomain(account);
       }
-      rethrow;
+      throw Exception(e.toString());
     }
   }
 
@@ -53,15 +53,16 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       String msg = displayErrorMessages(res.toString());
 
       if (msg == "success") {
-        SnackbarGlobal.showSnackBar(
-          "Name updated successfully",
-        );
+        // TODO: move to presentation layer
+        // SnackbarGlobal.showSnackBar(
+        //   "Name updated successfully",
+        // );
         AccountDBModel result = AccountDBModel.fromJson(res.data);
         return result;
       }
-      throw Exception('Failed to update name');
+      throw const ServerException('Failed to update name');
     } catch (e) {
-      rethrow;
+      throw Exception(e.toString());
     }
   }
 
@@ -89,16 +90,17 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       String msg = displayErrorMessages(res.toString());
 
       if (msg == "success") {
-        SnackbarGlobal.showSnackBar(
-          "Profile image updated successfully",
-        );
+        // TODO: move to presentation layer
+        // SnackbarGlobal.showSnackBar(
+        //   "Profile image updated successfully",
+        // );
         AccountDBModel result = AccountDBModel.fromJson(res.data);
         return result;
       } else {
-        throw Exception('Failed to update profile image');
+        throw const ServerException('Failed to update profile image');
       }
     } catch (e) {
-      rethrow;
+      throw Exception(e.toString());
     }
   }
 }

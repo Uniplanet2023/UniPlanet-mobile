@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/error/exceptions.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/features/account/data/data_sources/remote/account_remote_data_source.dart';
-import 'package:uniplanet/features/account/domain/entities/account.dart';
+import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/repository/account_repository.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
 
@@ -10,33 +11,37 @@ class AccountRepositoryImpl implements AccountRepository {
   const AccountRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, AccountEntity>> getAccountInfo() async {
+  Future<Either<Failure, AccountDBModel>> getAccountInfo() async {
     try {
       final account = await remoteDataSource.getAccountInfo();
       return right(account);
-    } on ServerFailure catch (e) {
-      return left(e);
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, AccountEntity>> updateName(String name) async {
+  Future<Either<Failure, AccountDBModel>> updateName(String name) async {
     try {
       final account = await remoteDataSource.updateName(name);
       return right(account);
-    } on ServerFailure catch (e) {
-      return left(e);
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<Either<Failure, AccountEntity>> updateProfilePicture(
+  Future<Either<Failure, AccountDBModel>> updateProfilePicture(
       UpdateProfilePictureParams params) async {
     try {
       final account = await remoteDataSource.updateProfilePicture(params);
       return right(account);
-    } on ServerFailure catch (e) {
-      return left(e);
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 }
