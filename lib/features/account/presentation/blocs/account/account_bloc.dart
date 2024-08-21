@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/get_account_info_usecase.dart';
+import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/update_name_usecase.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/update_profile_picture_usecase.dart';
 
@@ -36,9 +38,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   _updateProfileImage(
       UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));
-    File imageFile = File(event.image.path);
-    await updateProfilePictureUseCase(imageFile, state.account.user.id)
-        .then((value) {
+
+    await updateProfilePictureUseCase(UpdateProfilePictureParams(
+      image: File(event.image.path),
+      userId: state.account.user.id,
+    )).then((value) {
       value.fold(
         (failure) {
           emit(FailedToUpdateProfileImageState(
@@ -68,7 +72,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   _getAccountInfo(GetAccountInfoEvent event, Emitter<AccountState> emit) async {
     emit(GettingAccountInfoState(account: state.account));
-    await getAccountInfoUseCase().then((result) {
+    await getAccountInfoUseCase(NoParams()).then((result) {
       result.fold(
         (failure) {
           emit(FailedToGetAccountInfoState(

@@ -2,17 +2,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:uniplanet/config/dependency_injection/account.dart';
-import 'package:uniplanet/core/dependency_injection/auth.dart';
-import 'package:uniplanet/core/dependency_injection/get_housing.dart';
-import 'package:uniplanet/core/dependency_injection/housing.dart';
+import 'package:uniplanet/core/dependency_injection/account_feature/account.dart';
+import 'package:uniplanet/core/dependency_injection/auth_feature/auth.dart';
+import 'package:uniplanet/core/dependency_injection/dependency_injection.dart';
+import 'package:uniplanet/core/dependency_injection/housing_feature/get_housing.dart';
+import 'package:uniplanet/core/dependency_injection/upload_feature/housing.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/config/firebase_options.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uniplanet/core/helper/shared_preferences_helper.dart';
-import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/common/presentation/widgets/error_screen.dart';
 
 class Initialization {
