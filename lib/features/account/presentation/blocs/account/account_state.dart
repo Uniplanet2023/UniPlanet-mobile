@@ -1,7 +1,7 @@
 part of 'account_bloc.dart';
 
 sealed class AccountState extends Equatable {
-  final Account account;
+  final AccountEntity account;
 
   const AccountState({required this.account});
 

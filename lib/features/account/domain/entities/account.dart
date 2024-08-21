@@ -26,4 +26,29 @@ class AccountEntity {
       isBlockedChat: false,
     );
   }
+
+  // to Map
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'user': user.toMap(),
+      'type': type,
+      'isBlocked': isBlocked,
+      'isBlockedPost': isBlockedPost,
+      'isBlockedChat': isBlockedChat,
+    };
+  }
+  // from Map
+
+  factory AccountEntity.fromMap(Map<String, dynamic> map) {
+    return AccountEntity(
+      id: map['id'] as int?,
+      user: User.fromMap(map['user'] as Map<String, dynamic>),
+      type: map['type'] as String,
+      isBlocked: map['isBlocked'] as bool? ?? false,
+      isBlockedPost: map['isBlockedPost'] as bool? ?? false,
+      isBlockedChat: map['isBlockedChat'] as bool? ?? false,
+    );
+  }
 }

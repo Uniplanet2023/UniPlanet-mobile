@@ -1,11 +1,10 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/core/network/storage/image_upload_service.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
-import 'package:uniplanet/features/account/data/models/account_model.dart';
-import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
+import 'package:uniplanet/features/account/domain/entities/account.dart';
+import 'package:uniplanet/features/account/domain/usecases/account_usecases/get_account_info_usecase.dart';
+import 'package:uniplanet/features/account/domain/usecases/account_usecases/update_name_usecase.dart';
+import 'package:uniplanet/features/account/domain/usecases/account_usecases/update_profile_picture_usecase.dart';
 
 import '../../../../../core/utils/utils.dart';
 
@@ -13,9 +12,16 @@ part 'account_event.dart';
 part 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  final AccountRepository _accountRepository;
-  AccountBloc(this._accountRepository)
-      : super(AccountInitial(account: Account.initialAccount())) {
+  // usecase
+  final GetAccountInfoUseCase getAccountInfoUseCase;
+  final UpdateNameUseCase updateNameUseCase;
+  final UpdateProfilePictureUseCase updateProfilePictureUseCase;
+
+  AccountBloc({
+    required this.getAccountInfoUseCase,
+    required this.updateNameUseCase,
+    required this.updateProfilePictureUseCase,
+  }) : super(AccountInitial(account: AccountEntity.initialAccount())) {
     on<GetAccountInfoEvent>((event, emit) async {
       await _getAccountInfo(event, emit);
     });
@@ -26,52 +32,53 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       await _updateProfileImage(event, emit);
     });
   }
-  
-  //TODO: input a file, return either a AccountEntity or Failure
+
   _updateProfileImage(
-      UpdateProfileImageEvent event, Emitter<AccountState> emit) async { 
+      UpdateProfileImageEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingProfileImageState(account: state.account));
     File imageFile = File(event.image.path);
-    String secureUrl = await ImageUploadService()
-        .uploadImage(imageFile,
-            'profile-image/${AuthRepository.school}/${state.account.user.id}')
-        .timeout(
-      const Duration(seconds: 30),
-      onTimeout: () {
-        throw TimeoutException('Image uploading timed out');
-      },
-    );
-
-    Account? account =
-        await _accountRepository.updateProfileImage(profileImage: secureUrl);
-    if (account != null) {
-      emit(UpdatedProfileImageState(account: account));
-    } else {
-      emit(FailedToUpdateProfileImageState(
-          message: 'Fail to update profile image', account: state.account));
-    }
+    await updateProfilePictureUseCase(imageFile, state.account.user.id)
+        .then((value) {
+      value.fold(
+        (failure) {
+          emit(FailedToUpdateProfileImageState(
+              message: failure.toString(), account: state.account));
+        },
+        (account) {
+          emit(UpdatedProfileImageState(account: account));
+        },
+      );
+    });
   }
 
   _updateName(UpdateNameEvent event, Emitter<AccountState> emit) async {
     emit(UpdatingNameState(account: state.account));
-    Account? account = await _accountRepository.updateName(name: event.name);
-    if (account != null) {
-      emit(UpdatedNameState(account: account));
-    } else {
-      emit(FailedToUpdateNameState(
-          message: 'Fail to update name', account: state.account));
-    }
+    await updateNameUseCase(event.name).then((result) {
+      result.fold(
+        (failure) {
+          emit(FailedToUpdateNameState(
+              message: failure.toString(), account: state.account));
+        },
+        (account) {
+          emit(UpdatedNameState(account: account));
+        },
+      );
+    });
   }
 
   _getAccountInfo(GetAccountInfoEvent event, Emitter<AccountState> emit) async {
     emit(GettingAccountInfoState(account: state.account));
-    try {
-      Account result = await _accountRepository.getAccount();
-      emit(GotAccountInfoState(account: result));
-    } catch (e) {
-      emit(FailedToGetAccountInfoState(
-          message: e.toString(), account: state.account));
-    }
+    await getAccountInfoUseCase().then((result) {
+      result.fold(
+        (failure) {
+          emit(FailedToGetAccountInfoState(
+              message: failure.toString(), account: state.account));
+        },
+        (account) {
+          emit(GotAccountInfoState(account: account));
+        },
+      );
+    });
   }
 
   //Tracking

@@ -5,9 +5,8 @@ import 'package:uniplanet/core/entities/user.dart';
 
 part 'user.g.dart';
 
-
 @Collection()
-class UserLocalModel {
+class UserIsarModel {
   Id isarId = Isar.autoIncrement;
   late String id;
   late String name;
@@ -16,7 +15,7 @@ class UserLocalModel {
   late String school;
   late String type;
 
-  UserLocalModel({
+  UserIsarModel({
     required this.id,
     required this.name,
     required this.email,
@@ -25,8 +24,8 @@ class UserLocalModel {
     required this.type,
   });
 
-  factory UserLocalModel.fromUser(User user) {
-    return UserLocalModel(
+  factory UserIsarModel.fromUser(User user) {
+    return UserIsarModel(
       id: user.id,
       name: user.name,
       email: user.email,
@@ -58,8 +57,8 @@ class UserLocalModel {
     };
   }
 
-  factory UserLocalModel.fromMap(Map<String, dynamic> map) {
-    return UserLocalModel(
+  factory UserIsarModel.fromMap(Map<String, dynamic> map) {
+    return UserIsarModel(
       id: map['id'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
@@ -71,7 +70,6 @@ class UserLocalModel {
 
   String toJson() => json.encode(toMap());
 
-  factory UserLocalModel.fromJson(String source) =>
-      UserLocalModel.fromMap(json.decode(source));
+  factory UserIsarModel.fromJson(String source) =>
+      UserIsarModel.fromMap(json.decode(source));
 }
-

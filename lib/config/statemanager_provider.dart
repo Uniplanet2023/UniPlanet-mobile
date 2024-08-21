@@ -42,7 +42,7 @@ void setup() {
   getIt.registerLazySingleton(() => HotProductBloc(getIt<ProductRepository>()));
   getIt.registerLazySingleton(
       () => SearchProductBloc(getIt<ProductRepository>()));
-  getIt.registerLazySingleton(() => AccountBloc(getIt<AccountRepository>()));
+
   getIt.registerLazySingleton(() => ChatBloc(getIt<ChatRepository>()));
   getIt.registerLazySingleton(() => MessageBloc(getIt<ChatRepository>()));
   getIt.registerLazySingleton(() => StatusBloc());

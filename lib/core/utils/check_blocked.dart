@@ -1,10 +1,10 @@
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/utils/utils.dart';
+import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
-import 'package:uniplanet/features/account/data/models/account_model.dart';
 
 bool checkBlockedAccount({required String blockType}) {
-  Account? account = getIt<AccountBloc>().state.account;
+  AccountEntity? account = getIt<AccountBloc>().state.account;
   if (account.isBlocked) {
     SnackbarGlobal.showSnackBar(
         "You're account is blocked. Please contact support: profile -> Help -> contact us.");

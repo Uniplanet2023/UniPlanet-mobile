@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
@@ -14,14 +15,13 @@ import 'package:uniplanet/features/account/presentation/widgets/menu_section.dar
 import 'package:uniplanet/features/account/presentation/widgets/user_header.dart';
 import 'package:uniplanet/features/account/presentation/screens/terms_and_policies.dart';
 import 'package:uniplanet/features/housing/presentation/screens/housing_list_screen.dart';
-import 'package:uniplanet/features/account/data/models/account_model.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    late final Account currentUser;
+    late final AccountEntity currentUser;
     currentUser = context.watch<AccountBloc>().state.account;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

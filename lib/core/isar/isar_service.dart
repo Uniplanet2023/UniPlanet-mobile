@@ -1,11 +1,12 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:uniplanet/core/isar/collection/account.dart';
 import 'package:uniplanet/core/isar/collection/chat_room.dart';
 import 'package:uniplanet/core/isar/collection/message.dart';
 import 'package:uniplanet/core/isar/collection/product.dart';
 import 'package:uniplanet/core/isar/collection/user.dart';
-import 'package:uniplanet/features/account/data/models/account_model.dart';
+import 'package:uniplanet/features/account/data/models/account_db_model.dart';
+import 'package:uniplanet/features/account/data/models/account_isar_model.dart';
+import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/models/chat_room.dart';
 import 'package:uniplanet/models/message.dart';
 import 'package:uniplanet/models/product.dart';
@@ -25,8 +26,8 @@ class IsarService {
       return await Isar.open(
         directory: dir.path,
         [
-          UserLocalModelSchema,
-          AccountModelSchema,
+          UserIsarModelSchema,
+          AccountIsarModelSchema,
           ChatRoomModelSchema,
           MessageModelSchema,
           ProductModelSchema,
@@ -41,23 +42,23 @@ class IsarService {
     final isar = await db;
 
     final List<ProductModel> productModels = [];
-    final List<UserLocalModel> userModelsToInsert = [];
-    final List<UserLocalModel> existingUsers =
-        await isar.userLocalModels.where().findAll();
+    final List<UserIsarModel> userModelsToInsert = [];
+    final List<UserIsarModel> existingUsers =
+        await isar.userIsarModels.where().findAll();
 
     // Create a map for quick lookup of existing users
-    final Map<String, UserLocalModel> existingUserMap = {
+    final Map<String, UserIsarModel> existingUserMap = {
       for (var user in existingUsers) user.email: user
     };
 
     for (var product in productList) {
       ProductModel productModel = ProductModel.fromProduct(product);
 
-      UserLocalModel sellerModel;
+      UserIsarModel sellerModel;
       if (existingUserMap.containsKey(product.seller.email)) {
         sellerModel = existingUserMap[product.seller.email]!;
       } else {
-        sellerModel = UserLocalModel.fromUser(product.seller);
+        sellerModel = UserIsarModel.fromUser(product.seller);
         userModelsToInsert.add(sellerModel);
         existingUserMap[product.seller.email] = sellerModel;
       }
@@ -70,7 +71,7 @@ class IsarService {
       await isar.productModels.clear();
       // Bulk insert users if there are new users to insert
       if (userModelsToInsert.isNotEmpty) {
-        await isar.userLocalModels.putAll(userModelsToInsert);
+        await isar.userIsarModels.putAll(userModelsToInsert);
       }
       // Bulk insert products
       await isar.productModels.putAll(productModels);
@@ -107,40 +108,49 @@ class IsarService {
     });
   }
 
-  Future<Account> saveAccount(Account account) async {
+  Future<AccountEntity> saveAccount(AccountEntity account) async {
     final isar = await db;
-    AccountModel accountModel = AccountModel.fromAccount(account);
-    UserLocalModel userModel = UserLocalModel.fromUser(account.user);
+    AccountIsarModel accountModel = AccountIsarModel.fromDomain(account);
+
+    // Check if an account already exists
+    final existingAccount = await isar.accountIsarModels.where().findFirst();
     // Check if a user with the same email already exists
-    final existingUser = await isar.userLocalModels
+    final existingUser = await isar.userIsarModels
         .where()
         .filter()
         .emailEqualTo(account.user.email)
         .findFirst();
-    final existingAccount = await isar.accountModels.where().findFirst();
-    accountModel.user.value = userModel;
+
     await isar.writeTxn(() async {
       // Update isarUser
+      // If the user already exists, delete it
       if (existingUser != null) {
-        await isar.userLocalModels.delete(existingUser.isarId);
+        await isar.userIsarModels.delete(existingUser.isarId);
       }
-      await isar.userLocalModels.put(userModel);
+      //update user
+      if (accountModel.userLink.value != null) {
+        await isar.userIsarModels.put(accountModel.userLink.value!);
+      }
       // Update isarAccount
+      // If the account already exists, delete it
       if (existingAccount != null) {
-        await isar.accountModels.delete(existingAccount.isarId);
+        await isar.accountIsarModels.delete(existingAccount.isarId);
       }
-      await isar.accountModels.put(accountModel);
-      await accountModel.user.save();
+      // Save the new account
+      await isar.accountIsarModels.put(accountModel);
+
+      // Save the user link
+      await accountModel.userLink.save();
     });
     return account;
   }
 
-  Future<Account?> getAccount() async {
+  Future<AccountDBModel?> getAccount() async {
     final isar = await db;
 
-    final accountModel = await isar.accountModels.where().findFirst();
+    final accountModel = await isar.accountIsarModels.where().findFirst();
     if (accountModel != null) {
-      return await accountModel.toAccount();
+      return AccountDBModel.fromDomain(await accountModel.toDomain());
     }
     return null;
   }
@@ -149,33 +159,33 @@ class IsarService {
     final isar = await db;
 
     final List<ChatRoomModel> chatRoomModels = [];
-    final List<UserLocalModel> userModelsToInsert = [];
+    final List<UserIsarModel> userModelsToInsert = [];
     final List<MessageModel> messageModelsToInsert = [];
-    final List<UserLocalModel> existingUsers =
-        await isar.userLocalModels.where().findAll();
+    final List<UserIsarModel> existingUsers =
+        await isar.userIsarModels.where().findAll();
 
     // Create a map for quick lookup of existing users
-    final Map<String, UserLocalModel> existingUserMap = {
+    final Map<String, UserIsarModel> existingUserMap = {
       for (var user in existingUsers) user.email: user
     };
 
     for (var chatRoom in chatRooms) {
       ChatRoomModel chatRoomModel = ChatRoomModel.fromChatRoom(chatRoom);
 
-      UserLocalModel sellerModel;
+      UserIsarModel sellerModel;
       if (existingUserMap.containsKey(chatRoom.seller.email)) {
         sellerModel = existingUserMap[chatRoom.seller.email]!;
       } else {
-        sellerModel = UserLocalModel.fromUser(chatRoom.seller);
+        sellerModel = UserIsarModel.fromUser(chatRoom.seller);
         userModelsToInsert.add(sellerModel);
         existingUserMap[chatRoom.seller.email] = sellerModel;
       }
 
-      UserLocalModel buyerModel;
+      UserIsarModel buyerModel;
       if (existingUserMap.containsKey(chatRoom.buyer.email)) {
         buyerModel = existingUserMap[chatRoom.buyer.email]!;
       } else {
-        buyerModel = UserLocalModel.fromUser(chatRoom.buyer);
+        buyerModel = UserIsarModel.fromUser(chatRoom.buyer);
         userModelsToInsert.add(buyerModel);
         existingUserMap[chatRoom.buyer.email] = buyerModel;
       }
@@ -200,7 +210,7 @@ class IsarService {
       await isar.messageModels.clear();
       // Bulk insert users if there are new users to insert
       if (userModelsToInsert.isNotEmpty) {
-        await isar.userLocalModels.putAll(userModelsToInsert);
+        await isar.userIsarModels.putAll(userModelsToInsert);
       }
       // Bulk insert messages if there are new messages to insert
       if (messageModelsToInsert.isNotEmpty) {

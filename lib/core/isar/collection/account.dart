@@ -11,7 +11,7 @@
 //   late bool isBlocked;
 //   late bool isBlockedPost;
 //   late bool isBlockedChat;
-//   final user = IsarLink<UserLocalModel>();
+//   final user = IsarLink<UserIsarModel>();
 
 //   AccountModel({
 //     required this.type,

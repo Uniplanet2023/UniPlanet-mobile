@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:uniplanet/config/dependency_injection/account.dart';
 import 'package:uniplanet/core/dependency_injection/auth.dart';
 import 'package:uniplanet/core/dependency_injection/get_housing.dart';
 import 'package:uniplanet/core/dependency_injection/housing.dart';
@@ -40,6 +41,7 @@ class Initialization {
 
     //setup block
     setup();
+    accountSetup();
     setupAuth();
     setupHousing();
     initGetHouse();

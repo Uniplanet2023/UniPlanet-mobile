@@ -5,16 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
-import 'package:uniplanet/features/account/data/models/account_model.dart';
 import 'package:uniplanet/models/advertiser.dart';
 
 class UserHeader extends StatefulWidget {
-  final Account currentUser;
+  final AccountEntity currentUser;
   const UserHeader({super.key, required this.currentUser});
 
   @override

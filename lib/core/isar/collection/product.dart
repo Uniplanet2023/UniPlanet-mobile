@@ -22,7 +22,7 @@ class ProductModel {
   late bool isAdvertisement;
   late bool isNegotiable;
   late String type;
-  final seller = IsarLink<UserLocalModel>();
+  final seller = IsarLink<UserIsarModel>();
   ProductModel({
     required this.id,
     required this.name,

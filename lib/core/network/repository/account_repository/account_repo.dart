@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/core/isar/isar_service.dart';
-import 'package:uniplanet/features/account/data/models/account_model.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
@@ -171,74 +169,6 @@ class AccountRepository implements IAccountRepository {
     } catch (e) {
       SnackbarGlobal.showSnackBar("Failed to get account info");
 
-      return null;
-    }
-  }
-
-  Future<Account> getAccount() async {
-    try {
-      Response res = await DioHelper.instance.dio.get('$accountURI/myinfo',
-          options: DioHelper.instance.getDioOptions());
-
-      String msg = displayErrorMessages(res.toString());
-
-      if (msg == "success") {
-        Account account = Account.fromJson(res.data);
-        IsarService.instance.saveAccount(account);
-        return account;
-      } else {
-        throw Exception('Failed to get account info');
-      }
-    } catch (e) {
-      SnackbarGlobal.showSnackBar("Failed to get account info");
-      Account? account = await IsarService.instance.getAccount();
-      if (account != null) {
-        return account;
-      }
-      rethrow;
-    }
-  }
-
-  Future<Account?> updateName({required String name}) async {
-    try {
-      Response res = await DioHelper.instance.dio.put('$accountURI/update-name',
-          data: {'name': name}, options: DioHelper.instance.getDioOptions());
-
-      String msg = displayErrorMessages(res.toString());
-
-      if (msg == "success") {
-        SnackbarGlobal.showSnackBar(
-          "Name updated successfully",
-        );
-        Account result = Account.fromJson(res.data);
-        return result;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<Account?> updateProfileImage({required String profileImage}) async {
-    try {
-      Response res = await DioHelper.instance.dio.put(
-          '$accountURI/update-profile',
-          data: {'profileImage': profileImage},
-          options: DioHelper.instance.getDioOptions());
-
-      String msg = displayErrorMessages(res.toString());
-
-      if (msg == "success") {
-        SnackbarGlobal.showSnackBar(
-          "Profile image updated successfully",
-        );
-        Account result = Account.fromJson(res.data);
-        return result;
-      } else {
-        return null;
-      }
-    } catch (e) {
       return null;
     }
   }

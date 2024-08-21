@@ -13,8 +13,8 @@ class ChatRoomModel {
   late int unseenMessageCount;
   late String? deletedFrom;
   late String type;
-  final seller = IsarLink<UserLocalModel>();
-  final buyer = IsarLink<UserLocalModel>();
+  final seller = IsarLink<UserIsarModel>();
+  final buyer = IsarLink<UserIsarModel>();
   final lastMessage = IsarLink<MessageModel>();
 
   ChatRoomModel({
