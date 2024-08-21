@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:uniplanet/core/dependency_injection/auth.dart';
+import 'package:uniplanet/core/dependency_injection/auth_feature/auth.dart';
 import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/router/names.dart';

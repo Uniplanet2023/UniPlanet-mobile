@@ -14,6 +14,6 @@ class UpdateProfilePictureUseCase
   @override
   Future<Either<Failure, AccountEntity>> call(
       UpdateProfilePictureParams params) async {
-    return await repository.updateProfilePicture(params.image, params.userId);
+    return await repository.updateProfilePicture(params);
   }
 }

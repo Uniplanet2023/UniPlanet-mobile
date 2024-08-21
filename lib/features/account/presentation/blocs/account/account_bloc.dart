@@ -42,6 +42,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     await updateProfilePictureUseCase(UpdateProfilePictureParams(
       image: File(event.image.path),
       userId: state.account.user.id,
+      school: state.account.user.school,
     )).then((value) {
       value.fold(
         (failure) {

@@ -11,7 +11,6 @@ import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 
 abstract interface class AccountRemoteDataSource {
   Future<AccountDBModel> getAccountInfo();
@@ -73,8 +72,8 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       // Upload image to firebase storage
       File imageFile = File(params.image.path);
       String profileImage = await ImageUploadService()
-          .uploadImage(imageFile,
-              'profile-image/${AuthRepository.school}/${params.userId}')
+          .uploadImage(
+              imageFile, 'profile-image/${params.school}/${params.userId}')
           .timeout(
         const Duration(seconds: 30),
         onTimeout: () {
