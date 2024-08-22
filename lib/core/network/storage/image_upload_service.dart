@@ -27,7 +27,7 @@ class ImageUploadService {
 
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
       String modifiedFileName =
-          taskSnapshot.ref.name.replaceAll('.', '_600x900.');
+          taskSnapshot.ref.name.replaceAll('.', '_900x900.');
       Reference reference = storage.ref().child('$path/$modifiedFileName');
 
       String downloadUrl = await getDownloadUrlWithRetry(reference, 10);

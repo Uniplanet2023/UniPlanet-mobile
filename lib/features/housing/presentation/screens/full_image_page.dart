@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class FullScreenImagePage extends StatefulWidget {
   final List<String> imageUrls;
@@ -22,6 +24,7 @@ class FullScreenImagePageState extends State<FullScreenImagePage> {
   @override
   void initState() {
     super.initState();
+    print(widget.imageUrls[0]);
     _pageController = PageController(initialPage: widget.initialIndex);
     _currentIndex = widget.initialIndex;
   }
@@ -38,27 +41,31 @@ class FullScreenImagePageState extends State<FullScreenImagePage> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          PageView.builder(
-            controller: _pageController,
+          PhotoViewGallery.builder(
+            pageController: _pageController,
             itemCount: widget.imageUrls.length,
             onPageChanged: (index) {
               setState(() {
                 _currentIndex = index;
               });
             },
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Center(
-                  child: CachedNetworkImage(
-                    imageUrl: widget.imageUrls[index],
-                    fit: BoxFit.contain,
-                  ),
-                ),
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider:
+                    CachedNetworkImageProvider(widget.imageUrls[index]),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale:
+                    PhotoViewComputedScale.contained * 2, // Adjusted maxScale
+                initialScale: PhotoViewComputedScale
+                    .contained, // Ensures the image fits within the screen initially
+                heroAttributes:
+                    PhotoViewHeroAttributes(tag: widget.imageUrls[index]),
               );
             },
+            scrollPhysics: const BouncingScrollPhysics(),
+            backgroundDecoration: const BoxDecoration(
+              color: Colors.black,
+            ),
           ),
           Positioned(
             top: 40.0,

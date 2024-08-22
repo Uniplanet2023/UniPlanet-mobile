@@ -6,7 +6,6 @@ import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/upload/domain/entities/housing_post.dart';
 import 'package:uniplanet/models/product.dart';
 

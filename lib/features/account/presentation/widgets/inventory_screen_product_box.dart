@@ -5,7 +5,6 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';

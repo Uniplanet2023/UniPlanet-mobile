@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/chat/presentation/screens/chat_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';

@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/features/common/presentation/widgets/full_image.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/image_with_loading.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/message_detail.dart';
+import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
 import 'package:uniplanet/models/message.dart';
 
 class MessageCard extends StatelessWidget {
@@ -274,8 +274,10 @@ class MessageBox extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) =>
-                      FullScreenImageView(imagePath: oldMessage!.message),
+                  builder: (_) => FullScreenImagePage(
+                    imageUrls: List<String>.from([oldMessage!.message]),
+                    initialIndex: 0,
+                  ),
                 ));
               },
               child: CachedNetworkImage(
