@@ -70,7 +70,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   style: GoogleFonts.roboto(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Theme.of(context).colorScheme.inverseSurface,
                   ),
                 )),
             Padding(
@@ -78,8 +78,8 @@ class _CategoryPageState extends State<CategoryPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  color: Colors.grey.shade100,
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  color: Theme.of(context).colorScheme.surfaceDim,
+                  padding: const EdgeInsets.only(top: 20),
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -106,45 +106,44 @@ class _CategoryPageState extends State<CategoryPage> {
                                       ['name'])
                             }
                         },
-                        child: Container(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // Adjust the radius as needed
-                                child: Container(
-                                  padding: const EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  15.0), // Adjust the radius as needed
+                              child: Container(
+                                padding: const EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surface, // Set the background color
+                                  borderRadius: BorderRadius.circular(
+                                      15.0), // Adjust the radius as needed
+                                ),
+                                width: 60,
+                                height: 60,
+                                child: Image.asset(
+                                  GlobalVariables.categories[index]['image'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Text(
+                                GlobalVariables.categories[index]['name'],
+                                style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .surface, // Set the background color
-                                    borderRadius: BorderRadius.circular(
-                                        15.0), // Adjust the radius as needed
-                                  ),
-                                  width: 60,
-                                  height: 60,
-                                  child: Image.asset(
-                                    GlobalVariables.categories[index]['image'],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                        .inverseSurface,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w900),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.visible,
                               ),
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: Text(
-                                  GlobalVariables.categories[index]['name'],
-                                  style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w900),
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -186,7 +185,8 @@ class _CategoryPageState extends State<CategoryPage> {
                             style: GoogleFonts.roboto(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                             ),
                           ),
                           TextSpan(
@@ -194,7 +194,8 @@ class _CategoryPageState extends State<CategoryPage> {
                             style: GoogleFonts.roboto(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                             ),
                           ),
                         ],
