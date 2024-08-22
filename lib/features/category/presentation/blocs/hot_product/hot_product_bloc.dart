@@ -53,7 +53,13 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
         emit(const EndHotProductState(hotProducts: [], hotProductPage: 1));
         return;
       } else {
-        notificationScheduling(result, 12);
+        notificationScheduling(
+          result,
+          dailyLimit: 2,
+          weeklyLimit: 6,
+          monthlyLimit: 20,
+          notificationId: hotProductId,
+        );
       }
     } catch (e) {
       emit(ErrorHotProductState(message: e.toString()));

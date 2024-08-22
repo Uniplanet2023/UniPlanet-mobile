@@ -54,7 +54,13 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
         emit(const LikeEnd(likeProduct: [], page: 1));
         return;
       } else {
-        notificationScheduling(likeProduct, 11);
+        notificationScheduling(
+          likeProduct,
+          dailyLimit: 2,
+          weeklyLimit: 5,
+          monthlyLimit: 20,
+          notificationId: likeProductId,
+        );
       }
       emit(LikeLoaded(likeProduct: likeProduct, page: state.page));
     } catch (e) {

@@ -2,89 +2,95 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
 
-// id = 10 Search Product
-// id = 11 Like Product
-// id = 12 Hot Product
-void notificationScheduling(List<Product> products, int id) async {
-  // Cancel any existing notification with the same ID
-  var notificationList =
-      await AwesomeNotifications().listScheduledNotifications();
+// Notification IDs
+const int searchProductId = 10;
+const int likeProductId = 11;
+const int hotProductId = 12;
 
-  for (var notification in notificationList) {
-    if (notification.content?.id == id) {
-      return;
+void notificationScheduling(
+  List<Product> products, {
+  int dailyLimit = 2,
+  int weeklyLimit = 15,
+  int monthlyLimit = 64,
+  required int notificationId,
+}) async {
+  // Cancel any existing scheduled notifications to prevent duplicates
+  await AwesomeNotifications().cancelAllSchedules();
+
+  DateTime now = DateTime.now();
+  int dailyCount = 0;
+  int weeklyCount = 0;
+  int monthlyCount = 0;
+
+  // Define notification titles and bodies based on the notification ID
+  String getTitle(int notificationId, String productName) {
+    switch (notificationId) {
+      case searchProductId:
+        return '🧐 Are you looking for this?';
+      case likeProductId:
+        return '💕 $productName 💕';
+      case hotProductId:
+        return '🔥 Hot Product Alert! 🔥';
+      default:
+        return '$productName is trending now!';
     }
   }
 
-  // Get the current date and time
-  DateTime now = DateTime.now();
+  String getBody(int notificationId, String productName) {
+    switch (notificationId) {
+      case searchProductId:
+        return '🔍 $productName is prepared!';
+      case likeProductId:
+        return '$productName is liked by many users. ❤️ Check it out!';
+      case hotProductId:
+        return '$productName is trending now! 🌟';
+      default:
+        return '$productName is trending now!';
+    }
+  }
 
-  // Loop through the products and schedule notifications for the next day
+  // Loop through the products and schedule notifications
   for (var index = 0; index < products.length; index++) {
-    var title = id == 10
-        ? '🧐Are you looking for this?'
-        : id == 11
-            ? '💕 ${products[index].name} 💕'
-            : id == 12
-                ? '🔥Hot Product Alert!🔥'
-                : '${products[index].name} is trending now!';
-    var body = id == 10
-        ? '🔍 ${products[index].name} is prepared!'
-        : id == 11
-            ? '${products[index].name} is liked by many users.❤️ Check it out!'
-            : id == 12
-                ? '${products[index].name} is trending now! Check it out! 🌟'
-                : '${products[index].name} is trending now!';
-
-    // Calculate the scheduled time for the next day
-    DateTime scheduledTime = DateTime(
-      now.year,
-      now.month,
-      now.day + 1 + id % 10, // Schedule for the next day
-      now.hour, // Hour adjustment based on index
-      now.minute, // Minute adjustment based on index
-    );
-
-    // Ensure the scheduled time is valid
-    if (scheduledTime.hour >= 24) {
-      scheduledTime = scheduledTime.add(const Duration(hours: -24, days: 1));
+    if (dailyCount >= dailyLimit ||
+        weeklyCount >= weeklyLimit ||
+        monthlyCount >= monthlyLimit) {
+      break;
     }
-    if (scheduledTime.minute >= 60) {
-      scheduledTime = scheduledTime.add(const Duration(hours: 1, minutes: -60));
-    }
-    if (scheduledTime.day >
-        DateTime(scheduledTime.year, scheduledTime.month + 1, 0).day) {
+
+    var product = products[index];
+
+    // Calculate the scheduled time based on the current counts
+    DateTime scheduledTime = now.add(Duration(
+      days: (monthlyCount / dailyLimit).floor(), // Spread across days
+      hours: (dailyCount * 2) + 11, // Spread between 11 AM and 9 PM
+      minutes: (index % 60), // Spread across the hour
+    ));
+
+    // Ensure the scheduled time is within 11:00 AM - 9:00 PM
+    if (scheduledTime.hour > 21) {
       scheduledTime = DateTime(
         scheduledTime.year,
-        scheduledTime.month + 1,
-        scheduledTime.day -
-            DateTime(scheduledTime.year, scheduledTime.month + 1, 0).day,
-        scheduledTime.hour,
-        scheduledTime.minute,
-      );
-    }
-    if (scheduledTime.month > 12) {
-      scheduledTime = DateTime(
-        scheduledTime.year + 1,
-        scheduledTime.month - 12,
+        scheduledTime.month,
         scheduledTime.day,
-        scheduledTime.hour,
-        scheduledTime.minute,
+        21,
+        59, // Adjust to just before 10:00 PM
       );
     }
-    // Show the notification using the LocalNotificationController
+
+    // Schedule the notification using the LocalNotificationController
     await LocalNotificationController.showNotification(
-      id: id, // Use a unique ID for each notification
+      id: index + 100, // Use a unique ID for each notification
       channelKey: 'scheduled_channel',
-      title: title,
-      body: body,
-      bigPicture: products[index].images.first,
+      title: getTitle(notificationId, product.name), // Rotate through IDs
+      body: getBody(notificationId, product.name), // Rotate through bodies
+      bigPicture: product.images.isNotEmpty ? product.images.first : null,
       notificationLayout: NotificationLayout.BigPicture,
       scheduled: true,
       calendar: NotificationCalendar.fromDate(date: scheduledTime),
     );
 
-    // Limit to a maximum of 3 notifications
-    if (index >= 2) return;
+    dailyCount++;
+    weeklyCount++;
+    monthlyCount++;
   }
 }
