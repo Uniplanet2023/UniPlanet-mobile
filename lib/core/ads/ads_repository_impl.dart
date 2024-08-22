@@ -167,8 +167,8 @@ class AdsRepositoryImpl {
       // return 'ca-app-pub-3940256099942544/9214589741';
       return 'ca-app-pub-3940256099942544/6300978111'; // test
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-9923099397206192/8504321060';
-      // return 'ca-app-pub-3940256099942544/2435281174'; //test
+      // return 'ca-app-pub-9923099397206192/8504321060';
+      return 'ca-app-pub-3940256099942544/2435281174'; //test
     }
     return null;
   }
@@ -178,8 +178,8 @@ class AdsRepositoryImpl {
       // return 'ca-app-pub-9923099397206192/2990525534';
       return 'ca-app-pub-3940256099942544/1033173712'; // test
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-9923099397206192/9910237232';
-      // return 'ca-app-pub-3940256099942544/4411468910'; //test
+      // return 'ca-app-pub-9923099397206192/9910237232';
+      return 'ca-app-pub-3940256099942544/4411468910'; //test
     }
     return null;
   }
@@ -197,8 +197,8 @@ class AdsRepositoryImpl {
     if (Platform.isAndroid) {
       return 'ca-app-pub-9923099397206192/7675257452';
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-9923099397206192/6804527904';
-      // return 'ca-app-pub-3940256099942544/1712485313'; // test
+      // return 'ca-app-pub-9923099397206192/6804527904';
+      return 'ca-app-pub-3940256099942544/1712485313'; // test
     }
     return null;
   }

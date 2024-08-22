@@ -30,6 +30,7 @@ Widget chatButton(ChatBlocState state, Product product, BuildContext context,
           seller: product.seller,
           productId: product.id,
           productName: product.name,
+          productType: product.type,
           type: 'product',
         ));
       },

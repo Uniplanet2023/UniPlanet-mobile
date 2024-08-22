@@ -134,6 +134,7 @@ class HousingDetailPage extends StatelessWidget {
                                             seller: housing.seller,
                                             productId: housing.id!,
                                             productName: housing.title,
+                                            productType: 'housing',
                                             type: 'housing',
                                           ));
                                         },

@@ -292,6 +292,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         buyer: event.buyer,
         productId: event.productId,
         productName: event.productName,
+        productType: event.productType,
         type: event.type,
       );
       bool isChatRoomExist = false;

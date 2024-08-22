@@ -17,13 +17,13 @@ import 'package:uniplanet/core/utils/display_error_messages.dart';
 class ChatRepository {
   ChatRepository();
 
-  Future<ChatRoom> creatingChatRoom({
-    required String productId,
-    required String productName,
-    required User seller,
-    required User buyer,
-    required String type,
-  }) async {
+  Future<ChatRoom> creatingChatRoom(
+      {required String productId,
+      required String productName,
+      required User seller,
+      required User buyer,
+      required String type,
+      required String productType}) async {
     ChatRoom chatRoom = ChatRoom.initChatRoom();
     try {
       Response res = await DioHelper.instance.dio.post(
@@ -32,11 +32,16 @@ class ChatRepository {
         data: {
           'productId': productId,
           'productName': productName,
+          'productType': productType,
           'seller': seller,
           'buyer': buyer,
           'type': type,
         },
       );
+      if (res.statusCode != 200) {
+        SnackbarGlobal.showSnackBar(res.data['msg']);
+        throw Exception("Failed to create chat room");
+      }
 
       chatRoom = ChatRoom.fromMap(res.data['chat']);
 
@@ -48,10 +53,11 @@ class ChatRepository {
 
         getIt<StatusBloc>().add(ConnectedEvent(userId: chatRoom.seller.id));
       }
+      return chatRoom;
     } on DioException catch (e) {
       _handleDioException(e);
+      throw Exception("Failed to create chat room");
     }
-    return chatRoom;
   }
 
   Future<List<Message>> getMessages(
