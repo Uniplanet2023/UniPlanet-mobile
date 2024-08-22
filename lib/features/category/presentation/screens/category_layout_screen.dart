@@ -78,6 +78,7 @@ class _CategoryPageState extends State<CategoryPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
+                  alignment: Alignment.bottomCenter,
                   color: Theme.of(context).colorScheme.surfaceDim,
                   padding: const EdgeInsets.only(top: 20),
                   child: GridView.builder(

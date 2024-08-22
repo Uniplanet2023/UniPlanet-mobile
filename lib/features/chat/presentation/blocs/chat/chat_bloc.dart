@@ -275,17 +275,21 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   _creatingChatRoom(CreateChatRoomEvent event, emit) async {
     bool isBlocked = checkBlockedAccount(blockType: "Chat");
     if (isBlocked) {
-      emit(ErrorChatState('You are blocked from chatting',
-          page: state.page,
-          chatRooms: state.chatRooms,
-          totalUnseenMessageCount: state.totalUnseenMessageCount));
+      emit(ErrorChatState(
+        'You are blocked from chatting',
+        page: state.page,
+        chatRooms: state.chatRooms,
+        totalUnseenMessageCount: state.totalUnseenMessageCount,
+      ));
       return;
     }
+
     emit(CreatingChatRoomState(
       chatRooms: state.chatRooms,
       totalUnseenMessageCount: state.totalUnseenMessageCount,
       page: state.page,
     ));
+
     try {
       ChatRoom chatRoom = await _chatRepository.creatingChatRoom(
         seller: event.seller,
@@ -295,22 +299,35 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         productType: event.productType,
         type: event.type,
       );
+
       bool isChatRoomExist = false;
+
       for (var chat in state.chatRooms) {
         if (chat.id == chatRoom.id) {
           isChatRoomExist = true;
           break;
         }
       }
-      if (isChatRoomExist == false) {
-        state.chatRooms.insert(0, chatRoom);
+
+      if (!isChatRoomExist) {
+        // Create a new list and add the new chatRoom
+        List<ChatRoom> updatedChatRooms = List.from(state.chatRooms);
+        updatedChatRooms.insert(0, chatRoom);
+
+        emit(CreatedChatRoomState(
+          chatRooms: updatedChatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount,
+          chatRoomCreated: chatRoom,
+          page: state.page,
+        ));
+      } else {
+        emit(CreatedChatRoomState(
+          chatRooms: state.chatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount,
+          chatRoomCreated: chatRoom,
+          page: state.page,
+        ));
       }
-      emit(CreatedChatRoomState(
-        chatRooms: state.chatRooms,
-        totalUnseenMessageCount: state.totalUnseenMessageCount,
-        chatRoomCreated: chatRoom,
-        page: state.page,
-      ));
     } catch (e) {
       emit(ErrorChatState(e.toString()));
       throw Exception('creating chat room API error');
