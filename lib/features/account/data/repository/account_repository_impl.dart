@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:uniplanet/core/error/exceptions.dart';
 import 'package:uniplanet/core/error/failures.dart';
-import 'package:uniplanet/features/account/data/data_sources/remote/account_remote_data_source.dart';
+import 'package:uniplanet/features/account/data/data_sources/account_data_source.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/repository/account_repository.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
-  final AccountRemoteDataSource remoteDataSource;
+  final AccountDataSource remoteDataSource;
   const AccountRepositoryImpl(this.remoteDataSource);
 
   @override
@@ -15,8 +17,8 @@ class AccountRepositoryImpl implements AccountRepository {
     try {
       final account = await remoteDataSource.getAccountInfo();
       return right(account);
-    } catch (e) {
-      throw ServerException(e.toString());
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
     }
   }
 
@@ -26,9 +28,7 @@ class AccountRepositoryImpl implements AccountRepository {
       final account = await remoteDataSource.updateName(name);
       return right(account);
     } on ServerException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw ServerException(e.toString());
+      return Left(Failure(e.message));
     }
   }
 
@@ -39,9 +39,9 @@ class AccountRepositoryImpl implements AccountRepository {
       final account = await remoteDataSource.updateProfilePicture(params);
       return right(account);
     } on ServerException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw ServerException(e.toString());
+      return Left(Failure(e.message));
+    } on TimeoutException catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
-import 'package:uniplanet/models/advertiser.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 
 part 'admin_event.dart';
 part 'admin_state.dart';
@@ -28,7 +28,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit(PostingBlockControlState(
         advertiserList: state.advertiserList, page: state.page));
 
-    Advertiser? advertiser = await _accountRepository.blockControl(
+    AdvertiserEntity? advertiser = await _accountRepository.blockControl(
       accountId: event.accountId,
       isPostBlock: event.isPostBlock,
       isChatBlock: event.isChatBlock,
@@ -52,7 +52,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit(IncreasingCreditState(
         advertiserList: state.advertiserList, page: state.page));
 
-    Advertiser? advertiser = await _accountRepository.increaseCredit(
+    AdvertiserEntity? advertiser = await _accountRepository.increaseCredit(
         advertiserAccountId: event.accountId,
         freeCredit: event.freeCredit,
         credit: event.credit);
@@ -69,7 +69,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit(GettingAdvertiserListState(
         advertiserList: state.advertiserList, page: 1));
 
-    List<Advertiser> advertiserList =
+    List<AdvertiserEntity> advertiserList =
         await _accountRepository.getAdvertiserList();
 
     if (advertiserList.isEmpty) {
@@ -85,7 +85,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit(GettingMoreAdvertiserListState(
         advertiserList: state.advertiserList, page: state.page));
     int nextPage = state.page + 1;
-    List<Advertiser> advertiserList =
+    List<AdvertiserEntity> advertiserList =
         await _accountRepository.getAdvertiserList();
 
     if (advertiserList.isEmpty) {

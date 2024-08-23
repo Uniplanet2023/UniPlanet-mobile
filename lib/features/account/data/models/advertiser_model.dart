@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 
-class Advertiser {
+class AdvertiserModel {
   AccountEntity account;
   int maximumPost;
   int numberOfPost;
@@ -11,7 +12,7 @@ class Advertiser {
   double credit;
   double creditUsed;
 
-  Advertiser({
+  AdvertiserModel({
     required this.account,
     this.maximumPost = 0,
     this.numberOfPost = 0,
@@ -22,8 +23,8 @@ class Advertiser {
     this.creditUsed = 0,
   });
 
-  static initialAdtertiser() {
-    return Advertiser(
+  static initialAdvertiser() {
+    return AdvertiserModel(
       account: AccountEntity.initialAccount(),
       maximumPost: 0,
       numberOfPost: 0,
@@ -32,6 +33,34 @@ class Advertiser {
       freeCredit: 0,
       credit: 0,
       creditUsed: 0,
+    );
+  }
+
+  // Convert from domain model to data model
+  factory AdvertiserModel.fromDomain(AdvertiserEntity advertiserEntity) {
+    return AdvertiserModel(
+      account: advertiserEntity.account,
+      maximumPost: advertiserEntity.maximumPost,
+      numberOfPost: advertiserEntity.numberOfPost,
+      costPerClick: advertiserEntity.costPerClick,
+      freeCreditUsed: advertiserEntity.freeCreditUsed,
+      freeCredit: advertiserEntity.freeCredit,
+      credit: advertiserEntity.credit,
+      creditUsed: advertiserEntity.creditUsed,
+    );
+  }
+
+  // Convert from data model to domain model
+  AdvertiserEntity toDomain() {
+    return AdvertiserEntity(
+      account: account,
+      maximumPost: maximumPost,
+      numberOfPost: numberOfPost,
+      costPerClick: costPerClick,
+      freeCreditUsed: freeCreditUsed,
+      freeCredit: freeCredit,
+      credit: credit,
+      creditUsed: creditUsed,
     );
   }
 
@@ -48,8 +77,8 @@ class Advertiser {
     };
   }
 
-  factory Advertiser.fromMap(Map<String, dynamic> map) {
-    return Advertiser(
+  factory AdvertiserModel.fromMap(Map<String, dynamic> map) {
+    return AdvertiserModel(
       account: AccountEntity.fromMap(map),
       maximumPost: map['maximumPost'] as int,
       numberOfPost: map['numberOfPost'] as int,
@@ -61,6 +90,6 @@ class Advertiser {
     );
   }
 
-  factory Advertiser.fromJson(String source) =>
-      Advertiser.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AdvertiserModel.fromJson(String source) =>
+      AdvertiserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

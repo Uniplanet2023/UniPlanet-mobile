@@ -1,9 +1,9 @@
 part of 'advertiser_bloc.dart';
 
 sealed class AdvertiserState extends Equatable {
-  final Advertiser advertiser;
-  final AdStat adStat;
-  final List<UserInteraction> userInteraction;
+  final AdvertiserEntity advertiser;
+  final AdStatEntity adStat;
+  final List<UserInteractionEntity> userInteraction;
   final int interactionPage;
   const AdvertiserState({
     required this.advertiser,

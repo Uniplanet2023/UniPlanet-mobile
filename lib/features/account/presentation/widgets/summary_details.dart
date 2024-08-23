@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 import 'package:uniplanet/features/account/presentation/widgets/custom_card_widget.dart';
-import 'package:uniplanet/models/advertiser.dart';
 
 class SummaryDetails extends StatelessWidget {
-  final Advertiser advertiser;
+  final AdvertiserEntity advertiser;
   const SummaryDetails({super.key, required this.advertiser});
 
   @override

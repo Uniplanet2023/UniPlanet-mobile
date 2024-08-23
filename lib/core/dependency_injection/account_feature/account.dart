@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:uniplanet/features/account/data/data_sources/remote/account_remote_data_source.dart';
+import 'package:uniplanet/features/account/data/data_sources/account_data_source.dart';
 import 'package:uniplanet/features/account/data/repository/account_repository_impl.dart';
 import 'package:uniplanet/features/account/domain/repository/account_repository.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/get_account_info_usecase.dart';
@@ -11,12 +11,11 @@ final getIt = GetIt.instance;
 
 void accountSetup() {
   // Registering Data Sources
-  getIt.registerFactory<AccountRemoteDataSource>(
-      () => AccountRemoteDataSourceImpl());
+  getIt.registerFactory<AccountDataSource>(() => AccountRemoteDataSourceImpl());
 
   // Registering AccountRepository
   getIt.registerFactory<AccountRepository>(
-      () => AccountRepositoryImpl(getIt<AccountRemoteDataSource>()));
+      () => AccountRepositoryImpl(getIt<AccountDataSource>()));
 
   // Registering Account Use Cases
   getIt.registerFactory(() => UpdateNameUseCase(getIt<AccountRepository>()));

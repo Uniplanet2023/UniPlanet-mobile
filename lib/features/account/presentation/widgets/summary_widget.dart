@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 import 'package:uniplanet/features/account/presentation/widgets/pie_chart_widget.dart';
-import 'package:uniplanet/features/account/presentation/widgets/summery_details.dart';
-import 'package:uniplanet/models/advertiser.dart';
+import 'package:uniplanet/features/account/presentation/widgets/summary_details.dart';
 
 class SummaryWidget extends StatelessWidget {
-  final Advertiser advertiser;
+  final AdvertiserEntity advertiser;
   const SummaryWidget({super.key, required this.advertiser});
 
   @override

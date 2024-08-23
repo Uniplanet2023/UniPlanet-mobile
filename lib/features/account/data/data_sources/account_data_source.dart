@@ -12,14 +12,14 @@ import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
 
-abstract interface class AccountRemoteDataSource {
+abstract interface class AccountDataSource {
   Future<AccountDBModel> getAccountInfo();
   Future<AccountDBModel> updateName(String name);
   Future<AccountDBModel> updateProfilePicture(
       UpdateProfilePictureParams params);
 }
 
-class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
+class AccountRemoteDataSourceImpl implements AccountDataSource {
   @override
   Future<AccountDBModel> getAccountInfo() async {
     try {
@@ -40,7 +40,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       if (account != null) {
         return AccountDBModel.fromDomain(account);
       }
-      throw Exception(e.toString());
+      throw ServerException(e.toString());
     }
   }
 
@@ -62,7 +62,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       }
       throw const ServerException('Failed to update name');
     } catch (e) {
-      throw Exception(e.toString());
+      throw ServerException(e.toString());
     }
   }
 
@@ -100,7 +100,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         throw const ServerException('Failed to update profile image');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw ServerException(e.toString());
     }
   }
 }

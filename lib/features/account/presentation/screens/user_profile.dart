@@ -7,7 +7,6 @@ import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/account/presentation/screens/inventory_products_screen.dart';
 import 'package:uniplanet/features/account/presentation/screens/sold_products_screen.dart';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_inventory_screen.dart';
 import 'package:uniplanet/features/product_details/presentation/pages/seller_sold_products_screen.dart';

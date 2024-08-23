@@ -1,123 +1,149 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uniplanet/core/network/repository/account_repository/account_repo.dart';
-import 'package:uniplanet/models/ad_stat.dart';
-import 'package:uniplanet/models/advertiser.dart';
-import 'package:uniplanet/models/user_interaction.dart';
+import 'package:uniplanet/core/usecases/usecase.dart';
+import 'package:uniplanet/features/account/domain/entities/ad_stat_entity.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
+import 'package:uniplanet/features/account/domain/entities/user_interaction_entity.dart';
+import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/get_ad_interaction_usecase.dart';
+import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/get_ad_statistic_usecase.dart';
+import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/get_advertiser_info_usecase.dart';
+import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/get_user_interaction_info_usecase.dart';
 
 part 'advertiser_event.dart';
 part 'advertiser_state.dart';
 
 class AdvertiserBloc extends Bloc<AdvertiserEvent, AdvertiserState> {
-  final AccountRepository _accountRepository;
+  final GetAdInteractionUsecase getAdInteractionUsecase;
+  final GetAdStatisticUsecase getAdStatisticUsecase;
+  final GetAdvertiserInfoUsecase getAdvertiserInfoUsecase;
+  final GetUserInteractionInfoUsecase getUserInteractionInfoUsecase;
 
-  AdvertiserBloc(this._accountRepository)
+  AdvertiserBloc(
+      {required this.getAdInteractionUsecase,
+      required this.getAdStatisticUsecase,
+      required this.getAdvertiserInfoUsecase,
+      required this.getUserInteractionInfoUsecase})
       : super(AdvertiserInitial(
-            advertiser: Advertiser.initialAdtertiser(),
-            adStat: AdStat.initialAdtertiser(),
+            advertiser: AdvertiserEntity.initialAdvertiser(),
+            adStat: AdStatEntity.initialAdStat(),
             userInteraction: const [])) {
-    on<GetAdvertiserInfoEvent>((event, emit) async {
-      await _getAdvertiserInfo(emit, event);
-    });
-    on<GetMoreUserInteractionEvent>((event, emit) async {
-      await _getMoreUserInteractionInfo(emit, event);
-    });
-    on<GetAdStatisticEvent>((event, emit) async {
-      await _getAdStatistic(emit, event);
-    });
-    on<GetUserInteractionEvent>((event, emit) async {
-      await _getAdInteraction(emit, event);
-    });
+    on<GetAdvertiserInfoEvent>(_getAdvertiserInfoUsecase);
+    on<GetMoreUserInteractionEvent>(_getUserInteractionInfoUsecase);
+    on<GetAdStatisticEvent>(_getAdStatisticUsecase);
+    on<GetUserInteractionEvent>(_getAdInteractionUsecase);
   }
 
-  _getMoreUserInteractionInfo(emit, event) async {
-    emit(GettingMoreUserInteractionState(
-        advertiser: state.advertiser,
-        adStat: state.adStat,
-        userInteraction: state.userInteraction,
-        interactionPage: state.interactionPage));
-    int page = state.interactionPage + 1;
-    List<UserInteraction> userInteraction =
-        await _accountRepository.getAdInteraction(page: page);
-    if (userInteraction.isEmpty) {
-      emit(EndUserInteractionState(
-          advertiser: state.advertiser,
-          adStat: state.adStat,
-          userInteraction: state.userInteraction,
-          interactionPage: state.interactionPage));
-      return;
-    } else {
-      emit(GotMoreUserInteractionState(
-          advertiser: state.advertiser,
-          adStat: state.adStat,
-          userInteraction: userInteraction,
-          interactionPage: page));
-    }
-  }
-
-  _getAdInteraction(emit, GetUserInteractionEvent event) async {
-    emit(GettingUserInteractionState(
-        advertiser: state.advertiser,
-        adStat: state.adStat,
-        userInteraction: state.userInteraction));
-
-    List<UserInteraction> userInteraction =
-        await _accountRepository.getAdInteraction(page: 1);
-    if (userInteraction.isEmpty) {
-      emit(EndUserInteractionState(
-          advertiser: state.advertiser,
-          adStat: state.adStat,
-          userInteraction: state.userInteraction,
-          interactionPage: state.interactionPage));
-      return;
-    }
-    emit(GotUserInteractionState(
-        advertiser: state.advertiser,
-        adStat: state.adStat,
-        userInteraction: userInteraction));
-  }
-
-  _getAdvertiserInfo(emit, GetAdvertiserInfoEvent event) async {
+  Future<void> _getAdvertiserInfoUsecase(
+      GetAdvertiserInfoEvent event, Emitter<AdvertiserState> emit) async {
     emit(GettingAdvertiserInfoState(
         advertiser: state.advertiser,
         adStat: state.adStat,
         userInteraction: state.userInteraction));
 
-    Advertiser? advertiser = await _accountRepository.getAdvertiser();
-
-    if (advertiser != null) {
-      emit(GotAdvertiserInfoState(
-          advertiser: advertiser,
-          adStat: state.adStat,
-          userInteraction: state.userInteraction));
-    } else {
-      emit(FailedToGetAdvertiserInfoState(
-          message: 'Failed to get advertiser info',
-          adStat: state.adStat,
-          advertiser: state.advertiser,
-          userInteraction: state.userInteraction));
-    }
+    await getAdvertiserInfoUsecase(NoParams()).then((result) {
+      result.fold(
+        (faliure) {
+          emit(FailedToGetAdvertiserInfoState(
+              message: faliure.message,
+              adStat: state.adStat,
+              advertiser: state.advertiser,
+              userInteraction: state.userInteraction));
+        },
+        (advertiser) {
+          emit(GotAdvertiserInfoState(
+              advertiser: advertiser,
+              adStat: state.adStat,
+              userInteraction: state.userInteraction));
+        },
+      );
+    });
   }
 
-  _getAdStatistic(emit, GetAdStatisticEvent event) async {
+  // more user interaction event
+  Future<void> _getUserInteractionInfoUsecase(
+      GetMoreUserInteractionEvent event, Emitter<AdvertiserState> emit) async {
+    emit(
+      GettingMoreUserInteractionState(
+          advertiser: state.advertiser,
+          adStat: state.adStat,
+          userInteraction: state.userInteraction,
+          interactionPage: state.interactionPage),
+    );
+
+    int page = state.interactionPage + 1;
+
+    await getUserInteractionInfoUsecase(page).then((result) {
+      result.fold((failure) {
+        // TODO: a state that can be emitted for errors
+      }, (userInteraction) {
+        if (userInteraction.isEmpty) {
+          emit(EndUserInteractionState(
+              advertiser: state.advertiser,
+              adStat: state.adStat,
+              userInteraction: state.userInteraction,
+              interactionPage: state.interactionPage));
+        } else {
+          emit(GotMoreUserInteractionState(
+              advertiser: state.advertiser,
+              adStat: state.adStat,
+              userInteraction: userInteraction,
+              interactionPage: page));
+        }
+      });
+    });
+  }
+
+  Future<void> _getAdInteractionUsecase(
+      GetUserInteractionEvent event, Emitter<AdvertiserState> emit) async {
+    emit(GettingUserInteractionState(
+        advertiser: state.advertiser,
+        adStat: state.adStat,
+        userInteraction: state.userInteraction));
+
+    int page = 1;
+
+    await getAdInteractionUsecase(page).then((result) {
+      result.fold((failure) {
+        // TODO: a state that can be emitted for errors
+      }, (userInteraction) {
+        if (userInteraction.isEmpty) {
+          emit(EndUserInteractionState(
+              advertiser: state.advertiser,
+              adStat: state.adStat,
+              userInteraction: state.userInteraction,
+              interactionPage: state.interactionPage));
+        } else {
+          emit(GotUserInteractionState(
+              advertiser: state.advertiser,
+              adStat: state.adStat,
+              userInteraction: userInteraction));
+        }
+      });
+    });
+  }
+
+  Future<void> _getAdStatisticUsecase(
+      GetAdStatisticEvent event, Emitter<AdvertiserState> emit) async {
     emit(GettingAdStatisticState(
         advertiser: state.advertiser,
         adStat: state.adStat,
         userInteraction: state.userInteraction));
 
-    AdStat? adStat = await _accountRepository.getAdStatistic();
-    if (adStat == null) {
-      emit(FailedToGetAdStatisticState(
-          message: 'Failed to get ad statistic',
-          advertiser: state.advertiser,
-          adStat: state.adStat,
-          userInteraction: state.userInteraction));
-      return;
-    }
-
-    emit(GotAdStatisticState(
-        advertiser: state.advertiser,
-        adStat: adStat,
-        userInteraction: state.userInteraction));
+    await getAdStatisticUsecase(NoParams()).then(
+      (result) {
+        result.fold((failed) {
+          emit(FailedToGetAdStatisticState(
+              message: failed.message,
+              advertiser: state.advertiser,
+              adStat: state.adStat,
+              userInteraction: state.userInteraction));
+        }, (adStat) {
+          emit(GotAdStatisticState(
+              advertiser: state.advertiser,
+              adStat: adStat,
+              userInteraction: state.userInteraction));
+        });
+      },
+    );
   }
 }

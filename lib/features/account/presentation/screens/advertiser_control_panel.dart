@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 import 'package:uniplanet/features/account/presentation/blocs/admin/admin_bloc.dart';
 import 'package:uniplanet/features/account/presentation/screens/advertiser_detail.dart';
-import 'package:uniplanet/models/advertiser.dart';
 
 class AdvertiserControlPanelScreen extends StatefulWidget {
   const AdvertiserControlPanelScreen({super.key});
@@ -35,7 +35,8 @@ class _AdvertiserControlPanelScreenState
 
   @override
   Widget build(BuildContext context) {
-    List<Advertiser> advertiserList = getIt<AdminBloc>().state.advertiserList;
+    List<AdvertiserEntity> advertiserList =
+        getIt<AdminBloc>().state.advertiserList;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Advertiser Control Panel'),

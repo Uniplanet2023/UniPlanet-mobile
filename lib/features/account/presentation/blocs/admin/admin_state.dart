@@ -1,7 +1,7 @@
 part of 'admin_bloc.dart';
 
 sealed class AdminState extends Equatable {
-  final List<Advertiser> advertiserList;
+  final List<AdvertiserEntity> advertiserList;
   final int page;
   const AdminState({required this.advertiserList, required this.page});
 
@@ -78,7 +78,7 @@ final class IncreasingCreditState extends AdminState {
 }
 
 final class IncreasedCreditState extends AdminState {
-  final Advertiser advertiser;
+  final AdvertiserEntity advertiser;
   const IncreasedCreditState(
       {required this.advertiser,
       required super.advertiserList,
@@ -105,7 +105,7 @@ final class PostingBlockControlState extends AdminState {
 }
 
 final class PostedBlockControlState extends AdminState {
-  final Advertiser advertiser;
+  final AdvertiserEntity advertiser;
   const PostedBlockControlState(
       {required this.advertiser,
       required super.advertiserList,
