@@ -1,5 +1,4 @@
 import 'package:uniplanet/config/api/server_address.dart';
-import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 import 'package:uniplanet/core/utils/utils.dart';

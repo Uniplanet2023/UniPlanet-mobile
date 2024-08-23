@@ -1,7 +1,4 @@
-// lib/features/auth/domain/repositories/auth_repository.dart
-
 import 'package:dartz/dartz.dart';
-import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';

@@ -12,7 +12,6 @@ import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
-import 'package:uniplanet/features/auth/data/helpers/auth_remote_helper.dart';
 
 abstract interface class AccountRemoteDataSource {
   Future<AccountDBModel> getAccountInfo();

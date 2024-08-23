@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/initialization/init_data.dart';
