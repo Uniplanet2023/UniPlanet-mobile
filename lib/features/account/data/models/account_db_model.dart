@@ -12,6 +12,17 @@ class AccountDBModel extends AccountEntity {
     required super.user,
   });
 
+  //inital
+  factory AccountDBModel.initialAccount() {
+    return AccountDBModel(
+      type: 'user',
+      isBlocked: false,
+      isBlockedPost: false,
+      isBlockedChat: false,
+      user: User.initialUser(),
+    );
+  }
+
   // Factory method to convert domain model to data model
   factory AccountDBModel.fromDomain(AccountEntity account) {
     return AccountDBModel(

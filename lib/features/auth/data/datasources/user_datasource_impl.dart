@@ -136,11 +136,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     String msg = displayErrorMessages(response.toString());
     if (msg == "success") {
-      if (response.data['deletionDate'] != null) {
-        SnackbarGlobal.showSnackBar("Account restored Successfully!");
-      }
+      // if (response.data['deletionDate'] != null) {
+      //   SnackbarGlobal.showSnackBar("Account restored Successfully!");
+      // }
       saveUserData(response.data);
-      return User.fromJson(response.data);
+      return User.fromMap(response.data);
     }
 
     throw Exception("User not found");

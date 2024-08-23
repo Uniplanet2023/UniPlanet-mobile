@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:uniplanet/features/account/domain/entities/account.dart';
+import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 
 class Advertiser {
-  AccountEntity account;
+  AccountDBModel account;
   int maximumPost;
   int numberOfPost;
   double costPerClick;
@@ -24,7 +24,7 @@ class Advertiser {
 
   static initialAdtertiser() {
     return Advertiser(
-      account: AccountEntity.initialAccount(),
+      account: AccountDBModel.initialAccount(),
       maximumPost: 0,
       numberOfPost: 0,
       costPerClick: 0.4,
@@ -50,7 +50,7 @@ class Advertiser {
 
   factory Advertiser.fromMap(Map<String, dynamic> map) {
     return Advertiser(
-      account: AccountEntity.fromMap(map),
+      account: AccountDBModel.fromMap(map),
       maximumPost: map['maximumPost'] as int,
       numberOfPost: map['numberOfPost'] as int,
       costPerClick: (map['costPerClick'] as num).toDouble(),

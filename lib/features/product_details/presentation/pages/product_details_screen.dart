@@ -47,7 +47,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late User currentUser;
   InterstitialAd? _interstitialAd;
   int currentIndex = 0;
-  int availableFreeItems = 0;
+  int availableFreeItems = 2;
 
   @override
   void initState() {
