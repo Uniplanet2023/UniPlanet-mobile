@@ -10,6 +10,7 @@ import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
+import 'package:uniplanet/features/auth/domain/entities/auth_user.dart';
 import 'package:uniplanet/features/auth/domain/usecases/index.dart';
 import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
 import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
@@ -156,7 +157,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _tokenValidationFunction(TokenValidationEvent event, emit) async {
     emit(const TokenValidatingState());
-    Either<Failure, User> result = await tokenValidation(NoParams());
+    Either<Failure, AuthUserEntity> result = await tokenValidation(NoParams());
     result.fold(
         (failure) => {
               emit(const AuthenticationDeny()),
@@ -169,8 +170,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _otpValidationFunction(OtpValidationEvent event, emit) async {
     emit(const OtpValidatingState());
-    Either<Failure, User> result = await otpValidation(OtpValidationParams(
-        email: event.email, hash: event.otpHash, otpCode: event.otpCode));
+    Either<Failure, AuthUserEntity> result = await otpValidation(
+        OtpValidationParams(
+            email: event.email, hash: event.otpHash, otpCode: event.otpCode));
 
     result.fold(
         (l) => emit(OtpValidationFailedState(hash: event.otpHash)),
@@ -218,7 +220,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _signInFunction(SignInEvent event, emit) async {
     emit(const SigninState());
-    Either<Failure, User> msg = await signIn(
+    Either<Failure, AuthUserEntity> msg = await signIn(
         SignInParams(email: event.email, password: event.password));
     msg.fold(
         (l) => {

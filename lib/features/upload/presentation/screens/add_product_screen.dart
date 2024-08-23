@@ -383,8 +383,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     city == null
                                         ? 'Address'
                                         : '$address, $city, $stateAddress, $zipCode',
-                                    style: const TextStyle(
-                                      color: Colors.black54,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                     ),
                                   ),

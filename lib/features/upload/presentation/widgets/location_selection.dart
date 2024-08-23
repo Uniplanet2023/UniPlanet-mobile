@@ -22,7 +22,12 @@ class LocationSelection extends StatelessWidget {
                   child: ChoiceChip(
                     selectedColor:
                         Theme.of(context).colorScheme.primaryFixedDim,
-                    label: Text(location),
+                    label: Text(
+                      location,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inverseSurface,
+                      ),
+                    ),
                     selected: selectedLocation == location,
                     onSelected: (selected) {
                       if (selected) {

@@ -5,12 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/isar/isar_service.dart';
+import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
 import 'package:uniplanet/features/account/domain/usecases/account_usecases/params/update_profile_picture_params.dart';
+import 'package:uniplanet/features/auth/data/helpers/auth_remote_helper.dart';
 
 abstract interface class AccountRemoteDataSource {
   Future<AccountDBModel> getAccountInfo();
@@ -31,6 +33,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       if (msg == "success") {
         AccountDBModel account = AccountDBModel.fromJson(res.data);
         IsarService.instance.saveAccount(account);
+        LocalStorage().saveUserData(account.user);
         return account;
       } else {
         throw Exception('Failed to get account info');
@@ -56,8 +59,9 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         SnackbarGlobal.showSnackBar(
           "Name updated successfully",
         );
-        AccountDBModel result = AccountDBModel.fromJson(res.data);
-        return result;
+        AccountDBModel account = AccountDBModel.fromJson(res.data);
+        LocalStorage().saveUserData(account.user);
+        return account;
       }
       throw Exception('Failed to update name');
     } catch (e) {
@@ -92,8 +96,9 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         SnackbarGlobal.showSnackBar(
           "Profile image updated successfully",
         );
-        AccountDBModel result = AccountDBModel.fromJson(res.data);
-        return result;
+        AccountDBModel account = AccountDBModel.fromJson(res.data);
+        LocalStorage().saveUserData(account.user);
+        return account;
       } else {
         throw Exception('Failed to update profile image');
       }

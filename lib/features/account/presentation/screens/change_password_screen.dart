@@ -79,6 +79,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               controller: _currentPasswordController,
               hintText: 'Password',
               obscureText: true,
+              isPassword: true,
             ),
             const SizedBox(height: 10),
             const Text('Enter a new password:'),
@@ -87,6 +88,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               controller: _updatePasswordController,
               hintText: 'Password',
               obscureText: true,
+              isPassword: true,
               borderColor: passwordsMatch
                   ? Colors.green
                   : null, // Apply green border if passwords match
@@ -97,6 +99,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               controller: _updatePasswordConfirmController,
               hintText: 'Confirm New Password',
               obscureText: true,
+              isPassword: true,
               borderColor: passwordsMatch
                   ? Colors.green
                   : null, // Apply green border if passwords match

@@ -1,7 +1,7 @@
 part of '../auth_bloc.dart';
 
 sealed class AuthState extends Equatable {
-  final User? user;
+  final AuthUserEntity? user;
   const AuthState({this.user});
   @override
   List<Object?> get props => [];

@@ -12,6 +12,9 @@ class LocalStorage {
   factory LocalStorage() {
     return _instance;
   }
+  void saveUserData(User user) {
+    SharedPreferencesHelper.instance.saveString('userData', user.toJson());
+  }
 
   User getUserData() {
     try {

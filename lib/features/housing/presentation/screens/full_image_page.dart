@@ -24,7 +24,6 @@ class FullScreenImagePageState extends State<FullScreenImagePage> {
   @override
   void initState() {
     super.initState();
-    print(widget.imageUrls[0]);
     _pageController = PageController(initialPage: widget.initialIndex);
     _currentIndex = widget.initialIndex;
   }

@@ -82,15 +82,15 @@ class HousingDetailPage extends StatelessWidget {
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0),
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black12,
+                        color: Theme.of(context).colorScheme.inverseSurface,
                         blurRadius: 10.0,
                         spreadRadius: 5.0,
                       ),
@@ -105,17 +105,29 @@ class HousingDetailPage extends StatelessWidget {
                         children: [
                           SelectableText(
                             '\$${housing.monthlyPayment.toString()}/mo',
-                            style: const TextStyle(
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          SelectableText(housing.title),
+                          SelectableText(
+                            housing.title,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
+                              fontSize: 20,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           SelectableText(
                             '${housing.address}, ${housing.city}, ${housing.stateAddress}, ${housing.zipCode}',
-                            style: const TextStyle(color: Colors.black54),
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           Row(
@@ -139,7 +151,9 @@ class HousingDetailPage extends StatelessWidget {
                                           ));
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          foregroundColor: Colors.white,
+                                          foregroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .inverseSurface,
                                           backgroundColor: Colors.blue,
                                         ),
                                         child: const Text(
@@ -156,7 +170,9 @@ class HousingDetailPage extends StatelessWidget {
                                           Navigator.of(context).pop();
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          foregroundColor: Colors.white,
+                                          foregroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .inverseSurface,
                                           backgroundColor: Colors.red,
                                         ),
                                         child: const Text('Delete'),
@@ -168,19 +184,23 @@ class HousingDetailPage extends StatelessWidget {
                           // Gender
                           RichText(
                             text: TextSpan(children: [
-                              const TextSpan(
+                              TextSpan(
                                 text: "Gender: ",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                                 ),
                               ),
                               TextSpan(
                                 text: housing.gender,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                                 ),
                               ),
                             ]),
@@ -189,19 +209,23 @@ class HousingDetailPage extends StatelessWidget {
                           //Property Details
                           RichText(
                               text: TextSpan(children: [
-                            const TextSpan(
+                            TextSpan(
                               text: 'Property Type: ',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface,
                               ),
                             ),
                             TextSpan(
                               text: housing.category,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface,
                               ),
                             ),
                           ])),
@@ -209,21 +233,25 @@ class HousingDetailPage extends StatelessWidget {
                           //Utility
                           RichText(
                             text: TextSpan(children: [
-                              const TextSpan(
+                              TextSpan(
                                 text: 'Utility: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                                 ),
                               ),
                               TextSpan(
                                 text: housing.isUtilityIncluded
                                     ? 'Included'
                                     : 'Not included',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                                 ),
                               ),
                             ]),
@@ -231,34 +259,45 @@ class HousingDetailPage extends StatelessWidget {
                           const SizedBox(height: 16),
                           RichText(
                             text: TextSpan(children: [
-                              const TextSpan(
+                              TextSpan(
                                 text: 'Security Deposit: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                                 ),
                               ),
                               TextSpan(
                                 text: '\$${housing.securityDeposit}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                                 ),
                               ),
                             ]),
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Amenities:',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                             ),
                           ),
                           const SizedBox(height: 8),
                           housing.housingConditions.isEmpty
-                              ? const Text('No amenities')
+                              ? Text('No amenities',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inverseSurface,
+                                  ))
                               : Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
@@ -267,18 +306,22 @@ class HousingDetailPage extends StatelessWidget {
                                       .toList(),
                                 ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Details:',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                             ),
                           ),
                           const SizedBox(height: 8),
                           SelectableLinkText(
                             text: housing.description,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                             ),
                           ),
                           const SizedBox(height: 50),

@@ -19,7 +19,7 @@ final class SigninSuccessState extends AuthState {
 }
 
 final class Authorized extends AuthState {
-  const Authorized(User user) : super(user: user);
+  const Authorized(AuthUserEntity user) : super(user: user);
   @override
   List<Object?> get props => [];
 }

@@ -17,7 +17,3 @@ Future<Response> deleteRequest(String url) async {
   return await DioHelper.instance.dio
       .delete(url, options: DioHelper.instance.getDioOptions());
 }
-
-void saveUserData(Map<String, dynamic> data) {
-  SharedPreferencesHelper.instance.saveString('userData', jsonEncode(data));
-}

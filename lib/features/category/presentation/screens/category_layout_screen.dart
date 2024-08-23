@@ -245,7 +245,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   style: GoogleFonts.roboto(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.tertiaryContainer),
+                      color: Theme.of(context).colorScheme.inverseSurface),
                 )),
             Padding(
               padding: const EdgeInsets.only(left: 16),
@@ -270,7 +270,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                   side: BorderSide(
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .tertiaryFixedDim,
+                                          .inverseSurface,
                                       width: 1),
                                 ),
                                 labelPadding: const EdgeInsets.symmetric(
@@ -283,7 +283,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       size: 15,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .tertiaryFixedDim,
+                                          .inverseSurface,
                                     ),
                                     Text(
                                       text,
@@ -291,7 +291,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                         fontSize: 15,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .tertiaryFixedDim,
+                                            .inverseSurface,
                                       ),
                                     ),
                                   ],

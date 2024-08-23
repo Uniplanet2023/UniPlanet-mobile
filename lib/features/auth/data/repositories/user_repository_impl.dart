@@ -10,6 +10,7 @@ import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
+import 'package:uniplanet/features/auth/domain/entities/auth_user.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
 import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
@@ -49,7 +50,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> signInUser(
+  Future<Either<Failure, AuthUserEntity>> signInUser(
       {required SignInParams params}) async {
     try {
       final result = await remoteDataSource.signInUser(
@@ -95,7 +96,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> tokenValidation(NoParams params) async {
+  Future<Either<Failure, AuthUserEntity>> tokenValidation(
+      NoParams params) async {
     try {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       var userData = prefsHelper.getString('userData');
@@ -105,7 +107,7 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = await remoteDataSource.tokenValidation();
         return Right(user);
       } else {
-        User user = User.fromMap(userRecord);
+        AuthUserEntity user = AuthUserEntity.fromMap(userRecord);
         return Right(user);
       }
     } catch (e) {
@@ -144,7 +146,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> otpValidation({
+  Future<Either<Failure, AuthUserEntity>> otpValidation({
     required OtpValidationParams params,
   }) async {
     try {
