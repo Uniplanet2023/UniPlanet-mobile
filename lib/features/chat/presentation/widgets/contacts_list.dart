@@ -209,7 +209,10 @@ class _ContactsListState extends State<ContactsList> {
                                         last.messageType ==
                                                 MessageEnum.image.value
                                             ? "Image"
-                                            : last.message,
+                                            : last.messageType ==
+                                                    MessageEnum.video.value
+                                                ? "Video"
+                                                : last.message,
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: last.sender != user.id &&

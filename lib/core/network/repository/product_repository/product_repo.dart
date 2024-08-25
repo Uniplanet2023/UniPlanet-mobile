@@ -259,7 +259,7 @@ class ProductRepository {
         final uploadTasks =
             List<Future<void>>.generate(images.length, (index) async {
           final image = images[index];
-          final secureUrl = await ImageUploadService()
+          final secureUrl = await MediaUploadService()
               .uploadImage(
             image,
             'product-images/${user.school}/${product.id}',

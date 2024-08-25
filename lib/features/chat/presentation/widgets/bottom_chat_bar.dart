@@ -56,10 +56,10 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
   }
 
-  void sendImages(List<XFile> imageList) async {
-    if (imageList.isNotEmpty) {
-      getIt<MessageBloc>().add(SendImageMessageEvent(
-        images: imageList,
+  void sendMedia(List<XFile> mediaList) async {
+    if (mediaList.isNotEmpty) {
+      getIt<MessageBloc>().add(SendMediaMessageEvent(
+        mediaList: mediaList,
         chatId: widget.chatRoomId,
         receiverId: widget.sellerId,
       ));
@@ -136,9 +136,9 @@ class _BottomChatFieldState extends State<BottomChatField> {
                           IconButton(
                             icon: const Icon(Icons.camera_alt),
                             onPressed: () async {
-                              File? image = await openCamera(context);
-                              if (image == null) return;
-                              sendImages([XFile(image.path)]);
+                              File? media = await openCamera(context);
+                              if (media == null) return;
+                              sendMedia([XFile(media.path)]);
                             },
                             padding: const EdgeInsets.all(0),
                             color:
@@ -163,8 +163,8 @@ class _BottomChatFieldState extends State<BottomChatField> {
               IconButton(
                 icon: const Icon(Icons.photo_size_select_actual_outlined),
                 onPressed: () async {
-                  List<XFile> imageList = await pickImagesFromGallery(context);
-                  sendImages(imageList);
+                  List<XFile> mediaList = await pickMultipleMedia(context);
+                  sendMedia(mediaList);
                 },
                 color: Theme.of(context).colorScheme.tertiary,
                 padding: const EdgeInsets.all(0),

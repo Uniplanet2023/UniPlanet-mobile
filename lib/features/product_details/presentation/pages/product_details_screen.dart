@@ -103,7 +103,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         : screenHeight * 0.5; // Proportional height for smaller screens
 
     return CarouselSlider(
-      carouselController: CarouselController(),
+      options: CarouselOptions(
+        viewportFraction: 1,
+        height: sliderHeight,
+        pageSnapping: true,
+        enableInfiniteScroll: false,
+        onPageChanged: (index, reason) {
+          if (index < widget.product.images.length) {
+            setState(() {
+              currentIndex = index;
+            });
+          }
+        },
+      ),
       items: widget.product.images
           .asMap()
           .entries
@@ -142,19 +154,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 },
               ))
           .toList(),
-      options: CarouselOptions(
-        viewportFraction: 1,
-        height: sliderHeight,
-        pageSnapping: true,
-        enableInfiniteScroll: false,
-        onPageChanged: (index, reason) {
-          if (index < widget.product.images.length) {
-            setState(() {
-              currentIndex = index;
-            });
-          }
-        },
-      ),
     );
   }
 

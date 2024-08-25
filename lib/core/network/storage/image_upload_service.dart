@@ -2,16 +2,16 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart'; // For getting the basename of the file
 
-class ImageUploadService {
+class MediaUploadService {
   // Private constructor
-  ImageUploadService._privateConstructor();
+  MediaUploadService._privateConstructor();
 
   // Singleton instance
-  static final ImageUploadService _instance =
-      ImageUploadService._privateConstructor();
+  static final MediaUploadService _instance =
+      MediaUploadService._privateConstructor();
 
   // Public factory method to provide access to the singleton instance
-  factory ImageUploadService() {
+  factory MediaUploadService() {
     return _instance;
   }
 
@@ -34,6 +34,24 @@ class ImageUploadService {
       return downloadUrl;
     } catch (e) {
       throw Exception('Image upload failed: $e');
+    }
+  }
+
+  Future<String> uploadVideo(File videoFile, String path) async {
+    try {
+      String fileName = basename(videoFile.path);
+      Reference ref = storage.ref().child('$path/$fileName');
+      UploadTask uploadTask = ref.putFile(videoFile);
+
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+
+      Reference reference =
+          storage.ref().child('$path/${taskSnapshot.ref.name}');
+
+      String downloadUrl = await getDownloadUrlWithRetry(reference, 10);
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Video upload failed: $e');
     }
   }
 

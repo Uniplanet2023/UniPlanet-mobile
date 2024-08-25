@@ -74,7 +74,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
     try {
       // Upload image to firebase storage
       File imageFile = File(params.image.path);
-      String profileImage = await ImageUploadService()
+      String profileImage = await MediaUploadService()
           .uploadImage(
               imageFile, 'profile-image/${params.school}/${params.userId}')
           .timeout(

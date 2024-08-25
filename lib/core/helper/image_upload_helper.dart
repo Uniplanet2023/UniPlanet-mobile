@@ -37,7 +37,7 @@ class ImageUploadHelper {
               throw Exception('Product is null');
             }
 
-            secureUrl = await ImageUploadService()
+            secureUrl = await MediaUploadService()
                 .uploadImage(
               image,
               'product-images/${user.school}/${product.id}',
@@ -55,7 +55,7 @@ class ImageUploadHelper {
             if (housingPost == null) {
               throw Exception('Housing post is null');
             }
-            secureUrl = await ImageUploadService()
+            secureUrl = await MediaUploadService()
                 .uploadImage(
               image,
               'housing-images/${user.school}/${housingPost.id}',

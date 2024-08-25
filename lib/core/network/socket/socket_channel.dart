@@ -6,7 +6,6 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
-import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
@@ -170,7 +169,7 @@ class SocketService {
         if (!imageFile.existsSync()) {
           return;
         }
-        String? secureUrl = await ImageUploadService()
+        String? secureUrl = await MediaUploadService()
             .uploadImage(imageFile, 'chat-images/${sentMessage.chat}')
             .timeout(
           const Duration(seconds: 30),
@@ -183,7 +182,7 @@ class SocketService {
           id: imageMessage.message.id,
           message: secureUrl,
           chatId: imageMessage.message.chat,
-          messageType: MessageEnum.image.value,
+          messageType: imageMessage.message.messageType,
           receiver: imageMessage.message.receiver,
         ).timeout(
           const Duration(seconds: 10),

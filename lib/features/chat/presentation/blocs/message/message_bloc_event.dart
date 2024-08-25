@@ -53,18 +53,18 @@ class SendTextMessageEvent extends MessageBlocEvent {
   List<Object> get props => [chatId, message, receiverId, context];
 }
 
-class SendImageMessageEvent extends MessageBlocEvent {
+class SendMediaMessageEvent extends MessageBlocEvent {
   final String chatId;
   final String receiverId;
-  final List<XFile> images;
+  final List<XFile> mediaList;
 
-  const SendImageMessageEvent({
+  const SendMediaMessageEvent({
     required this.chatId,
-    required this.images,
+    required this.mediaList,
     required this.receiverId,
   });
   @override
-  List<Object> get props => [chatId, images, receiverId];
+  List<Object> get props => [chatId, mediaList, receiverId];
 }
 
 // Retry Sending Message Event

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:uniplanet/config/enums/message_enum.dart';
 import 'package:uniplanet/config/enums/message_status_enum.dart';
 import 'package:uniplanet/core/entities/user.dart';
+import 'package:uniplanet/features/chat/presentation/widgets/full_screen_video_page.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
@@ -12,6 +13,7 @@ import 'package:uniplanet/features/chat/presentation/widgets/image_with_loading.
 import 'package:uniplanet/features/chat/presentation/widgets/message_detail.dart';
 import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
 import 'package:uniplanet/models/message.dart';
+import 'package:video_player/video_player.dart';
 
 class MessageCard extends StatelessWidget {
   final Message oldMessage;
@@ -171,8 +173,8 @@ class MessageBox extends StatelessWidget {
       alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: isTyping ? 100 : 250, // Smaller width when typing
-          maxHeight: isTyping ? 40 : 250,
+          maxWidth: isTyping ? 100 : 260, // Smaller width when typing
+          maxHeight: isTyping ? 40 : 450,
         ),
         child: Card(
           elevation: 1,
@@ -191,7 +193,8 @@ class MessageBox extends StatelessWidget {
   }
 
   Color getColorForCard(BuildContext context) {
-    if (oldMessage?.messageType == MessageEnum.image.value) {
+    if (oldMessage?.messageType == MessageEnum.image.value ||
+        oldMessage?.messageType == MessageEnum.video.value) {
       return Colors.transparent;
     } else {
       return isMyMessage
@@ -201,7 +204,8 @@ class MessageBox extends StatelessWidget {
   }
 
   EdgeInsets getPaddingForContent() {
-    return oldMessage?.messageType == MessageEnum.image.value
+    return oldMessage?.messageType == MessageEnum.image.value ||
+            oldMessage?.messageType == MessageEnum.video.value
         ? const EdgeInsets.all(0)
         : const EdgeInsets.all(8.0);
   }
@@ -219,9 +223,56 @@ class MessageBox extends StatelessWidget {
           : getTextMessage(context);
     } else if (oldMessage!.messageType == MessageEnum.image.value) {
       return handleImageMessage(context);
+    } else if (oldMessage!.messageType == MessageEnum.video.value) {
+      return handleVideoMessage(context);
     } else {
       return Text(oldMessage!.message, style: const TextStyle(fontSize: 16));
     }
+  }
+
+  Widget handleVideoMessage(BuildContext context) {
+    final VideoPlayerController videoController =
+        VideoPlayerController.networkUrl(
+      Uri.parse(oldMessage!.message),
+    );
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => FullScreenVideoPage(
+              videoUrl: oldMessage!.message,
+            ),
+          ));
+        },
+        child: Stack(
+          alignment: Alignment.center, // Align the play button to the center
+          children: [
+            FutureBuilder(
+              future: videoController.initialize(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return AspectRatio(
+                    aspectRatio: videoController.value.aspectRatio,
+                    child: VideoPlayer(videoController),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+            Icon(
+              Icons.play_circle_outline,
+              color: Colors.white.withOpacity(0.4),
+              size: 50, // Size of the play button
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget getTextMessage(BuildContext context) {

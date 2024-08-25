@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +40,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool isExpanded = false;
   bool? isNotificationAllowed;
   bool isChatRoomDeleted = false;
+  final bool isPickingImage = false;
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -118,11 +122,30 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+
     if (state == AppLifecycleState.resumed) {
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        getIt<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
-        Initialization.socketService.readAllMessages(widget.chatRoom.id);
-      });
+      final messageBlocState = getIt<MessageBloc>().state;
+
+      if (messageBlocState is SendingMessageState) {
+        // Listen to state changes in MessageBloc
+        StreamSubscription? subscription;
+        subscription = getIt<MessageBloc>().stream.listen((newState) {
+          if (newState is SentMessageState) {
+            // Once the state changes to SentMessageState, execute your logic
+            getIt<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
+            Initialization.socketService.readAllMessages(widget.chatRoom.id);
+
+            // Cancel the subscription after executing the logic
+            subscription?.cancel();
+          }
+        });
+      } else {
+        // If the state is not SendingMessageState, delay execution by 2 seconds
+        Future.delayed(const Duration(seconds: 1), () {
+          getIt<MessageBloc>().add(GetMessageEvent(widget.chatRoom.id));
+          Initialization.socketService.readAllMessages(widget.chatRoom.id);
+        });
+      }
     }
   }
 

@@ -14,6 +14,7 @@ import 'package:uniplanet/core/network/notification/remote_notification_controll
 import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/features/common/presentation/widgets/error_screen.dart';
+import 'package:uniplanet/purchase_observer.dart';
 
 class Initialization {
   static late SocketService socketService;
@@ -38,6 +39,7 @@ class Initialization {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    PurchasesObserver().initialize();
 
     //setup block
     setup();

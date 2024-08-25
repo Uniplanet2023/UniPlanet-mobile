@@ -8,6 +8,7 @@ package="shop.uniplanet.uniplanet"
     -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
      <!-- Permissions options for the `camera` group -->
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -47,6 +48,10 @@ package="shop.uniplanet.uniplanet"
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9923099397206192~3868492931"/>
+        <meta-data
+            android:name="AdaptyPublicSdkKey"
+            android:value="public_live_cwn4S4Q7.JUsLa0IzGv0k80PyJfQk" />
+
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility?hl=en and

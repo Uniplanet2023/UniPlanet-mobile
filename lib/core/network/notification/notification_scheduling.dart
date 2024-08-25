@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
@@ -14,8 +16,8 @@ void notificationScheduling(
   int monthlyLimit = 64,
   required int notificationId,
 }) async {
-  // Cancel any existing scheduled notifications to prevent duplicates
-  await AwesomeNotifications().cancelAllSchedules();
+  List<NotificationModel> list =
+      await AwesomeNotifications().listScheduledNotifications();
 
   DateTime now = DateTime.now();
   int dailyCount = 0;
@@ -51,38 +53,49 @@ void notificationScheduling(
 
   // Loop through the products and schedule notifications
   for (var index = 0; index < products.length; index++) {
-    if (dailyCount >= dailyLimit ||
-        weeklyCount >= weeklyLimit ||
+    if (list.length + index >= 63) {
+      return;
+    }
+    if (dailyCount >= dailyLimit &&
+        weeklyCount >= weeklyLimit &&
         monthlyCount >= monthlyLimit) {
       break;
     }
 
     var product = products[index];
 
-    // Calculate the scheduled time based on the current counts
+    // Calculate the scheduled time
     DateTime scheduledTime = now.add(Duration(
       days: (monthlyCount / dailyLimit).floor(), // Spread across days
-      hours: (dailyCount * 2) + 11, // Spread between 11 AM and 9 PM
+      hours: (dailyCount * 2) + 11, // Spread between 11 AM and 10 PM
       minutes: (index % 60), // Spread across the hour
     ));
 
-    // Ensure the scheduled time is within 11:00 AM - 9:00 PM
-    if (scheduledTime.hour > 21) {
+    // Ensure the scheduled time is within 11:00 AM - 11:00 PM
+    if (scheduledTime.hour < 11) {
       scheduledTime = DateTime(
         scheduledTime.year,
         scheduledTime.month,
         scheduledTime.day,
-        21,
+        11 + index, // Adjust to just after 11:00 AM
+        scheduledTime.minute,
+      );
+    } else if (scheduledTime.hour > 21) {
+      scheduledTime = DateTime(
+        scheduledTime.year,
+        scheduledTime.month,
+        scheduledTime.day,
+        21 - index,
         59, // Adjust to just before 10:00 PM
       );
     }
 
     // Schedule the notification using the LocalNotificationController
     await LocalNotificationController.showNotification(
-      id: index + 100, // Use a unique ID for each notification
+      id: Random().nextInt(1000), // Use a unique ID for each notification
       channelKey: 'scheduled_channel',
-      title: getTitle(notificationId, product.name), // Rotate through IDs
-      body: getBody(notificationId, product.name), // Rotate through bodies
+      title: getTitle(notificationId, product.name),
+      body: getBody(notificationId, product.name),
       bigPicture: product.images.isNotEmpty ? product.images.first : null,
       notificationLayout: NotificationLayout.BigPicture,
       scheduled: true,

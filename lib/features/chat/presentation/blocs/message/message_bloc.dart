@@ -31,8 +31,8 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     on<SendTextMessageEvent>((event, emit) async {
       await _sendMessage(event, emit);
     });
-    on<SendImageMessageEvent>((event, emit) async {
-      await _sendImageMessage(event, emit);
+    on<SendMediaMessageEvent>((event, emit) async {
+      await _sendMediaMessage(event, emit);
     });
     on<ReceiveMessageEvent>((event, emit) async {
       await _receiveMessage(event, emit);
@@ -118,17 +118,19 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     }
   }
 
-  Future<void> _sendImageMessage(SendImageMessageEvent event, emit) async {
+  Future<void> _sendMediaMessage(SendMediaMessageEvent event, emit) async {
     List<Message> messages = [];
-    for (var image in event.images) {
-      String uniqueId = UniqueKey().toString();
-      String imagePath = File(image.path).path;
+    for (var media in event.mediaList) {
+      String uniqueId = const Uuid().v4();
+      String imagePath = File(media.path).path;
+      String messageType =
+          isImage(media) ? MessageEnum.image.value : MessageEnum.video.value;
       Message tempMessage = Message(
         id: uniqueId,
         chat: event.chatId,
         message: imagePath,
         status: MessageStatusEnum.sending.value,
-        messageType: MessageEnum.image.value,
+        messageType: messageType,
         sender: LocalStorage().getUserData().id,
         receiver: event.receiverId,
         createdAt: DateTime.now(),
@@ -139,22 +141,66 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
     }
     for (var tempMessage in messages) {
       try {
-        Message? imageUploadedMessage = await _uploadImage(tempMessage);
-        if (imageUploadedMessage == null) {
-          throw Exception('Image uploading failed');
+        if (tempMessage.messageType == MessageEnum.video.value) {
+          Message? videoUploadedMessage = await _uploadVideo(tempMessage);
+          if (videoUploadedMessage == null) {
+            throw Exception('Video uploading failed');
+          }
+          Message sentMessage = await _uploadMessage(videoUploadedMessage);
+          add(SentMessageEvent(sentMessage));
+        } else if (tempMessage.messageType == MessageEnum.image.value) {
+          Message? imageUploadedMessage = await _uploadImage(tempMessage);
+          if (imageUploadedMessage == null) {
+            throw Exception('Image uploading failed');
+          }
+          Message sentMessage = await _uploadMessage(imageUploadedMessage);
+          add(SentMessageEvent(sentMessage));
+        } else {
+          tempMessage =
+              tempMessage.copyWith(status: MessageStatusEnum.error.value);
+          ImageMessage imageMessage = ImageMessage(
+            filePath: tempMessage.message,
+            message: tempMessage,
+          );
+          SocketService.imageMessagesToRetry.add(imageMessage);
+          add(ErrorMessageEvent(tempMessage));
         }
-        Message sentMessage = await _uploadMessage(imageUploadedMessage);
-        add(SentMessageEvent(sentMessage));
       } catch (e) {
         log(e.toString());
       }
     }
   }
 
+  Future<Message?> _uploadVideo(Message tempMessage) async {
+    try {
+      File videoFile = File(tempMessage.message);
+      String? secureUrl = await MediaUploadService()
+          .uploadVideo(videoFile, 'chat-videos/${tempMessage.chat}')
+          .timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Video uploading timed out');
+        },
+      );
+
+      tempMessage.message = secureUrl;
+      return tempMessage;
+    } catch (e) {
+      tempMessage = tempMessage.copyWith(status: MessageStatusEnum.error.value);
+      ImageMessage imageMessage = ImageMessage(
+        filePath: tempMessage.message,
+        message: tempMessage,
+      );
+      SocketService.imageMessagesToRetry.add(imageMessage);
+      add(ErrorMessageEvent(tempMessage));
+      return null;
+    }
+  }
+
   Future<Message?> _uploadImage(Message tempMessage) async {
     try {
       File imageFile = File(tempMessage.message);
-      String? secureUrl = await ImageUploadService()
+      String? secureUrl = await MediaUploadService()
           .uploadImage(imageFile, 'chat-images/${tempMessage.chat}')
           .timeout(
         const Duration(seconds: 30),
@@ -184,7 +230,7 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
         id: message.id,
         message: message.message,
         chatId: message.chat,
-        messageType: MessageEnum.image.value,
+        messageType: message.messageType,
         receiver: message.receiver,
       )
           .timeout(

@@ -88,9 +88,9 @@ class HousingDetailPage extends StatelessWidget {
                       topLeft: Radius.circular(20.0),
                       topRight: Radius.circular(20.0),
                     ),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: Theme.of(context).colorScheme.inverseSurface,
+                        color: Colors.black12,
                         blurRadius: 10.0,
                         spreadRadius: 5.0,
                       ),
@@ -118,7 +118,7 @@ class HousingDetailPage extends StatelessWidget {
                             style: TextStyle(
                               color:
                                   Theme.of(context).colorScheme.inverseSurface,
-                              fontSize: 20,
+                              fontSize: 18,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -135,30 +135,33 @@ class HousingDetailPage extends StatelessWidget {
                               user.id != housing.seller.id
                                   ? Expanded(
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          // Implement appointment request functionality
-                                          getIt<ChatBloc>()
-                                              .add(CreateChatRoomEvent(
-                                            buyer: getIt<AccountBloc>()
-                                                .state
-                                                .account
-                                                .user,
-                                            seller: housing.seller,
-                                            productId: housing.id!,
-                                            productName: housing.title,
-                                            productType: 'housing',
-                                            type: 'housing',
-                                          ));
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .inverseSurface,
-                                          backgroundColor: Colors.blue,
-                                        ),
-                                        child: const Text(
-                                            'Request an appointment'),
-                                      ),
+                                          onPressed: () {
+                                            // Implement appointment request functionality
+                                            getIt<ChatBloc>()
+                                                .add(CreateChatRoomEvent(
+                                              buyer: getIt<AccountBloc>()
+                                                  .state
+                                                  .account
+                                                  .user,
+                                              seller: housing.seller,
+                                              productId: housing.id!,
+                                              productName: housing.title,
+                                              productType: 'housing',
+                                              type: 'housing',
+                                            ));
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface,
+                                            backgroundColor: Colors.blue,
+                                          ),
+                                          child: const Text(
+                                            'Request an appointment',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          )),
                                     )
                                   : Expanded(
                                       child: ElevatedButton(
