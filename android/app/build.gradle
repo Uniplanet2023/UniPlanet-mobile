@@ -51,7 +51,7 @@ android {
         applicationId "shop.uniplanet.uniplanet"
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 30
+        versionCode 31
         versionName flutterVersionName
     }
 
@@ -82,4 +82,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.0.0')
     implementation platform('com.google.android.gms:play-services-ads:23.1.0')
     implementation 'com.android.billingclient:billing:6.0.1'
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
+    implementation 'com.google.android.play:integrity:1.4.0'
 }
