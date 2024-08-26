@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "1003008222202-9grj06v9lk5potlvs8aik44b4tl5n2m3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "shop.uniplanet.uniplanet",
+            "certificate_hash": "f40c3f094150830a0e73deb816900429fbb2919a"
+          }
+        },
+        {
           "client_id": "1003008222202-i1nmckeo8ob89gredu3bg9tromofaa72.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "shop.uniplanet.uniplanet",
             "certificate_hash": "bd93349dc162df4345c13f297dc71b0a0238068a"
+          }
+        },
+        {
+          "client_id": "1003008222202-rv85sr5hjgsj75hf1qnha5tb57nuqech.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "shop.uniplanet.uniplanet",
+            "certificate_hash": "2012ca08c19578bd3ff66bc59c9228950c2c5e42"
           }
         },
         {
