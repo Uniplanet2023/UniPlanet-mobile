@@ -65,8 +65,6 @@ class SearchProductBloc
       notificationScheduling(
         result,
         dailyLimit: 2,
-        weeklyLimit: 9,
-        monthlyLimit: 24,
         notificationId: hotProductId,
       );
     }

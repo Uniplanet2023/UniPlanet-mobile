@@ -9,6 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/university_list.dart';
+import 'package:uniplanet/features/auth/functions/phone_verification.dart';
 //common
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
@@ -40,10 +41,8 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isChecked = false;
   UserType userType = UserType.student;
   bool isPhoneVerified = false;
-  bool isOtpSent = false;
 
   String selectedCountryCode = '+1';
-  String verificationId = "";
 
   @override
   void dispose() {
@@ -53,54 +52,6 @@ class _SignupScreenState extends State<SignupScreen> {
     _nameController.dispose();
     _phoneController.dispose();
     _otpController.dispose();
-  }
-
-  Future<void> verifyPhoneNumber() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    String phoneNumber =
-        '$selectedCountryCode${_phoneController.text.replaceAll('-', '')}';
-    await auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential);
-        setState(() {
-          isPhoneVerified = true;
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? "Verification failed")),
-        );
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        setState(() {
-          this.verificationId = verificationId;
-          isOtpSent = true;
-        });
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          this.verificationId = verificationId;
-        });
-      },
-    );
-  }
-
-  Future<bool> verifyOtp(String otpCode) async {
-    try {
-      FirebaseAuth auth = FirebaseAuth.instance;
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: otpCode,
-      );
-      await auth.signInWithCredential(credential);
-      setState(() {
-        isPhoneVerified = true;
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   Widget _backButton() {
@@ -325,24 +276,29 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ? const Icon(Icons.verified,
                                     color: Colors.green)
                                 : ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
 // Remove any non-digit characters from the phone number
                                       String cleanPhoneNumber = _phoneController
                                           .text
                                           .replaceAll(RegExp(r'\D'), '');
                                       if (cleanPhoneNumber.length >= 10) {
-                                        Navigator.push(
+                                        bool? result = await Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PhoneOTPVerifyScreen(
-                                                      onVerification:
-                                                          verifyPhoneNumber,
-                                                      onVerificationComplete:
-                                                          verifyOtp)),
+                                            builder: (context) =>
+                                                PhoneOTPVerifyScreen(
+                                              phoneNumber:
+                                                  '$selectedCountryCode${_phoneController.text.replaceAll('-', '')}',
+                                            ),
+                                          ),
                                         );
+                                        if (result == true) {
+                                          setState(() {
+                                            isPhoneVerified =
+                                                true; // Update isPhoneVerified if OTP verification is successful
+                                          });
+                                        }
                                         // Your verify phone number logic here
-                                        verifyPhoneNumber();
                                       } else {
                                         // Show an error message if the phone number is not 10 digits
                                         ScaffoldMessenger.of(context)

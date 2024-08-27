@@ -12,8 +12,6 @@ const int hotProductId = 12;
 void notificationScheduling(
   List<Product> products, {
   int dailyLimit = 2,
-  int weeklyLimit = 15,
-  int monthlyLimit = 64,
   required int notificationId,
 }) async {
   List<NotificationModel> list =
@@ -53,12 +51,12 @@ void notificationScheduling(
 
   // Loop through the products and schedule notifications
   for (var index = 0; index < products.length; index++) {
-    if (list.length + index >= 63) {
+    if (list.length + index >= 30) {
       return;
     }
-    if (dailyCount >= dailyLimit &&
-        weeklyCount >= weeklyLimit &&
-        monthlyCount >= monthlyLimit) {
+    if (dailyCount >= dailyLimit) {
+      dailyCount = 0;
+      weeklyCount++;
       break;
     }
 
@@ -75,8 +73,8 @@ void notificationScheduling(
     if (scheduledTime.hour < 11) {
       scheduledTime = DateTime(
         scheduledTime.year,
-        scheduledTime.month,
-        scheduledTime.day,
+        scheduledTime.month + monthlyCount,
+        scheduledTime.day + weeklyCount,
         11 + index, // Adjust to just after 11:00 AM
         scheduledTime.minute,
       );
@@ -84,7 +82,7 @@ void notificationScheduling(
       scheduledTime = DateTime(
         scheduledTime.year,
         scheduledTime.month,
-        scheduledTime.day,
+        scheduledTime.day + weeklyCount,
         21 - index,
         59, // Adjust to just before 10:00 PM
       );
@@ -103,7 +101,6 @@ void notificationScheduling(
     );
 
     dailyCount++;
-    weeklyCount++;
     monthlyCount++;
   }
 }

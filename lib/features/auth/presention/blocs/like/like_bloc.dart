@@ -56,9 +56,7 @@ class LikeBloc extends Bloc<LikeEvent, LikeState> {
       } else {
         notificationScheduling(
           likeProduct,
-          dailyLimit: 2,
-          weeklyLimit: 5,
-          monthlyLimit: 20,
+          dailyLimit: 1,
           notificationId: likeProductId,
         );
       }

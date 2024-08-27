@@ -3,13 +3,14 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:async';
 
+import 'package:uniplanet/features/auth/functions/phone_verification.dart';
+
 class PhoneOTPVerifyScreen extends StatefulWidget {
-  final Future<bool> Function(String) onVerificationComplete;
-  final Future<void> Function() onVerification;
-  const PhoneOTPVerifyScreen(
-      {super.key,
-      required this.onVerificationComplete,
-      required this.onVerification});
+  final String phoneNumber;
+  const PhoneOTPVerifyScreen({
+    super.key,
+    required this.phoneNumber,
+  });
 
   @override
   PhoneOTPVerifyScreenState createState() => PhoneOTPVerifyScreenState();
@@ -17,11 +18,51 @@ class PhoneOTPVerifyScreen extends StatefulWidget {
 
 class PhoneOTPVerifyScreenState extends State<PhoneOTPVerifyScreen> {
   final TextEditingController _otpController = TextEditingController();
+  late String verificationId;
+  late bool isOtpSent = false;
   int _resendTimer = 30;
   Timer? _timer;
+  bool _isVerificationCompleted =
+      false; // Flag to track if verification is completed
+  final PhoneVerificationService _phoneVerificationService =
+      PhoneVerificationService();
+
+  Future<void> _startPhoneVerification() async {
+    await _phoneVerificationService.verifyPhoneNumber(
+      phoneNumber: widget.phoneNumber,
+      context: context,
+      isVerificationCompleted: _isVerificationCompleted,
+      onVerificationCompleted: () {
+        _isVerificationCompleted = true;
+        Navigator.pop(context, true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Verification completed")),
+        );
+      },
+      onVerificationFailed: (String? errorMessage) {
+        if (!_isVerificationCompleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage ?? "Verification failed")),
+          );
+        }
+      },
+      onCodeSent: (String verificationId) {
+        setState(() {
+          this.verificationId = verificationId;
+          isOtpSent = true;
+        });
+      },
+      onCodeAutoRetrievalTimeout: (String verificationId) {
+        setState(() {
+          this.verificationId = verificationId;
+        });
+      },
+    );
+  }
 
   @override
   void initState() {
+    _startPhoneVerification();
     _startResendTimer();
     super.initState();
   }
@@ -73,20 +114,27 @@ class PhoneOTPVerifyScreenState extends State<PhoneOTPVerifyScreen> {
                 backgroundColor: Colors.transparent,
                 enableActiveFill: true,
                 controller: _otpController,
-                onCompleted: (v) async {
-                  bool isVerified =
-                      await widget.onVerificationComplete(_otpController.text);
-                  if (isVerified) {
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  } else {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text("Fail to verify OTP, Please try again!")),
-                      );
+                onCompleted: (value) async {
+                  if (!_isVerificationCompleted) {
+                    // Only verify if not already completed
+                    bool isVerified = await _phoneVerificationService.verifyOtp(
+                        otpCode: _otpController.text,
+                        verificationId: verificationId,
+                        context: context);
+
+                    if (isVerified) {
+                      if (context.mounted) {
+                        _isVerificationCompleted = true;
+                        Navigator.pop(context, true);
+                      }
+                    } else {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  "Fail to verify OTP, Please try again!")),
+                        );
+                      }
                     }
                   }
                 },
@@ -112,7 +160,7 @@ class PhoneOTPVerifyScreenState extends State<PhoneOTPVerifyScreen> {
   }
 
   void _sendOTP() {
-    widget.onVerification();
+    _startPhoneVerification();
     setState(() {
       _resendTimer = 30;
     });

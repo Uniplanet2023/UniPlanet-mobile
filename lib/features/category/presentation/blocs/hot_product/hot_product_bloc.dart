@@ -55,9 +55,7 @@ class HotProductBloc extends Bloc<HotProductEvent, HotProductState> {
       } else {
         notificationScheduling(
           result,
-          dailyLimit: 2,
-          weeklyLimit: 6,
-          monthlyLimit: 20,
+          dailyLimit: 1,
           notificationId: hotProductId,
         );
       }

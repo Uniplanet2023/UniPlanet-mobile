@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/theme/theme_cubit.dart';
@@ -47,18 +48,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       var userData = prefsHelper.getString('userData');
       if (userData != null) {
-        if (Initialization.socketService.socket.disconnected) {
-          Initialization.socketService.connect();
+        var token = await DioHelper.instance.getSessionToken();
+        if (token != null) {
+          if (Initialization.socketService.socket.disconnected) {
+            Initialization.socketService.connect();
+          }
+          getIt<ChatBloc>().add(const LoadChatRoomEvent());
         }
-        getIt<ChatBloc>().add(const LoadChatRoomEvent());
       }
     } else if (state == AppLifecycleState.paused) {
       log('paused');
       SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       var userData = prefsHelper.getString('userData');
       if (userData != null) {
-        if (Initialization.socketService.socket.connected) {
-          Initialization.socketService.disconnect();
+        var token = await DioHelper.instance.getSessionToken();
+        if (token != null) {
+          if (Initialization.socketService.socket.connected) {
+            Initialization.socketService.disconnect();
+          }
         }
       }
     } else if (state == AppLifecycleState.inactive) {
