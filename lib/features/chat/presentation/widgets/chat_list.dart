@@ -6,7 +6,7 @@ import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/typing/typing_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/message_card.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 class ChatList extends StatefulWidget {
   final ScrollController scrollController;

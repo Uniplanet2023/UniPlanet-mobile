@@ -16,7 +16,7 @@ import "package:uniplanet/features/chat/presentation/screens/chat_screen.dart";
 import "package:uniplanet/features/home/screens/home_screen.dart";
 import "package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart";
 import "package:uniplanet/features/search/presentation/screens/search_screen.dart";
-import "package:uniplanet/models/chat_room.dart";
+import "package:uniplanet/features/chat/domain/entities/chat_room.dart";
 import "package:uniplanet/models/product.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {

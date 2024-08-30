@@ -81,7 +81,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await postRequest('$authURI/token-login', {});
 
     if (response.data['id'] != null) {
-      AuthUserEntity user = AuthUserEntity.fromJson(response.data);
+      AuthUserEntity user = AuthUserEntity.fromMap(response.data);
       return user;
     }
     throw Exception("User not found");

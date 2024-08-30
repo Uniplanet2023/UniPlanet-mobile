@@ -12,7 +12,7 @@ import 'package:uniplanet/features/account/presentation/screens/user_profile.dar
 import 'package:uniplanet/features/chat/presentation/widgets/image_with_loading.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/message_detail.dart';
 import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 import 'package:video_player/video_player.dart';
 
 class MessageCard extends StatelessWidget {

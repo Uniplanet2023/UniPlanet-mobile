@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:uniplanet/core/isar/collection/message.dart';
 import 'package:uniplanet/core/isar/collection/user.dart';
-import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
 part 'chat_room.g.dart';
 
 @Collection()
@@ -52,4 +52,7 @@ class ChatRoomModel {
       type: type,
     );
   }
+  //to Entity
+
+  //from Entity
 }

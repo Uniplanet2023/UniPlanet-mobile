@@ -12,8 +12,8 @@ import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.da
 import 'package:uniplanet/models/get_chat_room.dart';
 // Repositories
 // Models
-import 'package:uniplanet/models/chat_room.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 
 // Bloc Events, States

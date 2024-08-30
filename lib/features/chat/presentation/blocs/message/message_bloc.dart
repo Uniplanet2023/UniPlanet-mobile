@@ -12,7 +12,7 @@ import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/models/image_message.dart';
 // Models
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 // Repository
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/network/socket/socket_channel.dart';

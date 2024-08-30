@@ -1,4 +1,4 @@
-import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
 
 class GetChatRooms {
   List<ChatRoom> chatRooms;

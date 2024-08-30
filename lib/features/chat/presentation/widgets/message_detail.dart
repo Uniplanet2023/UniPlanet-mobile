@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 class MessageDetailScreen extends StatelessWidget {
   final Message message;

@@ -9,7 +9,7 @@ import 'package:uniplanet/features/chat/presentation/screens/chat_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/main.dart';
-import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
 import 'package:uniplanet/core/utils/show_dialog.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 

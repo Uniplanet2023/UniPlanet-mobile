@@ -15,9 +15,9 @@ import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/typing/typing_bloc.dart';
-import 'package:uniplanet/models/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
 import 'package:uniplanet/models/image_message.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 

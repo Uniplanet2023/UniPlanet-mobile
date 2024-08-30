@@ -17,8 +17,8 @@ import 'package:uniplanet/features/account/presentation/screens/user_profile.dar
 import 'package:uniplanet/features/chat/presentation/screens/chat_screen.dart';
 import 'package:uniplanet/features/report/presentation/screen/report_screen.dart';
 import 'package:uniplanet/core/initialization/init.dart';
-import 'package:uniplanet/models/chat_room.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 class ContactsList extends StatefulWidget {
   final List<ChatRoom> list;

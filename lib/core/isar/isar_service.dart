@@ -7,8 +7,8 @@ import 'package:uniplanet/core/isar/collection/user.dart';
 import 'package:uniplanet/features/account/data/models/account_db_model.dart';
 import 'package:uniplanet/features/account/data/models/account_isar_model.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
-import 'package:uniplanet/models/chat_room.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 import 'package:uniplanet/models/product.dart';
 
 class IsarService {

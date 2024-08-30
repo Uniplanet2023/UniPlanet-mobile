@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 class ImageMessage {
   final String filePath;

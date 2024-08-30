@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 part 'message.g.dart';
 
 @Collection()
@@ -52,4 +52,5 @@ class MessageModel {
       readDate: readDate,
     );
   }
+  //from map
 }

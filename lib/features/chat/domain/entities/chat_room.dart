@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 class ChatRoom {
   final String productId;

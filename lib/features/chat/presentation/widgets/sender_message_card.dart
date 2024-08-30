@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniplanet/models/message.dart';
+import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
