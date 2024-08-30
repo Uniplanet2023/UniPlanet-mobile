@@ -3,8 +3,6 @@ import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/error/exceptions.dart';
 import 'package:uniplanet/features/chat/data/models/chat_room_model.dart';
 import 'package:uniplanet/features/chat/data/models/message_model.dart';
-import 'package:uniplanet/features/chat/domain/entities/chat_room.dart';
-import 'package:uniplanet/features/chat/domain/entities/message.dart';
 
 abstract class ChatRemoteDataSource {
   Future<ChatRoomDBModel> createChatRoom(String productId, String productName,

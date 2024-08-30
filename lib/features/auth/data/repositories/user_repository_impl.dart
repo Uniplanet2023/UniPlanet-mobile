@@ -99,8 +99,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       var userData = prefsHelper.getString('userData');
       var userRecord = jsonDecode(userData.toString());
-      // var token = await DioHelper.instance.getSessionToken();
-      var token;
+      var token = await DioHelper.instance.getSessionToken();
       if (token == null || userRecord == null) {
         final user = await remoteDataSource.tokenValidation();
         return Right(user);
