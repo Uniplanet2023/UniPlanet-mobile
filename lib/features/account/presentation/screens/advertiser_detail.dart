@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 import 'package:uniplanet/features/account/presentation/blocs/admin/admin_bloc.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
-import 'package:uniplanet/models/advertiser.dart';
 
 class AdvertiserDetail extends StatelessWidget {
-  final Advertiser advertiser;
+  final AdvertiserEntity advertiser;
 
   const AdvertiserDetail({super.key, required this.advertiser});
 

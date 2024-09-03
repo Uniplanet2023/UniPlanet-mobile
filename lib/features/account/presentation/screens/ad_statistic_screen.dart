@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
+import 'package:uniplanet/features/account/domain/entities/ad_stat_entity.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
+import 'package:uniplanet/features/account/domain/entities/user_interaction_entity.dart';
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/features/account/presentation/widgets/bar_chart.dart';
 import 'package:uniplanet/features/account/presentation/widgets/stat_card.dart';
 import 'package:uniplanet/features/account/presentation/widgets/summary_widget.dart';
 import 'package:uniplanet/features/account/presentation/widgets/user_list.dart';
-import 'package:uniplanet/models/ad_stat.dart';
-import 'package:uniplanet/models/advertiser.dart';
 import 'package:uniplanet/models/click_count.dart';
-import 'package:uniplanet/models/user_interaction.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AdStatisticsScreen extends StatefulWidget {
@@ -91,11 +91,11 @@ class _AdStatisticsScreenState extends State<AdStatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AdStat adStat = context.watch<AdvertiserBloc>().state.adStat;
-    List<UserInteraction> userInteraction =
+    AdStatEntity adStat = context.watch<AdvertiserBloc>().state.adStat;
+    List<UserInteractionEntity> userInteraction =
         context.watch<AdvertiserBloc>().state.userInteraction;
     List<ClickData> weeklySummary = adStat.recent7Days;
-    Advertiser advertiser = getIt<AdvertiserBloc>().state.advertiser;
+    AdvertiserEntity advertiser = getIt<AdvertiserBloc>().state.advertiser;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

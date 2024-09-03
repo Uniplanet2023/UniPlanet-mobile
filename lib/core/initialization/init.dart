@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/core/dependency_injection/account_feature/account.dart';
+import 'package:uniplanet/core/dependency_injection/account_feature/admin_injection.dart';
+import 'package:uniplanet/core/dependency_injection/account_feature/advertiser_injection.dart';
 import 'package:uniplanet/core/dependency_injection/auth_feature/auth.dart';
 import 'package:uniplanet/core/dependency_injection/dependency_injection.dart';
 import 'package:uniplanet/core/dependency_injection/housing_feature/get_housing.dart';
@@ -44,6 +46,8 @@ class Initialization {
     //setup block
     setup();
     accountSetup();
+    advertiserInjectionSetup();
+    adminInjectionSetup();
     setupAuth();
     setupHousing();
     initGetHouse();

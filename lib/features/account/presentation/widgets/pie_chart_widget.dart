@@ -1,10 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 import 'package:uniplanet/features/account/presentation/widgets/pie_chart_data.dart';
-import 'package:uniplanet/models/advertiser.dart';
 
 class Chart extends StatelessWidget {
-  final Advertiser advertiser;
+  final AdvertiserEntity advertiser;
   const Chart({super.key, required this.advertiser});
 
   @override

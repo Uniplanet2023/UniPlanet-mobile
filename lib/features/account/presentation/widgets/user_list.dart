@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:uniplanet/models/user_interaction.dart';
+import 'package:uniplanet/features/account/domain/entities/user_interaction_entity.dart';
 
 class UserProfile {
   final String imageUrl;
@@ -17,7 +17,7 @@ class UserProfile {
 }
 
 class UserList extends StatelessWidget {
-  final List<UserInteraction> userInteractionList;
+  final List<UserInteractionEntity> userInteractionList;
 
   const UserList({super.key, required this.userInteractionList});
 

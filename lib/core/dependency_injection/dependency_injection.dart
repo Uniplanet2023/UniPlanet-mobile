@@ -57,7 +57,7 @@ void setup() {
   getIt.registerLazySingleton(
       () => WantedProductBloc(getIt<ProductRepository>()));
   getIt.registerLazySingleton(() => ReportBloc(getIt<AccountRepository>()));
-  getIt.registerLazySingleton(() => AdvertiserBloc(getIt<AccountRepository>()));
-  getIt.registerLazySingleton(() => AdminBloc(getIt<AccountRepository>()));
+  // getIt.registerLazySingleton(() => AdvertiserBloc(getIt<AccountRepository>()));
+  // getIt.registerLazySingleton(() => AdminBloc(getIt<AccountRepository>()));
   getIt.registerLazySingleton(() => ThemeCubit());
 }

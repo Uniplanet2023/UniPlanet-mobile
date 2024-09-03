@@ -1,5 +1,5 @@
 import 'package:uniplanet/config/api/server_address.dart';
-import 'package:uniplanet/core/error/failures.dart';
+import 'package:uniplanet/core/error/exceptions.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/housing/data/models/housing_post_model.dart';
@@ -36,7 +36,7 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
       }
     } catch (e) {
       log(e);
-      throw ServerFailure();
+      throw ServerException(e.toString());
     }
   }
 
@@ -61,7 +61,7 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
       }
     } catch (e) {
       log(e);
-      throw ServerFailure();
+      throw ServerException(e.toString());
     }
   }
 
@@ -76,7 +76,7 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
       }
     } catch (e) {
       log(e);
-      throw ServerFailure();
+      throw ServerException(e.toString());
     }
   }
 
@@ -93,7 +93,7 @@ class HousingRemoteDataSourceImpl implements HousingRemoteDataSource {
       }
     } catch (e) {
       log(e);
-      throw ServerFailure();
+      throw ServerException(e.toString());
     }
   }
 }

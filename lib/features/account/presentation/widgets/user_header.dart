@@ -6,12 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/account/domain/entities/account.dart';
+import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/screens/user_profile.dart';
-import 'package:uniplanet/models/advertiser.dart';
 
 class UserHeader extends StatefulWidget {
   final AccountEntity currentUser;
@@ -114,7 +114,7 @@ class _UserHeaderState extends State<UserHeader> {
 
   @override
   Widget build(BuildContext context) {
-    Advertiser? advertiser;
+    AdvertiserEntity? advertiser;
     if (widget.currentUser.type == "advertiser") {
       advertiser = context.watch<AdvertiserBloc>().state.advertiser;
     }

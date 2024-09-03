@@ -6,172 +6,173 @@ import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 import 'package:uniplanet/core/network/repository/account_repository/account_repo_interface.dart';
-import 'package:uniplanet/models/ad_stat.dart';
-import 'package:uniplanet/models/advertiser.dart';
-import 'package:uniplanet/models/user_interaction.dart';
+// import 'package:uniplanet/features/account/domain/entities/advertiser_entity.dart';
+// import 'package:uniplanet/features/account/data/models/ad_stat_model.dart';
+// import 'package:uniplanet/features/account/data/models/advertiser_model.dart';
+// import 'package:uniplanet/features/account/data/models/user_interaction_model.dart';
 
 class AccountRepository implements IAccountRepository {
   AccountRepository();
 
-  Future<Advertiser?> blockControl(
-      {required String accountId,
-      bool? isPostBlock,
-      bool? isChatBlock,
-      bool? isBlock}) async {
-    try {
-      Response res =
-          await DioHelper.instance.dio.post('$accountURI/block-control',
-              data: {
-                'accountId': accountId,
-                'isPostBlock': isPostBlock,
-                'isChatBlock': isChatBlock,
-                'isBlock': isBlock
-              },
-              options: DioHelper.instance.getDioOptions());
+  // Future<AdvertiserEntity?> blockControl(
+  //     {required String accountId,
+  //     bool? isPostBlock,
+  //     bool? isChatBlock,
+  //     bool? isBlock}) async {
+  //   try {
+  //     Response res =
+  //         await DioHelper.instance.dio.post('$accountURI/block-control',
+  //             data: {
+  //               'accountId': accountId,
+  //               'isPostBlock': isPostBlock,
+  //               'isChatBlock': isChatBlock,
+  //               'isBlock': isBlock
+  //             },
+  //             options: DioHelper.instance.getDioOptions());
 
-      String msg = displayErrorMessages(res.toString());
+  //     String msg = displayErrorMessages(res.toString());
 
-      if (msg == "success") {
-        SnackbarGlobal.showSnackBar("Block status updated successfully");
-        Advertiser advertiser = Advertiser.fromJson(res.data);
-        return advertiser;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      SnackbarGlobal.showSnackBar("Failed to update block status");
-      return null;
-    }
-  }
+  //     if (msg == "success") {
+  //       SnackbarGlobal.showSnackBar("Block status updated successfully");
+  //       Advertiser advertiser = Advertiser.fromJson(res.data);
+  //       return advertiser;
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     SnackbarGlobal.showSnackBar("Failed to update block status");
+  //     return null;
+  //   }
+  // }
 
-  Future<Advertiser?> increaseCredit(
-      {required advertiserAccountId,
-      required freeCredit,
-      required credit}) async {
-    try {
-      Response res = await DioHelper.instance.dio.post(
-          '$accountURI/increase-credit',
-          data: {
-            'accountId': advertiserAccountId,
-            'freeCredit': freeCredit,
-            'credit': credit
-          },
-          options: DioHelper.instance.getDioOptions());
+  // Future<AdvertiserEntity?> increaseCredit(
+  //     {required advertiserAccountId,
+  //     required freeCredit,
+  //     required credit}) async {
+  //   try {
+  //     Response res = await DioHelper.instance.dio.post(
+  //         '$accountURI/increase-credit',
+  //         data: {
+  //           'accountId': advertiserAccountId,
+  //           'freeCredit': freeCredit,
+  //           'credit': credit
+  //         },
+  //         options: DioHelper.instance.getDioOptions());
 
-      String msg = displayErrorMessages(res.toString());
+  //     String msg = displayErrorMessages(res.toString());
 
-      if (msg == "success") {
-        SnackbarGlobal.showSnackBar("Credit increased successfully");
-        Advertiser advertiser = Advertiser.fromJson(res.data);
-        return advertiser;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      SnackbarGlobal.showSnackBar("Failed to increase credit");
-      return null;
-    }
-  }
+  //     if (msg == "success") {
+  //       SnackbarGlobal.showSnackBar("Credit increased successfully");
+  //       Advertiser advertiser = Advertiser.fromJson(res.data);
+  //       return advertiser;
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     SnackbarGlobal.showSnackBar("Failed to increase credit");
+  //     return null;
+  //   }
+  // }
 
-  Future<List<Advertiser>> getAdvertiserList({int page = 1}) async {
-    List<Advertiser> advertiserList = [];
-    try {
-      Response res = await DioHelper.instance.dio.get(
-          '$accountURI/advertiser-list/$page',
-          options: DioHelper.instance.getDioOptions());
+  // Future<List<AdvertiserEntity>> getAdvertiserList({int page = 1}) async {
+  //   List<AdvertiserEntity> advertiserList = [];
+  //   try {
+  //     Response res = await DioHelper.instance.dio.get(
+  //         '$accountURI/advertiser-list/$page',
+  //         options: DioHelper.instance.getDioOptions());
 
-      String msg = displayErrorMessages(res.toString());
-      if (msg == 'success') {
-        var dataList = jsonDecode(res.data);
+  //     String msg = displayErrorMessages(res.toString());
+  //     if (msg == 'success') {
+  //       var dataList = jsonDecode(res.data);
 
-        if (dataList is List) {
-          for (var element in dataList) {
-            Advertiser advertiser = Advertiser.fromMap(element);
-            advertiserList.add(advertiser);
-          }
-        } else {
-          log('Unexpected data format: $dataList');
-        }
-        return advertiserList;
-      } else {
-        log('Error message: $msg');
-      }
-    } catch (e) {
-      log('Exception: $e');
-      SnackbarGlobal.showSnackBar("Failed to get advertiser list");
-    }
-    return advertiserList;
-  }
+  //       if (dataList is List) {
+  //         for (var element in dataList) {
+  //           Advertiser advertiser = Advertiser.fromMap(element);
+  //           advertiserList.add(advertiser);
+  //         }
+  //       } else {
+  //         log('Unexpected data format: $dataList');
+  //       }
+  //       return advertiserList;
+  //     } else {
+  //       log('Error message: $msg');
+  //     }
+  //   } catch (e) {
+  //     log('Exception: $e');
+  //     SnackbarGlobal.showSnackBar("Failed to get advertiser list");
+  //   }
+  //   return advertiserList;
+  // }
 
-  Future<List<UserInteraction>> getAdInteraction({int page = 1}) async {
-    List<UserInteraction> userInteractionList = [];
-    try {
-      Response res = await DioHelper.instance.dio.get(
-          '$accountURI/ad-interaction/$page',
-          options: DioHelper.instance.getDioOptions());
+  // Future<List<UserInteraction>> getAdInteraction({int page = 1}) async {
+  //   List<UserInteraction> userInteractionList = [];
+  //   try {
+  //     Response res = await DioHelper.instance.dio.get(
+  //         '$accountURI/ad-interaction/$page',
+  //         options: DioHelper.instance.getDioOptions());
 
-      String msg = displayErrorMessages(res.toString());
-      if (msg == 'success') {
-        var dataList = jsonDecode(res.data);
+  //     String msg = displayErrorMessages(res.toString());
+  //     if (msg == 'success') {
+  //       var dataList = jsonDecode(res.data);
 
-        if (dataList is List) {
-          for (var element in dataList) {
-            UserInteraction userInteraction = UserInteraction.fromMap(element);
-            userInteractionList.add(userInteraction);
-          }
-        } else {
-          log('Unexpected data format: $dataList');
-        }
-        return userInteractionList;
-      } else {
-        log('Error message: $msg');
-      }
-    } catch (e) {
-      log('Exception: $e');
-      SnackbarGlobal.showSnackBar("Failed to get account info");
-    }
-    return userInteractionList;
-  }
+  //       if (dataList is List) {
+  //         for (var element in dataList) {
+  //           UserInteraction userInteraction = UserInteraction.fromMap(element);
+  //           userInteractionList.add(userInteraction);
+  //         }
+  //       } else {
+  //         log('Unexpected data format: $dataList');
+  //       }
+  //       return userInteractionList;
+  //     } else {
+  //       log('Error message: $msg');
+  //     }
+  //   } catch (e) {
+  //     log('Exception: $e');
+  //     SnackbarGlobal.showSnackBar("Failed to get account info");
+  //   }
+  //   return userInteractionList;
+  // }
 
-  Future<AdStat?> getAdStatistic() async {
-    try {
-      Response res = await DioHelper.instance.dio.get(
-          '$accountURI/ad-statistic',
-          options: DioHelper.instance.getDioOptions());
+  // Future<AdStat?> getAdStatistic() async {
+  //   try {
+  //     Response res = await DioHelper.instance.dio.get(
+  //         '$accountURI/ad-statistic',
+  //         options: DioHelper.instance.getDioOptions());
 
-      String msg = displayErrorMessages(res.toString());
-      if (msg == "success") {
-        AdStat adStat = AdStat.fromMap(res.data);
-        return adStat;
-      }
-    } catch (e) {
-      SnackbarGlobal.showSnackBar("Failed to get account info");
+  //     String msg = displayErrorMessages(res.toString());
+  //     if (msg == "success") {
+  //       AdStat adStat = AdStat.fromMap(res.data);
+  //       return adStat;
+  //     }
+  //   } catch (e) {
+  //     SnackbarGlobal.showSnackBar("Failed to get account info");
 
-      return null;
-    }
-    return null;
-  }
+  //     return null;
+  //   }
+  //   return null;
+  // }
 
-  Future<Advertiser?> getAdvertiser() async {
-    try {
-      Response res = await DioHelper.instance.dio.get(
-          '$accountURI/advertiser-info',
-          options: DioHelper.instance.getDioOptions());
+  // Future<AdvertiserEntity?> getAdvertiser() async {
+  //   try {
+  //     Response res = await DioHelper.instance.dio.get(
+  //         '$accountURI/advertiser-info',
+  //         options: DioHelper.instance.getDioOptions());
 
-      String msg = displayErrorMessages(res.toString());
+  //     String msg = displayErrorMessages(res.toString());
 
-      if (msg == "success") {
-        Advertiser advertiser = Advertiser.fromJson(res.data);
-        return advertiser;
-      } else {
-        throw Exception('Failed to get account info');
-      }
-    } catch (e) {
-      SnackbarGlobal.showSnackBar("Failed to get account info");
+  //     if (msg == "success") {
+  //       Advertiser advertiser = Advertiser.fromJson(res.data);
+  //       return advertiser;
+  //     } else {
+  //       throw Exception('Failed to get account info');
+  //     }
+  //   } catch (e) {
+  //     SnackbarGlobal.showSnackBar("Failed to get account info");
 
-      return null;
-    }
-  }
+  //     return null;
+  //   }
+  // }
 
   Future<bool> reportUser({
     required String reportedUserId,
