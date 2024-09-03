@@ -106,13 +106,13 @@ class _ChatListState extends State<ChatListPage> {
                           ],
                         ),
                       ),
+                      const SizedBox(
+                        height: 30,
+                      )
                     ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              )
             ],
           ),
         );

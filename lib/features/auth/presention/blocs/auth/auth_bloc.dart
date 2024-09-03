@@ -126,7 +126,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                     SnackbarGlobal.showSnackBar(
                       "Password updated successfully",
                     ),
-                    getIt<AuthBloc>().add(const LogoutEvent()),
                   },
                 emit(const UpdatePasswordCompleteState())
               });

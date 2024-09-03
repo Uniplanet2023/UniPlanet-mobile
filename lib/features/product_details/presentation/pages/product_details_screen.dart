@@ -53,7 +53,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     super.initState();
     if (widget.product.type == 'Free Item' || widget.product.price == 0) {
-      AdsRepositoryImpl().createRewardedAd();
+      // AdsRepositoryImpl().createRewardedAd();
     }
     currentUser = getIt<AccountBloc>().state.account.user;
     context

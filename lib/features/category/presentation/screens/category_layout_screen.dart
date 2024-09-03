@@ -95,7 +95,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       return GestureDetector(
                         onTap: () => {
                           if (GlobalVariables.categories[index]['name'] ==
-                              'Rental Housing')
+                              'Housing')
                             {
                               Navigator.pushNamed(
                                   context, AppRoutes.housingPage),

@@ -9,6 +9,7 @@ import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_pro
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/home/funcions/school_tutorial.dart';
 
 class HomeHeader extends StatefulWidget {
   final String choiceCheapSelected;
@@ -26,6 +27,15 @@ class HomeHeader extends StatefulWidget {
 class _HomeHeaderState extends State<HomeHeader> {
   final SharedPreferencesHelper _prefsHelper = SharedPreferencesHelper();
   String selectedSchool = 'All School'; // Default selected value
+  final GlobalKey _dropdownKey = GlobalKey(); // Key for the DropdownButton
+  final GlobalKey _allItemsKey =
+      GlobalKey(); // Key for the All Items ChoiceChip
+  final GlobalKey _freeItemsKey =
+      GlobalKey(); // Key for the Free Items ChoiceChip
+  final GlobalKey _hotItemsKey =
+      GlobalKey(); // Key for the Hot Items ChoiceChip
+  final GlobalKey _wantedToBuyKey =
+      GlobalKey(); // Key for the Wanted to Buy ChoiceChip
 
   @override
   void initState() {
@@ -33,6 +43,21 @@ class _HomeHeaderState extends State<HomeHeader> {
     bool? isMySchool = _prefsHelper.getBool('isMySchool');
     selectedSchool =
         (isMySchool == null || !isMySchool) ? 'All School' : 'My School';
+    bool? isFirstHomeUser =
+        SharedPreferencesHelper.instance.getBool('first_home_user');
+    if (isFirstHomeUser == null || isFirstHomeUser == false) {
+      // Start the tutorial after the widget tree has been built
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        TutorialHelper(
+          context: context,
+          dropdownKey: _dropdownKey,
+          allItemsKey: _allItemsKey,
+          freeItemsKey: _freeItemsKey,
+          hotItemsKey: _hotItemsKey,
+          wantedToBuyKey: _wantedToBuyKey,
+        ).startTutorial();
+      });
+    }
   }
 
   @override
@@ -93,36 +118,39 @@ class _HomeHeaderState extends State<HomeHeader> {
                         )),
                   ],
                 ),
-                DropdownButton<String>(
-                  value: selectedSchool,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                    fontSize: isSmallDevice ? 12 : 15,
-                    fontWeight: FontWeight.w600,
+                GestureDetector(
+                  key: _dropdownKey,
+                  child: DropdownButton<String>(
+                    value: selectedSchool,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                      fontSize: isSmallDevice ? 12 : 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    items: <String>['All School', 'My School']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      bool isMySchool = newValue == 'My School';
+                      getIt<ProductBloc>().add(const LoadProductEvent());
+                      getIt<FreeProductBloc>().add(const LoadFreeProductEvent(
+                          category: 'Free Products'));
+                      context
+                          .read<HotProductBloc>()
+                          .add(const LoadHotProductsEvent());
+                      context
+                          .read<WantedProductBloc>()
+                          .add(const LoadWantedProductEvent());
+                      _prefsHelper.saveBool('isMySchool', isMySchool);
+                      setState(() {
+                        selectedSchool = newValue!;
+                      });
+                    },
                   ),
-                  items: <String>['All School', 'My School']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    bool isMySchool = newValue == 'My School';
-                    getIt<ProductBloc>().add(const LoadProductEvent());
-                    getIt<FreeProductBloc>().add(
-                        const LoadFreeProductEvent(category: 'Free Products'));
-                    context
-                        .read<HotProductBloc>()
-                        .add(const LoadHotProductsEvent());
-                    context
-                        .read<WantedProductBloc>()
-                        .add(const LoadWantedProductEvent());
-                    _prefsHelper.saveBool('isMySchool', isMySchool);
-                    setState(() {
-                      selectedSchool = newValue!;
-                    });
-                  },
                 ),
               ],
             ),
@@ -132,6 +160,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   ChoiceChip(
+                    key:
+                        _allItemsKey, // Assign the key for the All Items ChoiceChip
                     padding: const EdgeInsets.symmetric(vertical: 0),
                     showCheckmark: false,
                     side: const BorderSide(
@@ -155,6 +185,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                   ),
                   const SizedBox(width: 10),
                   ChoiceChip(
+                    key:
+                        _freeItemsKey, // Assign the key for the Free Items ChoiceChip
                     padding: const EdgeInsets.symmetric(vertical: 0),
                     side: const BorderSide(
                         color: GlobalVariables
@@ -181,7 +213,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ),
                       ],
                     ),
-                    elevation: 3,
                     selected: widget.choiceCheapSelected == "Free Products",
                     onSelected: (selected) {
                       widget.onChoiceChanged("Free Products");
@@ -189,6 +220,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                   ),
                   const SizedBox(width: 10),
                   ChoiceChip(
+                    key:
+                        _hotItemsKey, // Assign the key for the Hot Items ChoiceChip
                     padding: const EdgeInsets.symmetric(vertical: 0),
                     side: const BorderSide(
                         color: GlobalVariables
@@ -215,7 +248,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ),
                       ],
                     ),
-                    elevation: 3,
                     selected: widget.choiceCheapSelected == "Hot Items",
                     onSelected: (selected) {
                       widget.onChoiceChanged("Hot Items");
@@ -223,6 +255,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                   ),
                   const SizedBox(width: 10),
                   ChoiceChip(
+                    key:
+                        _wantedToBuyKey, // Assign the key for the Wanted to Buy ChoiceChip
                     padding: const EdgeInsets.symmetric(vertical: 0),
                     side: const BorderSide(
                         color: GlobalVariables
@@ -249,7 +283,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ),
                       ],
                     ),
-                    elevation: 3,
                     selected: widget.choiceCheapSelected == "Buying",
                     onSelected: (selected) {
                       widget.onChoiceChanged("Buying");

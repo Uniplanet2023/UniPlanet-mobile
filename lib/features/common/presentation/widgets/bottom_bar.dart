@@ -98,11 +98,8 @@ class _BottomBarState extends State<BottomBar> {
         child: CategoryPage(controller: _scrollController),
       ),
       const AddProductScreen(),
-      Padding(
-        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
-        child: ChatListPage(
-          controller: _scrollController,
-        ),
+      ChatListPage(
+        controller: _scrollController,
       ),
       const Padding(
         padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),

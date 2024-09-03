@@ -49,7 +49,7 @@ class GlobalVariables {
     {'name': 'Sports & Outdoors', 'image': 'assets/images/icons/Sports.png'},
     {'name': 'Vehicles', 'image': 'assets/images/icons/vehicle.png'},
     {'name': 'Other', 'image': 'assets/images/icons/other.png'},
-    {'name': 'Rental Housing', 'image': 'assets/images/icons/message.png'},
+    {'name': 'Housing', 'image': 'assets/images/icons/message.png'},
   ];
   static const List<Map<String, dynamic>> housingCategories = [
     {'name': 'Sublet'},

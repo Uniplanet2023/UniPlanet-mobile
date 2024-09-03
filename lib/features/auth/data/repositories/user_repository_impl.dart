@@ -95,12 +95,13 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, AuthUserEntity>> tokenValidation(
       NoParams params) async {
+    final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
+    var userData = prefsHelper.getString('userData');
+    var userRecord = jsonDecode(userData.toString());
     try {
-      final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
-      var userData = prefsHelper.getString('userData');
-      var userRecord = jsonDecode(userData.toString());
       var token = await DioHelper.instance.getSessionToken();
-      if (token == null || userRecord == null) {
+      token = null;
+      if (token == null) {
         final user = await remoteDataSource.tokenValidation();
         return Right(user);
       } else {
@@ -108,6 +109,11 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user);
       }
     } catch (e) {
+      if (userRecord != null) {
+        SnackbarGlobal.showSnackBar('Network Connection is not stable.');
+        AuthUserEntity user = AuthUserEntity.fromMap(userRecord);
+        return Right(user);
+      }
       return Left(Failure(e.toString()));
     }
   }
