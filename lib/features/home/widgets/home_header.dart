@@ -47,15 +47,20 @@ class _HomeHeaderState extends State<HomeHeader> {
         SharedPreferencesHelper.instance.getBool('first_home_user');
     if (isFirstHomeUser == null || isFirstHomeUser == false) {
       // Start the tutorial after the widget tree has been built
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        TutorialHelper(
-          context: context,
-          dropdownKey: _dropdownKey,
-          allItemsKey: _allItemsKey,
-          freeItemsKey: _freeItemsKey,
-          hotItemsKey: _hotItemsKey,
-          wantedToBuyKey: _wantedToBuyKey,
-        ).startTutorial();
+        Future.delayed(const Duration(seconds: 1)).then((_) {
+          if (mounted) {
+            TutorialHelper(
+              context: context,
+              dropdownKey: _dropdownKey,
+              allItemsKey: _allItemsKey,
+              freeItemsKey: _freeItemsKey,
+              hotItemsKey: _hotItemsKey,
+              wantedToBuyKey: _wantedToBuyKey,
+            ).startTutorial();
+          }
+        });
       });
     }
   }

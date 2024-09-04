@@ -1,10 +1,10 @@
 import 'package:uniplanet/config/api/server_address.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/utils/display_error_messages.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
 import 'package:uniplanet/features/auth/data/helpers/auth_remote_helper.dart';
-import 'package:uniplanet/features/auth/domain/entities/auth_user.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl();
@@ -37,7 +37,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthUserEntity> signInUser({
+  Future<User> signInUser({
     required String email,
     required String password,
   }) async {
@@ -51,7 +51,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.data['deletionDate'] != null) {
         SnackbarGlobal.showSnackBar("Account restored Successfully!");
       }
-      return AuthUserEntity.fromMap(response.data);
+      return User.fromMap(response.data);
     }
     throw Exception("User not found");
   }
@@ -77,11 +77,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthUserEntity> tokenValidation() async {
+  Future<User> tokenValidation() async {
     final response = await postRequest('$authURI/token-login', {});
 
     if (response.data['id'] != null) {
-      AuthUserEntity user = AuthUserEntity.fromMap(response.data);
+      User user = User.fromMap(response.data);
       return user;
     }
     throw Exception("User not found");
@@ -121,7 +121,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthUserEntity> otpValidation({
+  Future<User> otpValidation({
     required String email,
     required String hash,
     required String otpCode,
@@ -137,7 +137,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // if (response.data['deletionDate'] != null) {
       //   SnackbarGlobal.showSnackBar("Account restored Successfully!");
       // }
-      return AuthUserEntity.fromMap(response.data);
+      return User.fromMap(response.data);
     }
 
     throw Exception("User not found");

@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:lottie/lottie.dart';
 //core
 import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/university_list.dart';
-import 'package:uniplanet/features/auth/functions/phone_verification.dart';
 //common
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
@@ -162,27 +161,27 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: userType == UserType.local
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .secondaryFixedDim,
-                              ),
-                              child: TextButton.icon(
-                                onPressed: () =>
-                                    setState(() => userType = UserType.local),
-                                icon: const Icon(Icons.home),
-                                label: const Text('Local'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: userType == UserType.local
-                                      ? Theme.of(context).colorScheme.surface
-                                      : Theme.of(context).colorScheme.tertiary,
-                                ),
-                              ),
-                            ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(10),
+                            //     color: userType == UserType.local
+                            //         ? Theme.of(context).colorScheme.primary
+                            //         : Theme.of(context)
+                            //             .colorScheme
+                            //             .secondaryFixedDim,
+                            //   ),
+                            //   child: TextButton.icon(
+                            //     onPressed: () =>
+                            //         setState(() => userType = UserType.local),
+                            //     icon: const Icon(Icons.home),
+                            //     label: const Text('Local'),
+                            //     style: TextButton.styleFrom(
+                            //       foregroundColor: userType == UserType.local
+                            //           ? Theme.of(context).colorScheme.surface
+                            //           : Theme.of(context).colorScheme.tertiary,
+                            //     ),
+                            //   ),
+                            // ),
                             const SizedBox(width: 10),
                             Container(
                               decoration: BoxDecoration(

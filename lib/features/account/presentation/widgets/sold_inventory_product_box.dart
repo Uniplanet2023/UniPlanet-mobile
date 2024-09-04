@@ -9,8 +9,8 @@ import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.da
 import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:uniplanet/features/home/widgets/build_product_box.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
+import 'package:uniplanet/features/home/widgets/item.dart';
 import 'package:uniplanet/models/product.dart';
 
 class SoldInventoryProductBox extends StatefulWidget {

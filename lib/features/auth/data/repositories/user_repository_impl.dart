@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
+import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/error/failures.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
@@ -7,7 +8,6 @@ import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/core/usecases/usecase.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
-import 'package:uniplanet/features/auth/domain/entities/auth_user.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/domain/usecases/params/opt_validation_params.dart';
 import 'package:uniplanet/features/auth/domain/usecases/params/sign_in_params.dart';
@@ -47,7 +47,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthUserEntity>> signInUser(
+  Future<Either<Failure, User>> signInUser(
       {required SignInParams params}) async {
     try {
       final result = await remoteDataSource.signInUser(
@@ -93,8 +93,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthUserEntity>> tokenValidation(
-      NoParams params) async {
+  Future<Either<Failure, User>> tokenValidation(NoParams params) async {
     final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
     var userData = prefsHelper.getString('userData');
     var userRecord = jsonDecode(userData.toString());
@@ -105,13 +104,13 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = await remoteDataSource.tokenValidation();
         return Right(user);
       } else {
-        AuthUserEntity user = AuthUserEntity.fromMap(userRecord);
+        User user = User.fromMap(userRecord);
         return Right(user);
       }
     } catch (e) {
       if (userRecord != null) {
         SnackbarGlobal.showSnackBar('Network Connection is not stable.');
-        AuthUserEntity user = AuthUserEntity.fromMap(userRecord);
+        User user = User.fromMap(userRecord);
         return Right(user);
       }
       return Left(Failure(e.toString()));
@@ -149,7 +148,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthUserEntity>> otpValidation({
+  Future<Either<Failure, User>> otpValidation({
     required OtpValidationParams params,
   }) async {
     try {

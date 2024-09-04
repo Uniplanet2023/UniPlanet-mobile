@@ -70,16 +70,8 @@ class _SigninScreenState extends State<SigninScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authorized) {
-          final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
-          bool? isNotificationAllowed =
-              prefsHelper.getBool('isNotificationAllowed');
-          if (isNotificationAllowed == null || isNotificationAllowed == false) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, AppRoutes.notificationPage, (route) => false);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, AppRoutes.bottomBarPage, (route) => false);
-          }
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.bottomBarPage, (route) => false);
         } else if (state is UserNotVerifiedState) {
           Navigator.pushNamed(context, AppRoutes.signupPage);
         } else if (state is SigninFailedState) {}

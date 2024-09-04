@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
-import 'package:uniplanet/core/router/names.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -14,8 +13,7 @@ class NotificationScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, AppRoutes.bottomBarPage, (route) => false);
+              Navigator.pop(context);
             },
             child: const Text(
               "Skip",
@@ -71,22 +69,21 @@ class NotificationScreen extends StatelessWidget {
                   onPressed: () {
                     LocalNotificationController.notificationRationale(true);
 
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, AppRoutes.bottomBarPage, (route) => false);
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    backgroundColor: Colors.black,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Allow notifications",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                        color: Theme.of(context).colorScheme.surface),
                   ),
                 ),
               ),

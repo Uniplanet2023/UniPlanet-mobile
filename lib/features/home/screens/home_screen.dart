@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Loader(),
                   );
                 } else {
-                  return ItemBox(
+                  return ItemList(
                     productList: state.productList,
                   );
                 }
@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Loader(),
                     );
                   } else {
-                    return ItemBox(
+                    return ItemList(
                       productList: state.productList,
                     );
                   }
@@ -297,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Loader(),
                     );
                   } else {
-                    return ItemBox(
+                    return ItemList(
                       productList: state.productList,
                     );
                   }
@@ -371,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Loader(),
                     );
                   } else {
-                    return ItemBox(
+                    return ItemList(
                       productList: state.hotProducts,
                     );
                   }

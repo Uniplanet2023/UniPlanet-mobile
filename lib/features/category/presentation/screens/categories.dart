@@ -145,7 +145,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       } else if (state is LoadedHotProductState ||
                           state is LoadingMoreHotProductState ||
                           state is EndHotProductState) {
-                        return ItemBox(
+                        return ItemList(
                           productList: state.hotProducts,
                         );
                       } else {
@@ -164,7 +164,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           } else if (state is LoadedFreeProductState ||
                               state is LoadingMoreFreeProductState ||
                               state is EndFreeProductState) {
-                            return ItemBox(
+                            return ItemList(
                               productList: state.productList,
                             );
                           } else {
@@ -182,7 +182,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             } else if (state is LoadedCategoryState ||
                                 state is LoadingMoreCategoryState ||
                                 state is EndCategoryState) {
-                              return ItemBox(
+                              return ItemList(
                                 productList: state.categoryProducts,
                               );
                             } else {
