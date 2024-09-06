@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/core/ads/ads_repository_impl.dart';
 import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/entities/user_type.dart';
 import 'package:uniplanet/features/common/presentation/widgets/selectable_text.dart';

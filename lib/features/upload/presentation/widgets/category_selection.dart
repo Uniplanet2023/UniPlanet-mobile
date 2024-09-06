@@ -20,7 +20,7 @@ class CategorySelection extends StatelessWidget {
       child: Row(
         children: (type == 'Housing'
                 ? GlobalVariables.housingCategories
-                : GlobalVariables.categories)
+                : GlobalVariables.advertisementType)
             .map((category) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: ChoiceChip(

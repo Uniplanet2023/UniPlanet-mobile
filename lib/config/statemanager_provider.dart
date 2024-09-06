@@ -6,6 +6,7 @@ import 'package:uniplanet/features/account/presentation/blocs/admin/admin_bloc.d
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/category/category_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/banner/banner_bloc.dart';
 import 'package:uniplanet/features/housing/presentation/housing/housing_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
@@ -25,7 +26,8 @@ import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_
 import 'package:uniplanet/features/auth/presention/blocs/theme/theme_cubit.dart';
 import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_product_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
-import 'package:uniplanet/features/upload/presentation/blocs/bloc/housing_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/housing/housing_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/payment/payment_bloc.dart';
 import 'package:uniplanet/main.dart';
 
 final getIt = GetIt.instance;
@@ -62,6 +64,8 @@ class StateManagerProvider extends StatelessWidget {
         BlocProvider(create: (context) => getIt<AdvertiserBloc>()),
         BlocProvider(create: (context) => getIt<AdminBloc>()),
         BlocProvider(create: (context) => getIt<ThemeCubit>()),
+        BlocProvider(create: (context) => getIt<BannerBloc>()),
+        BlocProvider(create: (context) => getIt<PaymentBloc>()),
       ],
       child: const MyApp(),
     );

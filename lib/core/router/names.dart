@@ -17,4 +17,6 @@ class AppRoutes {
   static const String searchScreenPage = '/search-screen';
   static const String housingPage = '/housing-screen';
   static const String notificationPage = '/notification-screen';
+  static const String reviewPaymentPage = '/review_payment';
+  static const String setBudgetPage = '/set-budget';
 }

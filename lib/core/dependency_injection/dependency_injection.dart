@@ -1,6 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:uniplanet/features/account/presentation/blocs/admin/admin_bloc.dart';
-import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/category/category_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';

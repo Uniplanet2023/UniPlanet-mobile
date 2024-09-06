@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../utils/utils.dart';
 
 class NotificationController extends ChangeNotifier {
@@ -32,8 +33,8 @@ class NotificationController extends ChangeNotifier {
         onNativeTokenHandle: NotificationController.myNativeTokenHandle,
         onFcmSilentDataHandle: NotificationController.mySilentDataHandle,
         licenseKeys: [
-          '2024-05-03==CW4ZpzeUmcW4iuNK8dcdIgP+g5y4XyaeMYdANdnFZmXSDLtLBwUJTtoKwJMlTDqBWCcAeTKlH2GOgORoNDxou/OMoeV4WVweOBab4Sb/LYYKthVGkWrRsTdRqoCbPCkh2eJxB+1OhO+AJr2jDnw0H73EqJFTFdGc06a0c6B7mq9iXegul+/yM8b6hhPZxswgkM39YI11IYV79XGgmcgUaL5Cnh9Rz4kUq4jCee7BoD5PQkNMMyUCmbQP0sUIbu2Gmcxsq5qYYngCQuJRY2mpzASc9c+Tj/s5UhY/WWQBr6n9uf+YK/1ZDk2fnzegxgPzghZr7necmXLARArexJo/xA==',
-          '2024-05-03==QTqoNm32wuO6YiBsvpMCnUM1J+jYKoB9MVDe0eDQyFumvF2JDSRlzmMQP35o5QechgnCVo/jq7SNAVWVpPFkUgyybdYRgdNTP2cnwNd/IHoh53/9ew0LGR5l6m127nK49oRDszgs9XsJm658Gpj2Q6vI1+h+HzDRGZ7D9YQ0fMLjoSiUKMZho1AIJw0VwPZ8wT0ZOjLcPcHcTcdNasMXYUX7rpXqr7RiR/T17p05fLhPyXwsN/jMXghCYhqPCk9oYemz9pT5jvWsPfBApiMpRqo/RPQ+IpychiGKGuUSPGpk2F4NWgFoutAm9XD0T5L0a/vAZ1ci6cOPRuA34wq9iQ=='
+          dotenv.get('AWESOME_NOTIFICATION_LICENCE_v1'),
+          dotenv.get('AWESOME_NOTIFICATION_LICENCE_v2'),
         ],
         debug: debug);
   }

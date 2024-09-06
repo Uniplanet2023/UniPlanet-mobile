@@ -1,10 +1,13 @@
 import "package:flutter/material.dart";
+import "package:uniplanet/config/statemanager_provider.dart";
 import "package:uniplanet/core/router/names.dart";
 import "package:uniplanet/core/entities/user.dart";
+import "package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart";
 import "package:uniplanet/features/auth/presention/screens/notification_page.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
 import "package:uniplanet/features/edit-product/edit_product.dart";
 import "package:uniplanet/features/housing/presentation/screens/housing_page.dart";
+import "package:uniplanet/features/upload/presentation/screens/add_advertisement.dart";
 import 'package:uniplanet/features/upload/presentation/screens/add_product_screen.dart';
 import "package:uniplanet/features/auth/presention/screens/auth_screen.dart";
 import "package:uniplanet/features/auth/presention/screens/opt_verify_screen.dart";
@@ -17,6 +20,8 @@ import "package:uniplanet/features/home/screens/home_screen.dart";
 import "package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart";
 import "package:uniplanet/features/search/presentation/screens/search_screen.dart";
 import "package:uniplanet/features/chat/domain/entities/chat_room.dart";
+import "package:uniplanet/features/upload/presentation/screens/review_payment.dart";
+import "package:uniplanet/features/upload/presentation/screens/set_buget_screen.dart";
 import "package:uniplanet/models/product.dart";
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -61,9 +66,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const BottomBar(),
       );
     case AppRoutes.addProductPage:
+      final user = getIt<AuthBloc>().state.user;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const AddProductScreen(),
+        builder: (_) => user?.type == 'advertiser'
+            ? const AddAdScreen()
+            : const AddProductScreen(),
       );
     case AppRoutes.editProductPage:
       var product = routeSettings.arguments as Product;
@@ -115,6 +123,26 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const NotificationScreen(),
+      );
+    case AppRoutes.reviewPaymentPage:
+      // Cast routeSettings.arguments to a Map<String, Object>
+      var arguments = routeSettings.arguments as Map<String, dynamic>;
+
+      // Access the values from the map
+      var budget = arguments['budget'] as double;
+      var uploadAd =
+          arguments['uploadAd'] as Function({required double totalPayment});
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) =>
+              ReviewPaymentScreen(totalPayment: budget, uploadAd: uploadAd));
+    case AppRoutes.setBudgetPage:
+      var uploadAd =
+          routeSettings.arguments as Function({required double totalPayment});
+
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => SetBudgetScreen(uploadAd: uploadAd),
       );
     default:
       return MaterialPageRoute(

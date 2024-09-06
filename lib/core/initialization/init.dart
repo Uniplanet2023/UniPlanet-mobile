@@ -1,20 +1,25 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:uniplanet/core/dependency_injection/account_feature/account.dart';
 import 'package:uniplanet/core/dependency_injection/account_feature/admin_injection.dart';
 import 'package:uniplanet/core/dependency_injection/account_feature/advertiser_injection.dart';
 import 'package:uniplanet/core/dependency_injection/auth_feature/auth.dart';
+import 'package:uniplanet/core/dependency_injection/chat_feature/banner.dart';
 import 'package:uniplanet/core/dependency_injection/dependency_injection.dart';
 import 'package:uniplanet/core/dependency_injection/housing_feature/get_housing.dart';
 import 'package:uniplanet/core/dependency_injection/upload_feature/housing.dart';
+import 'package:uniplanet/core/dependency_injection/upload_feature/payment.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/config/firebase_options.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
+import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/common/presentation/widgets/error_screen.dart';
 import 'package:uniplanet/purchase_observer.dart';
 
@@ -41,7 +46,13 @@ class Initialization {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    await dotenv.load();
     PurchasesObserver().initialize();
+    if (dotenv.env['STRIPE_PUBLISHABLE_KEY'] != null) {
+      Stripe.publishableKey = dotenv.get('STRIPE_PUBLISHABLE_KEY');
+    } else {
+      log('Stripe publishable key is not set');
+    }
 
     //setup block
     setup();
@@ -51,6 +62,8 @@ class Initialization {
     setupAuth();
     setupHousing();
     initGetHouse();
+    bannerInit();
+    setupPayment();
     ErrorWidget.builder = (FlutterErrorDetails details) {
       bool inDebug = false;
       assert(() {

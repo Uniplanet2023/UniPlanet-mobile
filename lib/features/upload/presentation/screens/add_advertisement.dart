@@ -1,49 +1,104 @@
-import 'dart:io';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
-import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
-import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
-import 'package:flutter/material.dart';
+import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
+import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
+import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
+import 'dart:io';
 
-class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+import 'package:uniplanet/features/upload/domain/entities/housing_post_form.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/housing/housing_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/payment/payment_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/advertisement_type_toggle.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/category_selection.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/housing_detail.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/image_selection.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/location_selection.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/state_address.dart';
+
+class AddAdScreen extends StatefulWidget {
+  const AddAdScreen({super.key});
 
   @override
-  State<AddProductScreen> createState() => _AddProductScreenState();
+  State<AddAdScreen> createState() => _AddAdScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
+class _AddAdScreenState extends State<AddAdScreen> {
   final TextEditingController productNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController linkController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  final TextEditingController meetingLocationController =
+  final TextEditingController securityDepositController =
       TextEditingController();
+  String? stateAddress;
+  String? city;
+  String? address;
+  String? zipCode;
 
-  final int maxImages = 10; // Set the maximum number of images allowed
+  void setAddress({
+    required String state,
+    required String city,
+    required String address,
+    required String zipCode,
+  }) {
+    setState(() {
+      stateAddress = state;
+      this.city = city;
+      this.address = address;
+      this.zipCode = zipCode;
+    });
+  }
+
+  int maxImages = 1;
   bool isOpenToOffers = false;
-  bool showCategoryToggles = false; // New variable to control visibility
+  bool isUtilityIncluded = false;
+  bool isSecurityDeposit = false;
+  bool showLocationToggle = true;
+  bool showCategoryToggles = false;
   bool showCustomLocation = false;
-  String type = 'Listing';
-  String category = 'Electronics & Appliances';
-  String selectedCategory = 'Electronics & Appliances'; // Initial category
+  String type = 'Advertisement';
+  String category = 'Increase Website Visits';
+  String selectedCategory = 'Increase Website Visits';
   String selectedLocation = 'On Campus';
+  List<String> selectedHousingConditions = [];
+  String selectedGender = 'N/A';
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
+  int selectedIndex = 0;
 
-  int selectedIndex = 0; // Index of the selected category
+  void selectImages(BuildContext context) async {
+    var pickedImage = await pickImages(context);
+    if ((images.length + pickedImage.length) <= maxImages) {
+      images = [...images, ...pickedImage];
+      setState(() => {});
+    } else {
+      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
+    }
+  }
+
+  void selectImageFromCamera(BuildContext context) async {
+    File? image = await openCamera(context);
+    if (image != null) {
+      if (images.length + 1 <= maxImages) {
+        images.add(image);
+        setState(() => {});
+      } else {
+        SnackbarGlobal.showSnackBar(
+            'You can only add up to $maxImages images.');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    // Add listener to productNameController
+
     productNameController.addListener(() {
       final bool shouldShowToggles = productNameController.text.isNotEmpty;
-      // Update showCategoryToggles only if the value changes
       if (showCategoryToggles != shouldShowToggles) {
         setState(() {
           showCategoryToggles = shouldShowToggles;
@@ -54,114 +109,106 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     productNameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-    meetingLocationController.dispose();
+    securityDepositController.dispose();
+    super.dispose();
   }
 
-  void sellProduct(BuildContext context) {
+  void uploadAd({required double totalPayment}) {
+    getIt<PaymentBloc>().add(CreatePaymentIntentEvent(
+      amount: totalPayment,
+      adName: productNameController.text,
+      description: descriptionController.text,
+      link: linkController.text,
+      images: images,
+      type: type,
+      advertiser: getIt<AccountBloc>().state.account.user,
+      location: selectedLocation,
+      stateAddress: stateAddress,
+      city: city,
+      address: address,
+      zipCode: zipCode,
+    ));
+  }
+
+  void removeImage({required int selectedIndex}) {
+    images.removeAt(selectedIndex);
+    setState(() => {});
+  }
+
+  void postHousing() {
     if (images.isEmpty) {
       SnackbarGlobal.showSnackBar(
           'Please add at least one image and fill all fields.');
       return;
     }
     if (selectedLocation == 'Custom' &&
-        meetingLocationController.text.isEmpty) {
+        (stateAddress == null ||
+            city == null ||
+            address == null ||
+            zipCode == null)) {
       SnackbarGlobal.showSnackBar('Please enter a custom location');
       return;
     }
-
+    if (isSecurityDeposit && securityDepositController.text.isEmpty) {
+      SnackbarGlobal.showSnackBar('Please enter a security deposit');
+      return;
+    }
+    if (priceController.text.isEmpty) {
+      SnackbarGlobal.showSnackBar('Please enter a monthly payment');
+      return;
+    }
     if (_addProductFormKey.currentState!.validate()) {
-      getIt<ProductBloc>().add(UploadProductEvent(
-          productName: productNameController.text,
-          description: descriptionController.text,
-          price: type == 'Advertisement'
-              ? 0
-              : double.parse(
-                  double.parse(priceController.text).toStringAsFixed(2)),
-          category: selectedCategory,
-          status: 'On Sale',
-          type: type,
-          isNegotiable: isOpenToOffers,
-          images: images,
-          location: selectedLocation == 'Custom'
-              ? meetingLocationController.text
-              : selectedLocation,
-          seller: getIt<AccountBloc>().state.account.user));
+      HousingPostForm housingPostForm = HousingPostForm(
+        images: images,
+        title: productNameController.text,
+        monthlyPayment:
+            double.parse(double.parse(priceController.text).toStringAsFixed(2)),
+        isUtilityIncluded: isUtilityIncluded,
+        securityDeposit: isSecurityDeposit
+            ? double.parse(
+                double.parse(securityDepositController.text).toStringAsFixed(2))
+            : 0.0,
+        gender: selectedGender,
+        housingConditions: selectedHousingConditions,
+        location: selectedLocation,
+        stateAddress: stateAddress!,
+        city: city!,
+        address: address!,
+        zipCode: zipCode!,
+        category: selectedCategory,
+        description: descriptionController.text,
+        seller: getIt<AccountBloc>().state.account.user,
+      );
+
+      getIt<HousingBloc>()
+          .add(UploadHousingPostEvent(housingPostForm: housingPostForm));
     }
-  }
-
-  void selectImages() async {
-    // Your logic to pick more images and add to the list, make sure it does not exceed maxImages
-    var res =
-        await pickImages(context); // Implement pickImages to return List<File>
-
-    if ((images.length + res.length) <= maxImages) {
-      setState(() {
-        images.addAll(res); // Add new selected images to the existing list
-      });
-    } else {
-      // Show some error message if maxImages limit is reached
-      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
-    }
-  }
-
-  void selectImageFromCamera() async {
-    File? image = await openCamera(context);
-    if (image != null) {
-      if (images.length + 1 <= maxImages) {
-        setState(() {
-          images.add(image);
-        });
-      } else {
-        SnackbarGlobal.showSnackBar(
-            'You can only add up to $maxImages images.');
-      }
-    }
-  }
-
-  Widget imageContainer(File image) {
-    return Stack(
-      alignment: Alignment.topRight,
-      children: [
-        Container(
-          width: 70,
-          height: 70,
-          margin: const EdgeInsets.only(right: 8, bottom: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-                color: Theme.of(context).colorScheme.secondaryFixedDim),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.file(image, fit: BoxFit.cover),
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.cancel, color: Colors.red),
-          onPressed: () {
-            setState(() => images.remove(image));
-          },
-        ),
-      ],
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     var state = context.watch<ProductBloc>().state;
 
-    return BlocListener<ProductBloc, ProductState>(
-      listener: (context, state) {
-        if (state is ProductUploadedState) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.bottomBarPage, (route) => false);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ProductBloc, ProductState>(
+          listener: (context, state) {
+            if (state is ProductUploadedState) {
+              Navigator.pop(context, AppRoutes.bottomBarPage);
+            }
+          },
+        ),
+        BlocListener<HousingBloc, HousingState>(
+          listener: (context, state) {
+            if (state is HousingPostUploaded) {
+              Navigator.pop(context, AppRoutes.bottomBarPage);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
@@ -190,325 +237,224 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        children: [
-                          // Camera icon container to add new images
-                          InkWell(
-                            onTap: selectImageFromCamera,
-                            child: Container(
-                              width: 70,
-                              height: 70,
-                              margin:
-                                  const EdgeInsets.only(right: 8, bottom: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondaryFixedDim),
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.camera_alt,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiaryContainer,
-                                    size: 20,
-                                  ),
-                                  Text('${images.length}/10',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .tertiaryContainer,
-                                          fontSize: 12)),
-                                ],
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: selectImages,
-                            child: Container(
-                              width: 70,
-                              height: 70,
-                              margin:
-                                  const EdgeInsets.only(right: 8, bottom: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondaryFixedDim),
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.photo,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiaryContainer,
-                                    size: 20,
-                                  ),
-                                  Text('${images.length}/10',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .tertiaryContainer,
-                                          fontSize: 12)),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Displaying existing images
-                          for (File image in images) imageContainer(image),
-                        ],
-                      ),
-                    ),
-
+                    ImageSelection(
+                        images: images,
+                        maxImages: maxImages,
+                        selectImages: selectImages,
+                        selectImageFromCamera: selectImageFromCamera,
+                        removeImage: removeImage),
                     const SizedBox(height: 30),
-                    // Toggle Buttons
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: ToggleButtons(
-                        borderColor: Colors.transparent,
-                        fillColor: Colors.transparent,
-                        selectedColor: Theme.of(context).colorScheme.tertiary,
-                        color: Theme.of(context).colorScheme.tertiary,
-                        borderWidth: 0,
-                        selectedBorderColor: Colors.transparent,
-                        borderRadius: BorderRadius.circular(30),
-                        onPressed: (int index) {
-                          setState(() {
-                            if (index == 0) {
-                              type = 'Listing';
-                              priceController.clear();
-                            } else if (index == 1) {
-                              type = 'Advertisement';
-                              priceController.clear();
-                            }
-                          });
-                        },
-                        isSelected: [
-                          type == 'Listing',
-                          type == 'Advertisement',
-                          type == 'Buying'
-                        ],
-                        children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                              color: type == 'Listing'
-                                  ? Theme.of(context).colorScheme.tertiary
-                                  : Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .tertiaryFixedDim),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 5),
-                            child: Text(
-                              'Listing',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: type == 'Listing'
-                                      ? Theme.of(context).colorScheme.surface
-                                      : Theme.of(context).colorScheme.tertiary),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                              color: type == 'Advertisement'
-                                  ? Theme.of(context).colorScheme.tertiary
-                                  : Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .tertiaryFixedDim),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 5),
-                            child: Text(
-                              'Advertisement',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: type == 'Advertisement'
-                                      ? Theme.of(context).colorScheme.surface
-                                      : Theme.of(context).colorScheme.tertiary),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: type == 'Buying'
-                                  ? Theme.of(context).colorScheme.tertiary
-                                  : Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .tertiaryFixedDim),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 5),
-                            child: Text(
-                              'Wanted to buy',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: type == 'Buying'
-                                      ? Theme.of(context).colorScheme.surface
-                                      : Theme.of(context).colorScheme.tertiary),
-                            ),
-                          ),
-                        ],
-                      ),
+                    AdvertisementTypeToggle(
+                      type: type,
+                      onTypeChanged: (newType) {
+                        setState(() {
+                          type = newType;
+                          type == 'Advertisement'
+                              ? maxImages = 1
+                              : maxImages = 10;
+                          selectedLocation =
+                              newType == 'Housing' ? 'Custom' : 'On Campus';
+                          showCustomLocation = newType == 'Housing';
+                          showLocationToggle = newType != 'Housing';
+                          priceController.clear();
+                          securityDepositController.clear();
+                        });
+                      },
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       controller: productNameController,
-                      hintText: 'Product Name',
+                      hintText: 'Title',
                       maxLength: 100,
                     ),
                     if (showCategoryToggles)
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: GlobalVariables.categories
-                              .map((category) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4.0),
-                                    child: ChoiceChip(
-                                      selectedColor: Theme.of(context)
-                                          .colorScheme
-                                          .primaryFixedDim,
-                                      label: Text(category['name']),
-                                      selected:
-                                          selectedCategory == category['name'],
-                                      onSelected: (selected) {
-                                        if (selected) {
-                                          setState(() => selectedCategory =
-                                              category['name']);
-                                        }
-                                      },
-                                    ),
-                                  ))
-                              .toList(),
-                        ),
+                      CategorySelection(
+                        type: type,
+                        selectedCategory: selectedCategory,
+                        onCategoryChanged: (category) {
+                          setState(() => selectedCategory = category);
+                        },
                       ),
                     const SizedBox(height: 10),
-                    if (type != 'Advertisement')
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomTextField(
-                            controller: priceController,
-                            hintText: 'Price',
-                            enabled: true,
-                            maxLength: 5,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                signed: false,
-                                decimal:
-                                    true), // Set the keyboard type to number
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,9}')),
-                            ],
-                            prefixText: type != 'Advertisement' ? '\$' : '',
-                            validatorEnabled: type != 'Advertisement',
-                          ),
-                          Row(
-                            children: [
-                              Switch(
-                                value: isOpenToOffers,
-                                onChanged: (value) {
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        type == 'Advertisement'
+                            ? const SizedBox()
+                            : CustomTextField(
+                                controller: priceController,
+                                hintText: type == 'Housing'
+                                    ? 'Monthly Payment'
+                                    : 'Price',
+                                enabled: true,
+                                maxLength: 8,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        signed: false, decimal: true),
+                                prefixText: '\$',
+                                validatorEnabled: true,
+                              ),
+                        const SizedBox(width: 10),
+                        type == 'Housing'
+                            ? HousingDetails(
+                                isUtilityIncluded: isUtilityIncluded,
+                                isSecurityDeposit: isSecurityDeposit,
+                                onUtilityChanged: (value) =>
+                                    setState(() => isUtilityIncluded = value),
+                                onSecurityDepositChanged: (value) =>
+                                    setState(() => isSecurityDeposit = value),
+                                securityDepositController:
+                                    securityDepositController,
+                                selectedGender: selectedGender,
+                                onGenderChanged: (gender) =>
+                                    setState(() => selectedGender = gender),
+                                selectedHousingConditions:
+                                    selectedHousingConditions,
+                                onHousingConditionChanged:
+                                    (condition, selected) {
                                   setState(() {
-                                    isOpenToOffers = value;
+                                    if (selected) {
+                                      selectedHousingConditions.add(condition);
+                                    } else {
+                                      selectedHousingConditions
+                                          .remove(condition);
+                                    }
                                   });
                                 },
-                              ),
-                              const Text('Open to Offers'),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                    const SizedBox(height: 10),
-                    if (showCustomLocation)
-                      CustomTextField(
-                        controller: meetingLocationController,
-                        hintText: 'Enter custom meeting location',
-                        maxLength: 30,
-                      ),
-
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: GlobalVariables.locations
-                            .map((location) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  child: ChoiceChip(
-                                    selectedColor: Theme.of(context)
-                                        .colorScheme
-                                        .primaryFixedDim,
-                                    label: Text(location),
-                                    selected: selectedLocation == location,
-                                    onSelected: (selected) {
-                                      if (selected) {
-                                        if (location == 'Custom') {
-                                          showCustomLocation = true;
-                                        } else {
-                                          showCustomLocation = false;
-                                        }
-                                        selectedLocation = location;
-                                        setState(() {});
-                                      }
-                                    },
+                              )
+                            : type == 'Advertisement'
+                                ? const SizedBox()
+                                : Row(
+                                    children: [
+                                      Switch(
+                                        value: isOpenToOffers,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isOpenToOffers = value;
+                                          });
+                                        },
+                                      ),
+                                      const Text('Open to Offers'),
+                                    ],
                                   ),
-                                ))
-                            .toList(),
+                      ],
+                    ),
+                    if (type == 'Advertisement')
+                      CustomTextField(
+                        controller: linkController,
+                        hintText: 'Link (https://example.com)',
+                        maxLines: 1,
+                        maxLength: 100,
+                        keyboardType: TextInputType.url,
+                        validatorEnabled: true,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    CustomTextField(
-                      controller: descriptionController,
-                      hintText: 'Description',
-                      maxLines: 7,
-                      maxLength: 800,
-                      keyboardType: TextInputType.multiline,
-                    ),
-                    const SizedBox(height: 10),
-
-                    Container(
-                      child: (state is ProductUploadingState)
-                          ? ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(double.infinity, 50),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.primary,
+                    if (showCustomLocation && type != 'Advertisement')
+                      GestureDetector(
+                          onTap: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StateSelectionPage(
+                                      rootFrom: AppRoutes.addProductPage,
+                                      setAddress: setAddress,
+                                    ),
+                                  ),
+                                )
+                              },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
                               ),
-                              child: CircularProgressIndicator(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ))
-                          : CustomButton(
-                              text: 'Sell',
-                              onTap: () => sellProduct(context),
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
-                    ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    city == null
+                                        ? 'Address'
+                                        : '$address, $city, $stateAddress, $zipCode',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                          )),
+                    if (showLocationToggle && type != 'Advertisement')
+                      LocationSelection(
+                        selectedLocation: selectedLocation,
+                        onLocationChanged: (location) {
+                          setState(() {
+                            selectedLocation = location;
+                            showCustomLocation = location == 'Custom';
+                          });
+                        },
+                      ),
+                    const SizedBox(height: 10),
+                    if (type == 'Advertisement' &&
+                            selectedCategory == 'Get More messages' ||
+                        type != 'Advertisement')
+                      CustomTextField(
+                        controller: descriptionController,
+                        hintText: 'Description',
+                        maxLines: 7,
+                        maxLength: 1000,
+                        keyboardType: TextInputType.multiline,
+                      ),
+                    const SizedBox(height: 10),
+                    state is ProductUploadingState
+                        ? ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          )
+                        : CustomButton(
+                            text: type == 'Housing' ? 'Post' : 'Next',
+                            onTap: () {
+                              if (type == 'Housing') {
+                                postHousing();
+                              } else if (type == 'Advertisement') {
+                                if (images.isEmpty) {
+                                  SnackbarGlobal.showSnackBar(
+                                      'Please add at least one image and fill all fields.');
+                                  return;
+                                }
+                                if (_addProductFormKey.currentState!
+                                    .validate()) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.setBudgetPage,
+                                    arguments: uploadAd,
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),

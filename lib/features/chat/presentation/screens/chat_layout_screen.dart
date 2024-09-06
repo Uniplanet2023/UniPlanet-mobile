@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:uniplanet/core/ads/ads_repository_impl.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
+import 'package:uniplanet/features/chat/presentation/widgets/banner.dart';
 import 'package:uniplanet/features/chat/presentation/widgets/contacts_list.dart';
 
 class ChatListPage extends StatefulWidget {
@@ -14,17 +13,17 @@ class ChatListPage extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatListPage> {
-  BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
+  // BannerAd? _bannerAd;
+  // bool _isAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _bannerAd = AdsRepositoryImpl().createBannerAd(() {
-      setState(() {
-        _isAdLoaded = true;
-      });
-    });
+    // _bannerAd = AdsRepositoryImpl().createBannerAd(() {
+    //   setState(() {
+    //     _isAdLoaded = true;
+    //   });
+    // });
   }
 
   @override
@@ -34,19 +33,11 @@ class _ChatListState extends State<ChatListPage> {
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
+            preferredSize: const Size.fromHeight(0),
             child: AppBar(
               elevation: 0,
               backgroundColor: Theme.of(context).colorScheme.surface,
               centerTitle: false,
-              title: Text(
-                'Chats',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Theme.of(context).colorScheme.tertiary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
           ),
           body: Column(
@@ -74,18 +65,7 @@ class _ChatListState extends State<ChatListPage> {
                           ),
                         ],
                       ),
-                      _isAdLoaded
-                          ? Container(
-                              margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: SizedBox(
-                                  height: _bannerAd!.size.height.toDouble(),
-                                  child: AdWidget(ad: _bannerAd!),
-                                ),
-                              ),
-                            )
-                          : Container(),
+                      const AutoChangingBanner(),
                       Expanded(
                         child: TabBarView(
                           children: [

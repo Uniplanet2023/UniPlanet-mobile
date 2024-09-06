@@ -4,7 +4,7 @@ import 'package:uniplanet/features/upload/data/repositories/housing_repository_i
 import 'package:uniplanet/features/upload/domain/repositories/housing_repository.dart';
 import 'package:uniplanet/features/upload/domain/usecases/update_housing_post.dart';
 import 'package:uniplanet/features/upload/domain/usecases/upload_housing_post.dart';
-import 'package:uniplanet/features/upload/presentation/blocs/bloc/housing_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/housing/housing_bloc.dart';
 
 final getIt = GetIt.instance;
 

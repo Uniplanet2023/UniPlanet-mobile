@@ -11,6 +11,7 @@ import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_pro
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/core/network/notification/remote_notification_controller.dart';
 import 'package:uniplanet/core/network/socket/socket_channel.dart';
+import 'package:uniplanet/features/chat/presentation/blocs/banner/banner_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
@@ -31,6 +32,7 @@ Future<void> initData(User user) async {
   getIt<SoldProductBloc>().add(LoadSoldProductEvent(userId: user.id));
   getIt<OnSaleProductBloc>().add(LoadOnSaleProductEvent(userId: user.id));
   getIt<HotProductBloc>().add(const LoadHotProductsEvent());
+  getIt<BannerBloc>().add(const GetBannerAdsEvent());
 
   if (user.type == 'advertiser' || user.type == 'admin') {
     getIt<AdvertiserBloc>().add(const GetAdvertiserInfoEvent());

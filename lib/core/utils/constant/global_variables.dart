@@ -51,6 +51,11 @@ class GlobalVariables {
     {'name': 'Other', 'image': 'assets/images/icons/other.png'},
     {'name': 'Housing', 'image': 'assets/images/icons/message.png'},
   ];
+  static const List<Map<String, dynamic>> advertisementType = [
+    {'name': 'Increase Website Visits'},
+    {'name': 'Banner Ads'},
+    {'name': 'Get More messages'},
+  ];
   static const List<Map<String, dynamic>> housingCategories = [
     {'name': 'Sublet'},
     {'name': 'Studio'},

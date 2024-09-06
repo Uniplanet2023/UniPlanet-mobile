@@ -37,6 +37,25 @@ class MediaUploadService {
     }
   }
 
+  // Method to upload image
+  Future<String> uploadRawImage(File imageFile, String path) async {
+    try {
+      String fileName = basename(imageFile.path);
+      Reference ref = storage.ref().child('$path/$fileName');
+      UploadTask uploadTask = ref.putFile(imageFile);
+
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+
+      Reference reference =
+          storage.ref().child('$path/${taskSnapshot.ref.name}');
+
+      String downloadUrl = await getDownloadUrlWithRetry(reference, 10);
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('Image upload failed: $e');
+    }
+  }
+
   Future<String> uploadVideo(File videoFile, String path) async {
     try {
       String fileName = basename(videoFile.path);

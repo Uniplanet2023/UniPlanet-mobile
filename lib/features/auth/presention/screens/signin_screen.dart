@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:uniplanet/config/statemanager_provider.dart';
-import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
 
 import 'package:uniplanet/core/router/names.dart';
 

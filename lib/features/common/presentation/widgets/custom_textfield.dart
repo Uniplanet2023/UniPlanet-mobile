@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import the services package
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
+import 'package:uniplanet/core/utils/validate_url.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -99,6 +100,18 @@ class CustomTextFieldState extends State<CustomTextField> {
             : const SizedBox(),
       ),
       validator: (val) {
+        if (widget.keyboardType == TextInputType.url) {
+          if (!widget.validatorEnabled) {
+            return null;
+          }
+          if (val == null || val.isEmpty) {
+            return 'Enter your ${widget.hintText}';
+          }
+          if (!validateUrl(val)) {
+            return 'Enter a valid URL';
+          }
+          return null;
+        }
         if (!widget.validatorEnabled) {
           return null;
         }

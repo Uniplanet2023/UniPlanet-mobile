@@ -6,7 +6,7 @@ import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_p
 import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/loader.dart';
-import 'package:uniplanet/features/home/widgets/build_product_box.dart';
+import 'package:uniplanet/features/home/widgets/item_list.dart';
 import 'package:uniplanet/features/home/widgets/home_header.dart';
 
 class HomeScreen extends StatefulWidget {

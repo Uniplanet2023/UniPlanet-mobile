@@ -11,7 +11,7 @@ import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.
 import 'dart:io';
 
 import 'package:uniplanet/features/upload/domain/entities/housing_post_form.dart';
-import 'package:uniplanet/features/upload/presentation/blocs/bloc/housing_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/housing/housing_bloc.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/category_selection.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/housing_detail.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/image_selection.dart';
