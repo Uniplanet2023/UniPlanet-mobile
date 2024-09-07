@@ -6,9 +6,6 @@ class BannerAdModel extends BannerAd {
     required super.id,
     required super.link,
     required super.image,
-    required super.company,
-    required super.impressions,
-    required super.clicks,
   });
 
   //from map
@@ -17,20 +14,14 @@ class BannerAdModel extends BannerAd {
     return BannerAdModel(
       id: map['_id'],
       link: map['link'],
-      image: map['image'],
-      company: map['company'],
-      impressions: map['impressions'],
-      clicks: map['clicks'],
+      image: map['images'][0],
     );
   }
   factory BannerAdModel.fromJson(Map<String, dynamic> json) {
     return BannerAdModel(
       id: json['_id'],
       link: json['link'],
-      image: json['image'],
-      company: json['company'],
-      impressions: json['impressions'],
-      clicks: json['clicks'],
+      image: json['images'][0],
     );
   }
 
@@ -39,9 +30,6 @@ class BannerAdModel extends BannerAd {
       '_id': id,
       'link': link,
       'image': image,
-      'company': company,
-      'impressions': impressions,
-      'clicks': clicks,
     };
   }
 }

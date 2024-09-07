@@ -1,4 +1,5 @@
 // lib/data/datasources/banner_remote_data_source.dart
+
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 
@@ -14,7 +15,8 @@ class BannerRemoteDataSourceImpl implements BannerRemoteDataSource {
   @override
   Future<List<BannerAdModel>> getBannerAds() async {
     final response = await DioHelper.instance.dio.get(
-      '$accountURI/banner-ad',
+      '$productURI/get-ads',
+      queryParameters: {'type': 'Banner Ads'},
       options: DioHelper.instance.getDioOptions(),
     );
 

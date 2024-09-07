@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:uniplanet/core/deep_link_handler.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/launch_url.dart';
 import 'package:uniplanet/features/upload/domain/entities/payment_intent.dart';
 import 'package:uniplanet/features/upload/presentation/blocs/payment/payment_bloc.dart';
+import 'package:uniplanet/main.dart';
 
 class ReviewPaymentScreen extends StatefulWidget {
   final double totalPayment;
@@ -22,7 +25,7 @@ class ReviewPaymentScreen extends StatefulWidget {
 }
 
 class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
-  bool _isExpanded = true; // Track whether "See more" has been clicked
+  bool _isExpanded = false; // Track whether "See more" has been clicked
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,8 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
         listener: (context, state) async {
           if (state is PaymentSuccess) {
             var token = await DioHelper.instance.getSessionToken();
+            DeepLinkHandler deepLinkHandler = DeepLinkHandler();
+            deepLinkHandler.resetDeepLinkHandling();
             launchUrlWithCookie(
               'https://uniplanet.shop/ad-payment?clientSecret=${state.paymentIntent.clientSecret}&token=${state.paymentIntent.token}',
               'session=$token',
@@ -89,8 +94,8 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
                           const SizedBox(height: 8),
                           Text(
                             _isExpanded
-                                ? 'Charge is for 31 days upfront. Your ad will run continuously and auto-renew every 31 days...'
-                                : 'Charge is for 31 days upfront. Your ad will run continuously and auto-renew every 31 days...',
+                                ? 'Charge is for 31 days upfront. Your ad will run continuously and auto-renew every 31 days. By clicking “Publish” below, you agree that you have read, understand, and agree to be bound by the UniPlanet Ads Terms of Service. You acknowledge and agree that if you purchase a campaign on a continuous basis or any campaign of a fixed duration of longer than 31 days, UniPlanet will automatically charge the campaign budget amount you have set above to your payment method in advance 31 days following the date of the most recent charge to your account on a recurring basis until your campaign expires or is cancelled by you. You further authorize UniPlanet to charge your payment method the campaign budget amount on an earlier date if you have spent the campaign budget amount prior to your recurring payment date (including through the purchase of multiple campaigns) or on a later date if you haven’t spent the campaign budget amount prior to your recurring payment date. If you purchase subsequent campaigns, you acknowledge and agree that UniPlanet will utilize your account balance for subsequent campaigns and automatically charge your payment method for all campaigns in accordance with the payment schedule for this campaign. For any continuous ad or set duration ad scheduled to run beyond its current 31-day billing cycle, you may cancel to avoid future charges by going to the ‘Ads’ tab in your account, clicking the “Manage ads” button, selecting the ad you want to cancel, and then selecting “Cancel ad.” You can visit our Help Center if you need to contact us with any questions or concerns.'
+                                : 'Charge is for 31 days upfront. Your ad will run continuously and auto-renew every 31 days. By clicking “Publish” below, you agree that…',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 14,
@@ -136,28 +141,49 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () async {
-            widget.uploadAd(totalPayment: widget.totalPayment);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-          child: const Text(
-            'Navigate Payment Page',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.white,
-            ),
-          ),
-        ),
+      bottomNavigationBar: BlocBuilder<PaymentBloc, PaymentState>(
+        builder: (context, state) {
+          if (state is PaymentLoading) {
+            return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                    onPressed: () async {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )));
+          } else {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  widget.uploadAd(totalPayment: widget.totalPayment);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text(
+                  'Navigate Payment Page',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }

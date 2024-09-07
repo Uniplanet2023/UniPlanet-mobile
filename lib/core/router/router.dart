@@ -4,6 +4,7 @@ import "package:uniplanet/core/router/names.dart";
 import "package:uniplanet/core/entities/user.dart";
 import "package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart";
 import "package:uniplanet/features/auth/presention/screens/notification_page.dart";
+import "package:uniplanet/features/chat/domain/entities/chat_room.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
 import "package:uniplanet/features/edit-product/edit_product.dart";
 import "package:uniplanet/features/housing/presentation/screens/housing_page.dart";
@@ -19,7 +20,7 @@ import "package:uniplanet/features/chat/presentation/screens/chat_screen.dart";
 import "package:uniplanet/features/home/screens/home_screen.dart";
 import "package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart";
 import "package:uniplanet/features/search/presentation/screens/search_screen.dart";
-import "package:uniplanet/features/chat/domain/entities/chat_room.dart";
+import "package:uniplanet/features/upload/presentation/screens/payment_success.dart";
 import "package:uniplanet/features/upload/presentation/screens/review_payment.dart";
 import "package:uniplanet/features/upload/presentation/screens/set_buget_screen.dart";
 import "package:uniplanet/models/product.dart";
@@ -133,16 +134,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       var uploadAd =
           arguments['uploadAd'] as Function({required double totalPayment});
       return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) =>
-              ReviewPaymentScreen(totalPayment: budget, uploadAd: uploadAd));
+        settings: routeSettings,
+        builder: (_) =>
+            ReviewPaymentScreen(totalPayment: budget, uploadAd: uploadAd),
+      );
     case AppRoutes.setBudgetPage:
       var uploadAd =
           routeSettings.arguments as Function({required double totalPayment});
-
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => SetBudgetScreen(uploadAd: uploadAd),
+      );
+    case AppRoutes.paymentSuccessPage:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const PaymentSuccessPage(),
       );
     default:
       return MaterialPageRoute(

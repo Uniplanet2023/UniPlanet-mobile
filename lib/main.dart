@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:uniplanet/core/deep_link_handler.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
+import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/theme/theme_cubit.dart';
@@ -28,6 +31,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  final DeepLinkHandler _deepLinkHandler = DeepLinkHandler();
   @override
   void initState() {
     super.initState();
@@ -40,11 +44,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.dispose();
     Initialization.socketService.disconnect();
     WidgetsBinding.instance.removeObserver(this);
+    _deepLinkHandler.handleInitialDeepLink(); // Handle initial deep link
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
+      _deepLinkHandler.handleInitialDeepLink();
       SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       var userData = prefsHelper.getString('userData');
       if (userData != null) {

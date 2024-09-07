@@ -2,10 +2,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/entities/user.dart';
-import 'package:uniplanet/core/helper/image_upload_helper.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/features/upload/data/models/payment_intent_model.dart';

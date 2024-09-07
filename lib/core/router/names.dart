@@ -19,4 +19,6 @@ class AppRoutes {
   static const String notificationPage = '/notification-screen';
   static const String reviewPaymentPage = '/review_payment';
   static const String setBudgetPage = '/set-budget';
+  static const String onBoardingPage = '/on-boarding';
+  static const String paymentSuccessPage = '/payment-success';
 }

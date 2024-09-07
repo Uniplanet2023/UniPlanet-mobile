@@ -123,7 +123,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
       description: descriptionController.text,
       link: linkController.text,
       images: images,
-      type: type,
+      type: selectedCategory,
       advertiser: getIt<AccountBloc>().state.account.user,
       location: selectedLocation,
       stateAddress: stateAddress,
