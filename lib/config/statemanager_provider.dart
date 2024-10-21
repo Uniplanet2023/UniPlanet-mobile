@@ -4,9 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/admin/admin_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
+import 'package:uniplanet/features/advertiser/presentation/blocs/advertisement/advertisement_bloc.dart';
+import 'package:uniplanet/features/advertiser/presentation/blocs/mail/mail_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/category/category_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/banner/banner_bloc.dart';
+import 'package:uniplanet/features/home/presentation/blocs/advertisement/advertisement_bloc.dart';
 import 'package:uniplanet/features/housing/presentation/housing/housing_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/message/message_bloc.dart';
@@ -16,7 +19,12 @@ import 'package:uniplanet/features/chat/presentation/get_product/get_product_blo
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/job/presentation/blocs/job_post/job_post_bloc.dart';
+import 'package:uniplanet/features/offer/presentation/blocs/offer/offer_bloc.dart';
+import 'package:uniplanet/features/offer/presentation/blocs/qr_code_scan/qr_code_scan_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/job/job_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/offer/offer_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/report/presentation/bloc/report_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
@@ -66,6 +74,14 @@ class StateManagerProvider extends StatelessWidget {
         BlocProvider(create: (context) => getIt<ThemeCubit>()),
         BlocProvider(create: (context) => getIt<BannerBloc>()),
         BlocProvider(create: (context) => getIt<PaymentBloc>()),
+        BlocProvider(create: (context) => getIt<AdvertisementBloc>()),
+        BlocProvider(create: (context) => getIt<MyAdvertisementBloc>()),
+        BlocProvider(create: (context) => getIt<MailBloc>()),
+        BlocProvider(create: (context) => getIt<JobBloc>()),
+        BlocProvider(create: (context) => getIt<JobPostBloc>()),
+        BlocProvider(create: (context) => getIt<OfferBloc>()),
+        BlocProvider(create: (context) => getIt<GetOfferBloc>()),
+        BlocProvider(create: (context) => getIt<QrCodeScanBloc>()),
       ],
       child: const MyApp(),
     );

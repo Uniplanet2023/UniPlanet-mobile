@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'package:uniplanet/features/upload/presentation/functions/image_functions.dart';
+
 class ImageSelection extends StatelessWidget {
   final List<File> images;
   final int maxImages;
-  final Function selectImages;
-  final Function selectImageFromCamera;
-  final Function({required int selectedIndex}) removeImage;
+  final Function(void Function()) updateState;
 
-  const ImageSelection({
-    super.key,
-    required this.images,
-    required this.maxImages,
-    required this.selectImages,
-    required this.selectImageFromCamera,
-    required this.removeImage,
-  });
+  const ImageSelection(
+      {super.key,
+      required this.images,
+      required this.maxImages,
+      required this.updateState});
 
   Widget imageContainer(File image, int index, BuildContext context) {
-    // Added index parameter
     return Stack(
       alignment: Alignment.topRight,
       children: [
@@ -37,10 +33,44 @@ class ImageSelection extends StatelessWidget {
             child: Image.file(image, fit: BoxFit.cover),
           ),
         ),
+
+        // Display "Main" text if the index is 0
+        if (index == 0)
+          Positioned(
+            top: 5,
+            left: 5,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12), // Rounded corners
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black
+                        .withOpacity(0.1), // Optional shadow for depth
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Text(
+                'Main',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+
+        // Cancel button
         IconButton(
           icon: const Icon(Icons.cancel, color: Colors.red),
           onPressed: () {
-            removeImage(selectedIndex: index);
+            updateState(() {
+              images.removeAt(index);
+            });
           },
         ),
       ],
@@ -54,7 +84,16 @@ class ImageSelection extends StatelessWidget {
       child: Wrap(
         children: [
           InkWell(
-            onTap: () => selectImageFromCamera(context),
+            onTap: () async {
+              var newImages = await selectImageFromCamera(
+                context: context,
+                images: images,
+                maxImages: maxImages,
+              );
+              updateState(() {
+                images.addAll(newImages.where((img) => !images.contains(img)));
+              });
+            },
             child: Container(
               width: 70,
               height: 70,
@@ -81,7 +120,18 @@ class ImageSelection extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () => selectImages(context),
+            onTap: () async {
+              var selectedImages = await selectImages(
+                context: context,
+                images: images,
+                maxImages: maxImages,
+              );
+
+              updateState(() {
+                images.addAll(
+                    selectedImages.where((img) => !images.contains(img)));
+              });
+            },
             child: Container(
               width: 70,
               height: 70,

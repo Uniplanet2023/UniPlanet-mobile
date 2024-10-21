@@ -51,14 +51,20 @@ class AccountScreen extends StatelessWidget {
                         : 'My Products List',
                     icon: Icons.inventory_sharp,
                     ontap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InventoryProductsScreen(
-                            user: currentUser.user,
+                      if (currentUser.type == "advertiser" ||
+                          currentUser.type == "admin") {
+                        Navigator.pushNamed(
+                            context, AppRoutes.adsInventoryPage);
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InventoryProductsScreen(
+                              user: currentUser.user,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                   ),
                   const Divider(

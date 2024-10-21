@@ -24,7 +24,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       final paymentIntent = await createPaymentIntent(
         adName: event.adName,
         advertiser: event.advertiser,
-        amount: event.amount,
+        tier: event.tier,
         images: event.images,
         type: event.type,
         description: event.description,

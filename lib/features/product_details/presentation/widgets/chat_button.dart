@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/ads/ads_repository_impl.dart';
-import 'package:uniplanet/core/dependency_injection/auth_feature/auth.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/models/product.dart';

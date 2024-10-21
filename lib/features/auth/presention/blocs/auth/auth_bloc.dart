@@ -151,7 +151,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Either<Failure, User> result = await tokenValidation(NoParams());
     result.fold(
         (failure) => {
-              emit(const AuthenticationDeny()),
+              if (failure.message == "No token")
+                {
+                  SnackbarGlobal.showSnackBar(
+                      "No token found, Please login again"),
+                  emit(const TokenDoesNotExist()),
+                }
+              else
+                {
+                  emit(const AuthenticationDeny()),
+                }
             },
         (user) async => {
               emit(Authorized(user)),

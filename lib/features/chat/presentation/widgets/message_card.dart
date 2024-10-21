@@ -38,7 +38,7 @@ class MessageCard extends StatelessWidget {
     if (recentMessage != null) {
       final bool isSameSender = oldMessage.sender == recentMessage!.sender;
       final difference =
-          recentMessage!.createdAt.difference(oldMessage.createdAt);
+          recentMessage!.createdAt.difference(oldMessage.createdAt.toLocal());
       if (isSameSender && difference.inMinutes < 1) {
         hidePreviousDate = true;
       }
@@ -61,13 +61,15 @@ class MessageCard extends StatelessWidget {
           ),
         ),
         if (recentMessage != null &&
-            oldMessage.createdAt.day < recentMessage!.createdAt.day)
+            oldMessage.createdAt.toLocal().day <
+                recentMessage!.createdAt.toLocal().day)
           Align(
             alignment: Alignment.center,
             child: Text(
-              oldMessage.createdAt.day + 1 == DateTime.now().toLocal().day
+              oldMessage.createdAt.toLocal().day + 1 ==
+                      DateTime.now().toLocal().day
                   ? 'Yesterday'
-                  : DateFormat('d MMM').format(oldMessage.createdAt),
+                  : DateFormat('d MMM').format(oldMessage.createdAt.toLocal()),
               style: TextStyle(
                   fontSize: 13,
                   color: Theme.of(context).colorScheme.tertiaryContainer),

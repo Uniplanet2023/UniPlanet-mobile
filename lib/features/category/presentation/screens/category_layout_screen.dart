@@ -6,7 +6,7 @@ import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
@@ -99,6 +99,16 @@ class _CategoryPageState extends State<CategoryPage> {
                             {
                               Navigator.pushNamed(
                                   context, AppRoutes.housingPage),
+                            }
+                          else if (GlobalVariables.categories[index]['name'] ==
+                              'Jobs')
+                            {
+                              Navigator.pushNamed(context, AppRoutes.jobList),
+                            }
+                          else if (GlobalVariables.categories[index]['name'] ==
+                              'Offers')
+                            {
+                              Navigator.pushNamed(context, AppRoutes.offerList),
                             }
                           else
                             {

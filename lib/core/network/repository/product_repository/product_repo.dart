@@ -100,7 +100,8 @@ class ProductRepository {
         return productList;
       }
     } catch (e) {
-      SnackbarGlobal.showSnackBar("Network is not stable. Please try again.");
+      SnackbarGlobal.showSnackBar(
+          "Network is not stable. Please try logout and login again.");
       log(e);
     }
     return [];
@@ -139,7 +140,7 @@ class ProductRepository {
     try {
       final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
       bool? isMySchool = prefsHelper.getBool('isMySchool');
-      if (category == 'Free Products') {
+      if (category == 'Free Items') {
         category = null;
       }
       final response = await DioHelper.instance.dio.get(
@@ -210,6 +211,8 @@ class ProductRepository {
     required bool isNegotiable,
     required String type,
     required User seller,
+    required List<String> images,
+    double? originalPrice,
     String? stateAddress,
     String? city,
     String? address,
@@ -232,6 +235,8 @@ class ProductRepository {
           'city': city,
           'address': address,
           'zipCode': zipCode,
+          'originalPrice': originalPrice,
+          'images': images,
         },
         options: DioHelper.instance.getDioOptions(),
       );

@@ -234,7 +234,7 @@ Future<File?> openCamera(BuildContext context) async {
       }
     } else {
       // Permission still denied, handle appropriately
-      print('Camera permission is denied.');
+      log('Camera permission is denied.');
     }
   } else if (permissionStatus.isPermanentlyDenied) {
     // Direct the user to the settings if permissions are permanently denied

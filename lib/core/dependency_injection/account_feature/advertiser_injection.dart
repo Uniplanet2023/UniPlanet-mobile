@@ -1,4 +1,4 @@
-import 'package:get_it/get_it.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/account/data/data_sources/advertiser_data_source.dart';
 import 'package:uniplanet/features/account/data/repository/advertiser_repository_impl.dart';
 import 'package:uniplanet/features/account/domain/repository/advertiser_repository.dart';
@@ -7,8 +7,6 @@ import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/g
 import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/get_advertiser_info_usecase.dart';
 import 'package:uniplanet/features/account/domain/usecases/advertiser_usecases/get_user_interaction_info_usecase.dart';
 import 'package:uniplanet/features/account/presentation/blocs/advertiser/advertiser_bloc.dart';
-
-final getIt = GetIt.instance;
 
 void advertiserInjectionSetup() {
   // Registering Data Sources

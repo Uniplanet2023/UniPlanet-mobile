@@ -5,12 +5,12 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sold_product/sold_product_bloc.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/core/local_stoarage/shared_preferences_helper.dart';
-import 'package:uniplanet/features/home/widgets/item.dart';
+import 'package:uniplanet/features/home/presentation/widgets/item.dart';
 import 'package:uniplanet/models/product.dart';
 
 class SoldInventoryProductBox extends StatefulWidget {

@@ -49,12 +49,33 @@ class GlobalVariables {
     {'name': 'Sports & Outdoors', 'image': 'assets/images/icons/Sports.png'},
     {'name': 'Vehicles', 'image': 'assets/images/icons/vehicle.png'},
     {'name': 'Other', 'image': 'assets/images/icons/other.png'},
-    {'name': 'Housing', 'image': 'assets/images/icons/message.png'},
+    {'name': 'Housing', 'image': 'assets/images/icons/housing.png'},
+    {'name': 'Jobs', 'image': 'assets/images/icons/job.png'},
+    {'name': 'Offers', 'image': 'assets/images/icons/event.png'},
   ];
+  static const List<Map<String, dynamic>> toggleCategories = [
+    {
+      'name': 'Electronics & Appliances',
+      'image': 'assets/images/icons/air-conditioning.png'
+    },
+    {'name': 'Furniture', 'image': 'assets/images/icons/chair.png'},
+    {'name': 'Home & Garden', 'image': 'assets/images/icons/home.png'},
+    {'name': 'Game & Hobbies', 'image': 'assets/images/icons/game.png'},
+    {'name': "Books & Music", 'image': 'assets/images/icons/book.png'},
+    {'name': "Fashion", 'image': 'assets/images/icons/fashion.png'},
+    {
+      'name': 'Health & Beauty',
+      'image': 'assets/images/icons/health & Beauty.png'
+    },
+    {'name': 'Sports & Outdoors', 'image': 'assets/images/icons/Sports.png'},
+    {'name': 'Vehicles', 'image': 'assets/images/icons/vehicle.png'},
+    {'name': 'Other', 'image': 'assets/images/icons/other.png'},
+  ];
+
   static const List<Map<String, dynamic>> advertisementType = [
     {'name': 'Increase Website Visits'},
     {'name': 'Banner Ads'},
-    {'name': 'Get More messages'},
+    // {'name': 'Get More messages'},
   ];
   static const List<Map<String, dynamic>> housingCategories = [
     {'name': 'Sublet'},
@@ -85,12 +106,6 @@ class GlobalVariables {
     {'name': 'Internet'},
     {'name': 'Cable TV'},
     {'name': 'Other'},
-  ];
-  static const List<Map<String, dynamic>> localstore = [
-    {'name': 'Coffee Shop', 'image': 'assets/images/icons/fashion.png'},
-    {'name': 'Restaurant', 'image': 'assets/images/icons/fashion.png'},
-    {'name': 'Hair Shop', 'image': 'assets/images/icons/fashion.png'},
-    {'name': "Gym", 'image': 'assets/images/icons/fashion.png'},
   ];
   static const List<String> locations = [
     'On Campus',

@@ -27,14 +27,17 @@ class AdvertisementTypeToggle extends StatelessWidget {
             onTypeChanged('Advertisement');
           } else if (index == 1) {
             onTypeChanged('Housing');
-          } else {
-            onTypeChanged('Jobs');
+          } else if (index == 2) {
+            onTypeChanged('Offer');
+          } else if (index == 3) {
+            onTypeChanged('Job');
           }
         },
         isSelected: [
           type == 'Advertisement',
           type == 'Housing',
-          type == 'Jobs',
+          type == 'Offer',
+          type == 'Job',
         ],
         children: <Widget>[
           Container(
@@ -84,7 +87,7 @@ class AdvertisementTypeToggle extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
-              color: type == 'Jobs'
+              color: type == 'Offer'
                   ? Theme.of(context).colorScheme.tertiary
                   : Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(30),
@@ -94,15 +97,37 @@ class AdvertisementTypeToggle extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: Text(
-              'Jobs',
+              'Offer',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: type == 'Jobs'
+                color: type == 'Offer'
                     ? Theme.of(context).colorScheme.surface
                     : Theme.of(context).colorScheme.tertiary,
               ),
             ),
-          )
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(
+              color: type == 'Job'
+                  ? Theme.of(context).colorScheme.tertiary
+                  : Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(
+                  width: 1,
+                  color: Theme.of(context).colorScheme.tertiaryFixedDim),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+            child: Text(
+              'Job',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: type == 'Job'
+                    ? Theme.of(context).colorScheme.surface
+                    : Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -46,9 +46,9 @@ package="shop.uniplanet.uniplanet"
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" />
-                <data android:host="mobile.uniplanet.shop"/>
-                <data android:paty='/payment-success'/>
+                <data android:scheme="mobile" />
+                <data android:host="uniplanet.shop"/>
+                <data android:pathPattern='/redirect/.*'/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

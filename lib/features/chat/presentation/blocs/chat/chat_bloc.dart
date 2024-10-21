@@ -329,7 +329,10 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         ));
       }
     } catch (e) {
-      emit(ErrorChatState(e.toString()));
+      emit(ErrorChatState(e.toString(),
+          chatRooms: state.chatRooms,
+          totalUnseenMessageCount: state.totalUnseenMessageCount,
+          page: state.page));
       throw Exception('creating chat room API error');
     }
   }
@@ -343,6 +346,6 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   @override
   void onTransition(Transition<ChatBlocEvent, ChatBlocState> transition) {
     super.onTransition(transition);
-    // log(transition);
+    log(transition);
   }
 }

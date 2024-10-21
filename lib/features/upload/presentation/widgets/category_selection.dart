@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
+import 'package:uniplanet/core/utils/constant/job.dart';
 
 class CategorySelection extends StatelessWidget {
   final String type;
@@ -20,7 +21,11 @@ class CategorySelection extends StatelessWidget {
       child: Row(
         children: (type == 'Housing'
                 ? GlobalVariables.housingCategories
-                : GlobalVariables.advertisementType)
+                : type == 'Advertisement'
+                    ? GlobalVariables.advertisementType
+                    : type == 'Job Type'
+                        ? JobConstant.jobTypes
+                        : GlobalVariables.toggleCategories)
             .map((category) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: ChoiceChip(

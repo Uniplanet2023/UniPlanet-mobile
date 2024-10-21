@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:uniplanet/core/dependency_injection/auth_feature/auth.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/entities/user.dart';
 import 'package:uniplanet/core/helper/dio_helper.dart';
 import 'package:uniplanet/core/router/names.dart';
@@ -59,9 +59,6 @@ class HousingDetailPage extends StatelessWidget {
                               height: 300,
                               imageUrl: housing.images[index],
                               fit: BoxFit.cover,
-                              placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                             ),

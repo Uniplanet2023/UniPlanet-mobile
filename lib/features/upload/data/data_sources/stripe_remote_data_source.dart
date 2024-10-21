@@ -10,7 +10,7 @@ import 'package:uniplanet/features/upload/data/models/payment_intent_model.dart'
 
 abstract class StripeRemoteDataSource {
   Future<PaymentIntentModel> createPaymentIntent({
-    required double amount,
+    required String tier,
     required String adName,
     required String type,
     required List<File> images,
@@ -30,7 +30,7 @@ class StripeRemoteDataSourceImpl implements StripeRemoteDataSource {
 
   @override
   Future<PaymentIntentModel> createPaymentIntent({
-    required double amount,
+    required String tier,
     required String adName,
     required String type,
     required List<File> images,
@@ -43,13 +43,13 @@ class StripeRemoteDataSourceImpl implements StripeRemoteDataSource {
     String? address,
     String? zipCode,
   }) async {
-    var secureUrl = await MediaUploadService()
-        .uploadRawImage(
-      images[0],
+    var secureUrls = await MediaUploadService()
+        .uploadMultipleAdImages(
+      images,
       'ads-images/${advertiser.school}/${advertiser.id}',
     )
         .timeout(
-      const Duration(seconds: 30),
+      const Duration(seconds: 60),
       onTimeout: () {
         throw TimeoutException('Image uploading timed out');
       },
@@ -58,10 +58,10 @@ class StripeRemoteDataSourceImpl implements StripeRemoteDataSource {
     final response = await DioHelper.instance.dio.get(
       '$productURI/ad-payment',
       data: {
-        'amount': (amount * 100).toDouble(), // convert to cents
+        'tier': tier,
         'adName': adName,
         'type': type,
-        'images': [secureUrl],
+        'images': secureUrls,
         'advertiser': advertiser,
         'streetAddress': streetAddress,
         'description': description,

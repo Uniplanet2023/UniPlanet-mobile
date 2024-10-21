@@ -5,13 +5,14 @@ import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/account/presentation/blocs/account/account_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'dart:io';
 
 import 'package:uniplanet/features/upload/domain/entities/housing_post_form.dart';
 import 'package:uniplanet/features/upload/presentation/blocs/housing/housing_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/widgets/address_selection.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/category_selection.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/housing_detail.dart';
 import 'package:uniplanet/features/upload/presentation/widgets/image_selection.dart';
@@ -30,6 +31,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController productNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController originalPriceController = TextEditingController();
   final TextEditingController securityDepositController =
       TextEditingController();
   String? stateAddress;
@@ -57,6 +59,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool isSecurityDeposit = false;
   bool showLocationToggle = true;
   bool showCategoryToggles = false;
+  bool showOptionalPriceToggoles = false;
   bool showCustomLocation = false;
   String type = 'For Sale';
   String category = 'Electronics & Appliances';
@@ -67,29 +70,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   List<File> images = [];
   final _addProductFormKey = GlobalKey<FormState>();
   int selectedIndex = 0;
-
-  void selectImages(BuildContext context) async {
-    var pickedImage = await pickImages(context);
-    if ((images.length + pickedImage.length) <= maxImages) {
-      images = [...images, ...pickedImage];
-      setState(() => {});
-    } else {
-      SnackbarGlobal.showSnackBar('You can only add up to $maxImages images.');
-    }
-  }
-
-  void selectImageFromCamera(BuildContext context) async {
-    File? image = await openCamera(context);
-    if (image != null) {
-      if (images.length + 1 <= maxImages) {
-        images.add(image);
-        setState(() => {});
-      } else {
-        SnackbarGlobal.showSnackBar(
-            'You can only add up to $maxImages images.');
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -103,6 +83,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
         });
       }
     });
+
+    priceController.addListener(() {
+      final bool shouldShowOptionalPriceToggles =
+          priceController.text.isNotEmpty;
+      if (showOptionalPriceToggoles != shouldShowOptionalPriceToggles) {
+        setState(() {
+          showOptionalPriceToggoles = shouldShowOptionalPriceToggles;
+        });
+      }
+    });
   }
 
   @override
@@ -110,6 +100,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     productNameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
+    originalPriceController.dispose();
     securityDepositController.dispose();
     super.dispose();
   }
@@ -148,13 +139,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
         address: address,
         zipCode: zipCode,
         seller: getIt<AccountBloc>().state.account.user,
+        originalPrice: type == 'For Sale'
+            ? double.parse(
+                double.parse(originalPriceController.text).toStringAsFixed(2))
+            : 0.0,
       ));
     }
-  }
-
-  void removeImage({required int selectedIndex}) {
-    images.removeAt(selectedIndex);
-    setState(() => {});
   }
 
   void postHousing() {
@@ -224,6 +214,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
           listener: (context, state) {
             if (state is HousingPostUploaded) {
               Navigator.pop(context, AppRoutes.bottomBarPage);
+            } else if (state is HousingPostSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Post uploaded successfully'),
+                ),
+              );
             }
           },
         ),
@@ -257,11 +253,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   children: [
                     const SizedBox(height: 20),
                     ImageSelection(
-                        images: images,
-                        maxImages: maxImages,
-                        selectImages: selectImages,
-                        selectImageFromCamera: selectImageFromCamera,
-                        removeImage: removeImage),
+                      images: images,
+                      maxImages: maxImages,
+                      updateState: setState,
+                    ),
                     const SizedBox(height: 30),
                     ProductTypeToggle(
                       type: type,
@@ -274,6 +269,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           showLocationToggle = newType != 'Housing';
                           priceController.clear();
                           securityDepositController.clear();
+                          originalPriceController.clear();
                         });
                       },
                     ),
@@ -307,6 +303,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             prefixText: type != 'Free Item' ? '\$' : '',
                             validatorEnabled: type != 'Free Item',
                           ),
+                          type == "For Sale" && showOptionalPriceToggoles
+                              ? CustomTextField(
+                                  controller: originalPriceController,
+                                  hintText: 'Original Price (Optional)',
+                                  enabled: true,
+                                  maxLength: 8,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: false, decimal: true),
+                                  prefixText: type != 'Free Item' ? '\$' : '',
+                                  validatorEnabled: type != 'Free Item',
+                                )
+                              : SizedBox(),
                           const SizedBox(width: 10),
                           type == 'Housing'
                               ? HousingDetails(
@@ -352,53 +361,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ],
                       ),
                     if (showCustomLocation)
-                      GestureDetector(
-                          onTap: () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => StateSelectionPage(
-                                      rootFrom: AppRoutes.addProductPage,
-                                      setAddress: setAddress,
-                                    ),
-                                  ),
-                                )
-                              },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1.0,
+                      AddressSelection(
+                        address: address,
+                        city: city,
+                        stateAddress: stateAddress,
+                        zipCode: zipCode,
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StateSelectionPage(
+                                rootFrom: AppRoutes.addProductPage,
+                                setAddress: setAddress,
                               ),
-                              borderRadius: BorderRadius.circular(5.0),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    city == null
-                                        ? 'Address'
-                                        : '$address, $city, $stateAddress, $zipCode',
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.black54,
-                                ),
-                              ],
-                            ),
-                          )),
+                          )
+                        },
+                      ),
                     if (showLocationToggle)
                       LocationSelection(
                         selectedLocation: selectedLocation,

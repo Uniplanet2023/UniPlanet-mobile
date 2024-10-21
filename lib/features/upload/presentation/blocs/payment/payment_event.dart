@@ -8,7 +8,7 @@ sealed class PaymentEvent extends Equatable {
 }
 
 class CreatePaymentIntentEvent extends PaymentEvent {
-  final double amount;
+  final String tier;
   final String adName;
   final String description;
   final List<File> images;
@@ -22,7 +22,7 @@ class CreatePaymentIntentEvent extends PaymentEvent {
   final User advertiser;
 
   const CreatePaymentIntentEvent({
-    required this.amount,
+    required this.tier,
     required this.adName,
     required this.description,
     required this.images,
@@ -37,5 +37,6 @@ class CreatePaymentIntentEvent extends PaymentEvent {
   });
 
   @override
-  List<Object> get props => [amount];
+  List<Object> get props =>
+      [tier, adName, description, images, type, advertiser];
 }

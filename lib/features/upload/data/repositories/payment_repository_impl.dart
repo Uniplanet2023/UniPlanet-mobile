@@ -13,7 +13,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<PaymentIntentModel> createPaymentIntent({
-    required double amount,
+    required String tier,
     required String adName,
     required String type,
     required List<File> images,
@@ -28,7 +28,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
   }) async {
     return await remoteDataSource.createPaymentIntent(
         adName: adName,
-        amount: amount,
+        tier: tier,
         type: type,
         images: images,
         advertiser: advertiser,

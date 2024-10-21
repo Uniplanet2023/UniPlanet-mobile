@@ -84,6 +84,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       User user = User.fromMap(response.data);
       return user;
     }
+    if (response.data['access'] == false) {
+      SnackbarGlobal.showSnackBar("Token Expired! Please login again.");
+    }
     throw Exception("User not found");
   }
 

@@ -41,7 +41,7 @@ class User {
   //fromMap method for potential deserialization
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'] as String,
+      id: map['id'] ?? map['_id'] as String,
       name: map['name'] as String,
       email: map['email'] as String,
       profileImage: map['profileImage'] as String?,

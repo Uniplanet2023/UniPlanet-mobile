@@ -4,10 +4,11 @@ import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/category/presentation/blocs/category/category_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/loader.dart';
 import 'package:uniplanet/features/category/presentation/widget/category_header.dart';
-import 'package:uniplanet/features/home/widgets/item_list.dart';
+import 'package:uniplanet/features/home/presentation/blocs/advertisement/advertisement_bloc.dart';
+import 'package:uniplanet/features/home/presentation/widgets/item_list.dart';
 
 class CategoriesPage extends StatefulWidget {
   final ScrollController controller;
@@ -56,11 +57,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
   void initState() {
     super.initState();
     widget.controller.addListener(scrollListener); // Listen to scroll events
-    if (widget.category != 'Hot Products' &&
-        widget.category != 'Free Products') {
+    if (widget.category != 'Hot Products' && widget.category != 'Free Items') {
       getIt<CategoryBloc>().add(LoadCategoryEvent(category: widget.category));
     } else {
-      if (widget.category == 'Free Products') {
+      if (widget.category == 'Free Items') {
         // _createRewardedAd();
         // _createUnterstitialAd();
       }
@@ -96,7 +96,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     .read<HotProductBloc>()
                     .add(const LoadHotProductsEvent());
               }
-              if (widget.category == 'Free Products') {
+              if (widget.category == 'Free Items') {
                 context
                     .read<FreeProductBloc>()
                     .add(LoadMoreFreeProductEvent(category: widget.category));
@@ -137,59 +137,80 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
               widget.category == 'Hot Products'
                   ? BlocBuilder<HotProductBloc, HotProductState>(
-                      builder: (context, state) {
-                      if (state is LoadingHotProductState) {
-                        return const SliverToBoxAdapter(
-                          child: Loader(),
-                        );
-                      } else if (state is LoadedHotProductState ||
-                          state is LoadingMoreHotProductState ||
-                          state is EndHotProductState) {
-                        return ItemList(
-                          productList: state.hotProducts,
-                        );
-                      } else {
-                        return const SliverToBoxAdapter(
-                          child: SizedBox(),
-                        );
-                      }
+                      builder: (context, hotProductState) {
+                      return BlocBuilder<AdvertisementBloc, AdvertisementState>(
+                          builder: (context, adState) {
+                        if (hotProductState is LoadingHotProductState) {
+                          return const SliverToBoxAdapter(
+                            child: Loader(),
+                          );
+                        } else if (hotProductState is LoadedHotProductState ||
+                            hotProductState is LoadingMoreHotProductState ||
+                            hotProductState is EndHotProductState) {
+                          return ItemList(
+                            productList: hotProductState.hotProducts,
+                            ads: adState is AdvertisementLoaded
+                                ? adState.ads
+                                : [],
+                          );
+                        } else {
+                          return const SliverToBoxAdapter(
+                            child: SizedBox(),
+                          );
+                        }
+                      });
                     })
-                  : widget.category == 'Free Products'
+                  : widget.category == 'Free Items'
                       ? BlocBuilder<FreeProductBloc, FreeProductState>(
-                          builder: (context, state) {
-                          if (state is LoadingFreeProductState) {
-                            return const SliverToBoxAdapter(
-                              child: Loader(),
-                            );
-                          } else if (state is LoadedFreeProductState ||
-                              state is LoadingMoreFreeProductState ||
-                              state is EndFreeProductState) {
-                            return ItemList(
-                              productList: state.productList,
-                            );
-                          } else {
-                            return const SliverToBoxAdapter(
-                              child: SizedBox(),
-                            );
-                          }
-                        })
-                      : BlocBuilder<CategoryBloc, CategoryState>(
-                          builder: (context, state) {
-                            if (state is LoadingCategoryState) {
+                          builder: (context, freeProductState) {
+                          return BlocBuilder<AdvertisementBloc,
+                              AdvertisementState>(builder: (context, adState) {
+                            if (freeProductState is LoadingFreeProductState) {
                               return const SliverToBoxAdapter(
                                 child: Loader(),
                               );
-                            } else if (state is LoadedCategoryState ||
-                                state is LoadingMoreCategoryState ||
-                                state is EndCategoryState) {
+                            } else if (freeProductState
+                                    is LoadedFreeProductState ||
+                                freeProductState
+                                    is LoadingMoreFreeProductState ||
+                                freeProductState is EndFreeProductState) {
                               return ItemList(
-                                productList: state.categoryProducts,
+                                productList: freeProductState.productList,
+                                ads: adState is AdvertisementLoaded
+                                    ? adState.ads
+                                    : [],
                               );
                             } else {
                               return const SliverToBoxAdapter(
                                 child: SizedBox(),
                               );
                             }
+                          });
+                        })
+                      : BlocBuilder<CategoryBloc, CategoryState>(
+                          builder: (context, state) {
+                            return BlocBuilder<AdvertisementBloc,
+                                    AdvertisementState>(
+                                builder: (context, adState) {
+                              if (state is LoadingCategoryState) {
+                                return const SliverToBoxAdapter(
+                                  child: Loader(),
+                                );
+                              } else if (state is LoadedCategoryState ||
+                                  state is LoadingMoreCategoryState ||
+                                  state is EndCategoryState) {
+                                return ItemList(
+                                  productList: state.categoryProducts,
+                                  ads: adState is AdvertisementLoaded
+                                      ? adState.ads
+                                      : [],
+                                );
+                              } else {
+                                return const SliverToBoxAdapter(
+                                  child: SizedBox(),
+                                );
+                              }
+                            });
                           },
                         ),
 

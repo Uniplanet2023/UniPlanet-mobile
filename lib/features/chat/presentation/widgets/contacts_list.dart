@@ -290,7 +290,8 @@ class _ContactsListState extends State<ContactsList> {
                               child: Text(
                                 widget.list[index].lastMessage != null
                                     ? formatTimestamp(widget
-                                        .list[index].lastMessage!.createdAt)
+                                        .list[index].lastMessage!.createdAt
+                                        .toLocal())
                                     : "",
                                 style: const TextStyle(
                                   color: Colors.grey,

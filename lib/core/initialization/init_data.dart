@@ -14,7 +14,8 @@ import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/banner/banner_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/home/presentation/blocs/advertisement/advertisement_bloc.dart';
 
 Future<void> initData(User user) async {
   await NotificationController.initializeRemoteNotifications(debug: true);
@@ -23,12 +24,13 @@ Future<void> initData(User user) async {
   Initialization.socketService.connect();
 
   getIt<ProductBloc>().add(const LoadProductEvent());
+  getIt<AdvertisementBloc>().add(const GetAdvertisementEvent(type: 'home'));
   getIt<AccountBloc>().add(const GetAccountInfoEvent());
   getIt<ChatBloc>().add(const LoadChatRoomEvent());
   getIt<LikeBloc>().add(const LoadLikeEvent());
   getIt<WantedProductBloc>().add(const LoadWantedProductEvent());
   getIt<FreeProductBloc>()
-      .add(const LoadFreeProductEvent(category: "Free Products"));
+      .add(const LoadFreeProductEvent(category: "Free Items"));
   getIt<SoldProductBloc>().add(LoadSoldProductEvent(userId: user.id));
   getIt<OnSaleProductBloc>().add(LoadOnSaleProductEvent(userId: user.id));
   getIt<HotProductBloc>().add(const LoadHotProductsEvent());

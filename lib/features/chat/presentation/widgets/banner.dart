@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/banner/banner_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -73,12 +74,15 @@ class AutoChangingBannerState extends State<AutoChangingBanner> {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Image.network(
-                        bannerAds[_currentPage].image,
+                      CachedNetworkImage(
+                        imageUrl: bannerAds[_currentPage].image,
                         width: 370,
                         height: 60.0,
                         fit: BoxFit
                             .cover, // Ensure the image covers the entire width
+
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ],
                   ),

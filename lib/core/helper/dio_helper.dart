@@ -8,7 +8,8 @@ class DioHelper {
   static final DioHelper _instance = DioHelper._internal();
   static DioHelper get instance => _instance;
 
-  late Directory _tempDir;
+  late Directory _appDocDir;
+  late PersistCookieJar _cookieJar;
   late String? _sessionToken;
   late final Dio _dio;
 
@@ -24,21 +25,25 @@ class DioHelper {
       );
 
   Future<void> init() async {
-    _tempDir = await path_provider.getTemporaryDirectory();
-    final tempPath = _tempDir.path;
-    var cookieJar = PersistCookieJar(
-      storage: FileStorage(tempPath),
+    // Use the application documents directory to persist cookies
+    _appDocDir = await path_provider.getApplicationDocumentsDirectory();
+    final appDocPath = _appDocDir.path;
+
+    // Create a cookie jar in a persistent storage directory
+    _cookieJar = PersistCookieJar(
+      storage: FileStorage(appDocPath), // Store in persistent location
       ignoreExpires: true,
     );
 
-    _dio.interceptors.add(CookieManager(cookieJar));
+    _dio.interceptors.add(CookieManager(_cookieJar));
+    _sessionToken = await getSessionToken();
   }
 
   Future<void> clearCookies() async {
-    final tempPath = _tempDir.path;
+    final appDocPath = _appDocDir.path;
 
     var cookieJar = PersistCookieJar(
-      storage: FileStorage(tempPath),
+      storage: FileStorage(appDocPath),
       ignoreExpires: true,
     );
     _sessionToken = null;
@@ -46,17 +51,19 @@ class DioHelper {
   }
 
   Future<String?> getSessionToken() async {
-    final tempPath = _tempDir.path;
+    final appDocPath = _appDocDir.path;
 
     var cookieJar = PersistCookieJar(
-      storage: FileStorage(tempPath),
+      storage: FileStorage(appDocPath), // Load from persistent storage
       ignoreExpires: true,
     );
 
-    List<Cookie> cookies =
-        await cookieJar.loadForRequest(Uri.parse("http://auth.uniplanet.shop"));
-    String? sessionToken;
+    List<Cookie> cookies = await cookieJar
+        .loadForRequest(Uri.parse("https://auth.uniplanet.shop"));
 
+    String? sessionToken;
+    await _cookieJar.saveFromResponse(
+        Uri.parse("https://auth.uniplanet.shop"), cookies);
     for (var cookie in cookies) {
       if (cookie.name == 'session') {
         sessionToken = cookie.value;

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uniplanet/models/product.dart';
 import 'package:uniplanet/core/network/notification/local_notification.dart';
@@ -11,16 +10,15 @@ const int hotProductId = 12;
 
 void notificationScheduling(
   List<Product> products, {
-  int dailyLimit = 2,
+  int dailyLimit =
+      2, // If you want to limit daily notifications, you can use this
   required int notificationId,
 }) async {
-  List<NotificationModel> list =
-      await AwesomeNotifications().listScheduledNotifications();
+  final random = Random();
+  final now = DateTime.now();
 
-  DateTime now = DateTime.now();
-  int dailyCount = 0;
-  int weeklyCount = 0;
-  int monthlyCount = 0;
+  List<NotificationModel> scheduledNotifications =
+      await AwesomeNotifications().listScheduledNotifications();
 
   // Define notification titles and bodies based on the notification ID
   String getTitle(int notificationId, String productName) {
@@ -49,58 +47,62 @@ void notificationScheduling(
     }
   }
 
-  // Loop through the products and schedule notifications
-  for (var index = 0; index < products.length; index++) {
-    if (list.length + index >= 30) {
-      return;
-    }
-    if (dailyCount >= dailyLimit) {
-      dailyCount = 0;
-      weeklyCount++;
-      break;
-    }
+  // Ensure you don't exceed the number of products available
+  int maxNotifications =
+      min(products.length, 10); // Limit to 10 or the number of products
 
-    var product = products[index];
+  for (int i = 0; i < maxNotifications; i++) {
+    // Calculate the date for each day in the next 10 days
+    DateTime scheduledDate = now.add(Duration(days: i));
 
-    // Calculate the scheduled time
-    DateTime scheduledTime = now.add(Duration(
-      days: (monthlyCount / dailyLimit).floor(), // Spread across days
-      hours: (dailyCount * 2) + 11, // Spread between 11 AM and 10 PM
-      minutes: (index % 60), // Spread across the hour
-    ));
+    // Generate a random hour between 11 AM (11) and 10 PM (22)
+    int randomHour = 11 + random.nextInt(12);
+    int randomMinute = random.nextInt(60);
 
-    // Ensure the scheduled time is within 11:00 AM - 11:00 PM
-    if (scheduledTime.hour < 11) {
-      scheduledTime = DateTime(
-        scheduledTime.year,
-        scheduledTime.month + monthlyCount,
-        scheduledTime.day + weeklyCount,
-        11 + index, // Adjust to just after 11:00 AM
-        scheduledTime.minute,
-      );
-    } else if (scheduledTime.hour > 21) {
-      scheduledTime = DateTime(
-        scheduledTime.year,
-        scheduledTime.month,
-        scheduledTime.day + weeklyCount,
-        21 - index,
-        59, // Adjust to just before 10:00 PM
-      );
-    }
-
-    // Schedule the notification using the LocalNotificationController
-    await LocalNotificationController.showNotification(
-      id: Random().nextInt(1000), // Use a unique ID for each notification
-      channelKey: 'scheduled_channel',
-      title: getTitle(notificationId, product.name),
-      body: getBody(notificationId, product.name),
-      bigPicture: product.images.isNotEmpty ? product.images.first : null,
-      notificationLayout: NotificationLayout.BigPicture,
-      scheduled: true,
-      calendar: NotificationCalendar.fromDate(date: scheduledTime),
+    // Set the notification time to the generated hour and minute
+    scheduledDate = DateTime(
+      scheduledDate.year,
+      scheduledDate.month,
+      scheduledDate.day,
+      randomHour,
+      randomMinute,
     );
 
-    dailyCount++;
-    monthlyCount++;
+    // Check if there's already a scheduled notification for that day
+    bool alreadyScheduled = scheduledNotifications.any((notification) {
+      if (notification.schedule is NotificationCalendar) {
+        NotificationCalendar calendar =
+            notification.schedule as NotificationCalendar;
+        DateTime notificationDate = DateTime(
+          calendar.year ?? scheduledDate.year,
+          calendar.month ?? scheduledDate.month,
+          calendar.day ?? scheduledDate.day,
+          calendar.hour ?? 0,
+          calendar.minute ?? 0,
+        );
+
+        // Check if the notification is on the same day
+        return notificationDate.year == scheduledDate.year &&
+            notificationDate.month == scheduledDate.month &&
+            notificationDate.day == scheduledDate.day;
+      }
+      return false;
+    });
+
+    // If no notification is scheduled for that day, schedule a new one
+    if (!alreadyScheduled) {
+      await LocalNotificationController.showNotification(
+        id: random
+            .nextInt(1000), // Use the reusable Random object for consistency
+        channelKey: 'scheduled_channel',
+        title: getTitle(notificationId, products[i].name),
+        body: getBody(notificationId, products[i].name),
+        bigPicture:
+            products[i].images.isNotEmpty ? products[i].images.first : null,
+        notificationLayout: NotificationLayout.BigPicture,
+        scheduled: true,
+        calendar: NotificationCalendar.fromDate(date: scheduledDate),
+      );
+    }
   }
 }

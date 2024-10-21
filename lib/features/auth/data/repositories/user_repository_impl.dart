@@ -97,19 +97,20 @@ class AuthRepositoryImpl implements AuthRepository {
     final SharedPreferencesHelper prefsHelper = SharedPreferencesHelper();
     var userData = prefsHelper.getString('userData');
     var userRecord = jsonDecode(userData.toString());
+
     try {
-      var token = await DioHelper.instance.getSessionToken();
-      token = null;
-      if (token == null) {
-        final user = await remoteDataSource.tokenValidation();
-        return Right(user);
-      } else {
-        User user = User.fromMap(userRecord);
-        return Right(user);
+      final token = DioHelper.instance.session;
+      if (token == null && userRecord == null) {
+        return Left(Failure('No data'));
+      } else if (token == null && userRecord != null) {
+        return Left(Failure('No token'));
       }
+      final user = await remoteDataSource.tokenValidation();
+      return Right(user);
     } catch (e) {
+      SnackbarGlobal.showSnackBar(
+          'Network Connection is not stable. Please try again later or Logout and Login again!');
       if (userRecord != null) {
-        SnackbarGlobal.showSnackBar('Network Connection is not stable.');
         User user = User.fromMap(userRecord);
         return Right(user);
       }

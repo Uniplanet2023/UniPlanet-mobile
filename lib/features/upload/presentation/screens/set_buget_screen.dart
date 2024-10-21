@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uniplanet/core/router/names.dart';
 
 class SetBudgetScreen extends StatefulWidget {
-  final Function({required double totalPayment}) uploadAd;
+  final Function({required String tier}) uploadAd;
 
   const SetBudgetScreen({super.key, required this.uploadAd});
 
@@ -46,6 +46,19 @@ class SetBudgetScreenState extends State<SetBudgetScreen> {
     }
   }
 
+  String _getTier(int index) {
+    switch (index) {
+      case 0:
+        return 'basic';
+      case 1:
+        return 'standard';
+      case 2:
+        return 'premium';
+      default:
+        return 'custom';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,13 +68,14 @@ class SetBudgetScreenState extends State<SetBudgetScreen> {
           TextButton(
             onPressed: () {
               // Handle the next action and call the uploadAd function
-              final budget = _getBudgetAmount(_selectedBudgetIndex);
-
+              final totalPayment = _getBudgetAmount(_selectedBudgetIndex);
+              final tier = _getTier(_selectedBudgetIndex);
               Navigator.pushNamed(
                 context,
                 AppRoutes.reviewPaymentPage,
                 arguments: {
-                  'budget': budget,
+                  'totalPayment': totalPayment,
+                  'tier': tier,
                   'impressionsRange': _impressionsRange,
                   'uploadAd': widget.uploadAd,
                 },
@@ -134,7 +148,9 @@ class SetBudgetScreenState extends State<SetBudgetScreen> {
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
         border: Border.all(
-          color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
+          color: isSelected
+              ? Theme.of(context).colorScheme.inverseSurface
+              : Theme.of(context).colorScheme.surface,
           width: 2.0,
         ),
         borderRadius: BorderRadius.circular(8.0),

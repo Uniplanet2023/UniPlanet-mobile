@@ -6,7 +6,7 @@ import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_
 import 'package:uniplanet/core/initialization/init.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/status/status_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 
 class Streamer {
   late StreamSubscription _chatStreamSubscription;

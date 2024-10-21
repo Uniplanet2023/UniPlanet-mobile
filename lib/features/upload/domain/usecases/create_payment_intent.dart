@@ -10,7 +10,7 @@ class CreatePaymentIntent {
   CreatePaymentIntent(this.repository);
 
   Future<PaymentIntentEntity> call({
-    required double amount,
+    required String tier,
     required String adName,
     required String type,
     required List<File> images,
@@ -25,7 +25,7 @@ class CreatePaymentIntent {
   }) {
     return repository.createPaymentIntent(
         adName: adName,
-        amount: amount,
+        tier: tier,
         type: type,
         images: images,
         advertiser: advertiser,

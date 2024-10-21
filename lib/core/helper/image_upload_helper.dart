@@ -7,6 +7,7 @@ import 'package:uniplanet/core/local_stoarage/local_stoarage.dart';
 import 'package:uniplanet/core/network/storage/image_upload_service.dart';
 import 'package:uniplanet/core/utils/utils.dart';
 import 'package:uniplanet/features/upload/domain/entities/housing_post.dart';
+import 'package:uniplanet/features/upload/domain/entities/offer.dart';
 import 'package:uniplanet/models/product.dart';
 
 class ImageUploadHelper {
@@ -90,6 +91,57 @@ class ImageUploadHelper {
         housingPost!.images.addAll(validUrls);
         return validUrls;
       }
+    } catch (e) {
+      log('Image upload failed: $e');
+      throw Exception('Image upload failed: $e');
+    }
+  }
+
+  List<String> getImagesUrl(
+      {required List<File> images, required String path}) {
+    List<String> urls = [];
+    for (File image in images) {
+      String imageUrl = MediaUploadService().getImagePathUrl(image, path);
+      urls.add(imageUrl);
+    }
+    return urls;
+  }
+
+  Future<void> uploadImagesAtFirebase({
+    required List<File> images,
+    required String path,
+  }) async {
+    try {
+      final imageUrls =
+          List<String?>.filled(images.length, null, growable: false);
+
+      // Concurrently upload all images and collect their URLs
+      final uploadTasks =
+          List<Future<void>>.generate(images.length, (index) async {
+        final image = images[index];
+        String secureUrl;
+
+        try {
+          secureUrl = await MediaUploadService()
+              .uploadImage(
+            image,
+            path,
+          )
+              .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              throw TimeoutException('Image uploading timed out');
+            },
+          );
+          imageUrls[index] = secureUrl;
+        } catch (e) {
+          log('Error uploading image at index $index: $e');
+          throw Exception('Failed to upload image at index $index');
+        }
+      });
+
+      // Wait for all uploads to complete
+      await Future.wait(uploadTasks);
     } catch (e) {
       log('Image upload failed: $e');
       throw Exception('Image upload failed: $e');

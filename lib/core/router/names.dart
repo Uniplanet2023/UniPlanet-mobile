@@ -21,4 +21,9 @@ class AppRoutes {
   static const String setBudgetPage = '/set-budget';
   static const String onBoardingPage = '/on-boarding';
   static const String paymentSuccessPage = '/payment-success';
+  static const String adDetailPage = '/ad-detail';
+  static const String adsInventoryPage = '/ads-inventory';
+  static const String adStatisticPage = '/ad-statistic';
+  static const String jobList = '/job-list';
+  static const String offerList = '/offer-list';
 }

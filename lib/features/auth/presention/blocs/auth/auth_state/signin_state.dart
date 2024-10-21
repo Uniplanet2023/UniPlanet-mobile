@@ -43,8 +43,8 @@ final class TokenValidationCompleteState extends AuthState {
   List<Object?> get props => [];
 }
 
-final class ValidationFailedState extends AuthState {
-  const ValidationFailedState();
+final class TokenDoesNotExist extends AuthState {
+  const TokenDoesNotExist();
   @override
   List<Object?> get props => [];
 }

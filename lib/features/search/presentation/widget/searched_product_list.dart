@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/router/names.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
-import 'package:uniplanet/features/home/widgets/item.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/home/presentation/widgets/item.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 import 'package:uniplanet/models/product.dart';
 

@@ -6,7 +6,7 @@ import 'package:uniplanet/features/upload/domain/entities/payment_intent.dart';
 
 abstract class PaymentRepository {
   Future<PaymentIntentEntity> createPaymentIntent({
-    required double amount,
+    required String tier,
     required String adName,
     required String type,
     required List<File> images,

@@ -18,7 +18,7 @@ import 'package:uniplanet/features/account/presentation/blocs/account/account_bl
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/housing/presentation/screens/full_image_page.dart';
 import 'package:uniplanet/features/product_details/presentation/blocs/seller_sale_product/seller_sale_product_bloc.dart';
 import 'package:uniplanet/features/product_details/presentation/blocs/seller_sold_product/sold_product_bloc.dart';
@@ -293,7 +293,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           TextSpan(
                             text: DateFormat.yMd()
                                 .add_jm()
-                                .format(widget.product.updatedAt),
+                                .format(widget.product.createdAt.toLocal()),
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,

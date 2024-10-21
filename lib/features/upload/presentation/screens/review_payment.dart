@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:uniplanet/core/deep_link_handler.dart';
+import 'package:uniplanet/config/api/server_address.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/core/utils/launch_url.dart';
 import 'package:uniplanet/features/upload/domain/entities/payment_intent.dart';
 import 'package:uniplanet/features/upload/presentation/blocs/payment/payment_bloc.dart';
-import 'package:uniplanet/main.dart';
 
 class ReviewPaymentScreen extends StatefulWidget {
+  final String tier;
   final double totalPayment;
-  final Function({required double totalPayment}) uploadAd;
+  final Function({required String tier}) uploadAd;
 
   const ReviewPaymentScreen({
     super.key,
     required this.totalPayment,
+    required this.tier,
     required this.uploadAd,
   });
 
@@ -40,11 +40,9 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
       body: BlocListener<PaymentBloc, PaymentState>(
         listener: (context, state) async {
           if (state is PaymentSuccess) {
-            var token = await DioHelper.instance.getSessionToken();
-            DeepLinkHandler deepLinkHandler = DeepLinkHandler();
-            deepLinkHandler.resetDeepLinkHandling();
+            var token = DioHelper.instance.session;
             launchUrlWithCookie(
-              'https://uniplanet.shop/ad-payment?clientSecret=${state.paymentIntent.clientSecret}&token=${state.paymentIntent.token}',
+              '$websiteURI/ad-payment?clientSecret=${state.paymentIntent.clientSecret}&token=${state.paymentIntent.token}',
               'session=$token',
             );
           }
@@ -85,10 +83,11 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
                           const SizedBox(height: 4),
                           Text(
                             '\$${widget.totalPayment} / month',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -163,10 +162,10 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () async {
-                  widget.uploadAd(totalPayment: widget.totalPayment);
+                  widget.uploadAd(tier: widget.tier);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -207,7 +206,7 @@ class ReviewPaymentScreenState extends State<ReviewPaymentScreen> {
           ),
         );
       });
-    } on StripeException catch (e) {
+    } on StripeException {
       // Handle error
     }
   }

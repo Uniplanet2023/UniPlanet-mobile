@@ -1,4 +1,4 @@
-import 'package:get_it/get_it.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/category/presentation/blocs/category/category_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/free_product/free_product_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
@@ -8,7 +8,7 @@ import 'package:uniplanet/features/chat/presentation/blocs/typing/typing_bloc.da
 import 'package:uniplanet/features/chat/presentation/get_product/get_product_bloc.dart';
 import 'package:uniplanet/features/category/presentation/blocs/hot_product/hot_product_bloc.dart';
 import 'package:uniplanet/features/auth/presention/blocs/like/like_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/report/presentation/bloc/report_bloc.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_history/search_history_bloc.dart';
@@ -20,7 +20,6 @@ import 'package:uniplanet/features/category/presentation/blocs/buying/wanted_pro
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/features/search/presentation/blocs/search_product/search_product_bloc.dart';
 
-final getIt = GetIt.instance;
 //TODO: Need to refactor this code
 void setup() {
   getIt.registerFactory<AccountRepository>(() => AccountRepository());

@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/presentation/blocs/sale_product/sale_product_bloc.dart';
-import 'package:uniplanet/features/auth/presention/blocs/product/product_bloc.dart';
+import 'package:uniplanet/features/upload/presentation/blocs/product/product_bloc.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_button.dart';
 import 'package:uniplanet/features/common/presentation/widgets/custom_textfield.dart';
 import 'package:uniplanet/core/utils/constant/global_variables.dart';
@@ -189,7 +189,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       SnackbarGlobal.showSnackBar('Please enter a custom location');
       return;
     }
-    if (type != 'Free Items' && priceController.text == "") {
+    if (type != 'Free Item' && priceController.text == "") {
       SnackbarGlobal.showSnackBar('Please enter a price');
       return;
     }
@@ -508,7 +508,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: GlobalVariables.categories
+                          children: GlobalVariables.toggleCategories
                               .map((category) => Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 4.0),

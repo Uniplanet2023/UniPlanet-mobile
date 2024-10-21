@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniplanet/core/utils/streamer.dart';
 import 'package:uniplanet/core/router/names.dart';
 import 'package:uniplanet/features/account/presentation/screens/account_screen.dart';
+import 'package:uniplanet/features/main_page/presentation/screens/main_page.dart';
 import 'package:uniplanet/features/upload/presentation/screens/add_product_screen.dart';
 import 'package:uniplanet/features/category/presentation/screens/category_layout_screen.dart';
 import 'package:uniplanet/features/chat/presentation/blocs/chat/chat_bloc.dart';
 import 'package:uniplanet/features/chat/presentation/screens/chat_layout_screen.dart';
-import 'package:uniplanet/features/home/screens/home_screen.dart';
+import 'package:uniplanet/features/home/presentation/screens/home_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:uniplanet/features/search/presentation/screens/search_screen.dart';
@@ -92,11 +93,13 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      HomeScreen(controller: _scrollController),
+      RestaurantCategoryScreen(),
+      // HomeScreen(controller: _scrollController),
       Container(
         margin: const EdgeInsets.only(bottom: kBottomNavigationBarHeight + 40),
         child: CategoryPage(controller: _scrollController),
       ),
+
       const AddProductScreen(),
       ChatListPage(
         controller: _scrollController,

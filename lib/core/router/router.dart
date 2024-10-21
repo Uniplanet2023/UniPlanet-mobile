@@ -2,12 +2,18 @@ import "package:flutter/material.dart";
 import "package:uniplanet/config/statemanager_provider.dart";
 import "package:uniplanet/core/router/names.dart";
 import "package:uniplanet/core/entities/user.dart";
+import "package:uniplanet/features/advertiser/domain/entities/advertisement.dart";
+import "package:uniplanet/features/advertiser/presentation/screens/ad_detail_statistic.dart";
+import "package:uniplanet/features/advertiser/presentation/screens/inventory_ads_screen.dart";
 import "package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart";
 import "package:uniplanet/features/auth/presention/screens/notification_page.dart";
 import "package:uniplanet/features/chat/domain/entities/chat_room.dart";
 import 'package:uniplanet/features/common/presentation/widgets/bottom_bar.dart';
 import "package:uniplanet/features/edit-product/edit_product.dart";
 import "package:uniplanet/features/housing/presentation/screens/housing_page.dart";
+import "package:uniplanet/features/job/presentation/screens/job_list_screen.dart";
+import "package:uniplanet/features/offer/presentation/screens/offer_layout.dart";
+import "package:uniplanet/features/product_details/presentation/pages/ad_detail_screen.dart";
 import "package:uniplanet/features/upload/presentation/screens/add_advertisement.dart";
 import 'package:uniplanet/features/upload/presentation/screens/add_product_screen.dart';
 import "package:uniplanet/features/auth/presention/screens/auth_screen.dart";
@@ -17,7 +23,7 @@ import 'package:uniplanet/features/auth/presention/screens/signup_screen.dart';
 import "package:uniplanet/features/category/presentation/screens/categories.dart";
 import "package:uniplanet/features/chat/presentation/screens/chat_layout_screen.dart";
 import "package:uniplanet/features/chat/presentation/screens/chat_screen.dart";
-import "package:uniplanet/features/home/screens/home_screen.dart";
+import "package:uniplanet/features/home/presentation/screens/home_screen.dart";
 import "package:uniplanet/features/product_details/presentation/pages/product_details_screen.dart";
 import "package:uniplanet/features/search/presentation/screens/search_screen.dart";
 import "package:uniplanet/features/upload/presentation/screens/payment_success.dart";
@@ -101,7 +107,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           product: product,
         ),
       );
-
+    case AppRoutes.adDetailPage:
+      final arguments = routeSettings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => AdDetailScreen(advertisement: arguments['ad']),
+      );
     case AppRoutes.chatPage:
       final arguments = routeSettings.arguments as Map<String, dynamic>;
 
@@ -130,17 +141,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       var arguments = routeSettings.arguments as Map<String, dynamic>;
 
       // Access the values from the map
-      var budget = arguments['budget'] as double;
-      var uploadAd =
-          arguments['uploadAd'] as Function({required double totalPayment});
+      var tier = arguments['tier'] as String;
+      var totalPayment = arguments['totalPayment'] as double;
+      var uploadAd = arguments['uploadAd'] as Function({required String tier});
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) =>
-            ReviewPaymentScreen(totalPayment: budget, uploadAd: uploadAd),
+        builder: (_) => ReviewPaymentScreen(
+            totalPayment: totalPayment, tier: tier, uploadAd: uploadAd),
       );
     case AppRoutes.setBudgetPage:
       var uploadAd =
-          routeSettings.arguments as Function({required double totalPayment});
+          routeSettings.arguments as Function({required String tier});
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => SetBudgetScreen(uploadAd: uploadAd),
@@ -149,6 +160,31 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const PaymentSuccessPage(),
+      );
+    case AppRoutes.adsInventoryPage:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => InventoryAdsScreen(user: getIt<AuthBloc>().state.user!),
+      );
+    case AppRoutes.adStatisticPage:
+      Advertisement ad = routeSettings.arguments is Map<String, dynamic>
+          ? (routeSettings.arguments as Map<String, dynamic>)['advertisement']
+              as Advertisement
+          : throw ArgumentError('Invalid arguments for InsightsPage');
+
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => InsightsPage(ad: ad),
+      );
+    case AppRoutes.jobList:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const JobListScreen(),
+      );
+    case AppRoutes.offerList:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const OfferListScreen(),
       );
     default:
       return MaterialPageRoute(

@@ -196,7 +196,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 onPressed: () => setState(
                                     () => userType = UserType.advertiser),
                                 icon: const Icon(Icons.campaign),
-                                label: const Text('Advertiser'),
+                                label: const Text('Business'),
                                 style: TextButton.styleFrom(
                                   foregroundColor: userType ==
                                           UserType.advertiser
@@ -326,9 +326,21 @@ class _SignupScreenState extends State<SignupScreen> {
                               scrollbarProps: ScrollbarProps(
                                 trackBorderColor: Colors.amber,
                               )),
-                          items: universities,
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
+                          items: (String? filter,
+                              dynamic infiniteScrollProps) async {
+                            // Apply the filter to your universities list
+                            if (filter != null && filter.isNotEmpty) {
+                              return universities
+                                  .where((university) => university
+                                      .toLowerCase()
+                                      .contains(filter.toLowerCase()))
+                                  .toList();
+                            }
+                            // Return the full list if no filter is applied
+                            return universities;
+                          },
+                          decoratorProps: DropDownDecoratorProps(
+                            decoration: InputDecoration(
                               hintText: userType == UserType.advertiser
                                   ? "Select School Where You Want To Advertise"
                                   : "Select School",

@@ -114,7 +114,7 @@ class SocketService {
               body: receivedMessage.message,
               channelKey: 'inapp_notification',
               bigPicture: sender.profileImage,
-              notificationLayout: NotificationLayout.MessagingGroup);
+              notificationLayout: NotificationLayout.Messaging);
           getIt<ChatBloc>()
               .add(UpdateUnseenMessageEvent(chatId: receivedMessage.chat));
         }
@@ -139,10 +139,10 @@ class SocketService {
     });
     socket.onDisconnect((data) => log('Disconnected $data'));
     socket.onConnectError((data) => log('ConnectError $data'));
-    socket.onConnectTimeout((data) => log('ConnectTimeout $data'));
+    socket.timeout(100);
     socket.onReconnect((data) => log('Reconnect $data'));
     socket.onReconnectAttempt((data) => log('ReconnectAttempt $data'));
-    socket.onReconnecting((data) => log('Reconnecting $data'));
+    socket.onReconnect((data) => log('Reconnecting $data'));
 
     socket.connect();
   }
@@ -302,18 +302,30 @@ class SocketService {
     final Completer<bool> completer = Completer();
 
     socket.emitWithAck(
-        "join chat", {"chatRoomId": chatId, "targetUser": targetUserId},
-        ack: (data) {
-      bool userExist = data;
-      if (userExist) {
-        completer.complete(true);
-      } else {
-        completer.complete(false);
-      }
-    });
+      "join chat",
+      {
+        "chatRoomId": chatId,
+        "targetUser": targetUserId,
+      },
+      ack: (data) {
+        if (data is Map && data.containsKey('message')) {
+          if (data['message'] == "operation has timed out") {
+            completer.complete(false);
+            return;
+          }
+        }
 
-    return completer
-        .future; // This will return a Future<bool> that completes when the callback is called
+        // Assuming data is a boolean (userExist)
+        if (data is bool) {
+          completer.complete(data); // Complete with the boolean directly
+        } else {
+          completer
+              .complete(false); // Default to false if data is not as expected
+        }
+      },
+    );
+
+    return completer.future;
   }
 
   Future<Message> sendMessage({

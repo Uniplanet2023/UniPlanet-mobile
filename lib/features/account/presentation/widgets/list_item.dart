@@ -59,8 +59,6 @@ class ListItem extends StatelessWidget {
                                 fit: BoxFit.cover,
                                 height: 110,
                                 width: 135,
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
                                 errorWidget: (context, url, error) => Container(
                                   color: Colors.black12,
                                   child: const Icon(
@@ -160,7 +158,8 @@ class ListItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                TimeAgoFormatter(product.updatedAt).format(),
+                                TimeAgoFormatter(product.updatedAt.toLocal())
+                                    .format(),
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                 ),

@@ -64,7 +64,7 @@ class SearchProductBloc
     if (result.isNotEmpty) {
       notificationScheduling(
         result,
-        dailyLimit: 2,
+        dailyLimit: 1,
         notificationId: hotProductId,
       );
     }

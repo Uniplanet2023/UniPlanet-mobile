@@ -1,12 +1,10 @@
-import 'package:get_it/get_it.dart';
+import 'package:uniplanet/config/statemanager_provider.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource.dart';
 import 'package:uniplanet/features/auth/data/datasources/user_datasource_impl.dart';
 import 'package:uniplanet/features/auth/data/repositories/user_repository_impl.dart';
 import 'package:uniplanet/features/auth/domain/repository/user_repository.dart';
 import 'package:uniplanet/features/auth/domain/usecases/index.dart';
 import 'package:uniplanet/features/auth/presention/blocs/auth/auth_bloc.dart';
-
-final getIt = GetIt.instance;
 
 void setupAuth() {
   getIt

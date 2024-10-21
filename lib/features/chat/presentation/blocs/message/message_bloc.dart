@@ -17,6 +17,7 @@ import 'package:uniplanet/features/chat/domain/entities/message.dart';
 import 'package:uniplanet/core/network/repository/index.dart';
 import 'package:uniplanet/core/network/socket/socket_channel.dart';
 import 'package:uuid/uuid.dart';
+import 'package:video_compress/video_compress.dart';
 // Part of the bloc
 part 'message_bloc_event.dart';
 part 'message_bloc_state.dart';
@@ -174,8 +175,22 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
   Future<Message?> _uploadVideo(Message tempMessage) async {
     try {
       File videoFile = File(tempMessage.message);
+
+      // Compress the video
+      final MediaInfo? compressedVideo = await VideoCompress.compressVideo(
+        videoFile.path,
+        quality: VideoQuality.MediumQuality, // Adjust the quality as needed
+        deleteOrigin: false, // Whether to delete the original file or not
+      );
+
+      if (compressedVideo == null || compressedVideo.file == null) {
+        throw Exception('Video compression failed');
+      }
+
+      // Use the compressed video file for uploading
       String? secureUrl = await MediaUploadService()
-          .uploadVideo(videoFile, 'chat-videos/${tempMessage.chat}')
+          .uploadVideo(File(compressedVideo.file!.path),
+              'chat-videos/${tempMessage.chat}')
           .timeout(
         const Duration(seconds: 30),
         onTimeout: () {
@@ -194,6 +209,9 @@ class MessageBloc extends Bloc<MessageBlocEvent, MessageBlocState> {
       SocketService.imageMessagesToRetry.add(imageMessage);
       add(ErrorMessageEvent(tempMessage));
       return null;
+    } finally {
+      // Clean up the compression process
+      VideoCompress.dispose();
     }
   }
 

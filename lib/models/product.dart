@@ -11,6 +11,7 @@ class Product {
   int numberOfChat;
   String category;
   double price;
+  final double? originalPrice;
   final DateTime createdAt;
   final DateTime updatedAt;
   String location;
@@ -22,6 +23,7 @@ class Product {
   final String? city;
   final String? address;
   final String? zipCode;
+
   Product({
     required this.seller,
     required this.id,
@@ -29,6 +31,7 @@ class Product {
     required this.status,
     required this.description,
     required this.images,
+    this.originalPrice,
     this.likes = 0,
     this.numberOfChat = 0,
     required this.category,
@@ -56,6 +59,7 @@ class Product {
       'likes': likes,
       'category': category,
       'price': price,
+      'originalPrice': originalPrice,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'numberOfChat': numberOfChat,
@@ -81,6 +85,9 @@ class Product {
       likes: map['likes'] as int,
       numberOfChat: map['numberOfChat'] as int,
       price: map['price'].toDouble() as double,
+      originalPrice: map['originalPrice'] == null
+          ? null
+          : map['originalPrice'].toDouble() as double,
       category: map['category'],
       location: map['location'] ?? "",
       createdAt: DateTime.parse(map['createdAt'].toString()),
@@ -110,6 +117,7 @@ class Product {
     int? numberOfChat,
     String? category,
     double? price,
+    double? originalPrice,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? location,
@@ -132,6 +140,7 @@ class Product {
       numberOfChat: numberOfChat ?? this.numberOfChat,
       category: category ?? this.category,
       price: price ?? this.price,
+      originalPrice: originalPrice ?? this.originalPrice,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       location: location ?? this.location,

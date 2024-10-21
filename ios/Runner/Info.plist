@@ -1,6 +1,6 @@
-<?xml version="2.1.4" encoding="UTF-8"?>
+<?xml version="2.1.19" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="2.1.4">
+<plist version="2.1.19">
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
@@ -25,14 +25,18 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
+	
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>mobile</string>
 				<string>com.googleusercontent.apps.1003008222202-5mvbk6jj3e90luatviloivcv0njg4o8c</string>
 			</array>
+			<key>CFBundleURLName</key>
+    		<string>shop.uniplanet.uniplanet</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -43,11 +47,10 @@
 	<string>ca-app-pub-9923099397206192~8964906949</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>UniPlanet needs to access your camera to allow you to take photos of products, update your profile picture, and share images in chats.</string>
-	<key>NSCameraUsageDescription
-	&lt;string&gt;To scan cards&lt;/string&gt;</key>
-	<string>To scan cards</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>UniPlanet needs to access your photo library to store product images, profile pictures, and images from chats.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
