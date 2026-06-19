@@ -35,7 +35,7 @@ dependencies:
   cached_network_image: 3.4.1
   carousel_slider: 4.2.1
   cloudinary_public: 0.23.1
-  cupertino_icons: 1.0.8
+  cupertino_icons: 1.0.9
   dio: 5.9.1
   dotted_border: 2.1.0
   dropdown_search: 5.0.6
