@@ -29,7 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animated_text_kit: 4.3.0
-  badges: 3.1.2
+  badges: 3.2.0
   bloc: 8.1.4
   bloc_concurrency: 0.3.0
   cached_network_image: 3.4.1
